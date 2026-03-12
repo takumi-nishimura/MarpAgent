@@ -46,24 +46,40 @@
 
 const { renderMermaid, THEMES } = require('beautiful-mermaid')
 
-// Match <text ...>...$...$...</text> or $$...$$ with optional &quot; wrappers
-const MATH_TEXT_RE =
-  /<text([^>]*)>(?:&quot;)?\$(\$?)(.*?)\$\2(?:&quot;)?<\/text>/g
-
 function parseAttr(attrStr, name) {
   const m = attrStr.match(new RegExp(`${name}="([^"]*)"` ))
   return m ? m[1] : null
+}
+
+// Estimate text width with CJK-aware character widths.
+function estimateTextWidth(text, fontSize) {
+  let len = 0
+  for (const ch of text) {
+    const cp = ch.codePointAt(0)
+    if (
+      (cp >= 0x2e80 && cp <= 0x9fff) ||
+      (cp >= 0xf900 && cp <= 0xfaff) ||
+      (cp >= 0xfe30 && cp <= 0xffef) ||
+      (cp >= 0x20000 && cp <= 0x2fa1f)
+    )
+      len += 1.0
+    else len += 0.6
+  }
+  return len * fontSize
 }
 
 async function postProcessMath(svg) {
   // Quick check — skip MathJax init if no math delimiters present
   if (!svg.includes('$')) return svg
 
+  // Find all <text> elements whose content contains $...$
+  const TEXT_EL_RE = /<text([^>]*)>([^<]+)<\/text>/g
   const hits = []
   let m
-  const re = new RegExp(MATH_TEXT_RE.source, MATH_TEXT_RE.flags)
-  while ((m = re.exec(svg)) !== null) {
-    hits.push({ full: m[0], attrs: m[1], tex: m[3] })
+  while ((m = TEXT_EL_RE.exec(svg)) !== null) {
+    if (m[2].includes('$')) {
+      hits.push({ full: m[0], attrs: m[1], rawContent: m[2] })
+    }
   }
   if (hits.length === 0) return svg
 
@@ -78,63 +94,147 @@ async function postProcessMath(svg) {
   // Collect all MathJax <defs> to merge into the root SVG
   const allDefs = []
 
-  for (const hit of hits) {
-    const node = MathJax.tex2svg(hit.tex, { display: false })
+  // Helper: render a TeX string to MathJax SVG components.
+  // Uses tex2svgPromise to support fonts loaded on demand (e.g. \mathcal).
+  async function renderTex(tex) {
+    const node = await MathJax.tex2svgPromise(tex, { display: false })
     const mjSvg = adaptor.innerHTML(node)
-
-    // Extract viewBox, width/height (in ex units) from the inner <svg>
     const vbMatch = mjSvg.match(/viewBox="([^"]*)"/)
     const wMatch = mjSvg.match(/width="([^"]*)"/)
     const hMatch = mjSvg.match(/height="([^"]*)"/)
-    if (!vbMatch) continue
-
-    const vb = vbMatch[1].split(' ').map(Number) // [minX, minY, w, h]
-    const wEx = parseFloat(wMatch[1]) // width in ex
-    const hEx = parseFloat(hMatch[1]) // height in ex
-
-    // Original <text> attributes
-    const x = parseFloat(parseAttr(hit.attrs, 'x') || '0')
-    const y = parseFloat(parseAttr(hit.attrs, 'y') || '0')
-    const dy = parseFloat(parseAttr(hit.attrs, 'dy') || '0')
-    const fontSize = parseFloat(parseAttr(hit.attrs, 'font-size') || '16')
-    const anchor = parseAttr(hit.attrs, 'text-anchor') || 'start'
-    const fill = parseAttr(hit.attrs, 'fill') || 'currentColor'
-
-    // 1ex ≈ 0.5em; scale MathJax ex-based dims to px at the target font-size
-    const exToPx = fontSize * 0.5
-    const pxW = wEx * exToPx
-    const pxH = hEx * exToPx
-
-    // Scale factor from viewBox units to px
-    const scaleX = pxW / vb[2]
-    const scaleY = pxH / vb[3]
-
-    // Horizontal offset based on text-anchor
-    let dx = 0
-    if (anchor === 'middle') dx = -pxW / 2
-    else if (anchor === 'end') dx = -pxW
-
-    // Vertical offset: centre the math bounding box at the node centre (y).
-    // Note: dy is a text-specific baseline shift for centering glyphs and does
-    // not apply to the pre-rendered MathJax SVG bounding box.
-    const cy = y - (vb[1] + vb[3] / 2) * scaleY
-
-    // Extract <defs> from MathJax SVG
+    if (!vbMatch) return null
+    const vb = vbMatch[1].split(' ').map(Number)
+    const wEx = parseFloat(wMatch[1])
+    const hEx = parseFloat(hMatch[1])
     const defsMatch = mjSvg.match(/<defs>([\s\S]*?)<\/defs>/)
     if (defsMatch) allDefs.push(defsMatch[1])
-
-    // Extract the <g> content (everything except <defs> and outer <svg> wrapper)
     const innerG = mjSvg
       .replace(/<svg[^>]*>/, '')
       .replace(/<\/svg>/, '')
       .replace(/<defs>[\s\S]*?<\/defs>/, '')
       .trim()
+    return { vb, wEx, hEx, innerG }
+  }
 
-    const replacement =
-      `<g transform="translate(${x + dx},${cy}) scale(${scaleX},${scaleY})"` +
-      ` fill="${fill}">${innerG}</g>`
+  for (const hit of hits) {
+    // Strip optional &quot; wrappers added by Mermaid for ["..."] labels
+    let content = hit.rawContent
+    if (content.startsWith('&quot;') && content.endsWith('&quot;')) {
+      content = content.slice(6, -6)
+    }
 
-    svg = svg.replace(hit.full, replacement)
+    // Parse attributes.
+    // dy may carry a unit (e.g. "0.35em"); preserve the raw string for <text>
+    // output and convert to px for math positioning.
+    const x = parseFloat(parseAttr(hit.attrs, 'x') || '0')
+    const y = parseFloat(parseAttr(hit.attrs, 'y') || '0')
+    const dyRaw = parseAttr(hit.attrs, 'dy') || '0'
+    const fontSize = parseFloat(parseAttr(hit.attrs, 'font-size') || '16')
+    const dyPx = dyRaw.endsWith('em')
+      ? parseFloat(dyRaw) * fontSize
+      : parseFloat(dyRaw)
+    const anchor = parseAttr(hit.attrs, 'text-anchor') || 'start'
+    const fill = parseAttr(hit.attrs, 'fill') || 'currentColor'
+
+    // Split content into text and math segments
+    const segments = []
+    let lastIdx = 0
+    const DOLLAR_RE = /\$(\$?)(.*?)\$\1/g
+    let dm
+    while ((dm = DOLLAR_RE.exec(content)) !== null) {
+      if (dm.index > lastIdx) {
+        segments.push({ type: 'text', value: content.slice(lastIdx, dm.index) })
+      }
+      segments.push({ type: 'math', tex: dm[2] })
+      lastIdx = dm.index + dm[0].length
+    }
+    if (lastIdx < content.length) {
+      segments.push({ type: 'text', value: content.slice(lastIdx) })
+    }
+    if (!segments.some((s) => s.type === 'math')) continue
+
+    // 1ex ≈ 0.5em; scale MathJax ex-based dims to px at the target font-size
+    const exToPx = fontSize * 0.5
+
+    // Pure-math fast path: entire content is a single $...$
+    if (segments.length === 1 && segments[0].type === 'math') {
+      const info = await renderTex(segments[0].tex)
+      if (!info) continue
+      const pxW = info.wEx * exToPx
+      const scaleX = pxW / info.vb[2]
+      const scaleY = (info.hEx * exToPx) / info.vb[3]
+      let dx = 0
+      if (anchor === 'middle') dx = -pxW / 2
+      else if (anchor === 'end') dx = -pxW
+      const cy = y - (info.vb[1] + info.vb[3] / 2) * scaleY
+      const replacement =
+        `<g transform="translate(${x + dx},${cy}) scale(${scaleX},${scaleY})"` +
+        ` fill="${fill}">${info.innerG}</g>`
+      svg = svg.replace(hit.full, replacement)
+      continue
+    }
+
+    // Inline math: compute widths for each segment
+    const rendered = []
+    let totalWidth = 0
+    for (const seg of segments) {
+      if (seg.type === 'text') {
+        const w = estimateTextWidth(seg.value, fontSize)
+        rendered.push({ type: 'text', value: seg.value, width: w })
+        totalWidth += w
+      } else {
+        const info = await renderTex(seg.tex)
+        if (!info) {
+          // Fallback: keep raw $...$ as plain text
+          const fallback = '$' + seg.tex + '$'
+          const w = estimateTextWidth(fallback, fontSize)
+          rendered.push({ type: 'text', value: fallback, width: w })
+          totalWidth += w
+          continue
+        }
+        const pxW = info.wEx * exToPx
+        rendered.push({
+          type: 'math',
+          width: pxW,
+          vb: info.vb,
+          scaleX: pxW / info.vb[2],
+          scaleY: (info.hEx * exToPx) / info.vb[3],
+          innerG: info.innerG,
+        })
+        totalWidth += pxW
+      }
+    }
+
+    // Anchor offset so the combined group is positioned correctly
+    let anchorOff = 0
+    if (anchor === 'middle') anchorOff = -totalWidth / 2
+    else if (anchor === 'end') anchorOff = -totalWidth
+
+    // Build replacement SVG group with positioned text + math
+    const fontFamily = parseAttr(hit.attrs, 'font-family')
+    const domBaseline = parseAttr(hit.attrs, 'dominant-baseline')
+    let commonAttrs = ` y="${y}"`
+    if (dyPx) commonAttrs += ` dy="${dyRaw}"`
+    commonAttrs += ` font-size="${fontSize}"`
+    if (fontFamily) commonAttrs += ` font-family="${fontFamily}"`
+    if (domBaseline) commonAttrs += ` dominant-baseline="${domBaseline}"`
+    commonAttrs += ` fill="${fill}"`
+
+    let parts = ''
+    let curX = x + anchorOff
+    for (const seg of rendered) {
+      if (seg.type === 'text') {
+        parts += `<text x="${curX}"${commonAttrs} text-anchor="start">${seg.value}</text>`
+      } else {
+        // Align math baseline (MathJax y=0) with text baseline (y + dyPx).
+        // The inner scale(1,-1) flips the y-axis but leaves y=0 at the origin,
+        // so translate y = text baseline gives correct alignment.
+        const ty = y + dyPx
+        parts += `<g transform="translate(${curX},${ty}) scale(${seg.scaleX},${seg.scaleY})" fill="${fill}">${seg.innerG}</g>`
+      }
+      curX += seg.width
+    }
+    svg = svg.replace(hit.full, `<g>${parts}</g>`)
   }
 
   // Merge collected MathJax <defs> into the root SVG <defs>
