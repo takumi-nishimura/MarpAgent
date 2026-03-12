@@ -136,16 +136,6 @@ function buildSlidePlan(brief) {
     });
   }
 
-  slides.push({
-    title: "Close and next action",
-    takeaway: action.replace(
-      /^What the audience should think, decide, or do after the talk:\s*/i,
-      "",
-    ),
-    layoutHint: "decision summary with 2-3 next steps",
-    overflowRisk: estimateOverflowRisk(action),
-  });
-
   return slides;
 }
 
