@@ -1,0 +1,62 @@
+@layer utilities {
+  .text-xl5 {
+    font-size: 3em;
+  }
+  .text-xl4 {
+    font-size: 2.25em;
+  }
+  .text-xl3 {
+    font-size: 1.875em;
+  }
+  .text-xl2 {
+    font-size: 1.5em;
+  }
+  .text-xl {
+    font-size: 1.25em;
+  }
+  .text-lg {
+    font-size: 1.125em;
+  }
+  .text-sm {
+    font-size: 0.875em;
+  }
+  .text-xs {
+    font-size: 0.75em;
+  }
+  .text-xs2 {
+    font-size: 0.625em;
+  }
+  .text-xs3 {
+    font-size: 0.5em;
+  }
+
+  /* Utility classes for emphasis */
+  .underline {
+    text-decoration: underline;
+    text-decoration-color: var(--color-deck-blue);
+  }
+
+  .marker {
+    background: linear-gradient(transparent 60%, var(--color-deck-yellow) 60%);
+  }
+}
+
+/* Emphasis styling */
+em {
+  font-style: normal;
+  background: linear-gradient(
+    transparent 70%,
+    color-mix(in srgb, var(--color-em) 40%, transparent) 70%
+  );
+}
+
+strong {
+  color: var(--color-strong);
+  font-weight: 500;
+}
+
+mark {
+  background-color: var(--color-deck-yellow);
+  color: var(--color-deck-black);
+  padding: 0 0.2em;
+}

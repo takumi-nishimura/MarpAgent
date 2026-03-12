@@ -1,0 +1,113 @@
+/* Dracula - https://draculatheme.com */
+section.dracula,
+section.title.dracula {
+  --bg: #282a36;
+  --fg: #f8f8f2;
+  --fg-muted: #6272a4;
+  --highlight: #bd93f9;
+  /* Emphasis colors */
+  --color-em: #f1fa8c; /* Yellow */
+  --color-strong: #ff79c6; /* Pink */
+}
+
+/* Dracula theme: use light logo for dark background */
+section.title.dracula header {
+  background-image: var(--logos-light);
+}
+section:not(.title).dracula header::after {
+  background-image: var(--logos-light);
+}
+
+/* One Dark Pro */
+section.one-dark,
+section.title.one-dark {
+  --bg: #282c34;
+  --fg: #abb2bf;
+  --fg-muted: #5c6370;
+  --highlight: #61afef;
+  /* Emphasis colors */
+  --color-em: #e5c07b; /* Yellow */
+  --color-strong: #e06c75; /* Red */
+}
+
+/* One Dark theme: use light logo for dark background */
+section.title.one-dark header {
+  background-image: var(--logos-light);
+}
+section:not(.title).one-dark header::after {
+  background-image: var(--logos-light);
+}
+
+/* Nord - https://nordtheme.com */
+section.nord,
+section.title.nord {
+  --bg: #2e3440;
+  --fg: #eceff4;
+  --fg-muted: #4c566a;
+  --highlight: #88c0d0;
+  /* Emphasis colors */
+  --color-em: #ebcb8b; /* Yellow */
+  --color-strong: #bf616a; /* Red */
+}
+
+/* Nord theme: use light logo for dark background */
+section.title.nord header {
+  background-image: var(--logos-light);
+}
+section:not(.title).nord header::after {
+  background-image: var(--logos-light);
+}
+
+/* Neogaia - inspired by Marp's Gaia theme */
+section.neogaia,
+section.title.neogaia {
+  --bg: #455a64; /* Dark blue-gray (gaia invert mode) */
+  --fg: #fff8e1; /* Warm white */
+  --fg-muted: #b0bec5; /* Light gray for muted text */
+  --highlight: #d1e8ff; /* Light blue for header gradient */
+
+  /* Emphasis colors */
+  --color-em: #ff6; /* Bright yellow (matches old-deck) */
+  --color-strong: #ffeb3b; /* Bright yellow */
+}
+
+/* Neogaia with invert - light mode */
+section.neogaia.invert,
+section.title.neogaia.invert {
+  --bg: #fff8e1; /* Warm white background */
+  --fg: #455a64; /* Dark blue-gray text */
+  --fg-muted: #607d8b; /* Darker gray for muted text */
+  --highlight: #0288d1; /* Darker blue for header gradient */
+
+  /* Emphasis colors for light background */
+  --color-em: #bf8700; /* Darker yellow for visibility */
+  --color-strong: #d97706; /* Orange for better contrast */
+}
+
+/* Neogaia theme: use light logo for dark background (default) */
+section.title.neogaia header {
+  background-image: var(--logos-light);
+}
+section:not(.title).neogaia header::after {
+  background-image: var(--logos-light);
+}
+
+/* Neogaia invert: use dark logo for light background */
+section.title.neogaia.invert header {
+  background-image: var(--logos-dark);
+}
+section:not(.title).neogaia.invert header::after {
+  background-image: var(--logos-dark);
+}
+
+/* GitHub Light */
+section.github-light,
+section.title.github-light {
+  --bg: #ffffff;
+  --fg: #24292f;
+  --fg-muted: #57606a;
+  --highlight: #0969da;
+  /* Emphasis colors */
+  --color-em: #bf8700; /* Yellow-orange */
+  --color-strong: #cf222e; /* Red */
+}

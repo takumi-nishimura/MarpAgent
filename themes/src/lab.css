@@ -1,0 +1,23 @@
+/*! @theme lab */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
+@import "tailwindcss";
+
+/* Import shared partials */
+@import "./_shared/_base.css";
+@import "./_shared/_colors.css";
+@import "./_shared/_typography.css";
+@import "./_shared/_layouts.css";
+@import "./_shared/_callouts.css";
+@import "./_shared/_code.css";
+@import "./_shared/_colorschemes.css";
+
+/* lab theme specific settings (add as needed) */
+
+/* Presenter cursor (laser pointer) settings */
+section {
+  --bespoke-marp-cursor-size: 6px;
+  --bespoke-marp-cursor-color: #FF5C31;
+  --bespoke-marp-cursor-glow: rgba(255, 92, 49, 0.5);
+  --bespoke-marp-cursor-duration: 0.35s;
+  --bespoke-marp-cursor-idle: 0.75s;
+}

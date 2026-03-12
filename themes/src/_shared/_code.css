@@ -1,0 +1,191 @@
+/* Inline code styling - use transparent overlay like gaia */
+code {
+  background-color: rgba(128, 128, 128, 0.2);
+  font-size: 0.8em;
+  font-family: "Source Code Pro", monospace;
+  padding: 0.1em 0.3em;
+  border-radius: 0.2em;
+}
+
+/* Code blocks (pre > code) */
+pre {
+  background-color: rgba(128, 128, 128, 0.15);
+  border-radius: 0.5em;
+  padding: 0.8em 1em;
+  overflow-x: auto;
+}
+
+pre > code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Named code blocks */
+code[name] {
+  position: relative;
+  margin-top: 44px;
+  padding-top: 4px;
+}
+
+code[name]::before {
+  position: absolute;
+  top: -44px;
+  left: 0;
+  padding: 0.25em 0.75em;
+  border-top-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  content: attr(name);
+  font-size: 0.75em;
+  background: rgba(128, 128, 128, 0.2);
+}
+
+/* ===== Syntax Highlighting (highlight.js) ===== */
+
+/* Light mode - GitHub inspired */
+section pre code .hljs-comment,
+section pre code .hljs-quote {
+  color: #6a737d;
+  font-style: italic;
+}
+
+section pre code .hljs-keyword,
+section pre code .hljs-selector-tag {
+  color: #d73a49;
+}
+
+section pre code .hljs-string,
+section pre code .hljs-doctag,
+section pre code .hljs-template-variable,
+section pre code .hljs-variable,
+section pre code .hljs-template-tag {
+  color: #032f62;
+}
+
+section pre code .hljs-number,
+section pre code .hljs-literal,
+section pre code .hljs-type,
+section pre code .hljs-params,
+section pre code .hljs-link {
+  color: #005cc5;
+}
+
+section pre code .hljs-function,
+section pre code .hljs-title {
+  color: #6f42c1;
+}
+
+section pre code .hljs-tag,
+section pre code .hljs-name,
+section pre code .hljs-attribute {
+  color: #22863a;
+}
+
+section pre code .hljs-built_in,
+section pre code .hljs-builtin-name {
+  color: #e36209;
+}
+
+section pre code .hljs-meta {
+  color: #735c0f;
+}
+
+section pre code .hljs-deletion {
+  color: #b31d28;
+  background-color: #ffeef0;
+}
+
+section pre code .hljs-addition {
+  color: #22863a;
+  background-color: #f0fff4;
+}
+
+/* Dark mode (invert) - One Dark inspired */
+section.invert pre code .hljs-comment,
+section.invert pre code .hljs-quote,
+section.dracula pre code .hljs-comment,
+section.dracula pre code .hljs-quote,
+section.one-dark pre code .hljs-comment,
+section.one-dark pre code .hljs-quote,
+section.nord pre code .hljs-comment,
+section.nord pre code .hljs-quote {
+  color: #7f848e;
+  font-style: italic;
+}
+
+section.invert pre code .hljs-keyword,
+section.invert pre code .hljs-selector-tag,
+section.dracula pre code .hljs-keyword,
+section.dracula pre code .hljs-selector-tag,
+section.one-dark pre code .hljs-keyword,
+section.one-dark pre code .hljs-selector-tag,
+section.nord pre code .hljs-keyword,
+section.nord pre code .hljs-selector-tag {
+  color: #c678dd;
+}
+
+section.invert pre code .hljs-string,
+section.invert pre code .hljs-doctag,
+section.invert pre code .hljs-template-variable,
+section.invert pre code .hljs-variable,
+section.invert pre code .hljs-template-tag,
+section.dracula pre code .hljs-string,
+section.dracula pre code .hljs-doctag,
+section.one-dark pre code .hljs-string,
+section.one-dark pre code .hljs-doctag,
+section.nord pre code .hljs-string,
+section.nord pre code .hljs-doctag {
+  color: #98c379;
+}
+
+section.invert pre code .hljs-number,
+section.invert pre code .hljs-literal,
+section.invert pre code .hljs-type,
+section.invert pre code .hljs-params,
+section.invert pre code .hljs-link,
+section.dracula pre code .hljs-number,
+section.dracula pre code .hljs-literal,
+section.one-dark pre code .hljs-number,
+section.one-dark pre code .hljs-literal,
+section.nord pre code .hljs-number,
+section.nord pre code .hljs-literal {
+  color: #d19a66;
+}
+
+section.invert pre code .hljs-function,
+section.invert pre code .hljs-title,
+section.dracula pre code .hljs-function,
+section.dracula pre code .hljs-title,
+section.one-dark pre code .hljs-function,
+section.one-dark pre code .hljs-title,
+section.nord pre code .hljs-function,
+section.nord pre code .hljs-title {
+  color: #61afef;
+}
+
+section.invert pre code .hljs-tag,
+section.invert pre code .hljs-name,
+section.invert pre code .hljs-attribute,
+section.dracula pre code .hljs-tag,
+section.dracula pre code .hljs-name,
+section.one-dark pre code .hljs-tag,
+section.one-dark pre code .hljs-name,
+section.nord pre code .hljs-tag,
+section.nord pre code .hljs-name {
+  color: #e06c75;
+}
+
+section.invert pre code .hljs-built_in,
+section.invert pre code .hljs-builtin-name,
+section.dracula pre code .hljs-built_in,
+section.one-dark pre code .hljs-built_in,
+section.nord pre code .hljs-built_in {
+  color: #e6c07b;
+}
+
+section.invert pre code .hljs-meta,
+section.dracula pre code .hljs-meta,
+section.one-dark pre code .hljs-meta,
+section.nord pre code .hljs-meta {
+  color: #56b6c2;
+}

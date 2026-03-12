@@ -1,0 +1,82 @@
+{
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "prettier.configPath": ".prettierrc.json",
+  "markdown.marp.html": "all",
+  "markdown.marp.themes": ["./themes/lab.css"],
+  "markdownlint.config": {
+    "MD007": {
+      "indent": 4
+    },
+    "MD024": false,
+    "MD032": false,
+    "MD033": false,
+    "MD036": false,
+    "MD045": false,
+    "MD060": false
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["class[\\w-]*=\"([^\"]*)\"", "(?:^|\\s)([^\\s]*)"]
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "entity.name.tag",
+        "settings": {
+          "foreground": "#8080808a"
+        }
+      },
+      {
+        "scope": "entity.other.attribute-name.html",
+        "settings": {
+          "foreground": "#8080808a"
+        }
+      },
+      {
+        "scope": "punctuation.definition.tag.begin.html",
+        "settings": {
+          "foreground": "#8080808a"
+        }
+      },
+      {
+        "scope": "punctuation.definition.tag.end.html",
+        "settings": {
+          "foreground": "#8080808a"
+        }
+      },
+      {
+        "scope": "punctuation.definition.string.begin.html",
+        "settings": {
+          "foreground": "#8080808a"
+        }
+      },
+      {
+        "scope": "punctuation.separator.key-value.html",
+        "settings": {
+          "foreground": "#8080808a"
+        }
+      },
+      {
+        "scope": "source.css",
+        "settings": {
+          "foreground": "#8080808a"
+        }
+      },
+      {
+        "scope": "string.quoted.double.html",
+        "settings": {
+          "foreground": "#3b94b78a"
+        }
+      }
+    ]
+  },
+  "cSpell.words": [
+    "Hime"
+  ]
+}

@@ -1,0 +1,60 @@
+@theme {
+  --color-deck-white: #fff;
+  --color-deck-black: #202228;
+  --color-deck-gray: #7f7f7f;
+  --color-deck-red: #f55;
+  --color-deck-blue: #38f;
+  --color-deck-light-blue: #61dbfb;
+  --color-deck-green: #2eab7f;
+  --color-deck-yellow: rgb(209, 198, 0);
+  --color-deck-orange: #f80;
+  --color-deck-cyan: #0cc;
+  --color-deck-pink: #f5a;
+  --color-deck-purple: #673ab8;
+
+  /* Callout colors */
+  --color-note: #316dca;
+  --color-tip: #347d39;
+  --color-important: #8256d0;
+  --color-warning: #cc9d35;
+  --color-caution: #c93c37;
+}
+
+@layer utilities {
+  .white {
+    color: var(--color-deck-white) !important;
+  }
+  .black {
+    color: var(--color-deck-black) !important;
+  }
+  .gray {
+    color: var(--color-deck-gray) !important;
+  }
+  .red {
+    color: var(--color-deck-red) !important;
+  }
+  .blue {
+    color: var(--color-deck-blue) !important;
+  }
+  .light-blue {
+    color: var(--color-deck-light-blue) !important;
+  }
+  .green {
+    color: var(--color-deck-green) !important;
+  }
+  .yellow {
+    color: var(--color-deck-yellow) !important;
+  }
+  .orange {
+    color: var(--color-deck-orange) !important;
+  }
+  .cyan {
+    color: var(--color-deck-cyan) !important;
+  }
+  .pink {
+    color: var(--color-deck-pink) !important;
+  }
+  .purple {
+    color: var(--color-deck-purple) !important;
+  }
+}
