@@ -30,7 +30,8 @@ Content excluded from counting: `<style>`, `<script>`, `<div class="footnote">` 
 
 | Rule | Trigger | Remediation |
 | :--- | :------ | :---------- |
-| `overflow-risk` | Body > 600 chars or >= 10 text lines or >= 12 top-level bullets | Split slide |
+| `visual-overflow` | Rendered slide content overflows viewport (pixel-accurate, supersedes `overflow-risk`) | Split slide |
+| `overflow-risk` | Body > 600 chars or >= 10 text lines or >= 12 top-level bullets (heuristic fallback) | Split slide |
 | `dense-bullets` | >= 9 top-level bullets | Split slide |
 | `long-heading` | Heading >= 48 chars (warn) / >= 70 (error) | Shorten to < 48; move detail to body |
 | `typography-drift` | `.text-xs2` or `.text-xs3` in use | Remove class; split content instead |

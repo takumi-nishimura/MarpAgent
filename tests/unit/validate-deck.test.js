@@ -9,6 +9,7 @@ const {
   splitSlides,
   validateDeckFile,
   validateDeckMarkdown,
+  validateDeckWithVisualCheck,
   writeArtifacts,
 } = require("../../src/deck-validator");
 
@@ -118,6 +119,42 @@ test("validator flags overflow-risk for very long body lines", () => {
     result.findings.some((f) => f.ruleId === "overflow-risk"),
     true,
   );
+});
+
+test("validateDeckWithVisualCheck produces visual-overflow findings for heavy slide", async () => {
+  const deckPath = fixture("overflow-heavy-slide.md");
+  const result = await validateDeckWithVisualCheck(deckPath);
+
+  const visualFindings = result.findings.filter(
+    (f) => f.ruleId === "visual-overflow",
+  );
+  assert.equal(
+    visualFindings.length > 0,
+    true,
+    "Should have visual-overflow findings",
+  );
+  assert.match(visualFindings[0].title, /overflows by/);
+});
+
+test("validateDeckWithVisualCheck removes heuristic overflow-risk when visual detects overflow", async () => {
+  const deckPath = fixture("overflow-heavy-slide.md");
+  const result = await validateDeckWithVisualCheck(deckPath);
+
+  const overflowRisk = result.findings.filter(
+    (f) => f.ruleId === "overflow-risk",
+  );
+  const visualOverflow = result.findings.filter(
+    (f) => f.ruleId === "visual-overflow",
+  );
+
+  // If visual overflow detected that slide, heuristic overflow-risk should be removed for it
+  for (const vo of visualOverflow) {
+    assert.equal(
+      overflowRisk.some((or) => or.slide === vo.slide),
+      false,
+      `overflow-risk should be removed for slide ${vo.slide} when visual-overflow is present`,
+    );
+  }
 });
 
 test("validator writes report artifacts and uses injected screenshot exporter", () => {

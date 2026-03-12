@@ -382,11 +382,61 @@ function validateDeckFile(deckPath, options = {}) {
   };
 }
 
+/**
+ * Validate a deck with both heuristic rules and pixel-accurate visual overflow detection.
+ * Falls back to heuristic-only if Playwright is unavailable.
+ */
+async function validateDeckWithVisualCheck(deckPath, options = {}) {
+  const { measureVisualOverflow } = require("./visual-overflow");
+
+  const markdown = fs.readFileSync(deckPath, "utf8");
+  const result = validateDeckMarkdown(markdown);
+
+  const overflows = await measureVisualOverflow(deckPath);
+
+  const visualSlides = new Set(overflows.map((o) => o.slideNumber));
+
+  // Remove heuristic overflow-risk findings for slides where visual measurement ran
+  if (overflows.length > 0) {
+    result.findings = result.findings.filter(
+      (f) => !(f.ruleId === "overflow-risk" && visualSlides.has(f.slide)),
+    );
+  }
+
+  // Add visual-overflow findings
+  for (const overflow of overflows) {
+    result.findings.push(
+      buildFinding(
+        { number: overflow.slideNumber },
+        "visual-overflow",
+        "warning",
+        `Slide content overflows by ${overflow.overflowPx}px (${overflow.scrollHeight}px content in ${overflow.clientHeight}px viewport).`,
+        "Reduce content, split into multiple slides, or adjust layout to fit within the slide area.",
+      ),
+    );
+  }
+
+  // Sort findings by slide number for consistent output
+  result.findings.sort((a, b) => a.slide - b.slide);
+
+  const artifacts = writeArtifacts(result, {
+    deckPath,
+    reportDir: options.reportDir,
+    imageExporter: options.imageExporter,
+  });
+
+  return {
+    ...result,
+    artifacts,
+  };
+}
+
 module.exports = {
   defaultImageExporter,
   formatSummary,
   splitSlides,
   validateDeckFile,
   validateDeckMarkdown,
+  validateDeckWithVisualCheck,
   writeArtifacts,
 };

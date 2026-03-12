@@ -1,5 +1,9 @@
 const path = require("node:path");
-const { formatSummary, validateDeckFile } = require("../src/deck-validator");
+const {
+  formatSummary,
+  validateDeckFile,
+  validateDeckWithVisualCheck,
+} = require("../src/deck-validator");
 
 function parseArgs(argv) {
   const args = [...argv];
@@ -31,11 +35,17 @@ function parseArgs(argv) {
   };
 }
 
-function main() {
+async function main() {
   const { deckPath, reportDir } = parseArgs(process.argv.slice(2));
 
   try {
-    const result = validateDeckFile(deckPath, { reportDir });
+    let result;
+    try {
+      result = await validateDeckWithVisualCheck(deckPath, { reportDir });
+    } catch {
+      result = validateDeckFile(deckPath, { reportDir });
+    }
+
     process.stdout.write(formatSummary(deckPath, result));
 
     if (reportDir) {
