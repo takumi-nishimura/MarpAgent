@@ -56,8 +56,9 @@ style: |
 | `npx marpx decks/<name>/slide.md -v` | Validate slide.md |
 | `npx marpx decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |
 | `npx marpx decks/<name>/slide.md` | Serve with live reload |
-| `npx marpx decks/<name>/slide.md -p` | Single-shot preview |
-| `npx marpx decks/<name>/slide.md --overview` | Thumbnail overview |
+| `npx marpx decks/<name>/slide.md --screenshot <page>` | Screenshot a slide to `/tmp` (headless) |
+| `npx marpx decks/<name>/slide.md -p` | Single-shot preview (opens browser) |
+| `npx marpx decks/<name>/slide.md --overview` | Thumbnail overview (opens browser) |
 | `npx marpx decks/<name>/slide.md --pdf` | Export to PDF |
 | `npx marpx --theme` | Build all themes |
 | `npx marpx --theme lab` | Build lab theme only |

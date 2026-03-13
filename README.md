@@ -46,6 +46,7 @@ npx marpx decks/my-talk/slide.md -v
 | `npx marpx -n decks/<path>` | Scaffold a new deck |
 | `npx marpx <brief.md> --outline` | Generate outline |
 | `npx marpx <slide.md>` | Serve with live reload |
+| `npx marpx <slide.md> --screenshot <page>` | Screenshot a slide to `/tmp` |
 | `npx marpx <slide.md> -p` | Single-shot preview |
 | `npx marpx <slide.md> --overview` | Thumbnail overview |
 | `npx marpx <slide.md> --pdf` | Export to PDF |

@@ -2,6 +2,7 @@
 const { parseArgs } = require("node:util");
 const fs = require("node:fs");
 const path = require("node:path");
+const os = require("node:os");
 const { execFileSync, spawn } = require("node:child_process");
 
 const repoRoot = path.resolve(__dirname, "..");
@@ -15,6 +16,7 @@ Options:
   -p, --preview            Single-shot preview (like marp --preview)
   --overview               Open in overview mode
   --pdf                    Export to PDF
+  --screenshot <page>      Screenshot a slide (1-based displayed page)
   -v, --validate           Validate deck
   -n, --new                Create new deck
   --outline                Generate outline from brief
@@ -32,6 +34,7 @@ Examples:
   marpx decks/2025/talk/slide.md -p         Single-shot preview
   marpx decks/2025/talk/slide.md --overview Overview mode
   marpx decks/2025/talk/slide.md --pdf      Export PDF
+  marpx decks/2025/talk/slide.md --screenshot 5  Screenshot slide 5
   marpx decks/2025/talk/slide.md -v         Validate
   marpx -n decks/2025/talk                  New deck
   marpx decks/2025/talk/brief.md --outline  Generate outline
@@ -49,6 +52,7 @@ try {
       preview: { type: "boolean", short: "p", default: false },
       overview: { type: "boolean", default: false },
       pdf: { type: "boolean", default: false },
+      screenshot: { type: "string" },
       validate: { type: "boolean", short: "v", default: false },
       new: { type: "boolean", short: "n", default: false },
       outline: { type: "boolean", default: false },
@@ -75,7 +79,7 @@ if (values.help) {
 }
 
 // Determine mode from flags (default: serve)
-const modes = ["preview", "overview", "pdf", "validate", "new", "outline", "theme"].filter(
+const modes = ["preview", "overview", "pdf", "screenshot", "validate", "new", "outline", "theme"].filter(
   (m) => values[m],
 );
 
@@ -165,6 +169,49 @@ switch (mode) {
   case "overview":
     runScript("preview-overview.js", positionals);
     break;
+
+  case "screenshot": {
+    if (positionals.length === 0) {
+      console.error("Error: file path required for --screenshot");
+      process.exit(1);
+    }
+
+    const ssDeckPath = path.resolve(positionals[0]);
+    const displayedPage = Number(values.screenshot);
+
+    if (!Number.isInteger(displayedPage) || displayedPage < 1) {
+      console.error("Error: --screenshot requires a positive integer page number");
+      process.exit(1);
+    }
+
+    const { findSlideIdByDisplayedPage } = require("../src/marp-pagination");
+    const { renderToHtml, screenshotSlide } = require("../src/visual-overflow");
+
+    const entry = findSlideIdByDisplayedPage(ssDeckPath, configPath, displayedPage);
+    // Marp assigns id="1", id="2", … to sections, so fall back to the
+    // slide number when pagination metadata is absent.
+    const slideId = entry ? entry.slideId : String(displayedPage);
+
+    const { htmlPath, tempRoot } = renderToHtml(ssDeckPath);
+
+    screenshotSlide(htmlPath, slideId)
+      .then((buffer) => {
+        const screenshotPath = path.join(
+          os.tmpdir(),
+          `marpx-screenshot-${path.basename(ssDeckPath, ".md")}-p${displayedPage}.png`,
+        );
+        fs.writeFileSync(screenshotPath, buffer);
+        process.stdout.write(screenshotPath + "\n");
+      })
+      .catch((err) => {
+        console.error(`Error: ${err.message}`);
+        process.exit(1);
+      })
+      .finally(() => {
+        fs.rmSync(tempRoot, { recursive: true, force: true });
+      });
+    break;
+  }
 
   case "pdf": {
     if (positionals.length === 0) {

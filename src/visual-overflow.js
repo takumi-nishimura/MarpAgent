@@ -168,10 +168,36 @@ async function measureVisualOverflow(deckPath) {
   }
 }
 
+/**
+ * Take a screenshot of a single slide by its section id attribute.
+ * Returns a PNG Buffer.
+ */
+async function screenshotSlide(htmlPath, slideId) {
+  const playwright = require("playwright");
+  const browser = await playwright.chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
+
+    const section = await page.$(`section[id="${slideId}"]`);
+    if (!section) {
+      throw new Error(
+        `Slide section "${slideId}" not found in rendered HTML.`,
+      );
+    }
+
+    return await section.screenshot();
+  } finally {
+    await browser.close();
+  }
+}
+
 module.exports = {
   buildRenderedToMarkdownMap,
   detectHiddenSlides,
   measureOverflowInBrowser,
   measureVisualOverflow,
   renderToHtml,
+  screenshotSlide,
 };
