@@ -8,7 +8,7 @@ Three formal layout types. Every slide uses exactly one.
 
 ## title
 
-When to use: opening slide, closing slide.
+When to use: opening slide, closing slide (thank-you / contact info only). Do NOT use for summary or recap slides — use the content summary variant instead.
 
 ```markdown
 ---
@@ -63,6 +63,8 @@ When to use: single-column slides — bullet lists, prose, code, diagrams, table
 
 ### agenda variant
 
+Uses `.centered` to vertically and horizontally center the list below the heading.
+
 ```markdown
 ---
 
@@ -70,7 +72,7 @@ When to use: single-column slides — bullet lists, prose, code, diagrams, table
 
 ## Agenda
 
-<div style="display: flex; flex-direction: column; align-items: center; gap: 0.5em; margin-top: 1em;">
+<div class="centered">
 
 1. Section One
 2. Section Two
@@ -272,6 +274,6 @@ Short intro sentence.
 | Class / Element | Purpose |
 | :-------------- | :------ |
 | `.col` | Flex row container for two-column layout |
-| `.center-body-stack` | Centers content vertically and horizontally |
+| `.centered` | Centers content vertically and horizontally |
 | `.fit` | Scale element to fit available space |
 | `style="flex: N"` | Override column width ratio inside `.col` |

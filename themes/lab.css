@@ -597,11 +597,11 @@ mark {
     width: max-content;
     max-width: 100%;
   }
-  section:not(.title):has(> .center-body-stack) {
+  section:not(.title):has(> .centered) {
     display: flex;
     flex-direction: column;
   }
-  .center-body-stack {
+  .centered {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -613,16 +613,16 @@ mark {
     margin-left: auto;
     margin-right: auto;
   }
-  .center-body-stack > :first-child {
+  .centered > :first-child {
     margin-top: 0;
   }
-  .center-body-stack > :last-child {
+  .centered > :last-child {
     margin-bottom: 0;
   }
-  .center-body-stack > ol, .center-body-stack > ul {
+  .centered > ol, .centered > ul {
     margin: 0;
   }
-  .center-body-stack > .note, .center-body-stack > .tip, .center-body-stack > .important, .center-body-stack > .warning, .center-body-stack > .caution {
+  .centered > .note, .centered > .tip, .centered > .important, .centered > .warning, .centered > .caution {
     align-self: stretch;
   }
 }

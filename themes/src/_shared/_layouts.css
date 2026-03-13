@@ -30,15 +30,15 @@
     max-width: 100%;
   }
 
-  /* When a slide contains .center-body-stack, switch to flex column
+  /* When a slide contains .centered, switch to flex column
      so the centered block can fill the remaining vertical space */
-  section:not(.title):has(> .center-body-stack) {
+  section:not(.title):has(> .centered) {
     display: flex;
     flex-direction: column;
   }
 
   /* Center a content block within the body area below the header */
-  .center-body-stack {
+  .centered {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -50,21 +50,21 @@
     margin-left: auto;
     margin-right: auto;
   }
-  .center-body-stack > :first-child {
+  .centered > :first-child {
     margin-top: 0;
   }
-  .center-body-stack > :last-child {
+  .centered > :last-child {
     margin-bottom: 0;
   }
-  .center-body-stack > ol,
-  .center-body-stack > ul {
+  .centered > ol,
+  .centered > ul {
     margin: 0;
   }
-  .center-body-stack > .note,
-  .center-body-stack > .tip,
-  .center-body-stack > .important,
-  .center-body-stack > .warning,
-  .center-body-stack > .caution {
+  .centered > .note,
+  .centered > .tip,
+  .centered > .important,
+  .centered > .warning,
+  .centered > .caution {
     align-self: stretch;
   }
 }
