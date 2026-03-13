@@ -30,18 +30,25 @@
     max-width: 100%;
   }
 
+  /* When a slide contains .center-body-stack, switch to flex column
+     so the centered block can fill the remaining vertical space */
+  section:not(.title):has(> .center-body-stack) {
+    display: flex;
+    flex-direction: column;
+  }
+
   /* Center a content block within the body area below the header */
   .center-body-stack {
-    position: absolute;
-    top: calc(50% + (var(--header-height) / 2) - 44px);
-    left: 50%;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
     gap: 0.75em;
     width: max-content;
     max-width: min(100%, 720px);
-    transform: translate(-50%, -50%);
+    margin-left: auto;
+    margin-right: auto;
   }
   .center-body-stack > :first-child {
     margin-top: 0;
