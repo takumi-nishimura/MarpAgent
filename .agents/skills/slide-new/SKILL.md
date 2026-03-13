@@ -32,7 +32,8 @@ Create a new deck at `decks/$ARGUMENTS`.
    Revise `outline.md` based on feedback before proceeding.
 
 6. Read `decks/$ARGUMENTS/outline.md`. Each slide has `Layout hint: content` or `Layout hint: two-column`. Apply the matching template from the **marp-slide-types** skill.
-   - Title/close slides always use the `title` type.
+   - Opening title slides use the `title` type.
+   - Closing slides: use the `content` closing variant for recap/summary endings; use the `title` close variant only for bare "Thank you" / contact-info pages.
    - If using `--bg-gray-5` (three-column / feature-grid / summary-box), declare it in frontmatter `style:` — see **marp-components** skill.
 
 7. Author `decks/$ARGUMENTS/slide.md`:

@@ -28,7 +28,7 @@ Subtitle or author info here
 
 ### close variant
 
-Same `<!-- _class: title -->`. Use a shorter h1:
+Same `<!-- _class: title -->`. Use ONLY for a bare "Thank you" / contact-info page with no substantive content. For recap or summary closing slides, use the `content` closing variant instead. Use a shorter h1:
 
 ```markdown
 ---
@@ -93,6 +93,48 @@ Uses `.centered` to vertically and horizontally center the list below the headin
 1. Key point one
 2. Key point two
 3. Key point three
+```
+
+### closing variant
+
+When to use: final slide of a deck — summarizes key takeaways and optionally includes a call to action. Use this instead of the `title` close variant when the slide carries substantive content (recap, next steps, conclusions).
+
+```markdown
+---
+
+<!-- _paginate: skip -->
+<!-- _header: Summary -->
+
+## Key Takeaways
+
+<div class="centered">
+
+1. **First point** — brief description
+2. **Second point** — brief description
+3. **Third point** — brief description
+
+</div>
+```
+
+With call to action (requires `--bg-gray-5` in frontmatter — see marp-components skill):
+
+```markdown
+---
+
+<!-- _paginate: skip -->
+<!-- _header: Summary -->
+
+## Key Takeaways
+
+1. **First point** — brief description
+2. **Second point** — brief description
+3. **Third point** — brief description
+
+<div style="background: var(--bg-gray-5); padding: 0.4em 1em; margin-top: 1em;">
+
+Next step or call to action here.
+
+</div>
 ```
 
 ## two-column
