@@ -8,37 +8,31 @@ const {
   parseDeckAndPageArgs,
 } = require("../../src/preview-cli");
 
-const repoRoot = path.join(__dirname, "..");
-const defaultDeckPath = path.join(repoRoot, "decks", "example", "slide.md");
+const repoRoot = path.join(__dirname, "../..");
+const fixtureDeckPath = path.join(repoRoot, "fixtures", "clean-slide.md");
 
-test("parseDeckAndPageArgs defaults to the example deck", () => {
-  assert.deepEqual(
-    parseDeckAndPageArgs([], { repoRoot, defaultDeckPath }),
-    { deckPath: defaultDeckPath },
-  );
+test("parseDeckAndPageArgs requires a deck path", () => {
+  assert.throws(() => parseDeckAndPageArgs([], { repoRoot }), /Deck path is required/);
 });
 
-test("parseDeckAndPageArgs accepts a displayed page shortcut", () => {
-  assert.deepEqual(
-    parseDeckAndPageArgs(["12"], { repoRoot, defaultDeckPath }),
-    { deckPath: defaultDeckPath, displayedPage: 12 },
+test("parseDeckAndPageArgs rejects page-only shorthand", () => {
+  assert.throws(
+    () => parseDeckAndPageArgs(["12"], { repoRoot }),
+    /Deck path is required before displayed page/,
   );
 });
 
 test("parseDeckAndPageArgs resolves explicit deck paths", () => {
   assert.deepEqual(
-    parseDeckAndPageArgs(["decks/example/slide.md", "3"], {
-      repoRoot,
-      defaultDeckPath,
-    }),
-    { deckPath: defaultDeckPath, displayedPage: 3 },
+    parseDeckAndPageArgs(["fixtures/clean-slide.md", "3"], { repoRoot }),
+    { deckPath: fixtureDeckPath, displayedPage: 3 },
   );
 });
 
 test("buildDeckUrl targets the deck route and hash", () => {
   assert.equal(
-    buildDeckUrl("http://localhost:8080", defaultDeckPath, "4"),
-    "http://localhost:8080/slide.md#4",
+    buildDeckUrl("http://localhost:8080", fixtureDeckPath, "4"),
+    "http://localhost:8080/clean-slide.md#4",
   );
 });
 

@@ -12,6 +12,12 @@ const {
 } = require("../../src/preview-runtime");
 
 const repoRoot = path.join(__dirname, "../..");
+const configPath = path.join(repoRoot, "marp.config.js");
+const paginationFixtureDeckPath = path.join(
+  repoRoot,
+  "fixtures",
+  "paginate-skip-slide.md",
+);
 
 test("getMarpBin returns platform-appropriate binary path", () => {
   const bin = getMarpBin(repoRoot);
@@ -57,22 +63,26 @@ test("resolveRequestedSlideId returns undefined when displayedPage is undefined"
 });
 
 test("resolveRequestedSlideId throws when page is not found", () => {
-  const deckPath = path.join(repoRoot, "decks", "example", "slide.md");
-  const configPath = path.join(repoRoot, "marp.config.js");
-
   assert.throws(
-    () => resolveRequestedSlideId(deckPath, configPath, 9999, repoRoot),
+    () =>
+      resolveRequestedSlideId(
+        paginationFixtureDeckPath,
+        configPath,
+        9999,
+        repoRoot,
+      ),
     /was not found/,
   );
 });
 
 test("resolveRequestedSlideId returns slide id for valid page", () => {
-  const deckPath = path.join(repoRoot, "decks", "example", "slide.md");
-  const configPath = path.join(repoRoot, "marp.config.js");
-
-  const slideId = resolveRequestedSlideId(deckPath, configPath, 1, repoRoot);
-  assert.equal(typeof slideId, "string");
-  assert.ok(slideId.length > 0);
+  const slideId = resolveRequestedSlideId(
+    paginationFixtureDeckPath,
+    configPath,
+    1,
+    repoRoot,
+  );
+  assert.equal(slideId, "2");
 });
 
 test("forwardChildSignals forwards SIGINT to child", () => {

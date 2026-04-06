@@ -6,17 +6,14 @@ function parsePositiveInteger(value) {
   return parsed >= 1 ? parsed : undefined;
 }
 
-function parseDeckAndPageArgs(args, { repoRoot, defaultDeckPath }) {
+function parseDeckAndPageArgs(args, { repoRoot }) {
   if (args.length === 0) {
-    return { deckPath: defaultDeckPath };
+    throw new Error("Deck path is required.");
   }
 
   const firstAsPage = parsePositiveInteger(args[0]);
-  if (firstAsPage !== undefined) {
-    if (args.length > 1) {
-      throw new Error("Too many arguments.");
-    }
-    return { deckPath: defaultDeckPath, displayedPage: firstAsPage };
+  if (firstAsPage !== undefined && args.length === 1) {
+    throw new Error("Deck path is required before displayed page.");
   }
 
   const deckPath = path.resolve(repoRoot, args[0]);

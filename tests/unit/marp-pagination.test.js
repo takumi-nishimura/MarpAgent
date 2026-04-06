@@ -9,6 +9,11 @@ const {
 
 const repoRoot = path.join(__dirname, "../..");
 const configPath = path.join(repoRoot, "marp.config.js");
+const paginationFixtureDeckPath = path.join(
+  repoRoot,
+  "fixtures",
+  "paginate-skip-slide.md",
+);
 
 test("extractSlidePageMap skips slides without displayed pagination", () => {
   const html = [
@@ -24,10 +29,11 @@ test("extractSlidePageMap skips slides without displayed pagination", () => {
 });
 
 test("findSlideIdByDisplayedPage accounts for paginate skip", () => {
-  const deckPath = path.join(repoRoot, "decks", "example", "slide.md");
-
-  assert.deepEqual(findSlideIdByDisplayedPage(deckPath, configPath, 1), {
-    slideId: "2",
-    displayedPage: 1,
-  });
+  assert.deepEqual(
+    findSlideIdByDisplayedPage(paginationFixtureDeckPath, configPath, 1),
+    {
+      slideId: "2",
+      displayedPage: 1,
+    },
+  );
 });

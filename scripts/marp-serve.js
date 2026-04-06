@@ -15,14 +15,10 @@ const {
 } = require("../src/preview-runtime");
 
 const repoRoot = path.resolve(__dirname, "..");
-const defaultDeckPath = path.join(repoRoot, "decks", "example", "slide.md");
 const configPath = path.join(repoRoot, "marp.config.js");
 
 function printUsage() {
-  console.error(
-    "Usage: npm run preview -- [deck.md] [displayed-page]\n" +
-      "       npm run preview -- [displayed-page]",
-  );
+  console.error("Usage: npm run preview -- <deck.md> [displayed-page]");
 }
 
 function main() {
@@ -31,7 +27,6 @@ function main() {
   try {
     parsedArgs = parseDeckAndPageArgs(process.argv.slice(2), {
       repoRoot,
-      defaultDeckPath,
     });
   } catch (error) {
     printUsage();
