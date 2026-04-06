@@ -1,6 +1,6 @@
 ---
 name: marp-components
-description: Content component patterns for MarpAgent slides: callouts (note/tip/important/warning/caution), figures, videos, Mermaid diagrams, footnotes, summary boxes, and typography rules. Use when adding any of these elements to a slide.
+description: "Content component patterns for MarpAgent slides: callouts (note/tip/important/warning/caution), figures, videos, Mermaid diagrams, footnotes, summary boxes, and typography rules. Use when adding any of these elements to a slide."
 user-invocable: false
 ---
 
@@ -101,7 +101,7 @@ Video:
 
 Wrap in a width-constrained div:
 
-```markdown
+````markdown
 <div style="width: 90%">
 
 ```mermaid
@@ -110,7 +110,7 @@ graph LR
 ```
 
 </div>
-```
+````
 
 ## Footnotes
 
