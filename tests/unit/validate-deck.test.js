@@ -5,6 +5,7 @@ const os = require("node:os");
 const path = require("node:path");
 
 const {
+  buildSarifReport,
   formatSummary,
   splitSlides,
   validateDeckFile,
@@ -120,6 +121,27 @@ test("formatSummary reports zero findings cleanly", () => {
   assert.match(summary, /Slides: 2/);
   assert.match(summary, /Findings: 0/);
   assert.equal(summary.includes("[warning]"), false);
+});
+
+test("buildSarifReport emits SARIF with rule and result entries", () => {
+  const report = buildSarifReport("fixtures/clean-slide.md", {
+    slideCount: 1,
+    findings: [
+      {
+        slide: 1,
+        ruleId: "dense-bullets",
+        severity: "warning",
+        title: "Too many bullets.",
+        suggestion: "Split across slides.",
+      },
+    ],
+  });
+
+  assert.equal(report.version, "2.1.0");
+  assert.equal(report.runs.length, 1);
+  assert.equal(report.runs[0].tool.driver.rules.length, 1);
+  assert.equal(report.runs[0].results.length, 1);
+  assert.equal(report.runs[0].results[0].ruleId, "dense-bullets");
 });
 
 test("writeArtifacts returns empty when no reportDir given", () => {

@@ -52,13 +52,19 @@ npx marpx decks/my-talk/slide.md -v
 | `npx marpx <slide.md> -p` | Single-shot preview |
 | `npx marpx <slide.md> --overview` | Thumbnail overview |
 | `npx marpx <slide.md> --pdf` | Export to PDF |
+| `npx marpx <slide.md> --lint` | Lint with deck validator rules |
+| `npx marpx <slide.md> --lint --autofix` | Apply safe autofixes, then lint again |
 | `npx marpx <slide.md> -v` | Validate |
+| `npx marpx <slide.md> -v --strict` | Validate and fail if visual check falls back |
+| `npx marpx <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |
 | `npx marpx <slide.md> -v --report-dir out/<name>` | Validate with report |
+| `npx marpx --doctor` | Run environment diagnostics |
 | `npx marpx --theme` | Build all themes |
 | `npx marpx --theme lab` | Build a single theme |
 | `npx marpx --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
 | `npm run quality:gate` | Run unit tests + fixture validation gate |
+| `npm run quality:gate:strict` | Enforce visual checks + strict e2e policy |
 | `npm run test:e2e` | Run Playwright CLI smoke tests |
 
 ## File Structure

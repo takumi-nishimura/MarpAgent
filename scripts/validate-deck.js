@@ -1,6 +1,7 @@
 const path = require("node:path");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 const {
+  buildSarifReport,
   formatSummary,
   validateDeckFile,
   validateDeckWithVisualCheck,
@@ -21,8 +22,9 @@ function parseArgs(argv) {
   let deckPath = null;
   let reportDir = null;
   let strictVisual = process.env.MARP_AGENT_REQUIRE_VISUAL === "1";
+  let format = "text";
   const usage =
-    "Usage: npx marpx <path/to/slide.md> -v [--report-dir <dir>] [--strict-visual]";
+    "Usage: npx marpx <path/to/slide.md> -v [--report-dir <dir>] [--strict-visual] [--format text|json|sarif]";
   const fail = (message) => {
     console.error(usage);
     console.error(message);
@@ -43,10 +45,24 @@ function parseArgs(argv) {
       strictVisual = true;
       continue;
     }
+    if (arg === "--format") {
+      const value = args.shift();
+      if (!value || value.startsWith("--")) {
+        fail("Option --format requires one of: text, json, sarif.");
+      }
+      if (!["text", "json", "sarif"].includes(value)) {
+        fail(`Unsupported --format value: ${value}`);
+      }
+      format = value;
+      continue;
+    }
 
     if (!deckPath) {
       deckPath = arg;
+      continue;
     }
+
+    fail(`Unexpected argument: ${arg}`);
   }
 
   if (!deckPath) {
@@ -57,11 +73,12 @@ function parseArgs(argv) {
     deckPath: path.resolve(deckPath),
     reportDir: reportDir ? path.resolve(reportDir) : null,
     strictVisual,
+    format,
   };
 }
 
 async function main() {
-  const { deckPath, reportDir, strictVisual } = parseArgs(process.argv.slice(2));
+  const { deckPath, reportDir, strictVisual, format } = parseArgs(process.argv.slice(2));
 
   try {
     let result;
@@ -115,15 +132,32 @@ async function main() {
       result = validateDeckFile(deckPath, { reportDir });
     }
 
-    process.stdout.write(formatSummary(deckPath, result));
+    if (format === "text") {
+      process.stdout.write(formatSummary(deckPath, result));
 
-    if (reportDir) {
-      for (const filePath of result.artifacts.reportFiles) {
-        process.stdout.write(`Artifact: ${filePath}\n`);
+      if (reportDir) {
+        for (const filePath of result.artifacts.reportFiles) {
+          process.stdout.write(`Artifact: ${filePath}\n`);
+        }
+        for (const filePath of result.artifacts.screenshotFiles) {
+          process.stdout.write(`Screenshot: ${filePath}\n`);
+        }
       }
-      for (const filePath of result.artifacts.screenshotFiles) {
-        process.stdout.write(`Screenshot: ${filePath}\n`);
-      }
+    } else if (format === "json") {
+      process.stdout.write(
+        `${JSON.stringify(
+          {
+            deckPath,
+            ...result,
+          },
+          null,
+          2,
+        )}\n`,
+      );
+    } else {
+      process.stdout.write(
+        `${JSON.stringify(buildSarifReport(deckPath, result), null, 2)}\n`,
+      );
     }
 
     process.exit(result.findings.length > 0 ? 1 : 0);

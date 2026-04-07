@@ -19,10 +19,16 @@ Options:
   -p, --preview            Single-shot preview (like marp --preview)
   --overview               Open in overview mode
   --pdf                    Export to PDF
+  --lint                   Lint deck and report findings
+  --autofix                Apply safe autofixes (for --lint)
+  --doctor                 Run environment diagnostics
+  --strict                 Enable strict mode for selected commands
   --screenshot <page>      Screenshot a slide (1-based displayed page)
   -v, --validate           Validate deck
   -n, --new                Create new deck
   --outline                Generate outline from brief
+  --no-strict-brief        Allow incomplete brief schema for --outline
+  --format <fmt>           Output format: text, json, sarif
   --theme [name]           Build theme(s) (all if name omitted)
   -w, --watch              Watch mode (for --theme)
   --output <path>          Output path (for --outline)
@@ -37,10 +43,13 @@ Examples:
   marpx decks/2025/talk/slide.md -p         Single-shot preview
   marpx decks/2025/talk/slide.md --overview Overview mode
   marpx decks/2025/talk/slide.md --pdf      Export PDF
+  marpx decks/2025/talk/slide.md --lint     Lint
+  marpx decks/2025/talk/slide.md --lint --autofix  Lint with safe autofix
   marpx decks/2025/talk/slide.md --screenshot 5  Screenshot slide 5
   marpx decks/2025/talk/slide.md -v         Validate
   marpx -n decks/2025/talk                  New deck
   marpx decks/2025/talk/brief.md --outline  Generate outline
+  marpx --doctor                             Environment diagnostics
   marpx --theme                             Build all themes
   marpx --theme lab                         Build lab theme only
   marpx --theme -w                          Watch all themes`);
@@ -56,9 +65,15 @@ try {
       overview: { type: "boolean", default: false },
       pdf: { type: "boolean", default: false },
       screenshot: { type: "string" },
+      lint: { type: "boolean", default: false },
+      autofix: { type: "boolean", default: false },
+      doctor: { type: "boolean", default: false },
+      strict: { type: "boolean", default: false },
       validate: { type: "boolean", short: "v", default: false },
       new: { type: "boolean", short: "n", default: false },
       outline: { type: "boolean", default: false },
+      "no-strict-brief": { type: "boolean", default: false },
+      format: { type: "string" },
       theme: { type: "boolean", default: false },
       watch: { type: "boolean", short: "w", default: false },
       output: { type: "string" },
@@ -82,7 +97,18 @@ if (values.help) {
 }
 
 // Determine mode from flags (default: serve)
-const modes = ["preview", "overview", "pdf", "screenshot", "validate", "new", "outline", "theme"].filter(
+const modes = [
+  "preview",
+  "overview",
+  "pdf",
+  "screenshot",
+  "lint",
+  "doctor",
+  "validate",
+  "new",
+  "outline",
+  "theme",
+].filter(
   (m) => values[m],
 );
 
@@ -92,6 +118,21 @@ if (modes.length > 1) {
 }
 
 const mode = modes[0] || "serve";
+
+if (values.autofix && mode !== "lint") {
+  console.error("Error: --autofix can only be used with --lint");
+  process.exit(1);
+}
+
+if (values["no-strict-brief"] && mode !== "outline") {
+  console.error("Error: --no-strict-brief can only be used with --outline");
+  process.exit(1);
+}
+
+if (values.format && !["text", "json", "sarif"].includes(values.format)) {
+  console.error(`Error: unsupported --format value "${values.format}"`);
+  process.exit(1);
+}
 
 // Dispatch to existing scripts
 function runScript(scriptName, args) {
@@ -230,7 +271,28 @@ switch (mode) {
     if (values["report-dir"]) {
       args.push("--report-dir", values["report-dir"]);
     }
+    if (values.strict) {
+      args.push("--strict-visual");
+    }
+    if (values.format) {
+      args.push("--format", values.format);
+    }
     runScript("validate-deck.js", args);
+    break;
+  }
+
+  case "lint": {
+    const args = [...positionals];
+    if (values.autofix) {
+      args.push("--autofix");
+    }
+    if (values.strict) {
+      args.push("--strict-visual");
+    }
+    if (values.format) {
+      args.push("--format", values.format);
+    }
+    runScript("lint-deck.js", args);
     break;
   }
 
@@ -243,7 +305,22 @@ switch (mode) {
     if (values.output) {
       args.push("--output", values.output);
     }
+    if (values["no-strict-brief"]) {
+      args.push("--no-strict-brief");
+    }
     runScript("generate-outline.js", args);
+    break;
+  }
+
+  case "doctor": {
+    const args = [];
+    if (values.format && ["text", "json"].includes(values.format)) {
+      args.push("--format", values.format);
+    } else if (values.format && !["text", "json"].includes(values.format)) {
+      console.error('Error: --doctor supports only --format "text" or "json"');
+      process.exit(1);
+    }
+    runScript("doctor.js", args);
     break;
   }
 

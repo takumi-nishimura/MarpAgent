@@ -8,6 +8,8 @@
   },
   "scripts": {
     "test": "node scripts/run-node-tests.js",
+    "doctor": "node scripts/doctor.js",
+    "lint:deck": "node scripts/lint-deck.js",
     "validate:fixtures": "node scripts/ci-validate-fixtures.js",
     "quality:gate": "npm test && npm run validate:fixtures && npm run test:e2e",
     "quality:gate:strict": "MARP_AGENT_REQUIRE_VISUAL=1 MARP_AGENT_STRICT_E2E=1 npm run quality:gate",

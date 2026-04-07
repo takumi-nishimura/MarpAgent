@@ -34,7 +34,10 @@ function parseArgs(argv) {
 
     if (!briefPath) {
       briefPath = arg;
+      continue;
     }
+
+    fail(`Unexpected argument: ${arg}`);
   }
 
   if (!briefPath) {

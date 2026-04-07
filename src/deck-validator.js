@@ -231,6 +231,71 @@ function formatSummary(deckPath, result) {
   return `${lines.join("\n")}\n`;
 }
 
+function toSarifLevel(severity) {
+  if (severity === "error") return "error";
+  if (severity === "warning") return "warning";
+  return "note";
+}
+
+function buildSarifReport(deckPath, result) {
+  const artifactUri = deckPath
+    ? path.relative(process.cwd(), deckPath)
+    : "stdin";
+  const rules = new Map();
+
+  for (const finding of result.findings) {
+    if (!rules.has(finding.ruleId)) {
+      rules.set(finding.ruleId, {
+        id: finding.ruleId,
+        name: finding.ruleId,
+        shortDescription: { text: finding.title },
+        fullDescription: { text: finding.suggestion },
+      });
+    }
+  }
+
+  return {
+    version: "2.1.0",
+    $schema: "https://json.schemastore.org/sarif-2.1.0.json",
+    runs: [
+      {
+        tool: {
+          driver: {
+            name: "marpx-validator",
+            rules: [...rules.values()],
+          },
+        },
+        results: result.findings.map((finding) => ({
+          ruleId: finding.ruleId,
+          level: toSarifLevel(finding.severity),
+          message: {
+            text: `Slide ${finding.slide}: ${finding.title} ${finding.suggestion}`,
+          },
+          locations: [
+            {
+              physicalLocation: {
+                artifactLocation: { uri: artifactUri },
+                region: { startLine: 1 },
+              },
+              logicalLocations: [
+                {
+                  name: `Slide ${finding.slide}`,
+                  fullyQualifiedName: `slide.${finding.slide}`,
+                },
+              ],
+            },
+          ],
+          properties: {
+            slide: finding.slide,
+            severity: finding.severity,
+            suggestion: finding.suggestion,
+          },
+        })),
+      },
+    ],
+  };
+}
+
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
@@ -431,6 +496,7 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
 
 module.exports = {
   defaultImageExporter,
+  buildSarifReport,
   formatSummary,
   splitSlides,
   validateDeckFile,
