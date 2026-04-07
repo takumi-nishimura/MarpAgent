@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
-const { execFileSync } = require("node:child_process");
+const { execFileSync, spawnSync } = require("node:child_process");
 
 const repoRoot = path.resolve(__dirname, "../..");
 const scriptPath = path.join(repoRoot, "scripts", "new-deck.js");
@@ -51,4 +51,27 @@ test("new-deck scaffolds brief and slide templates", () => {
   } finally {
     fs.rmSync(deckDir, { recursive: true, force: true });
   }
+});
+
+test("new-deck rejects path traversal outside decks directory", () => {
+  const result = spawnSync(process.execPath, [scriptPath, "../tmp/escape"], {
+    cwd: repoRoot,
+    env: process.env,
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /must be inside decks\//);
+});
+
+test("new-deck rejects absolute paths", () => {
+  const absolutePath = path.join(os.tmpdir(), `marpx-abs-${Date.now()}`);
+  const result = spawnSync(process.execPath, [scriptPath, absolutePath], {
+    cwd: repoRoot,
+    env: process.env,
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /must be inside decks\//);
 });

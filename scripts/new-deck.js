@@ -17,13 +17,34 @@ if (!name) {
 
 // Resolve all paths from repository root
 const repoRoot = path.resolve(__dirname, "..");
-const deckDir = path.join(repoRoot, name);
 const templateDir = path.join(repoRoot, "template");
+const decksRoot = path.join(repoRoot, "decks");
 const templateFiles = [
   ["brief.md", "brief.md"],
   ["slide.md", "slide.md"],
 ];
 const date = new Date().toISOString().split("T")[0];
+
+function resolveDeckDir(inputPath) {
+  const deckDir = path.resolve(repoRoot, inputPath);
+  const relativeToRepo = path.relative(repoRoot, deckDir);
+  const relativeToDecks = path.relative(decksRoot, deckDir);
+
+  const outsideRepo =
+    relativeToRepo.startsWith("..") || path.isAbsolute(relativeToRepo);
+  const outsideDecks =
+    relativeToDecks.startsWith("..") || path.isAbsolute(relativeToDecks);
+
+  if (outsideRepo || outsideDecks || deckDir === decksRoot) {
+    console.error("Error: deck path must be inside decks/ under repository root.");
+    console.error(`Received: ${inputPath}`);
+    process.exit(1);
+  }
+
+  return deckDir;
+}
+
+const deckDir = resolveDeckDir(name);
 
 // Check if templates exist
 for (const [templateName] of templateFiles) {
