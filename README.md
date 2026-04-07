@@ -35,8 +35,17 @@ npx marpx decks/my-talk/brief.md --outline
 
 # 4. Author decks/my-talk/slide.md
 
-# 5. Validate
+# 5. Live preview while editing
+npx marpx decks/my-talk/slide.md
+
+# 6. Validate
 npx marpx decks/my-talk/slide.md -v
+
+# 7. Single-shot preview (optional)
+npx marpx decks/my-talk/slide.md -p
+
+# 8. Open thumbnail overview (optional)
+npx marpx decks/my-talk/slide.md --overview
 ```
 
 ## Commands

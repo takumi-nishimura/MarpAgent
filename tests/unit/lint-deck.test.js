@@ -30,6 +30,10 @@ marp: true
       {
         cwd: repoRoot,
         encoding: "utf8",
+        env: {
+          ...process.env,
+          MARP_AGENT_REQUIRE_VISUAL: "0",
+        },
       },
     );
 

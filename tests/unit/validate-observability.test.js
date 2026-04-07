@@ -18,6 +18,7 @@ function runValidate(extraArgs, extraEnv) {
       encoding: "utf8",
       env: {
         ...process.env,
+        MARP_AGENT_REQUIRE_VISUAL: "0",
         ...extraEnv,
       },
     },
