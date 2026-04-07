@@ -18,7 +18,7 @@ const repoRoot = path.resolve(__dirname, "..");
 const configPath = path.join(repoRoot, "marp.config.js");
 
 function printUsage() {
-  console.error("Usage: npm run preview -- <deck.md> [displayed-page]");
+  console.error("Usage: npx marpx <deck.md> [displayed-page]");
 }
 
 function main() {

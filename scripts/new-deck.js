@@ -4,11 +4,11 @@ const os = require("os");
 
 const name = process.argv[2];
 if (!name) {
-  console.error("Usage: npm run new <path>");
+  console.error("Usage: npx marpx -n <path>");
   console.error("Path is relative to repository root.");
   console.error("Examples:");
-  console.error("  npm run new decks/2025/presentation");
-  console.error("  npm run new decks/2026/test");
+  console.error("  npx marpx -n decks/2025/presentation");
+  console.error("  npx marpx -n decks/2026/test");
   process.exit(1);
 }
 

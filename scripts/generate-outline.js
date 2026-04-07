@@ -6,7 +6,7 @@ function parseArgs(argv) {
   let briefPath = null;
   let outputPath = null;
   const usage =
-    "Usage: npm run outline -- <path/to/brief.md> [--output <path/to/outline.md>]";
+    "Usage: npx marpx <path/to/brief.md> --outline [--output <path/to/outline.md>]";
   const fail = (message) => {
     console.error(usage);
     console.error(message);

@@ -45,7 +45,9 @@ npx marpx decks/my-talk/slide.md -v
 | :------ | :---------- |
 | `npx marpx -n decks/<path>` | Scaffold a new deck |
 | `npx marpx <brief.md> --outline` | Generate outline |
+| `npx marpx <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
 | `npx marpx <slide.md>` | Serve with live reload |
+| `npx marpx <slide.md> <page>` | Serve and open at displayed page |
 | `npx marpx <slide.md> --screenshot <page>` | Screenshot a slide to `/tmp` |
 | `npx marpx <slide.md> -p` | Single-shot preview |
 | `npx marpx <slide.md> --overview` | Thumbnail overview |
@@ -53,6 +55,8 @@ npx marpx decks/my-talk/slide.md -v
 | `npx marpx <slide.md> -v` | Validate |
 | `npx marpx <slide.md> -v --report-dir out/<name>` | Validate with report |
 | `npx marpx --theme` | Build all themes |
+| `npx marpx --theme lab` | Build a single theme |
+| `npx marpx --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
 
 ## File Structure

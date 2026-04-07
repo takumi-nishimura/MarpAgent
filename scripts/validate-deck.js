@@ -10,7 +10,7 @@ function parseArgs(argv) {
   let deckPath = null;
   let reportDir = null;
   const usage =
-    "Usage: npm run deck:validate -- <path/to/slide.md> [--report-dir <dir>]";
+    "Usage: npx marpx <path/to/slide.md> -v [--report-dir <dir>]";
   const fail = (message) => {
     console.error(usage);
     console.error(message);
