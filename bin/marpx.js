@@ -4,6 +4,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 const os = require("node:os");
 const { execFileSync, spawn } = require("node:child_process");
+const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
+
+enforceSupportedNodeRuntime();
 
 const repoRoot = path.resolve(__dirname, "..");
 const scriptsDir = path.join(repoRoot, "scripts");

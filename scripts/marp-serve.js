@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 
 const {
   buildDeckUrl,
@@ -16,6 +17,8 @@ const {
 
 const repoRoot = path.resolve(__dirname, "..");
 const configPath = path.join(repoRoot, "marp.config.js");
+
+enforceSupportedNodeRuntime();
 
 function printUsage() {
   console.error("Usage: npx marpx <deck.md> [displayed-page]");

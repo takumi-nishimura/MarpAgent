@@ -1,9 +1,12 @@
 const path = require("node:path");
+const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 const {
   formatSummary,
   validateDeckFile,
   validateDeckWithVisualCheck,
 } = require("../src/deck-validator");
+
+enforceSupportedNodeRuntime();
 
 function parseArgs(argv) {
   const args = [...argv];

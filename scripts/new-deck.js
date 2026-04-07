@@ -1,6 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
+
+enforceSupportedNodeRuntime();
 
 const name = process.argv[2];
 if (!name) {

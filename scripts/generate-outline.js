@@ -1,5 +1,8 @@
 const path = require("node:path");
 const { generateOutlineFile } = require("../src/outline");
+const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
+
+enforceSupportedNodeRuntime();
 
 function parseArgs(argv) {
   const args = [...argv];

@@ -13,6 +13,9 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": ">=25 <26"
+  },
   "volta": {
     "node": "25.6.0",
     "npm": "11.9.0"

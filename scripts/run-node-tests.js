@@ -1,6 +1,9 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
+
+enforceSupportedNodeRuntime();
 
 const repoRoot = path.resolve(__dirname, "..");
 const testDir = path.join(repoRoot, "tests", "unit");

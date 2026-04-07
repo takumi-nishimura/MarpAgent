@@ -15,7 +15,7 @@ brief.md → outline.md → slide.md → HTML / PDF / PPTX
 
 ## Prerequisites
 
-- Node.js >= 20
+- Node.js 25.x (pinned by `volta.node` in `package.json`)
 - `npx marpx` (bundled via `npm install`)
 
 ```bash
