@@ -8,7 +8,7 @@ Three formal layout types. Every slide uses exactly one.
 
 ## title
 
-When to use: opening slide, closing slide (thank-you / contact info only). Do NOT use for summary or recap slides — use the content summary variant instead.
+When to use: opening slide. Do NOT use for summary or recap slides — use the content summary variant instead.
 
 ```markdown
 ---
@@ -22,25 +22,6 @@ When to use: opening slide, closing slide (thank-you / contact info only). Do NO
 <div class="author">
 
 Subtitle or author info here
-
-</div>
-```
-
-### close variant
-
-Same `<!-- _class: title -->`. Use ONLY for a bare "Thank you" / contact-info page with no substantive content. For recap or summary closing slides, use the `content` closing variant instead. Use a shorter h1:
-
-```markdown
----
-
-<!-- _paginate: skip -->
-<!-- _class: title -->
-
-# Thank you!
-
-<div class="author">
-
-Closing note or URL
 
 </div>
 ```
@@ -97,7 +78,7 @@ Uses `.centered` to vertically and horizontally center the list below the headin
 
 ### closing variant
 
-When to use: final slide of a deck — summarizes key takeaways and optionally includes a call to action. Use this instead of the `title` close variant when the slide carries substantive content (recap, next steps, conclusions).
+When to use: final slide of a deck — summarizes key takeaways and optionally includes a call to action (recap, next steps, conclusions).
 
 ```markdown
 ---
