@@ -6,6 +6,7 @@ const { spawn, spawnSync } = require("node:child_process");
 
 const repoRoot = path.resolve(__dirname, "../..");
 const marpxBin = path.join(repoRoot, "bin", "marpx.js");
+const strictE2E = process.env.MARP_AGENT_STRICT_E2E === "1";
 
 function runMarpx(args) {
   return spawnSync(process.execPath, [marpxBin, ...args], {
@@ -78,6 +79,9 @@ test("screenshot smoke", () => {
   const result = runMarpx(["fixtures/clean-slide.md", "--screenshot", "1"]);
 
   if (result.status !== 0 && canSkipForChromiumFailure(result.stderr)) {
+    if (strictE2E) {
+      expect(result.status, result.stderr).toBe(0);
+    }
     test.skip("Chromium is unavailable in this environment.");
     return;
   }
@@ -94,6 +98,9 @@ test("screenshot smoke", () => {
 
 test("overview smoke", async ({ browserName }, testInfo) => {
   if (browserName !== "chromium") {
+    if (strictE2E) {
+      throw new Error("Strict E2E mode requires Chromium.");
+    }
     test.skip("Smoke test targets chromium only.");
     return;
   }
@@ -125,7 +132,10 @@ test("overview smoke", async ({ browserName }, testInfo) => {
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
       });
-    } catch {
+    } catch (error) {
+      if (strictE2E) {
+        throw error;
+      }
       test.skip("Chromium is unavailable in this environment.");
       return;
     }

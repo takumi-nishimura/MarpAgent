@@ -20,8 +20,9 @@ function parseArgs(argv) {
   const args = [...argv];
   let deckPath = null;
   let reportDir = null;
+  let strictVisual = process.env.MARP_AGENT_REQUIRE_VISUAL === "1";
   const usage =
-    "Usage: npx marpx <path/to/slide.md> -v [--report-dir <dir>]";
+    "Usage: npx marpx <path/to/slide.md> -v [--report-dir <dir>] [--strict-visual]";
   const fail = (message) => {
     console.error(usage);
     console.error(message);
@@ -38,6 +39,10 @@ function parseArgs(argv) {
       reportDir = value;
       continue;
     }
+    if (arg === "--strict-visual") {
+      strictVisual = true;
+      continue;
+    }
 
     if (!deckPath) {
       deckPath = arg;
@@ -51,17 +56,19 @@ function parseArgs(argv) {
   return {
     deckPath: path.resolve(deckPath),
     reportDir: reportDir ? path.resolve(reportDir) : null,
+    strictVisual,
   };
 }
 
 async function main() {
-  const { deckPath, reportDir } = parseArgs(process.argv.slice(2));
+  const { deckPath, reportDir, strictVisual } = parseArgs(process.argv.slice(2));
 
   try {
     let result;
     try {
       result = await validateDeckWithVisualCheck(deckPath, {
         reportDir,
+        strictVisual,
         onDiagnostic: (diagnostic) => {
           emitValidationLog({
             component: "deck-validator",
@@ -71,6 +78,18 @@ async function main() {
         },
       });
     } catch (error) {
+      if (strictVisual) {
+        emitValidationLog({
+          component: "deck-validator",
+          level: "error",
+          event: "strict-visual-failed",
+          deckPath,
+          errorName: error.name,
+          errorCode: error.code,
+          errorMessage: error.message,
+        });
+        throw error;
+      }
       emitValidationLog({
         component: "deck-validator",
         level: "warning",

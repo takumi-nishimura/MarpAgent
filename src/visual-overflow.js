@@ -150,7 +150,7 @@ function buildRenderedToMarkdownMap(markdown) {
  * Returns [] if Playwright is unavailable or any error occurs.
  */
 async function measureVisualOverflow(deckPath, options = {}) {
-  const { onDiagnostic } = options;
+  const { onDiagnostic, strictVisual = false } = options;
   let tempRoot;
   try {
     if (process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE === "1") {
@@ -196,6 +196,14 @@ async function measureVisualOverflow(deckPath, options = {}) {
       deckPath,
       stack: error.stack,
     });
+    if (strictVisual) {
+      const strictError = new Error(
+        `Visual check failed in strict mode for ${deckPath}: ${error.message}`,
+      );
+      strictError.code = "VISUAL_CHECK_FAILED";
+      strictError.cause = error;
+      throw strictError;
+    }
     return [];
   } finally {
     if (tempRoot) {

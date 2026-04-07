@@ -11,9 +11,15 @@ const passFixtures = [
 const failFixtures = [
   "fixtures/comparison-slide.md",
 ];
+const strictVisual = process.env.MARP_AGENT_REQUIRE_VISUAL === "1";
 
 function runValidation(deckPath) {
-  const result = spawnSync(process.execPath, [validateScript, deckPath], {
+  const args = [validateScript, deckPath];
+  if (strictVisual) {
+    args.push("--strict-visual");
+  }
+
+  const result = spawnSync(process.execPath, args, {
     cwd: repoRoot,
     encoding: "utf8",
   });
@@ -22,6 +28,10 @@ function runValidation(deckPath) {
   if (result.stderr) process.stderr.write(result.stderr);
 
   return result.status ?? 1;
+}
+
+if (strictVisual) {
+  console.log("Fixture validation running in strict visual mode.");
 }
 
 for (const fixture of passFixtures) {

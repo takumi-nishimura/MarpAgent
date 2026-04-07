@@ -9,8 +9,10 @@
   "scripts": {
     "test": "node scripts/run-node-tests.js",
     "validate:fixtures": "node scripts/ci-validate-fixtures.js",
-    "quality:gate": "npm test && npm run validate:fixtures",
-    "test:e2e": "playwright test"
+    "quality:gate": "npm test && npm run validate:fixtures && npm run test:e2e",
+    "quality:gate:strict": "MARP_AGENT_REQUIRE_VISUAL=1 MARP_AGENT_STRICT_E2E=1 npm run quality:gate",
+    "test:e2e": "playwright test",
+    "test:e2e:strict": "MARP_AGENT_STRICT_E2E=1 playwright test"
   },
   "keywords": [],
   "author": "",

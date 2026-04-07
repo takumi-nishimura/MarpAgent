@@ -389,6 +389,7 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
 
   const overflows = await measureVisualOverflow(deckPath, {
     onDiagnostic: options.onDiagnostic,
+    strictVisual: options.strictVisual,
   });
 
   const visualSlides = new Set(overflows.map((o) => o.slideNumber));
