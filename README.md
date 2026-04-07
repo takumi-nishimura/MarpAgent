@@ -59,6 +59,7 @@ npx marpx decks/my-talk/slide.md -v
 | `npx marpx --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
 | `npm run quality:gate` | Run unit tests + fixture validation gate |
+| `npm run test:e2e` | Run Playwright CLI smoke tests |
 
 ## File Structure
 

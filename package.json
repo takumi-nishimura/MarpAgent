@@ -9,7 +9,8 @@
   "scripts": {
     "test": "node scripts/run-node-tests.js",
     "validate:fixtures": "node scripts/ci-validate-fixtures.js",
-    "quality:gate": "npm test && npm run validate:fixtures"
+    "quality:gate": "npm test && npm run validate:fixtures",
+    "test:e2e": "playwright test"
   },
   "keywords": [],
   "author": "",
