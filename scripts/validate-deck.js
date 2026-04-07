@@ -9,11 +9,22 @@ function parseArgs(argv) {
   const args = [...argv];
   let deckPath = null;
   let reportDir = null;
+  const usage =
+    "Usage: npm run deck:validate -- <path/to/slide.md> [--report-dir <dir>]";
+  const fail = (message) => {
+    console.error(usage);
+    console.error(message);
+    process.exit(1);
+  };
 
   while (args.length > 0) {
     const arg = args.shift();
     if (arg === "--report-dir") {
-      reportDir = args.shift();
+      const value = args.shift();
+      if (!value || value.startsWith("--")) {
+        fail("Option --report-dir requires a directory path.");
+      }
+      reportDir = value;
       continue;
     }
 
@@ -23,10 +34,7 @@ function parseArgs(argv) {
   }
 
   if (!deckPath) {
-    console.error(
-      "Usage: npm run deck:validate -- <path/to/slide.md> [--report-dir <dir>]",
-    );
-    process.exit(1);
+    fail("Deck path is required.");
   }
 
   return {

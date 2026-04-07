@@ -136,7 +136,12 @@ function getMimeType(filePath) {
 }
 
 function resolveStaticPath(deckDir, requestPath) {
-  const decodedPath = decodeURIComponent(requestPath);
+  let decodedPath;
+  try {
+    decodedPath = decodeURIComponent(requestPath);
+  } catch {
+    return null;
+  }
   const relativeRequestPath = decodedPath.replace(/^\/+/, "");
   const normalizedPath = path
     .normalize(relativeRequestPath)
@@ -249,6 +254,10 @@ function createServer({ deckDir, deckPath, outputPath, targetSlideId }) {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(notifyClients, 50);
       }
+    });
+    watcher.on("error", () => {
+      watcher?.close();
+      watcher = null;
     });
   } catch {
     // Fallback: clients will still use polling if fs.watch is unavailable.

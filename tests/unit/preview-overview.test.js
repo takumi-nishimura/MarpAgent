@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const crypto = require("node:crypto");
+const { EventEmitter } = require("node:events");
 const fs = require("node:fs");
 const http = require("node:http");
 const net = require("node:net");
@@ -33,6 +34,25 @@ function connectWs(port, wsPath = "/") {
       );
       resolve(client);
     });
+  });
+}
+
+function requestPath(port, requestPath) {
+  return new Promise((resolve, reject) => {
+    const request = http.request(
+      {
+        hostname: "127.0.0.1",
+        port,
+        path: requestPath,
+        method: "GET",
+      },
+      (response) => {
+        response.resume();
+        response.on("end", () => resolve(response.statusCode));
+      },
+    );
+    request.on("error", reject);
+    request.end();
   });
 }
 
@@ -221,4 +241,61 @@ test("createServer rejects WebSocket on wrong path", async () => {
 
   await new Promise((resolve) => server.close(resolve));
   fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+test("createServer returns 404 for malformed URL-encoded path and stays alive", async () => {
+  const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
+  const outputPath = path.join(tmpDir, "output.html");
+  const deckPath = path.join(tmpDir, "slide.md");
+  fs.writeFileSync(outputPath, "<html>test</html>");
+  fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
+
+  const server = createServer({
+    deckDir: tmpDir,
+    deckPath,
+    outputPath,
+    targetSlideId: undefined,
+  });
+
+  const port = await listenOnFreePort(server);
+  const malformedStatus = await requestPath(port, "/%E0%A4%A");
+  assert.equal(malformedStatus, 404);
+
+  const healthStatus = await requestPath(port, "/__marp_agent__/meta");
+  assert.equal(healthStatus, 200);
+
+  await new Promise((resolve) => server.close(resolve));
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+test("createServer survives fs.watch error events", async () => {
+  const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
+  const outputPath = path.join(tmpDir, "output.html");
+  const deckPath = path.join(tmpDir, "slide.md");
+  fs.writeFileSync(outputPath, "<html>test</html>");
+  fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
+
+  const originalWatch = fs.watch;
+  const fakeWatcher = new EventEmitter();
+  fakeWatcher.close = () => {};
+  fs.watch = () => fakeWatcher;
+
+  const server = createServer({
+    deckDir: tmpDir,
+    deckPath,
+    outputPath,
+    targetSlideId: undefined,
+  });
+
+  try {
+    const port = await listenOnFreePort(server);
+    fakeWatcher.emit("error", new Error("EMFILE"));
+
+    const status = await requestPath(port, "/__marp_agent__/meta");
+    assert.equal(status, 200);
+  } finally {
+    fs.watch = originalWatch;
+    await new Promise((resolve) => server.close(resolve));
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
 });

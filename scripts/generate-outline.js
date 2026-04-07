@@ -5,11 +5,22 @@ function parseArgs(argv) {
   const args = [...argv];
   let briefPath = null;
   let outputPath = null;
+  const usage =
+    "Usage: npm run outline -- <path/to/brief.md> [--output <path/to/outline.md>]";
+  const fail = (message) => {
+    console.error(usage);
+    console.error(message);
+    process.exit(1);
+  };
 
   while (args.length > 0) {
     const arg = args.shift();
     if (arg === "--output") {
-      outputPath = args.shift();
+      const value = args.shift();
+      if (!value || value.startsWith("--")) {
+        fail("Option --output requires a file path.");
+      }
+      outputPath = value;
       continue;
     }
 
@@ -19,10 +30,7 @@ function parseArgs(argv) {
   }
 
   if (!briefPath) {
-    console.error(
-      "Usage: npm run outline -- <path/to/brief.md> [--output <path/to/outline.md>]",
-    );
-    process.exit(1);
+    fail("Brief path is required.");
   }
 
   return {
