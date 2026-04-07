@@ -387,12 +387,16 @@ function validateDeckFile(deckPath, options = {}) {
  * Falls back to heuristic-only if Playwright is unavailable.
  */
 async function validateDeckWithVisualCheck(deckPath, options = {}) {
-  const { measureVisualOverflow } = require("./visual-overflow");
+  const { measureVisualOverflow: defaultMeasureVisualOverflow } = require("./visual-overflow");
+  const measureVisualOverflow =
+    options.measureVisualOverflow || defaultMeasureVisualOverflow;
 
   const markdown = fs.readFileSync(deckPath, "utf8");
   const result = validateDeckMarkdown(markdown);
 
-  const overflows = await measureVisualOverflow(deckPath);
+  const overflows = await measureVisualOverflow(deckPath, {
+    onDiagnostic: options.onDiagnostic,
+  });
 
   const visualSlides = new Set(overflows.map((o) => o.slideNumber));
 

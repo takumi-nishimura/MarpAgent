@@ -8,6 +8,14 @@ const {
 
 enforceSupportedNodeRuntime();
 
+const DEBUG_VALIDATION_LOGS = process.env.MARP_AGENT_DEBUG === "1";
+
+function emitValidationLog(payload) {
+  const level = payload.level || "info";
+  if (level === "debug" && !DEBUG_VALIDATION_LOGS) return;
+  process.stderr.write(`${JSON.stringify(payload)}\n`);
+}
+
 function parseArgs(argv) {
   const args = [...argv];
   let deckPath = null;
@@ -52,8 +60,39 @@ async function main() {
   try {
     let result;
     try {
-      result = await validateDeckWithVisualCheck(deckPath, { reportDir });
-    } catch {
+      result = await validateDeckWithVisualCheck(deckPath, {
+        reportDir,
+        onDiagnostic: (diagnostic) => {
+          emitValidationLog({
+            component: "deck-validator",
+            deckPath,
+            ...diagnostic,
+          });
+        },
+      });
+    } catch (error) {
+      emitValidationLog({
+        component: "deck-validator",
+        level: "warning",
+        event: "visual-validation-threw",
+        deckPath,
+        errorName: error.name,
+        errorMessage: error.message,
+      });
+      emitValidationLog({
+        component: "deck-validator",
+        level: "warning",
+        event: "heuristic-fallback",
+        deckPath,
+        reason: "validateDeckWithVisualCheck-threw",
+      });
+      emitValidationLog({
+        component: "deck-validator",
+        level: "debug",
+        event: "visual-validation-stack",
+        deckPath,
+        stack: error.stack,
+      });
       result = validateDeckFile(deckPath, { reportDir });
     }
 

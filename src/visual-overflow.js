@@ -3,6 +3,12 @@ const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 
+function emitDiagnostic(onDiagnostic, payload) {
+  if (typeof onDiagnostic === "function") {
+    onDiagnostic(payload);
+  }
+}
+
 /**
  * Render deck markdown to self-contained HTML via Marp CLI.
  * Returns the path to the generated HTML file (caller must clean up tempDir).
@@ -64,8 +70,11 @@ async function measureOverflowInBrowser(htmlPath) {
   let playwright;
   try {
     playwright = require("playwright");
-  } catch {
-    return [];
+  } catch (error) {
+    const wrapped = new Error("Playwright is not installed.");
+    wrapped.code = "PLAYWRIGHT_UNAVAILABLE";
+    wrapped.cause = error;
+    throw wrapped;
   }
 
   const browser = await playwright.chromium.launch({ headless: true });
@@ -141,9 +150,14 @@ function buildRenderedToMarkdownMap(markdown) {
  * Returns an array of { slideNumber, scrollHeight, clientHeight, overflowPx }.
  * Returns [] if Playwright is unavailable or any error occurs.
  */
-async function measureVisualOverflow(deckPath) {
+async function measureVisualOverflow(deckPath, options = {}) {
+  const { onDiagnostic } = options;
   let tempRoot;
   try {
+    if (process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE === "1") {
+      throw new Error("Forced visual check failure via MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE.");
+    }
+
     const markdown = fs.readFileSync(deckPath, "utf8");
     const rendered = renderToHtml(deckPath);
     tempRoot = rendered.tempRoot;
@@ -159,7 +173,30 @@ async function measureVisualOverflow(deckPath) {
       clientHeight: o.clientHeight,
       overflowPx: o.overflowPx,
     }));
-  } catch {
+  } catch (error) {
+    emitDiagnostic(onDiagnostic, {
+      component: "visual-check",
+      level: "warning",
+      event: "visual-check-failed",
+      deckPath,
+      errorName: error.name,
+      errorCode: error.code,
+      errorMessage: error.message,
+    });
+    emitDiagnostic(onDiagnostic, {
+      component: "visual-check",
+      level: "warning",
+      event: "heuristic-fallback",
+      deckPath,
+      reason: "visual-check-failed",
+    });
+    emitDiagnostic(onDiagnostic, {
+      component: "visual-check",
+      level: "debug",
+      event: "visual-check-stack",
+      deckPath,
+      stack: error.stack,
+    });
     return [];
   } finally {
     if (tempRoot) {
