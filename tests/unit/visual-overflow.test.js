@@ -102,6 +102,23 @@ marp: true
   assert.equal(map.length, 2);
 });
 
+test("buildRenderedToMarkdownMap keeps --- inside fenced code in one slide", () => {
+  const markdown = `---
+marp: true
+---
+
+# Slide 1
+
+\`\`\`md
+---
+\`\`\`
+`;
+
+  const map = buildRenderedToMarkdownMap(markdown);
+  assert.equal(map.length, 1);
+  assert.equal(map[0], 1);
+});
+
 test("measureVisualOverflow detects overflow on heavy slide", async (t) => {
   if (!(await supportsVisualChecks())) {
     t.skip("Visual overflow checks are unavailable in this environment.");

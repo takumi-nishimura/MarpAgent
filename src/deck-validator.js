@@ -2,17 +2,10 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
-
-function removeFrontmatter(markdown) {
-  return markdown.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
-}
+const { splitNonEmptySlides } = require("./markdown-slides");
 
 function splitSlides(markdown) {
-  const content = removeFrontmatter(markdown);
-  return content
-    .split(/\r?\n---\r?\n/g)
-    .map((raw, index) => ({ number: index + 1, raw }))
-    .filter((slide) => slide.raw.trim() !== "");
+  return splitNonEmptySlides(markdown);
 }
 
 function stripNonContent(raw) {

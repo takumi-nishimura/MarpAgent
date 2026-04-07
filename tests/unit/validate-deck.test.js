@@ -94,6 +94,24 @@ test("splitSlides strips frontmatter and filters empty slides", () => {
   assert.equal(slides[1].number, 3);
 });
 
+test("splitSlides does not split on --- inside fenced code blocks", () => {
+  const markdown = `---
+marp: true
+---
+# Slide 1
+
+\`\`\`yaml
+---
+key: value
+\`\`\`
+`;
+  const slides = splitSlides(markdown);
+
+  assert.equal(slides.length, 1);
+  assert.equal(slides[0].number, 1);
+  assert.match(slides[0].raw, /key: value/);
+});
+
 test("formatSummary reports zero findings cleanly", () => {
   const result = { slideCount: 2, findings: [] };
   const summary = formatSummary(null, result);

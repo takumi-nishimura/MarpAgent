@@ -2,6 +2,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
+const { splitSlideRawBlocks } = require("./markdown-slides");
 
 function emitDiagnostic(onDiagnostic, payload) {
   if (typeof onDiagnostic === "function") {
@@ -115,11 +116,11 @@ async function measureOverflowInBrowser(htmlPath) {
  */
 function detectHiddenSlides(markdown) {
   const hidden = new Set();
-  const content = markdown.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
-  const rawSlides = content.split(/\r?\n---\r?\n/g);
-  for (let i = 0; i < rawSlides.length; i++) {
-    if (/<!--\s*hide:\s*true\s*-->/.test(rawSlides[i])) {
-      hidden.add(i + 1);
+  const rawSlides = splitSlideRawBlocks(markdown);
+
+  for (const slide of rawSlides) {
+    if (/<!--\s*hide:\s*true\s*-->/.test(slide.raw)) {
+      hidden.add(slide.number);
     }
   }
   return hidden;
@@ -130,15 +131,13 @@ function detectHiddenSlides(markdown) {
  * Hidden slides are skipped in the rendered output.
  */
 function buildRenderedToMarkdownMap(markdown) {
-  const content = markdown.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
-  const rawSlides = content.split(/\r?\n---\r?\n/g);
+  const rawSlides = splitSlideRawBlocks(markdown);
   const hidden = detectHiddenSlides(markdown);
   const map = [];
 
-  for (let i = 0; i < rawSlides.length; i++) {
-    const slideNumber = i + 1;
-    if (!hidden.has(slideNumber) && rawSlides[i].trim() !== "") {
-      map.push(slideNumber);
+  for (const slide of rawSlides) {
+    if (!hidden.has(slide.number) && slide.raw.trim() !== "") {
+      map.push(slide.number);
     }
   }
 
