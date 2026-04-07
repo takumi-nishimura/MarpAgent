@@ -1,50 +1,56 @@
 // Subprocess script: reads Mermaid source from stdin, renders SVG,
 // post-processes $...$ / $$...$$ math via MathJax, outputs final SVG.
 
+const fs = require('node:fs')
+const Module = require('node:module')
+const path = require('node:path')
+const {
+  applyBeautifulMermaidPatch,
+  assertSupportedBeautifulMermaidVersion,
+} = require('./mermaid-patch')
+
 // Patch beautiful-mermaid in-process to support CJK character width estimation.
 // Replaces the patch-package approach: transforms the source before it enters
 // the require cache so no on-disk modification is needed.
-;(function patchBeautifulMermaid() {
+function patchBeautifulMermaid() {
   const filepath = require.resolve('beautiful-mermaid')
-  if (require.cache[filepath]) return // already loaded
+  if (require.cache[filepath]) return
 
-  let src = require('node:fs').readFileSync(filepath, 'utf8')
-  if (src.includes('_effectiveLength')) return // already patched or fix landed upstream
+  const packageJsonPath = resolvePackageJsonPath(filepath)
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+  assertSupportedBeautifulMermaidVersion(packageJson.version)
 
-  const CJK_FN =
-    'function _effectiveLength(text) {\n' +
-    '  let len = 0\n' +
-    '  for (const ch of text) {\n' +
-    '    const cp = ch.codePointAt(0)\n' +
-    '    if ((cp >= 0x2E80 && cp <= 0x9FFF) || (cp >= 0xF900 && cp <= 0xFAFF) ||\n' +
-    '        (cp >= 0xFE30 && cp <= 0xFFEF) || (cp >= 0x20000 && cp <= 0x2FA1F))\n' +
-    '      len += 1.8\n' +
-    '    else\n' +
-    '      len += 1\n' +
-    '  }\n' +
-    '  return len\n' +
-    '}\n'
+  const source = fs.readFileSync(filepath, 'utf8')
+  const patched = applyBeautifulMermaidPatch(source)
 
-  src = src
-    .replace('function estimateTextWidth(', CJK_FN + 'function estimateTextWidth(')
-    .replace(
-      'return text.length * fontSize * widthRatio;',
-      'return _effectiveLength(text) * fontSize * widthRatio;',
-    )
-    .replace(
-      'return text.length * fontSize * 0.6;',
-      'return _effectiveLength(text) * fontSize * 0.6;',
-    )
+  if (!patched.patched) {
+    return
+  }
 
-  const Module = require('node:module')
-  const m = new Module(filepath, module)
-  m.filename = filepath
-  m.paths = Module._nodeModulePaths(require('node:path').dirname(filepath))
-  m._compile(src, filepath)
-  require.cache[filepath] = m
-})()
+  const compiled = new Module(filepath, module)
+  compiled.filename = filepath
+  compiled.paths = Module._nodeModulePaths(path.dirname(filepath))
+  compiled._compile(patched.source, filepath)
+  require.cache[filepath] = compiled
+}
 
-const { renderMermaid, THEMES } = require('beautiful-mermaid')
+function resolvePackageJsonPath(entryPath) {
+  let dir = path.dirname(entryPath)
+  const root = path.parse(dir).root
+
+  while (dir !== root) {
+    const candidate = path.join(dir, 'package.json')
+    if (fs.existsSync(candidate)) {
+      const parsed = JSON.parse(fs.readFileSync(candidate, 'utf8'))
+      if (parsed.name === 'beautiful-mermaid') {
+        return candidate
+      }
+    }
+    dir = path.dirname(dir)
+  }
+
+  throw new Error('Could not resolve beautiful-mermaid package.json from module entry path.')
+}
 
 function parseAttr(attrStr, name) {
   const m = attrStr.match(new RegExp(`${name}="([^"]*)"` ))
@@ -252,6 +258,9 @@ async function postProcessMath(svg) {
 }
 
 async function main() {
+  patchBeautifulMermaid()
+  const { renderMermaid, THEMES } = require('beautiful-mermaid')
+
   let input = ''
   for await (const chunk of process.stdin) input += chunk
   const svg = await renderMermaid(input, {

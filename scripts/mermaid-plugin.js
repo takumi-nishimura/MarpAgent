@@ -7,11 +7,19 @@ const path = require('path')
 const RENDER_SCRIPT = path.join(__dirname, '..', 'src', 'mermaid-render.js')
 
 function renderMermaidSync(code) {
-  return execFileSync(process.execPath, [RENDER_SCRIPT], {
-    input: code,
-    encoding: 'utf-8',
-    timeout: 30000,
-  })
+  try {
+    return execFileSync(process.execPath, [RENDER_SCRIPT], {
+      input: code,
+      encoding: 'utf-8',
+      timeout: 30000,
+    })
+  } catch (error) {
+    const detail =
+      typeof error.stderr === 'string' && error.stderr.trim().length > 0
+        ? error.stderr.trim()
+        : error.message
+    throw new Error(`Mermaid subprocess failed: ${detail}`)
+  }
 }
 
 const marpMermaidPlugin = (md) => {
@@ -25,7 +33,7 @@ const marpMermaidPlugin = (md) => {
         const svg = renderMermaidSync(code)
         return `<div class="mermaid-diagram">${svg}</div>`
       } catch (err) {
-        console.warn('Mermaid rendering failed:', err.message)
+        console.warn(`[mermaid] render-failed: ${err.message}`)
         return defaultFence(tokens, idx, options, env, self)
       }
     }
