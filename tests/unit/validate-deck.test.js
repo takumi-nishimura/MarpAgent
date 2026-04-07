@@ -12,6 +12,7 @@ const {
   validateDeckWithVisualCheck,
   writeArtifacts,
 } = require("../../src/deck-validator");
+const { supportsVisualChecks } = require("./helpers/visual-support");
 
 function fixture(name) {
   return path.join(__dirname, "../..", "fixtures", name);
@@ -121,7 +122,12 @@ test("validator flags overflow-risk for very long body lines", () => {
   );
 });
 
-test("validateDeckWithVisualCheck produces visual-overflow findings for heavy slide", async () => {
+test("validateDeckWithVisualCheck produces visual-overflow findings for heavy slide", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
   const deckPath = fixture("overflow-heavy-slide.md");
   const result = await validateDeckWithVisualCheck(deckPath);
 
@@ -136,7 +142,12 @@ test("validateDeckWithVisualCheck produces visual-overflow findings for heavy sl
   assert.match(visualFindings[0].title, /overflows by/);
 });
 
-test("validateDeckWithVisualCheck removes heuristic overflow-risk when visual detects overflow", async () => {
+test("validateDeckWithVisualCheck removes heuristic overflow-risk when visual detects overflow", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
   const deckPath = fixture("overflow-heavy-slide.md");
   const result = await validateDeckWithVisualCheck(deckPath);
 

@@ -58,6 +58,7 @@ npx marpx decks/my-talk/slide.md -v
 | `npx marpx --theme lab` | Build a single theme |
 | `npx marpx --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
+| `npm run quality:gate` | Run unit tests + fixture validation gate |
 
 ## File Structure
 

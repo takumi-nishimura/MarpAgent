@@ -163,6 +163,10 @@ test("createServer notifies WebSocket clients on file change", async () => {
   const deckPath = path.join(tmpDir, "slide.md");
   fs.writeFileSync(outputPath, "<html>initial</html>");
   fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
+  const originalWatch = fs.watch;
+  const fakeWatcher = new EventEmitter();
+  fakeWatcher.close = () => {};
+  fs.watch = () => fakeWatcher;
 
   const server = createServer({
     deckDir: tmpDir,
@@ -171,55 +175,67 @@ test("createServer notifies WebSocket clients on file change", async () => {
     targetSlideId: undefined,
   });
 
-  const port = await listenOnFreePort(server);
-  const client = await connectWs(port, "/__marp_agent__/ws");
+  try {
+    const port = await listenOnFreePort(server);
+    const client = await connectWs(port, "/__marp_agent__/ws");
 
-  // Schedule file change so the WS frame arrives after handshake.
-  setTimeout(() => {
     fs.writeFileSync(outputPath, "<html>updated</html>");
-  }, 300);
+    fakeWatcher.emit("change", "output.html");
 
-  const buffer = await readUntil(client, hasWsFrame, 5000);
-  const payload = parseWsFrame(buffer);
-  assert.equal(JSON.parse(payload).type, "reload");
-
-  client.destroy();
-  await new Promise((resolve) => server.close(resolve));
-  fs.rmSync(tmpDir, { recursive: true, force: true });
+    const buffer = await readUntil(client, hasWsFrame, 3000);
+    const payload = parseWsFrame(buffer);
+    assert.equal(JSON.parse(payload).type, "reload");
+    client.destroy();
+  } finally {
+    fs.watch = originalWatch;
+    await new Promise((resolve) => server.close(resolve));
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
 });
 
-test("createServer notifies late WebSocket client when file already changed", async () => {
-  const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
-  const outputPath = path.join(tmpDir, "output.html");
-  const deckPath = path.join(tmpDir, "slide.md");
-  // Output does NOT exist yet (simulates waiting for first render).
-  fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
+test(
+  "createServer notifies late WebSocket client when file already changed",
+  async () => {
+    const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
+    const outputPath = path.join(tmpDir, "output.html");
+    const deckPath = path.join(tmpDir, "slide.md");
+    // Output does NOT exist yet (simulates waiting for first render).
+    fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
+    const originalWatch = fs.watch;
+    const fakeWatcher = new EventEmitter();
+    fakeWatcher.close = () => {};
+    fs.watch = () => fakeWatcher;
 
-  const server = createServer({
-    deckDir: tmpDir,
-    deckPath,
-    outputPath,
-    targetSlideId: undefined,
-  });
+    const server = createServer({
+      deckDir: tmpDir,
+      deckPath,
+      outputPath,
+      targetSlideId: undefined,
+    });
 
-  const port = await listenOnFreePort(server);
+    try {
+      const port = await listenOnFreePort(server);
 
-  // Create the output file BEFORE the WebSocket client connects.
-  fs.writeFileSync(outputPath, "<html>rendered</html>");
+      // Create the output file BEFORE the WebSocket client connects.
+      fs.writeFileSync(outputPath, "<html>rendered</html>");
+      fakeWatcher.emit("change", "output.html");
 
-  // Give fs.watch time to fire and notify (no clients yet).
-  await new Promise((resolve) => setTimeout(resolve, 200));
+      // Let the internal debounce timer run once.
+      await new Promise((resolve) => setTimeout(resolve, 80));
 
-  // Now connect the WebSocket client — it should get an immediate reload.
-  const client = await connectWs(port, "/__marp_agent__/ws");
-  const buffer = await readUntil(client, hasWsFrame, 3000);
-  const payload = parseWsFrame(buffer);
-  assert.equal(JSON.parse(payload).type, "reload");
-
-  client.destroy();
-  await new Promise((resolve) => server.close(resolve));
-  fs.rmSync(tmpDir, { recursive: true, force: true });
-});
+      // Now connect the WebSocket client — it should get an immediate reload.
+      const client = await connectWs(port, "/__marp_agent__/ws");
+      const buffer = await readUntil(client, hasWsFrame, 3000);
+      const payload = parseWsFrame(buffer);
+      assert.equal(JSON.parse(payload).type, "reload");
+      client.destroy();
+    } finally {
+      fs.watch = originalWatch;
+      await new Promise((resolve) => server.close(resolve));
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  },
+);
 
 test("createServer rejects WebSocket on wrong path", async () => {
   const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));

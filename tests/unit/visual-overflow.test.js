@@ -7,6 +7,7 @@ const {
   detectHiddenSlides,
   measureVisualOverflow,
 } = require("../../src/visual-overflow");
+const { supportsVisualChecks } = require("./helpers/visual-support");
 
 function fixture(name) {
   return path.join(__dirname, "../..", "fixtures", name);
@@ -101,7 +102,12 @@ marp: true
   assert.equal(map.length, 2);
 });
 
-test("measureVisualOverflow detects overflow on heavy slide", async () => {
+test("measureVisualOverflow detects overflow on heavy slide", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
   const deckPath = fixture("overflow-heavy-slide.md");
   const results = await measureVisualOverflow(deckPath);
 
@@ -112,7 +118,12 @@ test("measureVisualOverflow detects overflow on heavy slide", async () => {
   assert.equal(typeof results[0].clientHeight, "number");
 });
 
-test("measureVisualOverflow returns empty for clean slide", async () => {
+test("measureVisualOverflow returns empty for clean slide", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
   const deckPath = fixture("clean-slide.md");
   const results = await measureVisualOverflow(deckPath);
 
