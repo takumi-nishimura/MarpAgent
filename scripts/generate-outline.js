@@ -8,8 +8,9 @@ function parseArgs(argv) {
   const args = [...argv];
   let briefPath = null;
   let outputPath = null;
+  let strictBrief = true;
   const usage =
-    "Usage: npx marpx <path/to/brief.md> --outline [--output <path/to/outline.md>]";
+    "Usage: npx marpx <path/to/brief.md> --outline [--output <path/to/outline.md>] [--no-strict-brief]";
   const fail = (message) => {
     console.error(usage);
     console.error(message);
@@ -26,6 +27,10 @@ function parseArgs(argv) {
       outputPath = value;
       continue;
     }
+    if (arg === "--no-strict-brief") {
+      strictBrief = false;
+      continue;
+    }
 
     if (!briefPath) {
       briefPath = arg;
@@ -39,14 +44,15 @@ function parseArgs(argv) {
   return {
     briefPath: path.resolve(briefPath),
     outputPath: outputPath ? path.resolve(outputPath) : null,
+    strictBrief,
   };
 }
 
 function main() {
-  const { briefPath, outputPath } = parseArgs(process.argv.slice(2));
+  const { briefPath, outputPath, strictBrief } = parseArgs(process.argv.slice(2));
   const resolvedOutputPath =
     outputPath || path.join(path.dirname(briefPath), "outline.md");
-  generateOutlineFile(briefPath, resolvedOutputPath);
+  generateOutlineFile(briefPath, resolvedOutputPath, { strictBrief });
   console.log(`Wrote outline: ${resolvedOutputPath}`);
 }
 
