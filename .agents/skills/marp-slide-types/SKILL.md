@@ -6,6 +6,25 @@ user-invocable: false
 
 Three formal layout types. Every slide uses exactly one.
 
+## Quick Chooser
+
+Use this mapping when another skill says "apply the matching template":
+
+| Need | Template |
+| :--- | :------- |
+| Opening cover slide | `title` |
+| Standard single-column explanation | `content` |
+| Agenda slide | `content` + `agenda variant` |
+| In-section recap | `content` + `summary variant` |
+| Final recap / next steps | `content` + `closing variant` |
+| Comparison / figure + text / before-after | `two-column` |
+| Three peer columns | `two-column` + `three-column variant` |
+| 2xN card grid | `two-column` + `feature-grid variant` |
+
+If the outline says `Layout hint: content (...)`, keep the `content` base type and apply the named variant.
+If the outline says `Layout hint: title` or the slide is clearly the opening cover, use `title`.
+Use the `three-column` and `feature-grid` variants only when the outline or user request explicitly calls for that denser structure.
+
 ## title
 
 When to use: opening slide. Do NOT use for summary or recap slides — use the content summary variant instead.
