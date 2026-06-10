@@ -1,0 +1,18 @@
+%%{init:{'theme':'neutral'}}%%
+
+flowchart TD
+  OBS("$$o_t$$") --> SP
+  OBS -.-> AP
+  subgraph SP["Sync"]
+    SYNC["SQL 実行"]
+    NORM["正規化 $$[-1, 1]$$"]
+    SYNC --> NORM
+  end
+  subgraph AP["Async"]
+    ASYNC["キャッシュ更新"]
+    DECAY["減衰適用"]
+    ASYNC --> DECAY
+  end
+  NORM --> FUSE["統合"]
+  DECAY --> FUSE
+  FUSE --> ST("$$s_t$$ : Dict[str, float]")
