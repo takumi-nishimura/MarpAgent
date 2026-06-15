@@ -5,13 +5,15 @@ const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 
 enforceSupportedNodeRuntime();
 
-const name = process.argv[2];
+const rawArgs = process.argv.slice(2);
+const posterMode = rawArgs.includes("--poster");
+const name = rawArgs.find((arg) => !arg.startsWith("--"));
 if (!name) {
-  console.error("Usage: npx marpx -n <path>");
+  console.error("Usage: npx marpx -n <path> [--poster]");
   console.error("Path is relative to repository root.");
   console.error("Examples:");
   console.error("  npx marpx -n decks/2025/presentation");
-  console.error("  npx marpx -n decks/2026/test");
+  console.error("  npx marpx -n decks/2026/conf-poster --poster");
   process.exit(1);
 }
 
@@ -19,10 +21,13 @@ if (!name) {
 const repoRoot = path.resolve(__dirname, "..");
 const templateDir = path.join(repoRoot, "template");
 const decksRoot = path.join(repoRoot, "decks");
-const templateFiles = [
-  ["brief.md", "brief.md"],
-  ["slide.md", "slide.md"],
-];
+// A poster is a single full-page deck; a slide deck gets a brief + slides.
+const templateFiles = posterMode
+  ? [["poster.md", "poster.md"]]
+  : [
+      ["brief.md", "brief.md"],
+      ["slide.md", "slide.md"],
+    ];
 const date = new Date().toISOString().split("T")[0];
 
 function resolveDeckDir(inputPath) {
@@ -93,12 +98,19 @@ try {
   const symlinkType = os.platform() === "win32" ? "junction" : "dir";
   fs.symlinkSync(relativePath, sharedPath, symlinkType);
   const relativeToRepo = path.relative(repoRoot, deckDir);
-  console.log(`✓ Created: ${relativeToRepo}/`);
-  console.log(`  - brief.md`);
-  console.log(`  - slide.md`);
+  console.log(`✓ Created${posterMode ? " poster deck" : ""}: ${relativeToRepo}/`);
+  for (const [, outputName] of templateFiles) {
+    console.log(`  - ${outputName}`);
+  }
   console.log(`  - assets/img/`);
   console.log(`  - assets/video/`);
   console.log(`  - shared -> ${relativePath}`);
+  if (posterMode) {
+    console.log(`\nEdit ${relativeToRepo}/poster.md, then:`);
+    console.log(`  npx marpx ${relativeToRepo}/poster.md       # live preview`);
+    console.log(`  npx marpx ${relativeToRepo}/poster.md -v    # validate`);
+    console.log(`  npx marpx ${relativeToRepo}/poster.md --pdf # export A0 PDF`);
+  }
 } catch (err) {
   console.error(`Error creating symlink: ${err.message}`);
   if (os.platform() === "win32") {

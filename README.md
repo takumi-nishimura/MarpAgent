@@ -53,6 +53,7 @@ npx marpx decks/my-talk/slide.md --overview
 | Command | Description |
 | :------ | :---------- |
 | `npx marpx -n decks/<path>` | Scaffold a new deck |
+| `npx marpx -n decks/<path> --poster` | Scaffold a new A0 poster deck |
 | `npx marpx <brief.md> --outline` | Generate outline |
 | `npx marpx <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
 | `npx marpx <slide.md>` | Serve with live reload |
@@ -88,7 +89,7 @@ MarpAgent/
 │       ├── assets/
 │       └── shared -> ../../assets
 ├── assets/             # Shared assets (logos, fonts)
-├── themes/             # lab theme (Tailwind CSS v4)
+├── themes/             # lab (slides) + poster (A0) themes (Tailwind CSS v4)
 ├── src/                # CLI tools (outline generator, validator)
 ├── scripts/            # Test runner
 └── .agents/skills/     # AI agent authoring skills
@@ -110,6 +111,34 @@ npx marpx --theme lab   # build theme
 npx marpx --theme -w    # watch mode
 ```
 
+## Posters (A0)
+
+For conference poster sessions, the `poster` theme renders a single full-page
+A0 canvas instead of a slide sequence.
+
+```bash
+# Scaffold a poster deck (A0 portrait)
+npx marpx -n decks/my-poster --poster
+
+# Edit decks/my-poster/poster.md, then preview / validate / export
+npx marpx decks/my-poster/poster.md        # live preview
+npx marpx decks/my-poster/poster.md -v     # validate (A0 overflow check)
+npx marpx decks/my-poster/poster.md --pdf  # export A0 PDF for printing
+```
+
+- **Portrait (default):** `size: a0` in the front matter
+- **Landscape:** `size: a0-landscape`
+- **Columns:** controlled by the number of `<div class="poster-col">` blocks
+  (three for portrait, four for landscape)
+- **Cards:** `<section class="poster-section">` with an `## h2` title bar; add
+  `highlight` for a key-result card
+- Callouts, figures, tables, code, and Mermaid all work inside cards
+
+The validator skips the per-slide density heuristics for posters (a dense full
+page is expected) but still flags content that overflows the A0 page. See
+`decks/example-poster/poster.md` for a worked example and the `marp-poster`
+skill for authoring details.
+
 ## AI Agent Usage (Claude Code)
 
 Skills in `.agents/skills/` provide authoring guidance to AI coding agents:
@@ -118,9 +147,11 @@ Skills in `.agents/skills/` provide authoring guidance to AI coding agents:
 | :---- | :--- | :---------- |
 | `marp-slide-types` | reference (auto) | Slide type templates |
 | `marp-components` | reference (auto) | Callouts, figures, Mermaid, footnotes |
+| `marp-poster` | reference (auto) | A0 poster authoring (poster theme) |
 | `marp-validator` | reference (auto) | Validator rules and hard limits |
 | `/slide-new <name>` | task | Create a new deck end-to-end |
 | `/slide-add <slide.md>` | task | Add slides to an existing deck |
 | `/slide-review <name>` | task | Validate and remediate a deck |
+| `/poster-new <name>` | task | Create a new A0 poster end-to-end |
 
 See `AGENTS.md` for a quick command and directive reference.

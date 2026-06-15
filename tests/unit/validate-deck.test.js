@@ -7,6 +7,7 @@ const path = require("node:path");
 const {
   buildSarifReport,
   formatSummary,
+  isPosterDeck,
   splitSlides,
   validateDeckFile,
   validateDeckMarkdown,
@@ -70,6 +71,32 @@ test("clean slide produces no findings", () => {
 
   assert.equal(result.slideCount, 1);
   assert.equal(result.findings.length, 0);
+});
+
+test("isPosterDeck detects poster theme and A0 size directives", () => {
+  assert.equal(isPosterDeck("---\nmarp: true\ntheme: poster\n---\n# T\n"), true);
+  assert.equal(isPosterDeck("---\nmarp: true\nsize: a0\n---\n# T\n"), true);
+  assert.equal(isPosterDeck("---\nsize: a0-portrait\n---\n# T\n"), true);
+  assert.equal(isPosterDeck("---\nsize: a0-landscape\n---\n# T\n"), true);
+  assert.equal(isPosterDeck("---\nmarp: true\ntheme: lab\n---\n# T\n"), false);
+  assert.equal(isPosterDeck("---\nsize: 16:9\n---\n# T\n"), false);
+  assert.equal(isPosterDeck("# No frontmatter\n"), false);
+});
+
+test("poster decks skip slide-density heuristics", () => {
+  const bullets = Array.from({ length: 15 }, (_, i) => `- item ${i}`).join("\n");
+  const heading = "A".repeat(60);
+  const posterMarkdown = `---\nmarp: true\ntheme: poster\nsize: a0\n---\n\n# ${heading}\n\n${bullets}\n`;
+  const slideMarkdown = `---\nmarp: true\ntheme: lab\n---\n\n# ${heading}\n\n${bullets}\n`;
+
+  const posterResult = validateDeckMarkdown(posterMarkdown);
+  const slideResult = validateDeckMarkdown(slideMarkdown);
+
+  assert.equal(posterResult.poster, true);
+  assert.equal(posterResult.findings.length, 0);
+  // The same content as a normal slide deck still trips the heuristics.
+  assert.equal(slideResult.poster, false);
+  assert.equal(slideResult.findings.length > 0, true);
 });
 
 test("validator flags comparison density", () => {

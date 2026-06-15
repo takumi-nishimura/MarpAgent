@@ -53,6 +53,36 @@ test("new-deck scaffolds brief and slide templates", () => {
   }
 });
 
+test("new-deck --poster scaffolds a single poster template", () => {
+  const deckName = `decks/test-new-poster-${process.pid}-${Date.now()}`;
+  const deckDir = path.join(repoRoot, deckName);
+
+  fs.rmSync(deckDir, { recursive: true, force: true });
+
+  try {
+    execFileSync(process.execPath, [scriptPath, deckName, "--poster"], {
+      cwd: repoRoot,
+      env: process.env,
+      stdio: "pipe",
+    });
+
+    const posterPath = path.join(deckDir, "poster.md");
+
+    assert.equal(fs.existsSync(posterPath), true);
+    // A poster deck has no brief/slide/outline.
+    assert.equal(fs.existsSync(path.join(deckDir, "brief.md")), false);
+    assert.equal(fs.existsSync(path.join(deckDir, "slide.md")), false);
+    assert.equal(fs.existsSync(path.join(deckDir, "assets", "img")), true);
+
+    const poster = fs.readFileSync(posterPath, "utf8");
+    assert.match(poster, /theme: poster/);
+    assert.match(poster, /size: a0/);
+    assert.match(poster, /class="poster-columns"/);
+  } finally {
+    fs.rmSync(deckDir, { recursive: true, force: true });
+  }
+});
+
 test("new-deck rejects path traversal outside decks directory", () => {
   const result = spawnSync(process.execPath, [scriptPath, "../tmp/escape"], {
     cwd: repoRoot,

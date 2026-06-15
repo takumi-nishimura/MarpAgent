@@ -26,6 +26,7 @@ Options:
   --screenshot <page>      Screenshot a slide (1-based displayed page)
   -v, --validate           Validate deck
   -n, --new                Create new deck
+  --poster                 Scaffold an A0 poster deck (with --new)
   --outline                Generate outline from brief
   --no-strict-brief        Allow incomplete brief schema for --outline
   --format <fmt>           Output format: text, json, sarif
@@ -48,6 +49,7 @@ Examples:
   marpx decks/2025/talk/slide.md --screenshot 5  Screenshot slide 5
   marpx decks/2025/talk/slide.md -v         Validate
   marpx -n decks/2025/talk                  New deck
+  marpx -n decks/2025/poster --poster       New A0 poster deck
   marpx decks/2025/talk/brief.md --outline  Generate outline
   marpx --doctor                             Environment diagnostics
   marpx --theme                             Build all themes
@@ -71,6 +73,7 @@ try {
       strict: { type: "boolean", default: false },
       validate: { type: "boolean", short: "v", default: false },
       new: { type: "boolean", short: "n", default: false },
+      poster: { type: "boolean", default: false },
       outline: { type: "boolean", default: false },
       "no-strict-brief": { type: "boolean", default: false },
       format: { type: "string" },
@@ -126,6 +129,11 @@ if (values.autofix && mode !== "lint") {
 
 if (values["no-strict-brief"] && mode !== "outline") {
   console.error("Error: --no-strict-brief can only be used with --outline");
+  process.exit(1);
+}
+
+if (values.poster && mode !== "new") {
+  console.error("Error: --poster can only be used with --new");
   process.exit(1);
 }
 
@@ -296,9 +304,14 @@ switch (mode) {
     break;
   }
 
-  case "new":
-    runScript("new-deck.js", positionals);
+  case "new": {
+    const args = [...positionals];
+    if (values.poster) {
+      args.push("--poster");
+    }
+    runScript("new-deck.js", args);
     break;
+  }
 
   case "outline": {
     const args = [...positionals];

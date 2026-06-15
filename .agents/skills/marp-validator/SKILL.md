@@ -38,6 +38,16 @@ Content excluded from counting: `<style>`, `<script>`, `<div class="footnote">` 
 | `figure-text-density` | Image + >= 6 top-level bullets or text lines | Move text to next slide |
 | `comparison-overpacked` | Table >= 5 cols x 3 rows, or two-column with >= 10 top-level bullets | Split into two slides |
 
+## Poster Mode
+
+Decks with `theme: poster` or an `size: a0` / `a0-portrait` / `a0-landscape`
+directive are validated as a single A0 canvas. The per-slide density
+heuristics above (`dense-bullets`, `long-heading`, `figure-text-density`,
+`comparison-overpacked`, `typography-drift`, `overflow-risk`) are **skipped** —
+a dense full page is expected. The pixel-accurate `visual-overflow` check still
+runs: if content exceeds the A0 page, fix by trimming a card, rebalancing
+columns, or moving a card to another column. See the `marp-poster` skill.
+
 ## Remediation Classification
 
 For each finding, apply one action:
