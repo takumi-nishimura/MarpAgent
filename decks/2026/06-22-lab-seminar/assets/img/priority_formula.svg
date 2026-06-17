@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="86" viewBox="0 0 560 86" role="img" aria-labelledby="title desc">
+  <title id="title">優先度スコアの式</title>
+  <desc id="desc">優先度スコアは得点と残り時間を大きく，距離を小さく評価する．</desc>
+  <style>
+    text {
+      font-family: "源ノ角ゴシック", "Noto Sans CJK JP", "Hiragino Sans", sans-serif;
+      fill: #263238;
+    }
+    .main { font-size: 24px; font-weight: 600; }
+    .small { font-size: 15px; fill: #546E7A; }
+    .bar { stroke: #455A64; stroke-width: 2; }
+  </style>
+  <rect x="0" y="0" width="560" height="86" rx="8" fill="#FAFAFA" stroke="#CFD8DC"/>
+  <text class="main" x="20" y="53">P</text>
+  <text class="small" x="37" y="61">i</text>
+  <text class="main" x="52" y="53">=</text>
+  <text class="main" x="100" y="32">得点</text>
+  <text class="small" x="151" y="38">i</text>
+  <text class="small" x="162" y="20">α</text>
+  <text class="main" x="190" y="32">× 残り時間</text>
+  <text class="small" x="324" y="38">i</text>
+  <text class="small" x="335" y="20">β</text>
+  <line class="bar" x1="92" y1="45" x2="386" y2="45"/>
+  <text class="main" x="118" y="73">(1 + 距離</text>
+  <text class="small" x="233" y="78">i</text>
+  <text class="main" x="246" y="73">)</text>
+  <text class="small" x="263" y="58">γ</text>
+  <text class="small" x="410" y="35">高得点・残り時間大</text>
+  <text class="small" x="410" y="60">近いボールを選びやすい</text>
+</svg>

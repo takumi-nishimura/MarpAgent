@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="330" viewBox="0 0 1040 330" role="img" aria-labelledby="title desc">
+  <title id="title">行動読み出しの例</title>
+  <desc id="desc">合成された正負の質量場を移動とクリックに変換する例．</desc>
+  <defs>
+    <marker id="arrow-dark" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#263238"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2E7D32"/>
+    </marker>
+    <style>
+      text {
+        font-family: "源ノ角ゴシック", "Noto Sans CJK JP", "Hiragino Sans", sans-serif;
+        fill: #263238;
+      }
+      .panel-title { font-size: 22px; font-weight: 700; }
+      .label { font-size: 17px; fill: #455A64; }
+      .small { font-size: 15px; fill: #607D8B; }
+      .axis { stroke: #90A4AE; stroke-width: 2; marker-end: url(#arrow-dark); }
+      .grid { stroke: #ECEFF1; stroke-width: 1; }
+      .move { stroke: #2E7D32; stroke-width: 4; marker-end: url(#arrow-green); fill: none; }
+      .dash { stroke-dasharray: 8 6; }
+    </style>
+  </defs>
+
+  <rect width="1040" height="330" fill="#FFFFFF"/>
+
+  <rect x="24" y="24" width="585" height="280" rx="8" fill="#FAFAFA" stroke="#B0BEC5" stroke-width="2"/>
+  <text class="panel-title" x="48" y="58">複数ルールの支持・抑制を重ね合わせる</text>
+
+  <g transform="translate(70 82)">
+    <rect x="0" y="0" width="275" height="195" rx="4" fill="#FFFFFF" stroke="#CFD8DC"/>
+    <line class="grid" x1="55" y1="0" x2="55" y2="195"/>
+    <line class="grid" x1="110" y1="0" x2="110" y2="195"/>
+    <line class="grid" x1="165" y1="0" x2="165" y2="195"/>
+    <line class="grid" x1="220" y1="0" x2="220" y2="195"/>
+    <line class="grid" x1="0" y1="39" x2="275" y2="39"/>
+    <line class="grid" x1="0" y1="78" x2="275" y2="78"/>
+    <line class="grid" x1="0" y1="117" x2="275" y2="117"/>
+    <line class="grid" x1="0" y1="156" x2="275" y2="156"/>
+    <line class="axis" x1="18" y1="98" x2="257" y2="98"/>
+    <line class="axis" x1="138" y1="177" x2="138" y2="18"/>
+    <text class="small" x="245" y="88">右</text>
+    <text class="small" x="148" y="24">上</text>
+
+    <circle cx="193" cy="58" r="17" fill="#A5D6A7" stroke="#2E7D32" stroke-width="2"/>
+    <circle cx="222" cy="72" r="13" fill="#C8E6C9" stroke="#2E7D32" stroke-width="2"/>
+    <circle cx="205" cy="92" r="10" fill="#C8E6C9" stroke="#2E7D32" stroke-width="2"/>
+    <text class="small" x="210" y="48" fill="#2E7D32">支持</text>
+
+    <circle cx="82" cy="142" r="17" fill="#BBDEFB" stroke="#1565C0" stroke-width="2"/>
+    <circle cx="105" cy="158" r="12" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+    <text class="small" x="36" y="168" fill="#1565C0">抑制</text>
+
+    <circle cx="138" cy="98" r="7" fill="#263238"/>
+    <path class="move" d="M 138 98 C 155 90 171 79 190 64"/>
+    <text class="small" x="96" y="128">現在の出力</text>
+  </g>
+
+  <g transform="translate(380 96)">
+    <text class="label" x="0" y="0">移動の決まり方</text>
+    <text class="small" x="0" y="32">正の粒子の塊へ寄る</text>
+    <text class="small" x="0" y="60">負の粒子から離れる</text>
+    <rect x="0" y="92" width="175" height="66" rx="8" fill="#E8F5E9" stroke="#66BB6A" stroke-width="2"/>
+    <text class="label" x="22" y="122">出力: 右上へ移動</text>
+    <text class="small" x="22" y="148">右方向 + 上方向</text>
+  </g>
+
+  <rect x="638" y="24" width="378" height="280" rx="8" fill="#FAFAFA" stroke="#B0BEC5" stroke-width="2"/>
+  <text class="panel-title" x="662" y="58">クリックも同じ根拠から決まる</text>
+
+  <g transform="translate(670 98)">
+    <text class="label" x="0" y="0">クリックしたい強さが続く</text>
+    <text class="small" x="126" y="24" fill="#C62828">閾値を超える → クリック</text>
+    <rect x="0" y="30" width="265" height="86" rx="6" fill="#FFFFFF" stroke="#CFD8DC"/>
+    <line x1="18" y1="84" x2="247" y2="84" stroke="#90A4AE" stroke-width="2"/>
+    <line x1="188" y1="38" x2="188" y2="106" stroke="#D32F2F" stroke-width="3" class="dash"/>
+    <text class="small" x="190" y="108" fill="#D32F2F">閾値</text>
+    <rect x="42" y="72" width="23" height="12" fill="#90CAF9" stroke="#1565C0"/>
+    <rect x="78" y="62" width="23" height="22" fill="#64B5F6" stroke="#1565C0"/>
+    <rect x="114" y="50" width="23" height="34" fill="#42A5F5" stroke="#1565C0"/>
+    <rect x="150" y="39" width="23" height="45" fill="#2196F3" stroke="#1565C0"/>
+    <rect x="196" y="25" width="23" height="59" fill="#EF5350" stroke="#C62828" stroke-width="2"/>
+    <circle cx="207.5" cy="25" r="5" fill="#C62828"/>
+    <text class="small" x="10" y="126">クリック量が蓄積</text>
+  </g>
+
+  <rect x="700" y="250" width="245" height="38" rx="8" fill="#E3F2FD" stroke="#42A5F5" stroke-width="2"/>
+  <text class="label" x="728" y="275">出力: クリックする</text>
+</svg>

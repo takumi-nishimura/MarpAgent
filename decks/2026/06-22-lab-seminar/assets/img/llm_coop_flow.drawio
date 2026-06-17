@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="26.0.0">
+  <diagram name="llm_coop_flow" id="lcf-v5">
+    <mxGraphModel dx="900" dy="520" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="370">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ===== Row 1: Data sources ===== -->
+        <mxCell id="syn" value="LLM × LLM 合成協調&lt;br&gt;&lt;font style=&quot;font-size:10px&quot; color=&quot;#777&quot;&gt;多様なスタイルを低コストで生成&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;strokeWidth=1.5;fontSize=14;fontStyle=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="15" width="300" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="hum" value="Human × LLM 協調&lt;br&gt;&lt;font style=&quot;font-size:10px&quot; color=&quot;#777&quot;&gt;少数の検証データ&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=14;fontStyle=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="450" y="15" width="300" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Row 2: Behavior descriptors ===== -->
+        <mxCell id="xsyn" value="行動特性 &lt;i&gt;x&lt;/i&gt;&lt;sub&gt;syn&lt;/sub&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot; color=&quot;#666&quot;&gt;積極性 / 応答性 / 譲歩 / 摩擦 / 役割分担 / …&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=1.5;fontSize=12;fontStyle=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="280" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="xhum" value="行動特性 &lt;i&gt;x&lt;/i&gt;&lt;sub&gt;human&lt;/sub&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot; color=&quot;#666&quot;&gt;同一の定義で抽出&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=1.5;fontSize=12;fontStyle=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="490" y="100" width="220" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows: sources → descriptors -->
+        <mxCell id="a_sf" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#999;strokeWidth=1.5;endArrow=blockThin;endFill=1;endSize=6;" edge="1" parent="1" source="syn" target="xsyn">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_hf" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#999;strokeWidth=1.5;endArrow=blockThin;endFill=1;endSize=6;" edge="1" parent="1" source="hum" target="xhum">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Row 3: C2 Transfer ===== -->
+        <mxCell id="c2" value="C2: 転移検証 — &lt;i&gt;x&lt;/i&gt;&lt;sub&gt;syn&lt;/sub&gt; の方向・順位が &lt;i&gt;x&lt;/i&gt;&lt;sub&gt;human&lt;/sub&gt; で保存されるか？" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=2.5;fontSize=13;fontStyle=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="135" y="180" width="500" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows: descriptors → C2 -->
+        <mxCell id="a_sc2" value="" style="edgeStyle=none;html=1;strokeColor=#B85450;strokeWidth=2;endArrow=blockThin;endFill=1;endSize=6;exitX=0.5;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="xsyn" target="c2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_hc2" value="" style="edgeStyle=none;html=1;strokeColor=#B85450;strokeWidth=2;endArrow=blockThin;endFill=1;endSize=6;exitX=0.5;exitY=1;entryX=0.8;entryY=0;" edge="1" parent="1" source="xhum" target="c2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Row 4: Calibration → Partner matching ===== -->
+        <mxCell id="cal" value="較正&lt;br&gt;&lt;font style=&quot;font-size:9px&quot; color=&quot;#666&quot;&gt;少数の人間データで&lt;br&gt;選好モデルを学習&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#7986CB;strokeWidth=1.5;fontSize=12;fontStyle=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="205" y="260" width="150" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="sel" value="C3: パートナー適合推定&lt;br&gt;&lt;font style=&quot;font-size:9px&quot; color=&quot;#666&quot;&gt;新規参加者への&lt;br&gt;適合パートナーを推定&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#5C6BC0;strokeWidth=2;fontSize=12;fontStyle=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="430" y="260" width="185" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: C2 → cal -->
+        <mxCell id="a_cal" value="成立領域" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7986CB;strokeWidth=1.5;endArrow=blockThin;endFill=1;endSize=5;fontSize=9;fontColor=#7986CB;fontStyle=2;labelPosition=left;align=right;" edge="1" parent="1" source="c2" target="cal">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <!-- Arrow: cal → sel -->
+        <mxCell id="a_sel" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#5C6BC0;strokeWidth=1.5;endArrow=blockThin;endFill=1;endSize=6;" edge="1" parent="1" source="cal" target="sel">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Bottom annotation ===== -->
+        <mxCell id="note" value="LLM 同士の協調を人間の直接代替として扱わず，行動特性座標の転移可能性を実証的に検証する" style="text;html=1;fontSize=10;fontColor=#BBBBBB;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="335" width="660" height="16" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

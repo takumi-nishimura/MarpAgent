@@ -1,0 +1,145 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="26.0.0">
+  <diagram name="mass_field_metaphor" id="mfm-v1">
+    <mxGraphModel dx="900" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="820" pageHeight="380">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ===== Left panel: 2D action space (composed mass field) ===== -->
+        <mxCell id="space_bg" value="" style="rounded=0;fillColor=#FAFAFA;strokeColor=#666666;strokeWidth=1.5;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="40" width="440" height="320" as="geometry"/>
+        </mxCell>
+        <mxCell id="space_title" value="合成された意図の質量場 Ψ（action 空間の俯瞰）" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#444;align=left;" vertex="1" parent="1">
+          <mxGeometry x="28" y="48" width="300" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- やりたい attractor 1 -->
+        <mxCell id="attr1" value="" style="ellipse;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=2;fillOpacity=80;" vertex="1" parent="1">
+          <mxGeometry x="70" y="90" width="110" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="attr1_label" value="&lt;b&gt;ψ⁺&lt;/b&gt;&lt;br/&gt;(引力)" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#B71C1C;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="115" width="90" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- やりたい attractor 2 -->
+        <mxCell id="attr2" value="" style="ellipse;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=2;fillOpacity=80;" vertex="1" parent="1">
+          <mxGeometry x="320" y="80" width="100" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="attr2_label" value="&lt;b&gt;ψ⁺&lt;/b&gt;&lt;br/&gt;(引力)" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#B71C1C;align=center;" vertex="1" parent="1">
+          <mxGeometry x="325" y="100" width="90" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- 避けたい repeller -->
+        <mxCell id="rep1" value="" style="ellipse;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fillOpacity=80;" vertex="1" parent="1">
+          <mxGeometry x="230" y="220" width="120" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="rep1_label" value="&lt;b&gt;ψ⁻&lt;/b&gt;&lt;br/&gt;(反発)" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#0D47A1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="245" width="100" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Particle -->
+        <mxCell id="particle" value="" style="ellipse;fillColor=#222222;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="190" y="260" width="16" height="16" as="geometry"/>
+        </mxCell>
+        <!-- Trajectory arrow: particle curves up-left toward attr1, avoiding rep1 -->
+        <mxCell id="traj" value="" style="curved=1;endArrow=classic;html=1;rounded=0;strokeColor=#222;strokeWidth=2.5;fontSize=11;endFill=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="170" y="240"/>
+              <mxPoint x="145" y="200"/>
+            </Array>
+            <mxPoint x="198" y="268" as="sourcePoint"/>
+            <mxPoint x="130" y="155" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="traj_label" value="勾配に沿って転がる" style="text;html=1;fontSize=10;fontStyle=2;fontColor=#444;align=left;" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="130" height="16" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Right panels: two readouts ===== -->
+
+        <!-- Connector from space to continuous readout -->
+        <mxCell id="conn_cont" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#82B366;strokeWidth=2;endFill=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="465" y="120" as="sourcePoint"/>
+            <mxPoint x="500" y="120" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Connector from space to discrete readout -->
+        <mxCell id="conn_disc" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#6C8EBF;strokeWidth=2;endFill=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="465" y="270" as="sourcePoint"/>
+            <mxPoint x="500" y="270" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Continuous readout panel -->
+        <mxCell id="cont_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#82B366;strokeWidth=2;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="500" y="60" width="300" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cont_title" value="連続: 勾配で移動" style="text;html=1;fontSize=13;fontStyle=1;fontColor=#1B5E20;align=left;" vertex="1" parent="1">
+          <mxGeometry x="514" y="70" width="200" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="cont_desc" value="ψ⁺ に引かれ，ψ⁻ を避けて移動&lt;br/&gt;（左の粒子軌跡）" style="text;html=1;fontSize=11;fontColor=#2E7D32;align=left;" vertex="1" parent="1">
+          <mxGeometry x="514" y="92" width="280" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="cont_out" value="→ カーソル移動" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#1B5E20;align=left;" vertex="1" parent="1">
+          <mxGeometry x="514" y="160" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Discrete readout panel -->
+        <mxCell id="disc_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#6C8EBF;strokeWidth=2;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="500" y="210" width="300" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="disc_title" value="離散: 閾値発火" style="text;html=1;fontSize=13;fontStyle=1;fontColor=#0D47A1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="514" y="220" width="220" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="disc_desc" value="ψ⁺ で膜電位 u が貯まり&lt;br/&gt;閾値 θ 超で発火" style="text;html=1;fontSize=11;fontColor=#1565C0;align=left;" vertex="1" parent="1">
+          <mxGeometry x="514" y="242" width="280" height="36" as="geometry"/>
+        </mxCell>
+
+        <!-- Threshold line -->
+        <mxCell id="thresh_line" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#D32F2F;strokeWidth=1.5;dashed=1;dashPattern=4 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="290" as="sourcePoint"/>
+            <mxPoint x="660" y="290" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="thresh_label" value="θ" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#D32F2F;align=left;" vertex="1" parent="1">
+          <mxGeometry x="665" y="282" width="20" height="16" as="geometry"/>
+        </mxCell>
+
+        <!-- Membrane potential bars (rising u, then fire) -->
+        <mxCell id="bar1" value="" style="rounded=0;fillColor=#90CAF9;strokeColor=#1976D2;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="525" y="320" width="14" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="bar2" value="" style="rounded=0;fillColor=#64B5F6;strokeColor=#1976D2;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="545" y="310" width="14" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="bar3" value="" style="rounded=0;fillColor=#42A5F5;strokeColor=#1976D2;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="565" y="300" width="14" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="bar4" value="" style="rounded=0;fillColor=#2196F3;strokeColor=#1976D2;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="585" y="288" width="14" height="42" as="geometry"/>
+        </mxCell>
+
+        <!-- Fire spike (after threshold crossing) -->
+        <mxCell id="spike" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#D32F2F;strokeWidth=2.5;endFill=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="615" y="330" as="sourcePoint"/>
+            <mxPoint x="615" y="270" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="spike_label" value="発火" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#D32F2F;align=left;" vertex="1" parent="1">
+          <mxGeometry x="625" y="270" width="40" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="disc_out" value="→ クリック等" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#0D47A1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="690" y="335" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
