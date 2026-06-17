@@ -49,6 +49,27 @@ style: |
 | `<!-- _class: title -->` | Apply title layout |
 | `<!-- _header: <text> -->` | Set slide header text |
 
+## Research Vault (External Repository)
+
+The Obsidian research vault at `/Users/hapticslab/Documents/nishi/lab/notes/` contains literature notes, research memos, synthesis pages, and project notes. Use it when authoring decks to ground slides in existing research.
+
+### Key directories
+
+| Folder | Content |
+| :----- | :------ |
+| `10_Literature/` | Literature notes (`@AuthorShortTitle2024.md`). Each has `description` (1-line Japanese summary) and sections: 概要, 手法, 主要な知見 |
+| `15_Synthesis/` | Cross-cutting theme pages synthesizing knowledge across the vault |
+| `20_Research/` | Personal research thoughts and design memos |
+| `30_Projects/` | Project-scoped notes (`{YYYY}_{MM}_{PascalCaseName}/`) |
+| `50_Profile/` | CV, skills, publications, activities |
+
+### How to use
+
+- The `obsidian:obsidian-cli` plugin is globally enabled. Use `obsidian search "<query>"` to find relevant notes, `obsidian read "<path>"` to read them.
+- Alternatively: `rg -l "<keyword>" /Users/hapticslab/Documents/nishi/lab/notes/ --include="*.md"`
+- When writing `brief.md`, populate the `## References` section with vault note paths (e.g., `10_Literature/@SmithFuzzyControl2024.md`) so the link between deck and source material is explicit.
+- Literature notes' `description` field gives a quick 1-line summary for scanning relevance.
+
 ## Commands
 
 | Command | Description |
