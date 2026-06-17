@@ -6,10 +6,12 @@ Detailed authoring reference is in `.agents/skills/`:
 | :---- | :------ |
 | `marp-slide-types` | title / content / two-column templates + variants |
 | `marp-components` | callouts, figures, Mermaid, footnotes, CSS variables |
+| `marp-poster` | A0 poster authoring (poster theme, header/columns/footer) |
 | `marp-validator` | validator rules, hard limits, remediation |
 | `/slide-new <name>` | create a new deck end-to-end |
 | `/slide-add <slide.md>` | add slides to an existing deck |
 | `/slide-review <name>` | validate and remediate a deck |
+| `/poster-new <name>` | create a new A0 poster end-to-end |
 
 ## File Structure
 
@@ -52,6 +54,7 @@ style: |
 | Command | Description |
 | :------ | :---------- |
 | `npx marpx -n decks/<path>` | Scaffold a new deck |
+| `npx marpx -n decks/<path> --poster` | Scaffold a new A0 poster deck |
 | `npx marpx decks/<name>/brief.md --outline` | Generate outline from brief.md |
 | `npx marpx decks/<name>/slide.md -v` | Validate slide.md |
 | `npx marpx decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |

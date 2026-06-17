@@ -8,6 +8,30 @@ function splitSlides(markdown) {
   return splitNonEmptySlides(markdown);
 }
 
+function getFrontmatterBlock(markdown) {
+  const lines = String(markdown || "").split(/\r?\n/);
+  if (lines[0]?.trim() !== "---") return "";
+  let closingIndex = 1;
+  while (closingIndex < lines.length && lines[closingIndex].trim() !== "---") {
+    closingIndex += 1;
+  }
+  if (closingIndex >= lines.length) return "";
+  return lines.slice(1, closingIndex).join("\n");
+}
+
+/**
+ * A poster deck is a single full-page A0 canvas, not a sequence of slides, so
+ * the per-slide density heuristics do not apply. Detect it from front matter
+ * (theme: poster, or an A0 size directive) so validation can switch modes.
+ */
+function isPosterDeck(markdown) {
+  const fm = getFrontmatterBlock(markdown);
+  if (!fm) return false;
+  if (/^\s*theme\s*:\s*poster\s*$/im.test(fm)) return true;
+  if (/^\s*size\s*:\s*a0(?:-(?:portrait|landscape))?\s*$/im.test(fm)) return true;
+  return false;
+}
+
 function stripNonContent(raw) {
   return raw
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -88,10 +112,18 @@ function buildFinding(slide, ruleId, severity, title, suggestion) {
   };
 }
 
-function lintSlide(slide) {
+function lintSlide(slide, options = {}) {
   const lines = getVisibleLines(slide.raw);
-  const findings = [];
   const heading = getHeading(lines);
+
+  // Posters are intentionally one dense full-page canvas; the slide-density
+  // heuristics below are meaningless for them. Visual overflow against the A0
+  // page is still measured separately in validateDeckWithVisualCheck.
+  if (options.poster) {
+    return { slide: slide.number, heading, findings: [] };
+  }
+
+  const findings = [];
   const bulletCount = countBullets(lines);
   const topLevelBulletCount = countTopLevelBullets(slide.raw);
   const textLines = lines.filter(
@@ -200,10 +232,12 @@ function lintSlide(slide) {
 
 function validateDeckMarkdown(markdown) {
   const slides = splitSlides(markdown);
-  const results = slides.map(lintSlide);
+  const poster = isPosterDeck(markdown);
+  const results = slides.map((slide) => lintSlide(slide, { poster }));
   const findings = results.flatMap((result) => result.findings);
   return {
     slideCount: slides.length,
+    poster,
     slides: results,
     findings,
   };
@@ -498,6 +532,7 @@ module.exports = {
   defaultImageExporter,
   buildSarifReport,
   formatSummary,
+  isPosterDeck,
   splitSlides,
   validateDeckFile,
   validateDeckMarkdown,
