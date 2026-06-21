@@ -26,6 +26,10 @@ npx marpx decks/<name>/slide.md -v --report-dir out/<name>
 
 Content excluded from counting: `<style>`, `<script>`, `<div class="footnote">` blocks, and HTML-only structural lines.
 
+**Counting rules (pre-emptive guidance — the messages name the breakdown when a rule fires):**
+- Multi-column bullet counts are summed across columns. Target ≤ 2 bullets per column for `three-column` and `feature-grid`.
+- Callout body text (`> [!NOTE]` / `<div class="note">`, all five callout types) counts toward body chars and the 140-char single-line cap.
+
 ## Validator Rules
 
 | Rule | Trigger | Remediation |

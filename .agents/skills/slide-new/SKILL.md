@@ -25,6 +25,7 @@ Create a new deck at `decks/$ARGUMENTS`.
    ```bash
    npx marpx decks/$ARGUMENTS/brief.md --outline
    ```
+   The generator dedupes any Title/Agenda the brief already lists and carries layout-variant hints (`[three-column]`, `(closing variant)`, `using the feature-grid variant`, …) through to the outline's `Layout hint:` field — no manual sweep needed.
 
 5. **Review outline with the user.** Present the slide plan (titles, layout hints, flow) and discuss:
    - Are the sections in the right order?
