@@ -74,7 +74,10 @@ test("clean slide produces no findings", () => {
 });
 
 test("isPosterDeck detects poster theme and A0 size directives", () => {
-  assert.equal(isPosterDeck("---\nmarp: true\ntheme: poster\n---\n# T\n"), true);
+  assert.equal(
+    isPosterDeck("---\nmarp: true\ntheme: poster\n---\n# T\n"),
+    true,
+  );
   assert.equal(isPosterDeck("---\nmarp: true\nsize: a0\n---\n# T\n"), true);
   assert.equal(isPosterDeck("---\nsize: a0-portrait\n---\n# T\n"), true);
   assert.equal(isPosterDeck("---\nsize: a0-landscape\n---\n# T\n"), true);
@@ -84,7 +87,9 @@ test("isPosterDeck detects poster theme and A0 size directives", () => {
 });
 
 test("poster decks skip slide-density heuristics", () => {
-  const bullets = Array.from({ length: 15 }, (_, i) => `- item ${i}`).join("\n");
+  const bullets = Array.from({ length: 15 }, (_, i) => `- item ${i}`).join(
+    "\n",
+  );
   const heading = "A".repeat(60);
   const posterMarkdown = `---\nmarp: true\ntheme: poster\nsize: a0\n---\n\n# ${heading}\n\n${bullets}\n`;
   const slideMarkdown = `---\nmarp: true\ntheme: lab\n---\n\n# ${heading}\n\n${bullets}\n`;
@@ -112,7 +117,8 @@ test("validator flags comparison density", () => {
 });
 
 test("splitSlides strips frontmatter and filters empty slides", () => {
-  const markdown = "---\ntheme: lab\n---\n# Slide 1\n\n---\n\n---\n\n# Slide 3\n";
+  const markdown =
+    "---\ntheme: lab\n---\n# Slide 1\n\n---\n\n---\n\n# Slide 3\n";
   const slides = splitSlides(markdown);
 
   assert.equal(slides.length, 2);
@@ -233,6 +239,109 @@ test("validateDeckWithVisualCheck removes heuristic overflow-risk when visual de
       `overflow-risk should be removed for slide ${vo.slide} when visual-overflow is present`,
     );
   }
+});
+
+test("dense-bullets on multi-column slide reports per-column breakdown", () => {
+  const fourBullets = ["- a", "- b", "- c", "- d"].join("\n");
+  const fiveBullets = ["- a", "- b", "- c", "- d", "- e"].join("\n");
+  const markdown = `# Comparison
+
+<div class="col">
+<div>
+
+${fourBullets}
+
+</div>
+<div>
+
+${fourBullets}
+
+</div>
+<div>
+
+${fiveBullets}
+
+</div>
+</div>
+`;
+  const result = validateDeckMarkdown(markdown);
+  const finding = result.findings.find((f) => f.ruleId === "dense-bullets");
+
+  assert.ok(finding, "expected dense-bullets finding on multi-column slide");
+  assert.match(finding.title, /\(4\+4\+5 across 3 columns\)/);
+});
+
+test("dense-bullets keeps single-list message when slide is not multi-column", () => {
+  const bullets = Array.from({ length: 10 }, (_, i) => `- item ${i + 1}`).join(
+    "\n",
+  );
+  const markdown = `# Single list\n\n${bullets}\n`;
+  const result = validateDeckMarkdown(markdown);
+  const finding = result.findings.find((f) => f.ruleId === "dense-bullets");
+
+  assert.ok(finding);
+  assert.match(finding.title, /Slide contains 10 top-level bullet items\./);
+  assert.equal(finding.title.includes("across"), false);
+});
+
+test("overflow-risk message names the threshold that tripped", () => {
+  const longLine = "A".repeat(150);
+  const markdown = `# Short\n\n${longLine}\n`;
+  const result = validateDeckMarkdown(markdown);
+  const finding = result.findings.find((f) => f.ruleId === "overflow-risk");
+
+  assert.ok(finding);
+  assert.match(finding.title, /single line 150 chars/);
+});
+
+test("overflow-risk identifies callout source for long line", () => {
+  const longSentence =
+    "This callout body is intentionally extremely long so that it crosses the 140-character single-line threshold inside a GFM alert block to test the source attribution.";
+  const markdown = `# Slide
+
+> [!CAUTION]
+> ${longSentence}
+`;
+  const result = validateDeckMarkdown(markdown);
+  const finding = result.findings.find((f) => f.ruleId === "overflow-risk");
+
+  assert.ok(finding);
+  assert.match(finding.title, /\(callout body\)/);
+});
+
+test("typography-drift message names the offending class", () => {
+  const markdown = `# Slide
+
+<div class="text-xs2">
+
+shrunk content
+
+</div>
+`;
+  const result = validateDeckMarkdown(markdown);
+  const finding = result.findings.find((f) => f.ruleId === "typography-drift");
+
+  assert.ok(finding);
+  assert.match(finding.title, /\.text-xs2/);
+});
+
+test("figure-text-density message names the contributing count", () => {
+  const bullets = Array.from({ length: 7 }, (_, i) => `- item ${i + 1}`).join(
+    "\n",
+  );
+  const markdown = `# Slide
+
+![](shared/img/fig.png)
+
+${bullets}
+`;
+  const result = validateDeckMarkdown(markdown);
+  const finding = result.findings.find(
+    (f) => f.ruleId === "figure-text-density",
+  );
+
+  assert.ok(finding);
+  assert.match(finding.title, /7 bullets/);
 });
 
 test("validator writes report artifacts and uses injected screenshot exporter", () => {

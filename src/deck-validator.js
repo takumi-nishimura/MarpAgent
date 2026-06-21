@@ -28,7 +28,8 @@ function isPosterDeck(markdown) {
   const fm = getFrontmatterBlock(markdown);
   if (!fm) return false;
   if (/^\s*theme\s*:\s*poster\s*$/im.test(fm)) return true;
-  if (/^\s*size\s*:\s*a0(?:-(?:portrait|landscape))?\s*$/im.test(fm)) return true;
+  if (/^\s*size\s*:\s*a0(?:-(?:portrait|landscape))?\s*$/im.test(fm))
+    return true;
   return false;
 }
 
@@ -37,7 +38,10 @@ function stripNonContent(raw) {
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<div\s+class="footnote[^"]*"[\s\S]*?<\/div>\s*(?=<\/div>|$)/gi, "");
+    .replace(
+      /<div\s+class="footnote[^"]*"[\s\S]*?<\/div>\s*(?=<\/div>|$)/gi,
+      "",
+    );
 }
 
 function isHtmlOnlyLine(line) {
@@ -80,12 +84,83 @@ function countTopLevelBullets(raw) {
   return count;
 }
 
-function countTinyTypography(raw) {
+function detectTinyTypography(raw) {
   const classMatches = raw.match(/\btext-xs(?:2|3)?\b/g) || [];
   const inlineMatches =
     raw.match(/font-size\s*:\s*(?:0\.[0-7]\d*|[1-9]\d?px)/gi) || [];
   const smallTags = raw.match(/<small>/g) || [];
-  return classMatches.length + inlineMatches.length + smallTags.length;
+  const triggers = [];
+  for (const className of classMatches) triggers.push(`.${className}`);
+  if (inlineMatches.length > 0) triggers.push("inline font-size");
+  if (smallTags.length > 0) triggers.push("<small>");
+  return {
+    count: classMatches.length + inlineMatches.length + smallTags.length,
+    triggers,
+  };
+}
+
+/**
+ * Walk a `<div class="col">` container and return the raw markup of each
+ * immediate child column div, so each column's bullet budget can be reported
+ * separately when `dense-bullets` fires across a multi-column layout.
+ */
+function findColumnContents(raw) {
+  const colOpen = raw.match(/<div\s+class="col(?:\s[^"]*)?"[^>]*>/);
+  if (!colOpen) return null;
+
+  const tagRe = /<\/?div\b[^>]*>/g;
+  tagRe.lastIndex = colOpen.index + colOpen[0].length;
+
+  let depth = 1;
+  let childStart = -1;
+  const columns = [];
+
+  let match;
+  while ((match = tagRe.exec(raw)) !== null) {
+    const isClose = match[0].startsWith("</");
+    if (isClose) {
+      depth -= 1;
+      if (depth === 0) break;
+      if (depth === 1 && childStart !== -1) {
+        columns.push(raw.slice(childStart, match.index));
+        childStart = -1;
+      }
+    } else {
+      if (depth === 1 && childStart === -1) {
+        childStart = tagRe.lastIndex;
+      }
+      depth += 1;
+    }
+  }
+
+  return columns.length >= 2 ? columns : null;
+}
+
+/**
+ * Check whether a body line that tripped the single-line cap came from a
+ * callout block, so the message can name the source instead of leaving the
+ * author to guess.
+ */
+function isLineFromCallout(line, raw) {
+  const lines = raw.split(/\r?\n/);
+  const target = line.trim();
+  const idx = lines.findIndex((l) => {
+    const stripped = l.replace(/^>\s*/, "").trim();
+    return l.trim() === target || stripped === target;
+  });
+  if (idx === -1) return false;
+
+  if (/^\s*>/.test(lines[idx])) return true;
+
+  for (let i = idx - 1; i >= 0; i -= 1) {
+    if (/<\/div>/i.test(lines[i])) return false;
+    if (
+      /<div\s+class="(?:note|tip|important|warning|caution)"/i.test(lines[i])
+    ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function detectTableMetrics(lines) {
@@ -136,7 +211,7 @@ function lintSlide(slide, options = {}) {
   ).length;
   const tableMetrics = detectTableMetrics(lines);
   const strippedRaw = stripNonContent(slide.raw);
-  const tinyTypographyCount = countTinyTypography(strippedRaw);
+  const tinyTypography = detectTinyTypography(strippedRaw);
   const contentLines = lines.filter((line) => !/^\|.*\|$/.test(line));
   const totalChars = contentLines.join(" ").length;
 
@@ -153,24 +228,39 @@ function lintSlide(slide, options = {}) {
   }
 
   if (topLevelBulletCount >= 9) {
+    const columnContents = findColumnContents(slide.raw);
+    let denseBulletsTitle = `Slide contains ${topLevelBulletCount} top-level bullet items.`;
+    if (columnContents) {
+      const perColumn = columnContents.map((column) =>
+        countTopLevelBullets(column),
+      );
+      const totalAcrossColumns = perColumn.reduce((sum, n) => sum + n, 0);
+      if (totalAcrossColumns >= topLevelBulletCount * 0.8) {
+        denseBulletsTitle = `Slide contains ${topLevelBulletCount} top-level bullets (${perColumn.join("+")} across ${perColumn.length} columns).`;
+      }
+    }
     findings.push(
       buildFinding(
         slide,
         "dense-bullets",
         "warning",
-        `Slide contains ${topLevelBulletCount} top-level bullet items.`,
+        denseBulletsTitle,
         "Split the list into multiple slides or group the bullets into a smaller number of takeaways.",
       ),
     );
   }
 
   if (figureCount > 0 && (topLevelBulletCount >= 6 || textLines.length >= 6)) {
+    const densityDetail =
+      topLevelBulletCount >= 6
+        ? `${topLevelBulletCount} bullets`
+        : `${textLines.length} text lines`;
     findings.push(
       buildFinding(
         slide,
         "figure-text-density",
         "warning",
-        "Slide combines a visual with dense supporting text.",
+        `Slide combines a visual with ${densityDetail} of supporting text.`,
         "Let the figure carry more of the explanation and move extra text to speaker notes or another slide.",
       ),
     );
@@ -191,33 +281,50 @@ function lintSlide(slide, options = {}) {
     );
   }
 
-  if (tinyTypographyCount > 0) {
+  if (tinyTypography.count > 0) {
+    const triggerLabel =
+      tinyTypography.triggers.length > 0
+        ? tinyTypography.triggers.join(", ")
+        : "tiny text";
     findings.push(
       buildFinding(
         slide,
         "typography-drift",
         "warning",
-        "Slide relies on tiny text styling.",
+        `Slide uses tiny text styling: ${triggerLabel}.`,
         "Prefer splitting content across slides instead of shrinking the typography further.",
       ),
     );
   }
 
-  const hasVeryLongBodyLine = textLines.some((line) => line.length >= 140);
+  const longBodyLine = textLines.find((line) => line.length >= 140);
 
   if (
     topLevelBulletCount >= 12 ||
     textLines.length >= 10 ||
     totalChars >= 600 ||
     (heading && heading.length >= 70) ||
-    hasVeryLongBodyLine
+    longBodyLine
   ) {
+    const reasons = [];
+    if (topLevelBulletCount >= 12)
+      reasons.push(`${topLevelBulletCount} bullets`);
+    if (textLines.length >= 10) reasons.push(`${textLines.length} text lines`);
+    if (totalChars >= 600) reasons.push(`${totalChars} body chars`);
+    if (heading && heading.length >= 70)
+      reasons.push(`${heading.length}-char heading`);
+    if (longBodyLine) {
+      const fromCallout = isLineFromCallout(longBodyLine, slide.raw);
+      reasons.push(
+        `single line ${longBodyLine.length} chars${fromCallout ? " (callout body)" : ""}`,
+      );
+    }
     findings.push(
       buildFinding(
         slide,
         "overflow-risk",
         "warning",
-        "Slide has a high overflow risk by heuristic.",
+        `Slide has a high overflow risk: ${reasons.join("; ")}.`,
         "Shorten the slide, trim copy, or spread the material across more slides before adjusting font size.",
       ),
     );
@@ -408,7 +515,11 @@ function writeArtifacts(result, options = {}) {
     ...new Set(result.findings.map((finding) => finding.slide)),
   ];
 
-  const screenshotFiles = imageExporter({ deckPath, reportDir, slideNumbers });
+  const screenshotFiles = imageExporter({
+    deckPath,
+    reportDir,
+    slideNumbers,
+  });
   const report = {
     deckPath,
     slideCount: result.slideCount,
@@ -479,7 +590,9 @@ function validateDeckFile(deckPath, options = {}) {
  * Falls back to heuristic-only if Playwright is unavailable.
  */
 async function validateDeckWithVisualCheck(deckPath, options = {}) {
-  const { measureVisualOverflow: defaultMeasureVisualOverflow } = require("./visual-overflow");
+  const {
+    measureVisualOverflow: defaultMeasureVisualOverflow,
+  } = require("./visual-overflow");
   const measureVisualOverflow =
     options.measureVisualOverflow || defaultMeasureVisualOverflow;
 
