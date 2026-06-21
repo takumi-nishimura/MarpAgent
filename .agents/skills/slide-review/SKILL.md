@@ -17,6 +17,7 @@ Validate and remediate `decks/$ARGUMENTS/slide.md`.
    - **Split** — `visual-overflow`, `overflow-risk`, `dense-bullets`, `figure-text-density`, `comparison-overpacked`
    - **Trim** — heading or line too long
    - **Retype** — forbidden class in use (`typography-drift`)
+   - **Resize** — `visual-overflow` on a figure-only slide (no body text to split). Add `style="width: N%;"` to the `<figure>` per **marp-components** until the slide fits. This is the exception to the split-first rule.
 
 3. Apply remediations one slide at a time.
    - If one slide has multiple findings, fix that slide in one pass before re-validating

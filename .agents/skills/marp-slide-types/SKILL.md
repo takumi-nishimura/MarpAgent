@@ -189,6 +189,8 @@ Narrower right column
 
 Declare `--bg-gray-5` in frontmatter `style:` first (see marp-components skill).
 
+Bullet budget: the validator sums top-level bullets across all three columns, so keep each column to ≤ 2 bullets and put the takeaway in `.gap-box`. Same rule for `feature-grid`.
+
 ```markdown
 ---
 
@@ -264,6 +266,8 @@ Declare `--bg-gray-5` in frontmatter `style:` first (see marp-components skill).
 ### feature-grid variant
 
 2×N CSS grid of feature cards. Declare `--bg-gray-5` in frontmatter `style:` first.
+
+Density rule: the validator counts source-body lines, not rendered rows. The block-form `<div>` + `**Heading**` + sub-bullet shown below is fine up to ~4 cards. For 5+ cards, collapse each card to a single source line — `<div>**Heading** — body sentence.</div>` — so card count, not source layout, drives the body-line budget.
 
 ```markdown
 ---

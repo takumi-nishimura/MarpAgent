@@ -63,6 +63,7 @@ Rules:
 
 - Type tag must be uppercase (`[!NOTE]`, not `[!note]`) and on the first line of the blockquote.
 - The five GFM types above are styled by the theme. Author-defined types (e.g. `[!INFO]`, `[!QUESTION]`) are emitted as `<div class="info">` / `<div class="question">` but have no built-in styling — add rules to `themes/src/_shared/_callouts.css` to use them.
+- Callout body text counts toward the validator's body-character and single-line-length budgets (140 chars per line max). Hard-wrap long callout bodies across multiple `> ` lines at sentence boundaries, same rule as ordinary body prose.
 
 Equivalent HTML form (still supported — use when the body contains markdown that
 does not survive blockquote escaping, such as nested fenced code):

@@ -105,6 +105,10 @@ inside each column; keep columns roughly balanced in height.
 | `poster-section highlight` | Key-result card (orange border + tinted fill) |
 | `poster-stat` | Big centred statement/number, e.g. inside a highlight card |
 
+**Placement rules:**
+- When the headline number IS the Results, fuse them: make the Results section itself the highlight card (`<section class="poster-section highlight">` with a `poster-stat` plus supporting copy/table). Do not create a separate "Key Result" card alongside Results.
+- References belong in `<div class="poster-refs">` inside `<footer class="poster-footer">`, not a body card — even if the brief lists "References" as a required section. Same for author contact (`<div class="poster-contact">`).
+
 ## Reused components
 
 Callouts (`.note` / `.tip` / `.important` / `.warning` / `.caution`), figures

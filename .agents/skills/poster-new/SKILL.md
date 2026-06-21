@@ -30,7 +30,14 @@ A poster is one full-page A0 canvas, not a slide sequence. Follow the
      `<footer>` band — one slide, no `---` separators in the body.
    - One `<div class="poster-col">` per column; one
      `<section class="poster-section">` per topic.
-   - Use `poster-section highlight` + `poster-stat` for the headline result.
+   - If the work has a single headline result (e.g. a percentage, RMSE, or
+     n-vs-baseline number), add a `poster-section highlight` + `poster-stat`
+     block — the scaffold does NOT include one by default. Fuse it with the
+     Results section per **marp-poster** placement rules. If the contribution
+     is qualitative (protocol, framework, taxonomy), skip the highlight card
+     entirely.
+   - The sibling `README.md` written by the scaffold is informational only;
+     delete it once the author no longer needs the reminder.
    - Replace placeholder text instead of appending to it.
 
 4. Validate and fix:
@@ -40,7 +47,7 @@ A poster is one full-page A0 canvas, not a slide sequence. Follow the
    On `visual-overflow`: trim a card, rebalance columns, or move a card to
    another column. Never shrink the font below readability. Repeat until clean.
 
-5. Export for printing:
+5. Optional — export for printing (run only when the user asks for a PDF):
    ```bash
    npx marpx decks/$ARGUMENTS/poster.md --pdf
    ```
@@ -48,4 +55,5 @@ A poster is one full-page A0 canvas, not a slide sequence. Follow the
 ## Done When
 
 `Findings: 0` reported by the validator, and the poster reviews well in a
-single-shot preview.
+single-shot preview. PDF export is a separate request, not part of the
+success contract.
