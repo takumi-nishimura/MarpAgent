@@ -9,23 +9,6 @@ style: |
   }
 ---
 
-<!--
-  A0 poster (841 x 1189 mm, portrait). One slide = the whole poster.
-
-  Landscape: set `size: a0-landscape` above. Column count follows the number
-  of <div class="poster-col"> blocks — use 3 for portrait, 4 for landscape.
-
-  Structure: <header> band, a <div class="poster-columns"> with <div
-  class="poster-col"> children, and a <footer> band. Each topic is a
-  <section class="poster-section"> whose first <h2> becomes the title bar.
-  Add the `highlight` class for a key-result card.
-
-  Preview / validate / export (run from repo root):
-    npx marpx decks/<name>/poster.md        # live preview
-    npx marpx decks/<name>/poster.md -v      # validate (overflow check)
-    npx marpx decks/<name>/poster.md --pdf   # export A0 PDF for printing
--->
-
 <header class="poster-header">
 
 <div class="poster-logo">
@@ -65,18 +48,6 @@ style: |
 
 <section class="poster-section">
 
-## Research Question
-
-<div class="important">
-
-State the central question or hypothesis in one sentence.
-
-</div>
-
-</section>
-
-<section class="poster-section">
-
 ## Method
 
 - Study design
@@ -98,26 +69,14 @@ Brief description of the system or pipeline.
 
 </section>
 
-<section class="poster-section highlight">
-
-## Key Result
-
-<div class="poster-stat">
-
-The headline number or finding — make it **bold**.
-
-</div>
-
-</section>
-
 <section class="poster-section">
 
 ## Results
 
 | Condition | Metric A | Metric B |
 | :-------- | :------: | :------: |
-| Baseline | 0.0 | 0.0 |
-| Proposed | 0.0 | 0.0 |
+| Baseline  |   0.0    |   0.0    |
+| Proposed  |   0.0    |   0.0    |
 
 </section>
 
@@ -142,15 +101,6 @@ The headline number or finding — make it **bold**.
 
 </section>
 
-<section class="poster-section">
-
-## Future Work
-
-1. Next step one
-2. Next step two
-
-</section>
-
 </div>
 </div>
 
@@ -158,7 +108,7 @@ The headline number or finding — make it **bold**.
 
 <div class="poster-refs">
 
-**References** [1] Author et al., *Title*, Venue Year. [2] Author et al., *Title*, Venue Year.
+**References** [1] Author et al., _Title_, Venue Year. [2] Author et al., _Title_, Venue Year.
 
 </div>
 

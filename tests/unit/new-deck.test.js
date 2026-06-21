@@ -78,6 +78,29 @@ test("new-deck --poster scaffolds a single poster template", () => {
     assert.match(poster, /theme: poster/);
     assert.match(poster, /size: a0/);
     assert.match(poster, /class="poster-columns"/);
+
+    // Scaffold should not preload a highlight card — that placeholder used to
+    // push authors into adding a hero number even when one wasn't warranted.
+    assert.equal(poster.includes("poster-section highlight"), false);
+    assert.equal(poster.includes("poster-stat"), false);
+
+    // Authoring guidance now lives in a sibling README.md, not in body HTML
+    // comments inside the rendered poster.
+    const bodyAfterFrontmatter = poster
+      .split(/^---\s*$/m)
+      .slice(2)
+      .join("---");
+    assert.equal(
+      /<!--[\s\S]*?-->/.test(bodyAfterFrontmatter),
+      false,
+      "scaffolded poster body should contain no HTML comments",
+    );
+
+    const readmePath = path.join(deckDir, "README.md");
+    assert.equal(fs.existsSync(readmePath), true);
+    const readme = fs.readFileSync(readmePath, "utf8");
+    assert.match(readme, /A0 poster/);
+    assert.match(readme, /Highlight card/);
   } finally {
     fs.rmSync(deckDir, { recursive: true, force: true });
   }

@@ -22,8 +22,13 @@ const repoRoot = path.resolve(__dirname, "..");
 const templateDir = path.join(repoRoot, "template");
 const decksRoot = path.join(repoRoot, "decks");
 // A poster is a single full-page deck; a slide deck gets a brief + slides.
+// Posters also ship a sibling README with authoring notes that used to live
+// inside the poster.md body as HTML comments.
 const templateFiles = posterMode
-  ? [["poster.md", "poster.md"]]
+  ? [
+      ["poster.md", "poster.md"],
+      ["poster-README.md", "README.md"],
+    ]
   : [
       ["brief.md", "brief.md"],
       ["slide.md", "slide.md"],
@@ -41,7 +46,9 @@ function resolveDeckDir(inputPath) {
     relativeToDecks.startsWith("..") || path.isAbsolute(relativeToDecks);
 
   if (outsideRepo || outsideDecks || deckDir === decksRoot) {
-    console.error("Error: deck path must be inside decks/ under repository root.");
+    console.error(
+      "Error: deck path must be inside decks/ under repository root.",
+    );
     console.error(`Received: ${inputPath}`);
     process.exit(1);
   }
@@ -98,7 +105,9 @@ try {
   const symlinkType = os.platform() === "win32" ? "junction" : "dir";
   fs.symlinkSync(relativePath, sharedPath, symlinkType);
   const relativeToRepo = path.relative(repoRoot, deckDir);
-  console.log(`✓ Created${posterMode ? " poster deck" : ""}: ${relativeToRepo}/`);
+  console.log(
+    `✓ Created${posterMode ? " poster deck" : ""}: ${relativeToRepo}/`,
+  );
   for (const [, outputName] of templateFiles) {
     console.log(`  - ${outputName}`);
   }
@@ -109,7 +118,9 @@ try {
     console.log(`\nEdit ${relativeToRepo}/poster.md, then:`);
     console.log(`  npx marpx ${relativeToRepo}/poster.md       # live preview`);
     console.log(`  npx marpx ${relativeToRepo}/poster.md -v    # validate`);
-    console.log(`  npx marpx ${relativeToRepo}/poster.md --pdf # export A0 PDF`);
+    console.log(
+      `  npx marpx ${relativeToRepo}/poster.md --pdf # export A0 PDF`,
+    );
   }
 } catch (err) {
   console.error(`Error creating symlink: ${err.message}`);
