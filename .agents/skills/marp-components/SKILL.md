@@ -1,6 +1,6 @@
 ---
 name: marp-components
-description: "Content component patterns for MarpAgent slides: callouts (note/tip/important/warning/caution), figures, videos, Mermaid diagrams, footnotes, summary boxes, and typography rules. Use when adding any of these elements to a slide."
+description: "Content component patterns for MarpAgent slides: callouts (note/tip/important/warning/caution), figures, videos, Mermaid diagrams, footnotes, presenter notes, summary boxes, and typography rules. Use when adding any of these elements to a slide."
 user-invocable: false
 ---
 
@@ -111,6 +111,16 @@ graph LR
 
 </div>
 ````
+
+## Presenter Notes
+
+Add notes visible only in presenter view via HTML comments. Place inside the slide body:
+
+```markdown
+<!-- Speaker note: emphasize the funding source before moving on. -->
+```
+
+Multiple lines are allowed inside one comment block. Notes do not count toward the validator's body character limits.
 
 ## Footnotes
 
