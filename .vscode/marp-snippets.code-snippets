@@ -133,7 +133,7 @@
       "",
       "# ${2:Title}",
       "",
-      "<div class=\"info\">",
+      "<div class=\"author\">",
       "",
       "${3:affiliation}",
       "",
