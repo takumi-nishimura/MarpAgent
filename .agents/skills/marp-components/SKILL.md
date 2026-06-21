@@ -38,6 +38,35 @@ style: |
 
 ## Callouts
 
+Preferred: GitHub-flavored alert syntax. The blockquote is rewritten into the
+matching `<div class="…">` callout at render time, so the visual output is
+identical to the HTML form below.
+
+```markdown
+> [!NOTE]
+> Supplementary information.
+
+> [!TIP]
+> Helpful tip or shortcut.
+
+> [!IMPORTANT]
+> Critical point that must not be missed.
+
+> [!WARNING]
+> Something to be cautious about.
+
+> [!CAUTION]
+> Danger — incorrect use may cause problems.
+```
+
+Rules:
+
+- Type tag must be uppercase (`[!NOTE]`, not `[!note]`) and on the first line of the blockquote.
+- The five GFM types above are styled by the theme. Author-defined types (e.g. `[!INFO]`, `[!QUESTION]`) are emitted as `<div class="info">` / `<div class="question">` but have no built-in styling — add rules to `themes/src/_shared/_callouts.css` to use them.
+
+Equivalent HTML form (still supported — use when the body contains markdown that
+does not survive blockquote escaping, such as nested fenced code):
+
 ```markdown
 <div class="note">
 

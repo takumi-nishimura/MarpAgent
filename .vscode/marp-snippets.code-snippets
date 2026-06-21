@@ -65,35 +65,65 @@
     "body": ["<div class=\"info\">", "", "${1:content}", "", "</div>"],
     "description": "Info block for title slides",
   },
-  "NoteCallout": {
+  "NoteAlert": {
     "prefix": "note",
     "scope": "markdown",
-    "body": ["<div class=\"note\">", "", "${1:content}", "", "</div>"],
-    "description": "Note callout box",
+    "body": ["> [!NOTE]", "> ${1:content}"],
+    "description": "Note callout (GFM alert)",
   },
-  "TipCallout": {
+  "TipAlert": {
     "prefix": "tip",
     "scope": "markdown",
-    "body": ["<div class=\"tip\">", "", "${1:content}", "", "</div>"],
-    "description": "Tip callout box",
+    "body": ["> [!TIP]", "> ${1:content}"],
+    "description": "Tip callout (GFM alert)",
   },
-  "WarningCallout": {
-    "prefix": "warning",
-    "scope": "markdown",
-    "body": ["<div class=\"warning\">", "", "${1:content}", "", "</div>"],
-    "description": "Warning callout box",
-  },
-  "CautionCallout": {
-    "prefix": "caution",
-    "scope": "markdown",
-    "body": ["<div class=\"caution\">", "", "${1:content}", "", "</div>"],
-    "description": "Caution callout box",
-  },
-  "ImportantCallout": {
+  "ImportantAlert": {
     "prefix": "important",
     "scope": "markdown",
+    "body": ["> [!IMPORTANT]", "> ${1:content}"],
+    "description": "Important callout (GFM alert)",
+  },
+  "WarningAlert": {
+    "prefix": "warning",
+    "scope": "markdown",
+    "body": ["> [!WARNING]", "> ${1:content}"],
+    "description": "Warning callout (GFM alert)",
+  },
+  "CautionAlert": {
+    "prefix": "caution",
+    "scope": "markdown",
+    "body": ["> [!CAUTION]", "> ${1:content}"],
+    "description": "Caution callout (GFM alert)",
+  },
+  "NoteCalloutHtml": {
+    "prefix": "html-note",
+    "scope": "markdown",
+    "body": ["<div class=\"note\">", "", "${1:content}", "", "</div>"],
+    "description": "Note callout (HTML form — use when body contains markdown that breaks inside a blockquote)",
+  },
+  "TipCalloutHtml": {
+    "prefix": "html-tip",
+    "scope": "markdown",
+    "body": ["<div class=\"tip\">", "", "${1:content}", "", "</div>"],
+    "description": "Tip callout (HTML form)",
+  },
+  "ImportantCalloutHtml": {
+    "prefix": "html-important",
+    "scope": "markdown",
     "body": ["<div class=\"important\">", "", "${1:content}", "", "</div>"],
-    "description": "Important callout box",
+    "description": "Important callout (HTML form)",
+  },
+  "WarningCalloutHtml": {
+    "prefix": "html-warning",
+    "scope": "markdown",
+    "body": ["<div class=\"warning\">", "", "${1:content}", "", "</div>"],
+    "description": "Warning callout (HTML form)",
+  },
+  "CautionCalloutHtml": {
+    "prefix": "html-caution",
+    "scope": "markdown",
+    "body": ["<div class=\"caution\">", "", "${1:content}", "", "</div>"],
+    "description": "Caution callout (HTML form)",
   },
   "PresenterNote": {
     "prefix": "pnote",
