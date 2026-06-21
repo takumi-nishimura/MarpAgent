@@ -158,6 +158,101 @@ function suggestLayout(title) {
   return "content";
 }
 
+const TITLE_ALIASES = [
+  "title",
+  "title slide",
+  "opening",
+  "opening promise",
+  "タイトル",
+];
+
+const AGENDA_ALIASES = ["agenda", "アジェンダ", "目次", "もくじ"];
+
+const KNOWN_LAYOUTS = [
+  {
+    aliases: ["three-column", "three column"],
+    baseType: "two-column",
+    variant: "three-column variant",
+  },
+  {
+    aliases: ["feature-grid", "feature grid"],
+    baseType: "two-column",
+    variant: "feature-grid variant",
+  },
+  {
+    aliases: ["agenda"],
+    baseType: "content",
+    variant: "agenda variant",
+  },
+  {
+    aliases: ["summary"],
+    baseType: "content",
+    variant: "summary variant",
+  },
+  {
+    aliases: ["closing"],
+    baseType: "content",
+    variant: "closing variant",
+  },
+  {
+    aliases: ["two-column", "two column"],
+    baseType: "two-column",
+    variant: null,
+  },
+  { aliases: ["content"], baseType: "content", variant: null },
+  { aliases: ["title"], baseType: "title", variant: null },
+];
+
+function formatLayoutHint(layout) {
+  return layout.variant
+    ? `${layout.baseType} (${layout.variant})`
+    : layout.baseType;
+}
+
+function sectionMatchesAlias(text, aliases) {
+  const normalized = text.toLowerCase().trim();
+  return aliases.some((alias) => {
+    const a = alias.toLowerCase();
+    return (
+      normalized === a ||
+      normalized.startsWith(`${a} `) ||
+      normalized.startsWith(`${a}:`) ||
+      normalized.startsWith(`${a}—`) ||
+      normalized.startsWith(`${a} —`)
+    );
+  });
+}
+
+function parseLayoutHintFromText(text) {
+  for (const layout of KNOWN_LAYOUTS) {
+    for (const alias of layout.aliases) {
+      const escaped = alias.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+      const patterns = [
+        new RegExp(`\\[\\s*${escaped}(?:\\s+(?:variant|layout))?\\s*\\]`, "i"),
+        new RegExp(`\\(\\s*${escaped}(?:\\s+(?:variant|layout))?\\s*\\)`, "i"),
+        new RegExp(
+          `\\b(?:as|using|with)\\s+(?:the\\s+|a\\s+)?${escaped}(?:\\s+(?:variant|layout))?\\b`,
+          "i",
+        ),
+        new RegExp(`\\b${escaped}\\s+(?:variant|layout)\\b`, "i"),
+      ];
+      if (patterns.some((p) => p.test(text))) {
+        return formatLayoutHint(layout);
+      }
+    }
+  }
+  return null;
+}
+
+function stripLayoutHintMarkers(text) {
+  return text
+    .replace(
+      /\s*[\[(]\s*(?:three-column|three column|feature-grid|feature grid|two-column|two column|content|title|agenda|summary|closing)(?:\s+(?:variant|layout))?\s*[\])]/gi,
+      "",
+    )
+    .trim();
+}
+
 function extractTargetSlideCount(durationLines, requiredSections) {
   const explicit = durationLines.find((line) =>
     /target slide count/i.test(line),
@@ -175,37 +270,55 @@ function buildSlidePlan(brief) {
     brief.coreMessage.find((line) => /one-sentence takeaway:/i.test(line)) ||
     brief.coreMessage[0] ||
     "Clarify the deck's core message.";
-  const action =
-    brief.audienceAction[0] ||
-    "Summarize the decision or action expected from the audience.";
 
-  const slides = [
-    {
+  const briefHasTitle = brief.requiredSections.some((section) =>
+    sectionMatchesAlias(section, TITLE_ALIASES),
+  );
+  const briefHasAgenda = brief.requiredSections.some((section) =>
+    sectionMatchesAlias(section, AGENDA_ALIASES),
+  );
+
+  const slides = [];
+
+  if (!briefHasTitle) {
+    slides.push({
       title: "Opening promise",
       takeaway:
         coreTakeaway.replace(/^One-sentence takeaway:\s*/i, "").trim() ||
         coreTakeaway,
-      layoutHint: "title slide",
+      layoutHint: "title",
       overflowRisk: "low",
-    },
-  ];
+    });
+  }
 
-  if (brief.requiredSections.length >= 3) {
+  if (!briefHasAgenda && brief.requiredSections.length >= 3) {
     slides.push({
       title: "Agenda",
       takeaway: "Frame the narrative before diving into detail.",
-      layoutHint: "short agenda list",
+      layoutHint: "content (agenda variant)",
       overflowRisk: brief.requiredSections.length > 5 ? "medium" : "low",
     });
   }
 
   for (const section of brief.requiredSections) {
     const assetContext = brief.mustUseAssets[0] || "";
+    const explicitHint = parseLayoutHintFromText(section);
+    let layoutHint;
+    if (explicitHint) {
+      layoutHint = explicitHint;
+    } else if (sectionMatchesAlias(section, TITLE_ALIASES)) {
+      layoutHint = "title";
+    } else if (sectionMatchesAlias(section, AGENDA_ALIASES)) {
+      layoutHint = "content (agenda variant)";
+    } else {
+      layoutHint = suggestLayout(section);
+    }
+    const cleanTitle = stripLayoutHintMarkers(section) || section;
     slides.push({
-      title: section,
-      takeaway: `Explain why "${section}" matters to the audience.`,
-      layoutHint: suggestLayout(section),
-      overflowRisk: estimateOverflowRisk(section, assetContext),
+      title: cleanTitle,
+      takeaway: `Explain why "${cleanTitle}" matters to the audience.`,
+      layoutHint,
+      overflowRisk: estimateOverflowRisk(cleanTitle, assetContext),
     });
   }
 

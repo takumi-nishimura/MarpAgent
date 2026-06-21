@@ -11,12 +11,7 @@ const {
   validateBriefSchema,
 } = require("../../src/outline");
 
-const fixturePath = path.join(
-  __dirname,
-  "../..",
-  "fixtures",
-  "good-brief.md",
-);
+const fixturePath = path.join(__dirname, "../..", "fixtures", "good-brief.md");
 
 test("outline builder emits slide plan with required fields", () => {
   const brief = parseBrief(fs.readFileSync(fixturePath, "utf8"));
@@ -55,7 +50,10 @@ test("parseBrief supports Japanese heading aliases", () => {
 
   assert.deepEqual(brief.audience, ["Platform team"]);
   assert.deepEqual(brief.duration, ["15 min"]);
-  assert.equal(brief.coreMessage[0], "One-sentence takeaway: Keep the deck focused.");
+  assert.equal(
+    brief.coreMessage[0],
+    "One-sentence takeaway: Keep the deck focused.",
+  );
   assert.equal(brief.audienceAction[0], "Adopt the proposed process.");
   assert.deepEqual(brief.requiredSections, ["背景", "計画"]);
 });
@@ -72,6 +70,103 @@ test("validateBriefSchema reports missing required sections", () => {
   assert.equal(validation.ok, false);
   assert.match(validation.message, /Duration/);
   assert.match(validation.message, /Required Sections/);
+});
+
+test("outline does not duplicate Title slide when brief lists Title in Required Sections", () => {
+  const brief = parseBrief(`## Audience
+- A
+## Duration
+- 10 min
+## Core Message
+- One-sentence takeaway: T
+## Audience Action
+- Act
+## Required Sections
+- Title
+- Agenda
+- Problem
+- Solution
+`);
+  const outline = buildOutlineMarkdown(brief, {
+    generatedDate: "2026-06-21",
+    sourcePath: "brief.md",
+  });
+
+  assert.equal(outline.includes("Opening promise"), false);
+  const titleSlideCount = (outline.match(/^- Title: Title$/gm) || []).length;
+  assert.equal(titleSlideCount, 1, "expected exactly one Title slide");
+  const agendaCount = (outline.match(/^- Title: Agenda$/gm) || []).length;
+  assert.equal(agendaCount, 1, "expected exactly one Agenda slide");
+});
+
+test("outline maps Title-aliased section to the title layout", () => {
+  const brief = parseBrief(`## Audience
+- A
+## Duration
+- 10 min
+## Core Message
+- One-sentence takeaway: T
+## Audience Action
+- Act
+## Required Sections
+- Title
+- Body
+`);
+  const outline = buildOutlineMarkdown(brief, {
+    generatedDate: "2026-06-21",
+    sourcePath: "brief.md",
+  });
+
+  const titleBlock = outline.match(
+    /### Slide \d+: Title\n\n- Title: Title\n- Takeaway:.*\n- Layout hint: (.+)\n/,
+  );
+  assert.ok(titleBlock, "expected a Title slide block");
+  assert.equal(titleBlock[1], "title");
+});
+
+test("outline carries bracketed variant hint from required-section text", () => {
+  const brief = parseBrief(`## Audience
+- A
+## Duration
+- 10 min
+## Core Message
+- One-sentence takeaway: T
+## Audience Action
+- Act
+## Required Sections
+- Three-vendor comparison [three-column]
+- Closing (closing variant)
+`);
+  const outline = buildOutlineMarkdown(brief, {
+    generatedDate: "2026-06-21",
+    sourcePath: "brief.md",
+  });
+
+  assert.match(outline, /Layout hint: two-column \(three-column variant\)/);
+  assert.match(outline, /Layout hint: content \(closing variant\)/);
+  // Variant markers should be stripped from the displayed Title
+  assert.match(outline, /- Title: Three-vendor comparison\n/);
+  assert.match(outline, /- Title: Closing\n/);
+});
+
+test("outline carries 'using the X variant' prose variant hint", () => {
+  const brief = parseBrief(`## Audience
+- A
+## Duration
+- 10 min
+## Core Message
+- One-sentence takeaway: T
+## Audience Action
+- Act
+## Required Sections
+- Feature grid of trade-offs using the feature-grid variant
+`);
+  const outline = buildOutlineMarkdown(brief, {
+    generatedDate: "2026-06-21",
+    sourcePath: "brief.md",
+  });
+
+  assert.match(outline, /Layout hint: two-column \(feature-grid variant\)/);
 });
 
 test("generateOutlineFile rejects incomplete brief by default", () => {
