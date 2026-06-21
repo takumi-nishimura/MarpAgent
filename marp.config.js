@@ -1,5 +1,6 @@
 const fs = require('node:fs')
 const path = require('node:path')
+const marpGithubAlertsPlugin = require('./scripts/github-alerts-plugin')
 const marpHideSlidesPlugin = require('./scripts/hide-slides-plugin')
 const marpMermaidPlugin = require('./scripts/mermaid-plugin')
 
@@ -19,7 +20,10 @@ module.exports = {
   themeSet,
   html: true,
   engine: ({ marp }) => {
-    const base = marp.use(marpHideSlidesPlugin).use(marpMermaidPlugin)
+    const base = marp
+      .use(marpHideSlidesPlugin)
+      .use(marpMermaidPlugin)
+      .use(marpGithubAlertsPlugin)
     const _render = base.render.bind(base)
     base.render = (markdown, env) => {
       const result = _render(markdown, env)
