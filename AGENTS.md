@@ -41,6 +41,12 @@ style: |
 ---
 ```
 
+## Japanese Line Breaks
+
+Japanese text is auto-wrapped at phrase boundaries by Google BudouX during
+render. Do not hand-tune line breaks; wrap a run in `<span class="nobr">…</span>`
+to keep it on one line. Applies to lab and poster themes (see `marp-components`).
+
 ## Per-Slide Directives
 
 | Directive | Purpose |

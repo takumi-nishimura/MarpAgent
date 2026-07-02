@@ -222,3 +222,31 @@ h2 { font-size: 1.2em; }
 | `*text*` | Italic (colored in lab theme) |
 | `_text_` | Italic (alternative) |
 | `` `code` `` | Inline code |
+
+## Japanese Line Breaks
+
+Rendered output runs through Google BudouX at build time. Phrase-boundary
+break opportunities (U+200B zero-width spaces) are injected into Japanese
+text so long lines wrap at natural phrase points instead of arbitrary
+character positions. BudouX also sets `word-break:keep-all` so the browser
+only breaks at ZWSP or spaces — long katakana compounds stay intact and
+particles like 「は」 start a new line rather than splitting mid-word.
+This applies to both the `lab` (slide) and `poster` themes, and is
+visible in serve, screenshot, and PDF output.
+
+Do NOT hand-insert `<br>` or `<wbr>` for aesthetic wrapping — BudouX
+handles it. Reserve `<br>` for explicit, semantic line breaks (e.g.
+address blocks) where you truly want a forced break.
+
+BudouX skips content inside `<code>`, `<pre>`, `<script>`, `<style>`, and
+similar tags automatically, so code samples and inline `` `code` `` are
+untouched.
+
+To keep a specific run on one line (product names, commands, tightly
+coupled phrases), wrap it in `<span class="nobr">…</span>`. The `.nobr`
+class applies `white-space: nowrap`, which suppresses BudouX's break
+opportunities inside the span.
+
+```markdown
+本文の説明に <span class="nobr">Marp Slides</span> と書けば折れません．
+```

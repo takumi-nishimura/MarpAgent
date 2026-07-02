@@ -183,8 +183,17 @@
   }
 }
 @layer utilities {
+  .collapse {
+    visibility: collapse;
+  }
   .visible {
     visibility: visible;
+  }
+  .absolute {
+    position: absolute;
+  }
+  .fixed {
+    position: fixed;
   }
   .relative {
     position: relative;
@@ -261,6 +270,12 @@
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+  .lowercase {
+    text-transform: lowercase;
+  }
+  .uppercase {
+    text-transform: uppercase;
   }
   .outline {
     outline-style: var(--tw-outline-style);
@@ -552,6 +567,9 @@ tbody tr:nth-child(even) {
   }
   .marker {
     background: linear-gradient(transparent 60%, var(--color-deck-yellow) 60%);
+  }
+  .nobr {
+    white-space: nowrap;
   }
 }
 em {

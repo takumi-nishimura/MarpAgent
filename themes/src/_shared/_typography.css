@@ -39,6 +39,13 @@
   .marker {
     background: linear-gradient(transparent 60%, var(--color-deck-yellow) 60%);
   }
+
+  /* Opt-out for BudouX-inserted phrase breaks. Wrap a run in
+     <span class="nobr">…</span> to keep it on one line — nowrap suppresses
+     the ZWSP soft-break opportunities BudouX emits inside the span. */
+  .nobr {
+    white-space: nowrap;
+  }
 }
 
 /* Emphasis styling */
