@@ -55,20 +55,27 @@ to keep it on one line. Applies to lab and poster themes (see `marp-components`)
 | `<!-- _class: title -->` | Apply title layout |
 | `<!-- _header: <text> -->` | Set slide header text |
 
+## Mermaid Sizing
+
+Mermaid SVGs are laid out before slide CSS is applied. Scoped CSS that changes
+`svg text { font-size: ... }` only changes visible text; node boxes do not
+resize. Scale the rendered SVG/container instead, e.g.
+`style="--mermaid-width: 115%; --mermaid-max-width: none; --mermaid-overflow: visible"`.
+
 ## Commands
 
 | Command | Description |
 | :------ | :---------- |
-| `npx marpx -n decks/<path>` | Scaffold a new deck |
-| `npx marpx -n decks/<path> --poster` | Scaffold a new A0 poster deck |
-| `npx marpx decks/<name>/brief.md --outline` | Generate outline from brief.md |
-| `npx marpx decks/<name>/slide.md -v` | Validate slide.md |
-| `npx marpx decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |
-| `npx marpx decks/<name>/slide.md` | Serve with live reload |
-| `npx marpx decks/<name>/slide.md --screenshot <page>` | Screenshot a slide to `/tmp` (headless) |
-| `npx marpx decks/<name>/slide.md -p` | Single-shot preview (opens browser) |
-| `npx marpx decks/<name>/slide.md --overview` | Thumbnail overview (opens browser) |
-| `npx marpx decks/<name>/slide.md --pdf` | Export to PDF |
-| `npx marpx --theme` | Build all themes |
-| `npx marpx --theme lab` | Build lab theme only |
-| `npx marpx --theme -w` | Watch-build themes |
+| `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
+| `npm run marpx -- -n decks/<path> --poster` | Scaffold a new A0 poster deck |
+| `npm run marpx -- decks/<name>/brief.md --outline` | Generate outline from brief.md |
+| `npm run marpx -- decks/<name>/slide.md -v` | Validate slide.md |
+| `npm run marpx -- decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |
+| `npm run marpx -- decks/<name>/slide.md` | Serve with live reload |
+| `npm run marpx -- decks/<name>/slide.md --screenshot <page>` | Screenshot a slide to `/tmp` (headless) |
+| `npm run marpx -- decks/<name>/slide.md -p` | Single-shot preview (opens browser) |
+| `npm run marpx -- decks/<name>/slide.md --overview` | Thumbnail overview (opens browser) |
+| `npm run marpx -- decks/<name>/slide.md --pdf` | Export to PDF |
+| `npm run marpx -- --theme` | Build all themes |
+| `npm run marpx -- --theme lab` | Build lab theme only |
+| `npm run marpx -- --theme -w` | Watch-build themes |

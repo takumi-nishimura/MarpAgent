@@ -16,7 +16,7 @@ brief.md → outline.md → slide.md → HTML / PDF / PPTX
 ## Prerequisites
 
 - Node.js 25.x (pinned by `volta.node` in `package.json`)
-- `npx marpx` (bundled via `npm install`)
+- `npm run marpx --` (repo-local CLI script; avoid `npx marpx` in this checkout because the package's own bin is not linked into `node_modules/.bin`)
 
 ```bash
 npm install
@@ -26,52 +26,52 @@ npm install
 
 ```bash
 # 1. Create a deck
-npx marpx -n decks/my-talk
+npm run marpx -- -n decks/my-talk
 
 # 2. Fill in decks/my-talk/brief.md (8 sections)
 
 # 3. Generate outline
-npx marpx decks/my-talk/brief.md --outline
+npm run marpx -- decks/my-talk/brief.md --outline
 
 # 4. Author decks/my-talk/slide.md
 
 # 5. Live preview while editing
-npx marpx decks/my-talk/slide.md
+npm run marpx -- decks/my-talk/slide.md
 
 # 6. Validate
-npx marpx decks/my-talk/slide.md -v
+npm run marpx -- decks/my-talk/slide.md -v
 
 # 7. Single-shot preview (optional)
-npx marpx decks/my-talk/slide.md -p
+npm run marpx -- decks/my-talk/slide.md -p
 
 # 8. Open thumbnail overview (optional)
-npx marpx decks/my-talk/slide.md --overview
+npm run marpx -- decks/my-talk/slide.md --overview
 ```
 
 ## Commands
 
 | Command | Description |
 | :------ | :---------- |
-| `npx marpx -n decks/<path>` | Scaffold a new deck |
-| `npx marpx -n decks/<path> --poster` | Scaffold a new A0 poster deck |
-| `npx marpx <brief.md> --outline` | Generate outline |
-| `npx marpx <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
-| `npx marpx <slide.md>` | Serve with live reload |
-| `npx marpx <slide.md> <page>` | Serve and open at displayed page |
-| `npx marpx <slide.md> --screenshot <page>` | Screenshot a slide to `/tmp` |
-| `npx marpx <slide.md> -p` | Single-shot preview |
-| `npx marpx <slide.md> --overview` | Thumbnail overview |
-| `npx marpx <slide.md> --pdf` | Export to PDF |
-| `npx marpx <slide.md> --lint` | Lint with deck validator rules |
-| `npx marpx <slide.md> --lint --autofix` | Apply safe autofixes, then lint again |
-| `npx marpx <slide.md> -v` | Validate |
-| `npx marpx <slide.md> -v --strict` | Validate and fail if visual check falls back |
-| `npx marpx <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |
-| `npx marpx <slide.md> -v --report-dir out/<name>` | Validate with report |
-| `npx marpx --doctor` | Run environment diagnostics |
-| `npx marpx --theme` | Build all themes |
-| `npx marpx --theme lab` | Build a single theme |
-| `npx marpx --theme -w` | Watch-build themes |
+| `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
+| `npm run marpx -- -n decks/<path> --poster` | Scaffold a new A0 poster deck |
+| `npm run marpx -- <brief.md> --outline` | Generate outline |
+| `npm run marpx -- <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
+| `npm run marpx -- <slide.md>` | Serve with live reload |
+| `npm run marpx -- <slide.md> <page>` | Serve and open at displayed page |
+| `npm run marpx -- <slide.md> --screenshot <page>` | Screenshot a slide to `/tmp` |
+| `npm run marpx -- <slide.md> -p` | Single-shot preview |
+| `npm run marpx -- <slide.md> --overview` | Thumbnail overview |
+| `npm run marpx -- <slide.md> --pdf` | Export to PDF |
+| `npm run marpx -- <slide.md> --lint` | Lint with deck validator rules |
+| `npm run marpx -- <slide.md> --lint --autofix` | Apply safe autofixes, then lint again |
+| `npm run marpx -- <slide.md> -v` | Validate |
+| `npm run marpx -- <slide.md> -v --strict` | Validate and fail if visual check falls back |
+| `npm run marpx -- <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |
+| `npm run marpx -- <slide.md> -v --report-dir out/<name>` | Validate with report |
+| `npm run marpx -- --doctor` | Run environment diagnostics |
+| `npm run marpx -- --theme` | Build all themes |
+| `npm run marpx -- --theme lab` | Build a single theme |
+| `npm run marpx -- --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
 | `npm run quality:gate` | Run unit tests + fixture validation gate |
 | `npm run quality:gate:strict` | Enforce visual checks + strict e2e policy |
@@ -106,9 +106,36 @@ The `lab` theme is built on Tailwind CSS v4 and provides:
 - Laser pointer effect during presentation
 - Mermaid diagram support with MathJax
 
+### Mermaid sizing
+
+Mermaid diagrams are rendered to SVG before the slide is styled. Changing
+`svg text { font-size: ... }` with scoped CSS changes the visible text only;
+it does not rerun Mermaid layout, so node boxes and edge routes keep their
+original dimensions.
+
+To make a Mermaid diagram larger, scale the rendered SVG/container instead:
+
+````markdown
+<div style="width: 90%; --mermaid-width: 115%; --mermaid-max-width: none; --mermaid-overflow: visible">
+
+```mermaid
+flowchart TD
+  A[リアルタイム協調エージェント]
+  B[人間基準での較正]
+  C[未知ユーザーへの適応]
+  A --> B --> C
+```
+
+</div>
+````
+
+Use `--mermaid-width`, `--mermaid-max-width`, `--mermaid-max-height`, and
+`--mermaid-overflow` on a wrapper when the default diagram size does not fit.
+Do not rely on post-render text font-size changes for node sizing.
+
 ```bash
-npx marpx --theme lab   # build theme
-npx marpx --theme -w    # watch mode
+npm run marpx -- --theme lab   # build theme
+npm run marpx -- --theme -w    # watch mode
 ```
 
 ## Posters (A0)
@@ -118,12 +145,12 @@ A0 canvas instead of a slide sequence.
 
 ```bash
 # Scaffold a poster deck (A0 portrait)
-npx marpx -n decks/my-poster --poster
+npm run marpx -- -n decks/my-poster --poster
 
 # Edit decks/my-poster/poster.md, then preview / validate / export
-npx marpx decks/my-poster/poster.md        # live preview
-npx marpx decks/my-poster/poster.md -v     # validate (A0 overflow check)
-npx marpx decks/my-poster/poster.md --pdf  # export A0 PDF for printing
+npm run marpx -- decks/my-poster/poster.md        # live preview
+npm run marpx -- decks/my-poster/poster.md -v     # validate (A0 overflow check)
+npm run marpx -- decks/my-poster/poster.md --pdf  # export A0 PDF for printing
 ```
 
 - **Portrait (default):** `size: a0` in the front matter

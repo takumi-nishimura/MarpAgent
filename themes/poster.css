@@ -870,8 +870,10 @@ th {
   margin: 0.5em 0;
 }
 .mermaid-diagram > svg {
-  width: 100%;
-  max-width: 100%;
+  flex: 0 0 auto;
+  width: var(--mermaid-width, 100%);
+  max-width: var(--mermaid-max-width, 100%);
+  max-height: var(--mermaid-max-height, none);
   height: auto;
 }
 @property --tw-rotate-x {

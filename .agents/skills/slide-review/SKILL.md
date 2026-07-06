@@ -10,7 +10,7 @@ Validate and remediate `decks/$ARGUMENTS/slide.md`.
 
 1. Run validation with a report:
    ```bash
-   npx marpx decks/$ARGUMENTS/slide.md -v --report-dir out/$ARGUMENTS
+   npm run marpx -- decks/$ARGUMENTS/slide.md -v --report-dir out/$ARGUMENTS
    ```
 
 2. Read `out/$ARGUMENTS/report.md`. For each finding, classify the action using the **marp-validator** skill:
@@ -23,7 +23,7 @@ Validate and remediate `decks/$ARGUMENTS/slide.md`.
    - If one slide has multiple findings, fix that slide in one pass before re-validating
    - After each remediation pass, re-run:
      ```bash
-     npx marpx decks/$ARGUMENTS/slide.md -v --report-dir out/$ARGUMENTS
+     npm run marpx -- decks/$ARGUMENTS/slide.md -v --report-dir out/$ARGUMENTS
      ```
      Re-read the refreshed report before the next pass
 
@@ -33,7 +33,7 @@ Validate and remediate `decks/$ARGUMENTS/slide.md`.
 
 6. Final check:
    ```bash
-   npx marpx decks/$ARGUMENTS/slide.md -v
+   npm run marpx -- decks/$ARGUMENTS/slide.md -v
    ```
 
 ## Done When
