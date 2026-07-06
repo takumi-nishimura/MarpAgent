@@ -16,6 +16,7 @@ test("Mermaid theme CSS exposes sizing custom properties", () => {
     assert.match(css, /--mermaid-width/);
     assert.match(css, /--mermaid-max-width/);
     assert.match(css, /--mermaid-max-height/);
+    assert.match(css, /--mermaid-overflow/);
     assert.match(css, /flex:\s*0 0 auto/);
   }
 });
