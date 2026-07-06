@@ -11,7 +11,7 @@ Create a new deck at `decks/$ARGUMENTS`.
 
 1. Scaffold:
    ```bash
-   npx marpx -n decks/$ARGUMENTS
+   npm run marpx -- -n decks/$ARGUMENTS
    ```
    The scaffold creates placeholder `brief.md` and `slide.md` files. Before outline approval, treat `slide.md` as an untouched scaffold artifact, not authored content.
 
@@ -23,7 +23,7 @@ Create a new deck at `decks/$ARGUMENTS`.
 
 4. Generate outline:
    ```bash
-   npx marpx decks/$ARGUMENTS/brief.md --outline
+   npm run marpx -- decks/$ARGUMENTS/brief.md --outline
    ```
    The generator dedupes any Title/Agenda the brief already lists and carries layout-variant hints (`[three-column]`, `(closing variant)`, `using the feature-grid variant`, …) through to the outline's `Layout hint:` field — no manual sweep needed.
 
@@ -48,7 +48,7 @@ Create a new deck at `decks/$ARGUMENTS`.
 
 8. Validate and fix:
    ```bash
-   npx marpx decks/$ARGUMENTS/slide.md -v
+   npm run marpx -- decks/$ARGUMENTS/slide.md -v
    ```
    On `visual-overflow`, `overflow-risk`, `dense-bullets`, `figure-text-density`, or `comparison-overpacked`: split the slide. Never shrink text. Repeat until clean.
 

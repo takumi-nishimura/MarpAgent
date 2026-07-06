@@ -142,6 +142,21 @@ graph LR
 </div>
 ````
 
+Sizing note: Mermaid is laid out before slide CSS is applied. Scoped CSS such
+as `.my-flow svg text { font-size: 20px }` changes visible text only and does
+not resize node boxes. To make a diagram larger, scale the SVG/container:
+
+````markdown
+<div style="width: 90%; --mermaid-width: 115%; --mermaid-max-width: none; --mermaid-overflow: visible">
+
+```mermaid
+graph LR
+    A[Input] --> B[Process] --> C[Output]
+```
+
+</div>
+````
+
 ## Presenter Notes
 
 Add notes visible only in presenter view via HTML comments. Place inside the slide body:

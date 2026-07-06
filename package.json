@@ -7,6 +7,7 @@
     "marpx": "bin/marpx.js"
   },
   "scripts": {
+    "marpx": "node bin/marpx.js",
     "test": "node scripts/run-node-tests.js",
     "doctor": "node scripts/doctor.js",
     "lint:deck": "node scripts/lint-deck.js",

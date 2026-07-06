@@ -120,10 +120,10 @@ over from the lab theme.
 ## Commands
 
 ```bash
-npx marpx -n decks/<name> --poster   # scaffold a poster deck
-npx marpx decks/<name>/poster.md     # live preview
-npx marpx decks/<name>/poster.md -v  # validate (A0 overflow check)
-npx marpx decks/<name>/poster.md --pdf  # export A0 PDF for printing
+npm run marpx -- -n decks/<name> --poster   # scaffold a poster deck
+npm run marpx -- decks/<name>/poster.md     # live preview
+npm run marpx -- decks/<name>/poster.md -v  # validate (A0 overflow check)
+npm run marpx -- decks/<name>/poster.md --pdf  # export A0 PDF for printing
 ```
 
 ## Validation

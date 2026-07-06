@@ -14,7 +14,7 @@ A poster is one full-page A0 canvas, not a slide sequence. Follow the
 
 1. Scaffold:
    ```bash
-   npx marpx -n decks/$ARGUMENTS --poster
+   npm run marpx -- -n decks/$ARGUMENTS --poster
    ```
    This creates a single `poster.md` (A0 portrait) plus `assets/` and `shared`.
    No `brief.md` / `outline.md` — a poster does not use that pipeline.
@@ -42,14 +42,14 @@ A poster is one full-page A0 canvas, not a slide sequence. Follow the
 
 4. Validate and fix:
    ```bash
-   npx marpx decks/$ARGUMENTS/poster.md -v
+   npm run marpx -- decks/$ARGUMENTS/poster.md -v
    ```
    On `visual-overflow`: trim a card, rebalance columns, or move a card to
    another column. Never shrink the font below readability. Repeat until clean.
 
 5. Optional — export for printing (run only when the user asks for a PDF):
    ```bash
-   npx marpx decks/$ARGUMENTS/poster.md --pdf
+   npm run marpx -- decks/$ARGUMENTS/poster.md --pdf
    ```
 
 ## Done When
