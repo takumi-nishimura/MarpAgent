@@ -127,12 +127,19 @@ section h2 {
   margin: 0.55em 0 0.2em;
 }
 .research-flow {
-  width: 108%;
+  width: 100%;
   margin-top: 0.2em;
-  margin-left: -0.2em;
+  margin-left: -0.15em;
 }
-.research-flow svg {
+.research-flow .mermaid-diagram {
+  overflow: visible;
+  transform: scale(1.1);
+  transform-origin: center center;
+}
+.research-flow .mermaid-diagram > svg {
   width: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
   height: auto !important;
 }
 .research-flow svg text {
