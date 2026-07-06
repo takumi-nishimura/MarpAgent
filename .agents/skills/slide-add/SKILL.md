@@ -35,7 +35,7 @@ If the user does not specify an exact insertion point, infer the most relevant n
 
 5. Validate:
    ```bash
-   npx marpx $ARGUMENTS -v
+   npm run marpx -- $ARGUMENTS -v
    ```
    Fix any new findings. Confirm no regressions on previously clean slides.
 

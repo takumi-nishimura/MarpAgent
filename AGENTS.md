@@ -55,6 +55,31 @@ to keep it on one line. Applies to lab and poster themes (see `marp-components`)
 | `<!-- _class: title -->` | Apply title layout |
 | `<!-- _header: <text> -->` | Set slide header text |
 
+## Mermaid Sizing
+
+Mermaid SVGs are laid out before slide CSS is applied. Scoped CSS that changes
+`svg text { font-size: ... }` only changes visible text; node boxes do not
+resize. Scale the rendered SVG/container instead, e.g.
+`style="--mermaid-width: 115%; --mermaid-max-width: none; --mermaid-overflow: visible"`.
+
+## Commands
+
+| Command | Description |
+| :------ | :---------- |
+| `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
+| `npm run marpx -- -n decks/<path> --poster` | Scaffold a new A0 poster deck |
+| `npm run marpx -- decks/<name>/brief.md --outline` | Generate outline from brief.md |
+| `npm run marpx -- decks/<name>/slide.md -v` | Validate slide.md |
+| `npm run marpx -- decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |
+| `npm run marpx -- decks/<name>/slide.md` | Serve with live reload |
+| `npm run marpx -- decks/<name>/slide.md --screenshot <page>` | Screenshot a slide to `/tmp` (headless) |
+| `npm run marpx -- decks/<name>/slide.md -p` | Single-shot preview (opens browser) |
+| `npm run marpx -- decks/<name>/slide.md --overview` | Thumbnail overview (opens browser) |
+| `npm run marpx -- decks/<name>/slide.md --pdf` | Export to PDF |
+| `npm run marpx -- --theme` | Build all themes |
+| `npm run marpx -- --theme lab` | Build lab theme only |
+| `npm run marpx -- --theme -w` | Watch-build themes |
+
 ## Research Vault (External Repository)
 
 The Obsidian research vault at `/Users/hapticslab/Documents/nishi/lab/notes/` contains literature notes, research memos, synthesis pages, and project notes. Use it when authoring decks to ground slides in existing research.
@@ -71,25 +96,10 @@ The Obsidian research vault at `/Users/hapticslab/Documents/nishi/lab/notes/` co
 
 ### How to use
 
-- The `obsidian:obsidian-cli` plugin is globally enabled. Use `obsidian search "<query>"` to find relevant notes, `obsidian read "<path>"` to read them.
-- Alternatively: `rg -l "<keyword>" /Users/hapticslab/Documents/nishi/lab/notes/ --include="*.md"`
+- Treat the vault as a Markdown file tree first. Use `rg` / `rg --files` to find relevant notes:
+  - `rg -n "<keyword>" /Users/hapticslab/Documents/nishi/lab/notes --glob "*.md"`
+  - `rg --files /Users/hapticslab/Documents/nishi/lab/notes | rg "<topic|project|citekey>"`
+- Use `fzf` only for interactive local exploration, not as a required agent workflow.
 - When writing `brief.md`, populate the `## References` section with vault note paths (e.g., `10_Literature/@SmithFuzzyControl2024.md`) so the link between deck and source material is explicit.
 - Literature notes' `description` field gives a quick 1-line summary for scanning relevance.
-
-## Commands
-
-| Command | Description |
-| :------ | :---------- |
-| `npx marpx -n decks/<path>` | Scaffold a new deck |
-| `npx marpx -n decks/<path> --poster` | Scaffold a new A0 poster deck |
-| `npx marpx decks/<name>/brief.md --outline` | Generate outline from brief.md |
-| `npx marpx decks/<name>/slide.md -v` | Validate slide.md |
-| `npx marpx decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |
-| `npx marpx decks/<name>/slide.md` | Serve with live reload |
-| `npx marpx decks/<name>/slide.md --screenshot <page>` | Screenshot a slide to `/tmp` (headless) |
-| `npx marpx decks/<name>/slide.md -p` | Single-shot preview (opens browser) |
-| `npx marpx decks/<name>/slide.md --overview` | Thumbnail overview (opens browser) |
-| `npx marpx decks/<name>/slide.md --pdf` | Export to PDF |
-| `npx marpx --theme` | Build all themes |
-| `npx marpx --theme lab` | Build lab theme only |
-| `npx marpx --theme -w` | Watch-build themes |
+- For project-scoped research, start from `30_Projects/<project>/` and any project index note before following older cross-links.

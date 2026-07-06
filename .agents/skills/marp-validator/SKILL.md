@@ -7,9 +7,9 @@ user-invocable: false
 ## Run Validation
 
 ```bash
-npx marpx decks/<name>/slide.md -v
+npm run marpx -- decks/<name>/slide.md -v
 # With report output:
-npx marpx decks/<name>/slide.md -v --report-dir out/<name>
+npm run marpx -- decks/<name>/slide.md -v --report-dir out/<name>
 ```
 
 ## Hard Limits

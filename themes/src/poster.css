@@ -276,9 +276,12 @@ th {
   width: 100%;
   justify-content: center;
   margin: 0.5em 0;
+  overflow: var(--mermaid-overflow, visible);
 }
 .mermaid-diagram > svg {
-  width: 100%;
-  max-width: 100%;
+  flex: 0 0 auto;
+  width: var(--mermaid-width, 100%);
+  max-width: var(--mermaid-max-width, 100%);
+  max-height: var(--mermaid-max-height, none);
   height: auto;
 }
