@@ -15,6 +15,21 @@ Built-in theme variables:
 | `--text-sm` | Small font size |
 | `--text-xl` | Large font size |
 | `--logos-dark` | URL of dark-variant logo |
+| `--logos-light` | URL of light-variant logo |
+| `--logo-title-size` | Title-slide logo width used for default sizing and spacing |
+| `--logo-title-background-size` | Title-slide CSS background-size override |
+| `--logo-header-size` | Non-title header logo height |
+
+For wide title-slide wordmarks, keep `--logo-title-size` at its default unless
+you also need to change spacing. Override only the background size:
+
+```yaml
+style: |
+  section {
+    --logos-dark: url(shared/logos/haptics_lab/logo_gray.svg);
+    --logo-title-background-size: auto 50px;
+  }
+```
 
 **`--bg-gray-5` is NOT built into the theme.** Declare it in frontmatter `style:` before use:
 

@@ -34,6 +34,7 @@ section {
 
   /* Logo dimensions and spacing */
   --logo-title-size: 80px;
+  --logo-title-background-size: var(--logo-title-size);
   --logo-title-spacing: 10px;
   --logo-header-size: 50px;
   --logo-header-spacing: 35px;
@@ -166,11 +167,11 @@ section.title header {
     left calc(20px + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px,
     left calc(20px + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
   background-size:
-    var(--logo-title-size),
-    var(--logo-title-size),
-    var(--logo-title-size),
-    var(--logo-title-size),
-    var(--logo-title-size);
+    var(--logo-title-background-size),
+    var(--logo-title-background-size),
+    var(--logo-title-background-size),
+    var(--logo-title-background-size),
+    var(--logo-title-background-size);
 
   /* Ensure header has enough height for the logo */
   min-height: calc(var(--logo-title-size) + 20px);
