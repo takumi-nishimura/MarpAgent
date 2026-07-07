@@ -49,11 +49,13 @@ function resolvePackageJsonPath(entryPath) {
     dir = path.dirname(dir)
   }
 
-  throw new Error('Could not resolve beautiful-mermaid package.json from module entry path.')
+  throw new Error(
+    'Could not resolve beautiful-mermaid package.json from module entry path.',
+  )
 }
 
 function parseAttr(attrStr, name) {
-  const m = attrStr.match(new RegExp(`${name}="([^"]*)"` ))
+  const m = attrStr.match(new RegExp(`${name}="([^"]*)"`))
   return m ? m[1] : null
 }
 
@@ -72,6 +74,61 @@ function estimateTextWidth(text, fontSize) {
     else len += 0.6
   }
   return len * fontSize
+}
+
+function postProcessLineBreaks(svg) {
+  const TEXT_EL_RE = /<text([^>]*)>([\s\S]*?)<\/text>/g
+
+  return svg.replace(TEXT_EL_RE, (full, attrs, rawContent) => {
+    if (rawContent.includes('<tspan') || rawContent.includes('$')) {
+      return full
+    }
+
+    const content = stripQuoteWrapper(rawContent)
+    const lines = content.split(/&lt;br\s*\/?&gt;|\\n|\n/i)
+    if (lines.length <= 1) {
+      if (content !== rawContent) {
+        return `<text${attrs}>${content}</text>`
+      }
+      return full
+    }
+
+    const xRaw = parseAttr(attrs, 'x')
+    if (!xRaw) {
+      return full
+    }
+
+    const dyRaw = parseAttr(attrs, 'dy') || '0'
+    const fontSize = parseFloat(parseAttr(attrs, 'font-size') || '16')
+    const dyPx = dyRaw.endsWith('em')
+      ? parseFloat(dyRaw) * fontSize
+      : parseFloat(dyRaw)
+    const lineHeightPx = fontSize * 1.2
+    const firstDyPx = dyPx - ((lines.length - 1) * lineHeightPx) / 2
+    const firstDy = formatPxAsEm(firstDyPx, fontSize)
+
+    const tspans = lines
+      .map((line, index) => {
+        const dy = index === 0 ? firstDy : '1.2em'
+        return `<tspan x="${xRaw}" dy="${dy}">${line}</tspan>`
+      })
+      .join('')
+
+    return `<text${attrs}>${tspans}</text>`
+  })
+}
+
+function stripQuoteWrapper(content) {
+  if (content.startsWith('&quot;') && content.endsWith('&quot;')) {
+    return content.slice(6, -6)
+  }
+  return content
+}
+
+function formatPxAsEm(px, fontSize) {
+  const em = px / fontSize
+  if (Math.abs(em) < 0.0001) return '0em'
+  return `${Number(em.toFixed(3))}em`
 }
 
 async function postProcessMath(svg) {
@@ -124,10 +181,7 @@ async function postProcessMath(svg) {
 
   for (const hit of hits) {
     // Strip optional &quot; wrappers added by Mermaid for ["..."] labels
-    let content = hit.rawContent
-    if (content.startsWith('&quot;') && content.endsWith('&quot;')) {
-      content = content.slice(6, -6)
-    }
+    let content = stripQuoteWrapper(hit.rawContent)
 
     // Parse attributes.
     // dy may carry a unit (e.g. "0.35em"); preserve the raw string for <text>
@@ -267,11 +321,18 @@ async function main() {
     ...THEMES['github-light'],
     transparent: true,
   })
-  const result = await postProcessMath(svg)
+  const result = postProcessLineBreaks(await postProcessMath(svg))
   process.stdout.write(result)
 }
 
-main().catch((e) => {
-  process.stderr.write(e.message)
-  process.exit(1)
-})
+if (require.main === module) {
+  main().catch((e) => {
+    process.stderr.write(e.message)
+    process.exit(1)
+  })
+}
+
+module.exports = {
+  postProcessLineBreaks,
+  postProcessMath,
+}

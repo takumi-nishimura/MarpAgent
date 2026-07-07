@@ -142,6 +142,15 @@ graph LR
 </div>
 ````
 
+Use `<br/>` or `\n` inside a quoted label when a node label needs a line break:
+
+````markdown
+```mermaid
+flowchart TD
+    A["Long first line<br/>Short second line"] --> B[Output]
+```
+````
+
 Sizing note: Mermaid is laid out before slide CSS is applied. Scoped CSS such
 as `.my-flow svg text { font-size: 20px }` changes visible text only and does
 not resize node boxes. To make a diagram larger, scale the SVG/container:
