@@ -321,7 +321,7 @@ section {
   --padding-bottom: 0;
   --header-height: 60px;
   --logo-title-size: 80px;
-  --logo-title-background-size: var(--logo-title-size);
+  --logo-title-background-size: auto var(--logo-title-size);
   --logo-title-spacing: 10px;
   --logo-header-size: 50px;
   --logo-header-spacing: 35px;
