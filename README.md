@@ -133,6 +133,15 @@ Use `--mermaid-width`, `--mermaid-max-width`, `--mermaid-max-height`, and
 `--mermaid-overflow` on a wrapper when the default diagram size does not fit.
 Do not rely on post-render text font-size changes for node sizing.
 
+For node label line breaks, use `<br/>` or `\n` inside a quoted Mermaid label:
+
+````markdown
+```mermaid
+flowchart TD
+  A["Long first line<br/>Short second line"] --> B[Output]
+```
+````
+
 ```bash
 npm run marpx -- --theme lab   # build theme
 npm run marpx -- --theme -w    # watch mode
