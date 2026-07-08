@@ -167,7 +167,9 @@ Use `--mermaid-width`, `--mermaid-max-width`, `--mermaid-max-height`, and
 `--mermaid-overflow` on a wrapper when the default diagram size does not fit.
 Do not rely on post-render text font-size changes for node sizing.
 
-For node label line breaks, use `<br/>` or `\n` inside a quoted Mermaid label:
+For node label line breaks, use `<br/>` or `\n` inside a quoted Mermaid label.
+Explicit line breaks are measured before layout, so the node box height grows
+with the line count and the width follows the longest visual line:
 
 ````markdown
 ```mermaid
