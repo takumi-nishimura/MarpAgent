@@ -103,6 +103,7 @@ token sources. Available themes:
 
 - `lab` — default research presentation design
 - `muji` — quiet, minimal MUJI-inspired design
+- `bil` — private Body Integration Learning-inspired design
 
 Common capabilities:
 
@@ -134,7 +135,7 @@ The scaffold creates `designs/<name>/DESIGN.md`, `themes/src/<name>.css`, and
 extract-adapt-validate workflow for URL, brand-guide, and existing DESIGN.md
 sources.
 
-Use `theme: lab` or `theme: muji` for slide decks and A-series paper layouts.
+Use `theme: lab`, `theme: muji`, or `theme: bil` for slide decks and A-series paper layouts.
 Canvas size is an explicit frontmatter concern: `16:9`, `4:3`, `a4-portrait`,
 `a4-landscape`, or a custom pixel size such as `400x200`. Paper layout is
 selected by the `.paper-header` / `.paper-columns` structure, not by a separate

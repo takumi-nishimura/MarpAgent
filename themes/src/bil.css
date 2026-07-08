@@ -1,0 +1,209 @@
+/*!
+ * @theme bil
+ * @size 16:9 1280px 720px
+ * @size 4:3 1024px 768px
+ * @size a4-portrait 210mm 297mm
+ * @size a4-landscape 297mm 210mm
+ */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap");
+@import "tailwindcss" source(none);
+@source "../../decks/**/*.md";
+@source "../../fixtures/**/*.md";
+@source "../../.agents/skills/**/*.md";
+
+@import "./_generated/bil-design-tokens.css";
+@import "./_shared/_base.css";
+@import "./_shared/_colors.css";
+@import "./_shared/_typography.css";
+@import "./_shared/_layouts.css";
+@import "./_shared/_paper.css";
+@import "./_shared/_callouts.css";
+@import "./_shared/_code.css";
+@import "./_shared/_colorschemes.css";
+
+@font-face {
+  font-family: "Euclid";
+  src: url("https://bodyintegration-learning.org/bil_cms/wp-content/themes/BIL/resource/font/Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Euclid";
+  src: url("https://bodyintegration-learning.org/bil_cms/wp-content/themes/BIL/resource/font/Medium.woff") format("woff");
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+section {
+  --fg: var(--color-on-surface);
+  --bg: var(--color-bil-gray);
+  --fg-muted: var(--color-secondary);
+  --highlight: var(--color-bil-violet);
+  --gradient-mid: color-mix(in srgb, var(--highlight) 40%, var(--bg));
+  --bg-gray-5: var(--color-surface);
+  --color-em: var(--color-emphasis);
+  --color-strong: var(--color-accent-strong);
+  --padding-x: var(--spacing-slide-x);
+  --header-height: var(--spacing-header-height);
+  --footer-height: var(--spacing-footer-height);
+  --header-title-inset: var(--spacing-header-title-inset);
+  --logo-title-size: var(--spacing-logo-title-size);
+  --logo-header-size: var(--spacing-logo-header-size);
+  --paper-section-radius: var(--radius-md);
+  --logos-dark: none;
+  --logos-light: var(--logos-dark);
+  --bil-main-visual: none;
+  --bil-header-logo-area: 0px;
+
+  font-family: var(--font-body-md), "Noto Sans JP", sans-serif;
+  font-size: var(--text-body-md);
+}
+
+section h1,
+section h2,
+section h3 {
+  font-weight: 500;
+}
+
+section strong {
+  color: var(--color-bil-violet);
+}
+
+section.title {
+  --fg: var(--color-bil-ink);
+  --bg: var(--color-bil-gray);
+}
+
+section.title header {
+  background-position: left var(--spacing-lg) top var(--spacing-md);
+}
+
+section.title h1 {
+  max-width: 780px;
+  margin-top: 150px;
+  border-bottom: 0;
+  color: var(--color-bil-violet);
+  font-size: var(--text-display);
+  font-weight: var(--font-weight-display);
+  line-height: var(--leading-display);
+  text-align: left;
+}
+
+section.title > p {
+  max-width: 520px;
+  margin-top: 36px;
+  margin-left: auto;
+  margin-right: 48px;
+  color: var(--color-bil-ink);
+  font-size: var(--text-headline-md);
+  line-height: var(--leading-headline-md);
+  text-align: left;
+}
+
+section:not(.title).bil-visual {
+  background-image: var(--bil-main-visual);
+  background-repeat: no-repeat;
+  background-position: right -400px top -118px;
+  background-size: auto 930px;
+}
+
+section:not(.title).bil-logo {
+  --bil-header-logo-area: calc(var(--logo-header-size) + var(--spacing-md));
+}
+
+section:not(.title)::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: var(--header-height);
+  right: var(--spacing-lg);
+  bottom: var(--footer-height);
+  left: var(--spacing-lg);
+  background: var(--color-surface);
+  border-radius: var(--radius-none);
+  opacity: 0.94;
+}
+
+section:not(.title) > :not(header) {
+  position: relative;
+  z-index: 1;
+}
+
+section:not(.title) header:not(.paper-header) {
+  z-index: 2;
+  background-color: transparent;
+  background-image: none;
+  border-bottom: 0;
+  border-bottom-right-radius: var(--radius-none);
+  color: var(--color-bil-ink);
+  font-size: var(--text-body-md);
+  font-weight: var(--font-weight-label-md);
+  letter-spacing: 0;
+  padding-left: calc(var(--padding-x) + var(--spacing-lg) + var(--header-title-inset));
+  padding-right: calc(var(--padding-x) + var(--spacing-lg) + var(--bil-header-logo-area));
+  padding-top: 0;
+  padding-bottom: 0;
+  align-items: center;
+}
+
+section:not(.title) header:not(.paper-header)::after {
+  background-image: none;
+  background-position: right calc(var(--padding-x) + var(--spacing-lg)) center;
+  background-size: auto var(--logo-header-size);
+}
+
+section:not(.title).bil-logo header:not(.paper-header)::after {
+  background-image: var(--logos-dark);
+}
+
+section:not(.title) header:not(.paper-header) + * {
+  margin-top: calc(var(--header-height) + var(--spacing-sm));
+}
+
+.summary-box,
+.gap-box,
+.context-panel,
+.feature-grid > div,
+.note,
+.tip,
+.important,
+.warning,
+.caution,
+.paper-section {
+  border-radius: var(--radius-md);
+}
+
+.summary-box,
+.gap-box,
+.feature-grid > div {
+  background: var(--color-surface);
+}
+
+.tip {
+  background-color: color-mix(in srgb, var(--color-tip) 14%, transparent);
+}
+
+.important {
+  background-color: color-mix(in srgb, var(--color-important) 18%, transparent);
+}
+
+.context-panel {
+  background: var(--color-bil-navy);
+  color: var(--color-on-primary);
+  padding: var(--spacing-lg);
+}
+
+.summary-box {
+  padding: 0.8em 1.2em;
+}
+
+.gap-box {
+  padding: 0.7em 0.8em;
+}
+
+.feature-grid > div {
+  padding: 0.7em 0.8em;
+}

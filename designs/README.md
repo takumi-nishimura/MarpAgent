@@ -6,6 +6,7 @@ Available designs:
 | :----- | :----- | :--------------- | :---- |
 | `lab` | `designs/lab/DESIGN.md` | `themes/src/_generated/lab-design-tokens.css` | `theme: lab` |
 | `muji` | `designs/muji/DESIGN.md` | `themes/src/_generated/muji-design-tokens.css` | `theme: muji` |
+| `bil` | `designs/bil/DESIGN.md` | `themes/src/_generated/bil-design-tokens.css` | `theme: bil` |
 
 Create another design with:
 

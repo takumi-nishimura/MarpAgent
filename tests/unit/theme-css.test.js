@@ -149,7 +149,7 @@ test("title and normal slide rules share the same accent treatment", () => {
 });
 
 test("theme sources explicitly bound Tailwind class detection", () => {
-  for (const themeName of ["lab", "muji"]) {
+  for (const themeName of ["lab", "muji", "bil"]) {
     const css = fs.readFileSync(
       path.join(repoRoot, "themes/src", `${themeName}.css`),
       "utf8",
@@ -201,6 +201,19 @@ test("generated design token CSS is fresh for all designs", () => {
 
   for (const [name, expectations] of [
     [
+      "bil",
+      [
+        /--color-bil-violet:\s*#4726ff;/,
+        /--color-bil-green:\s*#5fff99;/,
+        /--color-important:\s*#9a90ff;/,
+        /--text-body-md:\s*24px;/,
+        /--spacing-header-height:\s*80px;/,
+        /--spacing-footer-height:\s*40px;/,
+        /--spacing-header-title-inset:\s*0px;/,
+        /--spacing-logo-header-size:\s*54px;/,
+      ],
+    ],
+    [
       "lab",
       [/--color-primary:\s*#202228;/, /--text-body-md:\s*26px;/],
     ],
@@ -223,7 +236,7 @@ test("generated design token CSS is fresh for all designs", () => {
 });
 
 test("all DESIGN.md files pass designmd lint without warnings", () => {
-  for (const designName of ["lab", "muji"]) {
+  for (const designName of ["lab", "muji", "bil"]) {
     const result = spawnSync(
       getDesignmdBin(),
       ["lint", `designs/${designName}/DESIGN.md`],
@@ -267,7 +280,7 @@ test("legacy deck color variables map to lab design tokens", () => {
 });
 
 test("DESIGN.md files follow the Google design.md document shape", () => {
-  for (const designName of ["lab", "muji"]) {
+  for (const designName of ["lab", "muji", "bil"]) {
     const design = fs.readFileSync(
       path.join(repoRoot, "designs", designName, "DESIGN.md"),
       "utf8",
@@ -310,6 +323,56 @@ test("muji theme renders a smoke deck", () => {
 
   assert.match(html, /MUJI Theme/);
   assert.match(html, /data-theme="muji"/);
+});
+
+test("bil theme renders a smoke deck", () => {
+  const marp = new Marp();
+  marp.themeSet.add(fs.readFileSync(path.join(repoRoot, "themes/bil.css"), "utf8"));
+  const markdown = fs.readFileSync(path.join(repoRoot, "fixtures/bil-slide.md"), "utf8");
+  const { html } = marp.render(markdown);
+
+  assert.match(html, /Body Integration Learning/);
+  assert.match(html, /data-theme="bil"/);
+});
+
+test("bil theme maps source visual tokens through DESIGN.md", () => {
+  const design = fs.readFileSync(path.join(repoRoot, "designs/bil/DESIGN.md"), "utf8");
+  const css = fs.readFileSync(path.join(repoRoot, "themes/src/bil.css"), "utf8");
+
+  assert.match(design, /bil-violet:\s*"#4726FF"/);
+  assert.match(design, /bil-green:\s*"#5FFF99"/);
+  assert.match(design, /important:\s*"#9A90FF"/);
+  assert.match(design, /bil-gray:\s*"#D9DCDE"/);
+  assert.match(css, /--bg:\s*var\(--color-bil-gray\)/);
+  assert.match(css, /--header-title-inset:\s*var\(--spacing-header-title-inset\)/);
+  assert.match(css, /--logos-dark:\s*none/);
+  assert.match(css, /--bil-main-visual:\s*none/);
+  assert.match(css, /section:not\(\.title\)\.bil-visual\s*\{[\s\S]*background-image:\s*var\(--bil-main-visual\)/);
+  assert.match(css, /section:not\(\.title\)\.bil-logo\s*\{[\s\S]*--bil-header-logo-area:/);
+  assert.match(css, /color:\s*var\(--color-bil-violet\)/);
+  assert.match(css, /border-radius:\s*var\(--radius-md\)/);
+  assert.match(css, /top:\s*var\(--header-height\)/);
+  assert.match(css, /bottom:\s*var\(--footer-height\)/);
+  assert.match(css, /background-color:\s*transparent/);
+  assert.match(css, /background-image:\s*none/);
+  assert.match(css, /border-bottom:\s*0/);
+  assert.match(css, /\.tip\s*\{[\s\S]*var\(--color-tip\) 14%/);
+  assert.match(css, /\.important\s*\{[\s\S]*var\(--color-important\) 18%/);
+  assert.match(css, /font-size:\s*var\(--text-body-md\)/);
+  assert.match(css, /padding-top:\s*0/);
+  assert.match(css, /padding-bottom:\s*0/);
+  assert.match(css, /align-items:\s*center/);
+  assert.match(css, /background-position:\s*right calc\(var\(--padding-x\) \+ var\(--spacing-lg\)\) center/);
+  assert.match(
+    css,
+    /padding-left:\s*calc\(var\(--padding-x\) \+ var\(--spacing-lg\) \+ var\(--header-title-inset\)\)/,
+  );
+  assert.match(
+    css,
+    /padding-right:\s*calc\(var\(--padding-x\) \+ var\(--spacing-lg\) \+ var\(--bil-header-logo-area\)\)/,
+  );
+  assert.doesNotMatch(css, /mv@pc\.png/);
+  assert.doesNotMatch(css, /icon-512x512/);
 });
 
 test("muji header title inset comes from design tokens", () => {
