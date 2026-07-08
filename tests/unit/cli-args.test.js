@@ -32,12 +32,23 @@ test("generate-outline fails when --output value is missing", () => {
   assert.match(result.stderr, /Option --output requires a file path\./);
 });
 
-test("marpx --poster requires --new", () => {
+test("marpx --paper requires --new", () => {
   const result = runNodeScript("bin/marpx.js", [
-    "decks/foo/poster.md",
+    "decks/foo/paper.md",
+    "--paper",
+  ]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--paper can only be used with --new/);
+});
+
+test("marpx --poster reports replacement", () => {
+  const result = runNodeScript("bin/marpx.js", [
+    "-n",
+    "decks/foo",
     "--poster",
   ]);
 
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /--poster can only be used with --new/);
+  assert.match(result.stderr, /--poster has been replaced by --paper/);
 });

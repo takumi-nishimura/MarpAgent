@@ -1,0 +1,244 @@
+/* ===================================================================
+   A-series paper layout components
+   Use with `theme: lab` and an A-series size such as `a4-portrait`.
+   A4 output can be enlarged to A0 at print time without changing the ratio.
+   =================================================================== */
+section:has(> .paper-header) {
+  --paper-accent: var(--highlight);
+  --paper-accent-soft: color-mix(in srgb, var(--paper-accent) 12%, var(--bg));
+
+  /* A4 authoring scale. Linear 400% enlargement maps A4 to A0. */
+  --paper-pad: 7.5mm;
+  --paper-gap: 4.5mm;
+  --paper-section-radius: 1.5mm;
+  --paper-rule: 0.35mm;
+
+  box-sizing: border-box;
+  padding: var(--paper-pad);
+  font-size: 7.5pt;
+  line-height: 1.5;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--paper-gap);
+  overflow: hidden;
+}
+
+section:has(> .paper-header)::after {
+  content: none;
+  display: none;
+}
+
+/* ===================================================================
+   Title band
+   =================================================================== */
+.paper-header {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 2.5mm;
+  padding: 3mm 4mm;
+  border-radius: var(--paper-section-radius);
+  background: linear-gradient(135deg, var(--fg) 0%, var(--paper-accent) 100%);
+  color: var(--bg);
+}
+.paper-header .paper-logo {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+}
+.paper-header .paper-logo img {
+  height: 10.5mm;
+  width: auto;
+  object-fit: contain;
+}
+.paper-header .paper-title {
+  text-align: center;
+}
+.paper-header .paper-title h1 {
+  margin: 0;
+  font-size: 16pt;
+  font-weight: 700;
+  line-height: 1.12;
+}
+.paper-header .paper-title .paper-authors {
+  margin: 1.5mm 0 0;
+  font-size: 7.5pt;
+  font-weight: 500;
+}
+.paper-header .paper-title .paper-affil {
+  margin: 0.75mm 0 0;
+  font-size: 5.5pt;
+  font-weight: 400;
+  opacity: 0.92;
+}
+.paper-header:not(:has(.paper-logo + * + .paper-logo)) .paper-title {
+  grid-column: 2;
+}
+
+/* ===================================================================
+   Column body
+   =================================================================== */
+.paper-columns {
+  flex: 1 1 auto;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: var(--paper-gap);
+  align-items: start;
+  min-height: 0;
+}
+.paper-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--paper-gap);
+  min-width: 0;
+}
+
+/* ===================================================================
+   Section card
+   =================================================================== */
+.paper-section {
+  break-inside: avoid;
+  border: var(--paper-rule) solid var(--paper-accent);
+  border-radius: var(--paper-section-radius);
+  background: var(--bg);
+  overflow: hidden;
+}
+.paper-section > h2 {
+  margin: 0;
+  padding: 0.35em 0.6em;
+  background: var(--paper-accent);
+  color: var(--bg);
+  font-size: 9.5pt;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.paper-section > :not(h2) {
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+}
+.paper-section > :first-child:not(h2) { padding-top: 0.6em; }
+.paper-section > :last-child { padding-bottom: 0.6em; }
+
+.paper-section.highlight {
+  border-color: var(--color-strong);
+  background: var(--paper-accent-soft);
+}
+.paper-section.highlight > h2 {
+  background: var(--color-strong);
+}
+
+.paper-stat {
+  font-size: 10pt;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  margin: 0.3em 0;
+}
+.paper-stat strong { color: var(--color-strong); }
+
+/* ===================================================================
+   Footer band
+   =================================================================== */
+.paper-footer {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 3mm;
+  padding: 2mm 3mm;
+  border-radius: var(--paper-section-radius);
+  background: var(--paper-accent-soft);
+  font-size: 4.5pt;
+  line-height: 1.35;
+  color: var(--fg);
+}
+.paper-footer .paper-refs {
+  min-width: 0;
+}
+.paper-footer .paper-refs ol,
+.paper-footer .paper-refs ul {
+  margin: 0;
+  padding-left: 1.4em;
+}
+.paper-footer .paper-contact {
+  text-align: right;
+  white-space: nowrap;
+}
+.paper-footer .paper-qr img {
+  height: 11mm;
+  width: 11mm;
+  object-fit: contain;
+}
+
+/* ===================================================================
+   Element rhythm inside paper cards
+   =================================================================== */
+.paper-section h3 {
+  font-size: 7.5pt;
+  font-weight: 700;
+  margin: 0.4em 0 0.2em;
+}
+.paper-section p { margin: 0.4em 0; }
+.paper-section ul,
+.paper-section ol {
+  margin: 0.4em 0;
+  padding-left: 1.3em;
+}
+.paper-section li { margin: 0.25em 0; }
+
+section:has(> .paper-header) figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.5em auto;
+}
+section:has(> .paper-header) figure img,
+section:has(> .paper-header) figure video {
+  display: block;
+  max-width: 100%;
+  object-fit: contain;
+}
+section:has(> .paper-header) figcaption {
+  font-size: 0.7em;
+  text-align: center;
+  margin-top: 0.4em;
+  color: var(--fg-muted);
+}
+
+section:has(> .paper-header) table {
+  width: 100%;
+  margin: 0.6em 0;
+  border-collapse: collapse;
+}
+section:has(> .paper-header) th,
+section:has(> .paper-header) td {
+  border: 1px solid var(--color-table-border);
+  padding: 0.3em 0.5em;
+}
+section:has(> .paper-header) th {
+  background: var(--paper-accent-soft);
+  text-align: left;
+}
+section:has(> .paper-header) tbody tr:nth-child(even) {
+  background: var(--bg);
+}
+
+section:has(> .paper-header) .mermaid-diagram {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin: 0.5em 0;
+  overflow: var(--mermaid-overflow, visible);
+}
+section:has(> .paper-header) .mermaid-diagram > svg {
+  flex: 0 0 auto;
+  width: var(--mermaid-width, 100%);
+  max-width: var(--mermaid-max-width, 100%);
+  max-height: var(--mermaid-max-height, none);
+  height: auto;
+}

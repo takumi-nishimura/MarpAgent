@@ -7,7 +7,7 @@ const path = require("node:path");
 const {
   buildSarifReport,
   formatSummary,
-  isPosterDeck,
+  isPaperDeck,
   splitSlides,
   validateDeckFile,
   validateDeckMarkdown,
@@ -73,34 +73,34 @@ test("clean slide produces no findings", () => {
   assert.equal(result.findings.length, 0);
 });
 
-test("isPosterDeck detects poster theme and A0 size directives", () => {
-  assert.equal(
-    isPosterDeck("---\nmarp: true\ntheme: poster\n---\n# T\n"),
-    true,
-  );
-  assert.equal(isPosterDeck("---\nmarp: true\nsize: a0\n---\n# T\n"), true);
-  assert.equal(isPosterDeck("---\nsize: a0-portrait\n---\n# T\n"), true);
-  assert.equal(isPosterDeck("---\nsize: a0-landscape\n---\n# T\n"), true);
-  assert.equal(isPosterDeck("---\nmarp: true\ntheme: lab\n---\n# T\n"), false);
-  assert.equal(isPosterDeck("---\nsize: 16:9\n---\n# T\n"), false);
-  assert.equal(isPosterDeck("# No frontmatter\n"), false);
+test("isPaperDeck detects A-series orientation size directives", () => {
+  assert.equal(isPaperDeck("---\nsize: a4-portrait\n---\n# T\n"), true);
+  assert.equal(isPaperDeck("---\nsize: a4-landscape\n---\n# T\n"), true);
+  assert.equal(isPaperDeck("---\nsize: a3-portrait\n---\n# T\n"), false);
+  assert.equal(isPaperDeck("---\nmarp: true\ntheme: poster\n---\n# T\n"), false);
+  assert.equal(isPaperDeck("---\nmarp: true\nsize: a0\n---\n# T\n"), false);
+  assert.equal(isPaperDeck("---\nsize: a0-portrait\n---\n# T\n"), false);
+  assert.equal(isPaperDeck("---\nsize: 16:9\n---\n# T\n"), false);
+  assert.equal(isPaperDeck("---\nsize: 4:3\n---\n# T\n"), false);
+  assert.equal(isPaperDeck("---\nsize: 400x200\n---\n# T\n"), false);
+  assert.equal(isPaperDeck("# No frontmatter\n"), false);
 });
 
-test("poster decks skip slide-density heuristics", () => {
+test("A-series paper decks skip slide-density heuristics", () => {
   const bullets = Array.from({ length: 15 }, (_, i) => `- item ${i}`).join(
     "\n",
   );
   const heading = "A".repeat(60);
-  const posterMarkdown = `---\nmarp: true\ntheme: poster\nsize: a0\n---\n\n# ${heading}\n\n${bullets}\n`;
+  const paperMarkdown = `---\nmarp: true\ntheme: lab\nsize: a4-portrait\n---\n\n# ${heading}\n\n${bullets}\n`;
   const slideMarkdown = `---\nmarp: true\ntheme: lab\n---\n\n# ${heading}\n\n${bullets}\n`;
 
-  const posterResult = validateDeckMarkdown(posterMarkdown);
+  const paperResult = validateDeckMarkdown(paperMarkdown);
   const slideResult = validateDeckMarkdown(slideMarkdown);
 
-  assert.equal(posterResult.poster, true);
-  assert.equal(posterResult.findings.length, 0);
+  assert.equal(paperResult.paper, true);
+  assert.equal(paperResult.findings.length, 0);
   // The same content as a normal slide deck still trips the heuristics.
-  assert.equal(slideResult.poster, false);
+  assert.equal(slideResult.paper, false);
   assert.equal(slideResult.findings.length > 0, true);
 });
 

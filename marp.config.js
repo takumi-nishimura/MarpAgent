@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { ensureCustomSizesForMarkdown } = require("./src/canvas-size");
 const { loadDefaultJapaneseParser } = require("budoux");
 const marpGithubAlertsPlugin = require("./scripts/github-alerts-plugin");
 const marpHideSlidesPlugin = require("./scripts/hide-slides-plugin");
@@ -73,6 +74,7 @@ module.exports = {
             .use(marpGithubAlertsPlugin);
         const _render = base.render.bind(base);
         base.render = (markdown, env) => {
+            ensureCustomSizesForMarkdown(base, markdown);
             const result = _render(markdown, env);
             const html =
                 applyBudoux(result.html) + `\n<script>${cursorScript}</script>`;

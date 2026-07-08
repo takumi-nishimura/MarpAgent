@@ -6,12 +6,12 @@ Detailed authoring reference is in `.agents/skills/`:
 | :---- | :------ |
 | `marp-slide-types` | title / content / two-column templates + variants |
 | `marp-components` | callouts, figures, Mermaid, footnotes, CSS variables |
-| `marp-poster` | A0 poster authoring (poster theme, header/columns/footer) |
+| `marp-paper` | A-series paper authoring (header/columns/footer) |
 | `marp-validator` | validator rules, hard limits, remediation |
 | `/slide-new <name>` | create a new deck end-to-end |
 | `/slide-add <slide.md>` | add slides to an existing deck |
 | `/slide-review <name>` | validate and remediate a deck |
-| `/poster-new <name>` | create a new A0 poster end-to-end |
+| `/paper-new <name>` | create a new A-series paper deck end-to-end |
 
 ## File Structure
 
@@ -45,7 +45,7 @@ style: |
 
 Japanese text is auto-wrapped at phrase boundaries by Google BudouX during
 render. Do not hand-tune line breaks; wrap a run in `<span class="nobr">…</span>`
-to keep it on one line. Applies to lab and poster themes (see `marp-components`).
+to keep it on one line. Applies to lab slide and paper layouts (see `marp-components`).
 
 ## Per-Slide Directives
 
@@ -67,7 +67,7 @@ resize. Scale the rendered SVG/container instead, e.g.
 | Command | Description |
 | :------ | :---------- |
 | `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
-| `npm run marpx -- -n decks/<path> --poster` | Scaffold a new A0 poster deck |
+| `npm run marpx -- -n decks/<path> --paper` | Scaffold a new A-series paper deck |
 | `npm run marpx -- decks/<name>/brief.md --outline` | Generate outline from brief.md |
 | `npm run marpx -- decks/<name>/slide.md -v` | Validate slide.md |
 | `npm run marpx -- decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |

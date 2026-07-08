@@ -9,17 +9,41 @@ tokens and rationale live in `designs/<name>/DESIGN.md`.
 Theme source lives in `themes/src/`. Compiled CSS in `themes/*.css` is generated
 from that source and should be regenerated after theme source changes.
 
-| Surface | Role |
-| :------ | :--- |
+| File | Role |
+| :--- | :--- |
 | `designs/README.md` | repo-level design index and default pointer |
 | `designs/lab/DESIGN.md` | lab visual identity, design tokens, and design rationale |
 | `themes/src/_generated/lab-design-tokens.css` | generated Tailwind v4 `@theme` tokens from `designs/lab/DESIGN.md` |
+| `themes/src/lab.css` | Marp theme entry point for lab slides and paper layouts |
 | `themes/src/_shared/_base.css` | slide canvas, title/header layout, tables, footnotes |
+| `themes/src/_shared/_paper.css` | A-series paper layout components using the lab design tokens |
 | `themes/src/_shared/_layouts.css` | reusable author-facing layout components |
 | `themes/src/_shared/_callouts.css` | GFM alert / HTML callout classes |
 | `themes/src/_shared/_typography.css` | typography utilities and emphasis |
 | `.agents/skills/` | authoring patterns for agents |
 | `src/deck-validator.js` | density and typography enforcement |
+
+## Design And Surface Boundary
+
+A design is the visual identity described by `designs/<name>/DESIGN.md`.
+A Marp theme entry is a CSS file that Marp can select with `theme:`.
+Those are intentionally separate concepts.
+
+The current default design is `lab`. It supports these canvas families:
+
+- `16:9`, selected with `theme: lab` and `size: 16:9`;
+- `4:3`, selected with `theme: lab` and `size: 4:3`;
+- A-series paper, selected with `theme: lab` and `size: a4-portrait` or
+  `size: a4-landscape`;
+- custom pixel canvases, selected with `theme: lab` and `size: <width>x<height>`
+  such as `400x200`.
+
+Paper-specific layout lives in `themes/src/_shared/_paper.css` and is activated
+by the `.paper-header` / `.paper-columns` structure. It is not a separate Marp
+theme or `class:` mode. Custom pixel sizes are injected into the active theme
+metadata at render time by `src/canvas-size.js`; they are not separate compiled
+theme files. Future designs should add a new `designs/<name>/DESIGN.md` and
+matching generated token file before remapping canvas behavior.
 
 ## Tailwind Boundary
 
@@ -39,8 +63,7 @@ Registered Tailwind sources:
 - `.agents/skills/**/*.md`
 
 Design documents are not class-scanning sources. They are token sources. The
-generated lab token CSS is imported by both `themes/src/lab.css` and
-`themes/src/poster.css`.
+generated lab token CSS is imported by `themes/src/lab.css`.
 
 Useful commands:
 

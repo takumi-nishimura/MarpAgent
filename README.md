@@ -53,7 +53,7 @@ npm run marpx -- decks/my-talk/slide.md --overview
 | Command | Description |
 | :------ | :---------- |
 | `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
-| `npm run marpx -- -n decks/<path> --poster` | Scaffold a new A0 poster deck |
+| `npm run marpx -- -n decks/<path> --paper` | Scaffold a new A-series paper deck |
 | `npm run marpx -- <brief.md> --outline` | Generate outline |
 | `npm run marpx -- <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
 | `npm run marpx -- <slide.md>` | Serve with live reload |
@@ -89,7 +89,7 @@ MarpAgent/
 │       ├── assets/
 │       └── shared -> ../../assets
 ├── assets/             # Shared assets (logos, fonts)
-├── themes/             # lab (slides) + poster (A0) themes (Tailwind CSS v4)
+├── themes/             # Marp entries and surfaces built with Tailwind CSS v4
 ├── src/                # CLI tools (outline generator, validator)
 ├── scripts/            # Test runner
 └── .agents/skills/     # AI agent authoring skills
@@ -97,7 +97,7 @@ MarpAgent/
 
 ## Theme
 
-The `lab` theme is built on Tailwind CSS v4 and provides:
+The `lab` design is built on Tailwind CSS v4 and provides:
 
 - Five color schemes: Dracula, One Dark Pro, Nord, Neogaia, GitHub Light
 - Slide layouts: title, content, two-column
@@ -114,6 +114,12 @@ shared by CSS, templates, skills, Tailwind, and the validator.
 `npm run marpx -- --theme` regenerates
 `themes/src/_generated/lab-design-tokens.css` before compiling the tracked
 theme CSS files.
+
+Use `theme: lab` for slide decks and A-series paper layouts. Canvas size is an
+explicit frontmatter concern: `16:9`, `4:3`, `a4-portrait`, `a4-landscape`, or a
+custom pixel size such as `400x200`. Paper layout is selected by the
+`.paper-header` / `.paper-columns` structure, not by a separate theme or slide
+class.
 
 ### Mermaid sizing
 
@@ -170,33 +176,34 @@ npm run marpx -- --theme lab   # build theme
 npm run marpx -- --theme -w    # watch mode
 ```
 
-## Posters (A0)
+## A-Series Paper Layouts
 
-For conference poster sessions, the `poster` theme renders a single full-page
-A0 canvas instead of a slide sequence.
+For dense one-page research outputs, `theme: lab` can render a single A-series
+paper canvas instead of a slide sequence.
 
 ```bash
-# Scaffold a poster deck (A0 portrait)
-npm run marpx -- -n decks/my-poster --poster
+# Scaffold a paper deck (A4 portrait)
+npm run marpx -- -n decks/my-paper --paper
 
-# Edit decks/my-poster/poster.md, then preview / validate / export
-npm run marpx -- decks/my-poster/poster.md        # live preview
-npm run marpx -- decks/my-poster/poster.md -v     # validate (A0 overflow check)
-npm run marpx -- decks/my-poster/poster.md --pdf  # export A0 PDF for printing
+# Edit decks/my-paper/paper.md, then preview / validate / export
+npm run marpx -- decks/my-paper/paper.md        # live preview
+npm run marpx -- decks/my-paper/paper.md -v     # validate
+npm run marpx -- decks/my-paper/paper.md --pdf  # export PDF for printing
 ```
 
-- **Portrait (default):** `size: a0` in the front matter
-- **Landscape:** `size: a0-landscape`
-- **Columns:** controlled by the number of `<div class="poster-col">` blocks
+- **Portrait:** `size: a4-portrait` in the front matter
+- **Landscape:** `size: a4-landscape`
+- **Columns:** controlled by the number of `<div class="paper-col">` blocks
   (three for portrait, four for landscape)
-- **Cards:** `<section class="poster-section">` with an `## h2` title bar; add
+- **Cards:** `<section class="paper-section">` with an `## h2` title bar; add
   `highlight` for a key-result card
 - Callouts, figures, tables, code, and Mermaid all work inside cards
 
-The validator skips the per-slide density heuristics for posters (a dense full
-page is expected) but still flags content that overflows the A0 page. See
-`decks/example-poster/poster.md` for a worked example and the `marp-poster`
-skill for authoring details.
+Export at A4 and scale at print time when a larger physical sheet is needed.
+The validator skips the per-slide density heuristics for A-series paper outputs
+(a dense full page is expected) but still flags visual overflow. See
+`decks/example-paper/paper.md` for a worked example and the `marp-paper` skill
+for authoring details.
 
 ## AI Agent Usage (Claude Code)
 
@@ -206,11 +213,11 @@ Skills in `.agents/skills/` provide authoring guidance to AI coding agents:
 | :---- | :--- | :---------- |
 | `marp-slide-types` | reference (auto) | Slide type templates |
 | `marp-components` | reference (auto) | Callouts, figures, Mermaid, footnotes |
-| `marp-poster` | reference (auto) | A0 poster authoring (poster theme) |
+| `marp-paper` | reference (auto) | A-series paper authoring |
 | `marp-validator` | reference (auto) | Validator rules and hard limits |
 | `/slide-new <name>` | task | Create a new deck end-to-end |
 | `/slide-add <slide.md>` | task | Add slides to an existing deck |
 | `/slide-review <name>` | task | Validate and remediate a deck |
-| `/poster-new <name>` | task | Create a new A0 poster end-to-end |
+| `/paper-new <name>` | task | Create a new A-series paper deck end-to-end |
 
 See `AGENTS.md` for a quick command and directive reference.

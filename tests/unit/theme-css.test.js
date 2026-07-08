@@ -30,9 +30,8 @@ function getDesignmdBin() {
 test("Mermaid theme CSS exposes sizing custom properties", () => {
   for (const relativePath of [
     "themes/src/_shared/_layouts.css",
-    "themes/src/poster.css",
+    "themes/src/_shared/_paper.css",
     "themes/lab.css",
-    "themes/poster.css",
   ]) {
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
     assert.match(css, /--mermaid-width/);
@@ -59,7 +58,7 @@ test("title logo background sizing defaults to height-based and remains overrida
     );
     assert.match(
       css,
-      /section:not\(\.title\) header::after\s*\{[\s\S]*background-size:[\s\S]*auto var\(--logo-header-size\)/,
+      /section:not\(\.title\) header:not\(\.paper-header\)::after\s*\{[\s\S]*background-size:[\s\S]*auto var\(--logo-header-size\)/,
     );
   }
 });
@@ -88,17 +87,38 @@ test("theme CSS defines default subtle panel token", () => {
 });
 
 test("theme sources explicitly bound Tailwind class detection", () => {
-  for (const relativePath of [
-    "themes/src/lab.css",
-    "themes/src/poster.css",
-  ]) {
-    const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
-    assert.match(css, /@import "tailwindcss" source\(none\);/);
-    assert.match(css, /@source "\.\.\/\.\.\/decks\/\*\*\/\*\.md";/);
-    assert.match(css, /@source "\.\.\/\.\.\/fixtures\/\*\*\/\*\.md";/);
-    assert.match(css, /@source "\.\.\/\.\.\/\.agents\/skills\/\*\*\/\*\.md";/);
-    assert.match(css, /@import "\.\/_generated\/lab-design-tokens\.css";/);
-  }
+  const css = fs.readFileSync(path.join(repoRoot, "themes/src/lab.css"), "utf8");
+  assert.match(css, /@import "tailwindcss" source\(none\);/);
+  assert.match(css, /@source "\.\.\/\.\.\/decks\/\*\*\/\*\.md";/);
+  assert.match(css, /@source "\.\.\/\.\.\/fixtures\/\*\*\/\*\.md";/);
+  assert.match(css, /@source "\.\.\/\.\.\/\.agents\/skills\/\*\*\/\*\.md";/);
+  assert.match(css, /@import "\.\/_generated\/lab-design-tokens\.css";/);
+});
+
+test("lab theme declares canvas size families and imports paper components", () => {
+  const css = fs.readFileSync(path.join(repoRoot, "themes/src/lab.css"), "utf8");
+  assert.match(css, /@size 16:9 1280px 720px/);
+  assert.match(css, /@size 4:3 1024px 768px/);
+  assert.match(css, /@size a4-portrait 210mm 297mm/);
+  assert.match(css, /@size a4-landscape 297mm 210mm/);
+  assert.doesNotMatch(css, /@theme poster/);
+  assert.match(css, /@import "\.\/_shared\/_paper\.css";/);
+
+  assert.equal(
+    fs.existsSync(path.join(repoRoot, "themes/src/poster.css")),
+    false,
+  );
+  assert.equal(fs.existsSync(path.join(repoRoot, "themes/poster.css")), false);
+
+  const paper = fs.readFileSync(
+    path.join(repoRoot, "themes/src/_shared/_paper.css"),
+    "utf8",
+  );
+  assert.match(paper, /A-series paper layout components/);
+  assert.match(paper, /\.paper-header\b/);
+  assert.match(paper, /\.paper-columns\b/);
+  assert.match(paper, /\.paper-section\b/);
+  assert.match(paper, /\.paper-footer\b/);
 });
 
 test("generated design token CSS is fresh", () => {

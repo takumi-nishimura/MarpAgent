@@ -1,32 +1,32 @@
 ---
 marp: true
-theme: poster
-size: a0
+theme: lab
+size: a4-portrait
 paginate: false
 style: |
   section {
-    --accent: var(--color-tertiary);        /* section bars, borders, links */
+    --paper-accent: var(--color-tertiary);  /* section bars, borders, links */
   }
 ---
 
-<header class="poster-header">
+<header class="paper-header">
 
-<div class="poster-logo">
+<div class="paper-logo">
 
 ![logo](shared/logos/marp-logo.svg)
 
 </div>
 
-<div class="poster-title">
+<div class="paper-title">
 
-# Poster Title Goes Here
+# Paper Title Goes Here
 
-<p class="poster-authors">First Author, Second Author, Third Author</p>
-<p class="poster-affil">Laboratory / Department, Institution — {{DATE}}</p>
+<p class="paper-authors">First Author, Second Author, Third Author</p>
+<p class="paper-affil">Laboratory / Department, Institution — {{DATE}}</p>
 
 </div>
 
-<div class="poster-logo">
+<div class="paper-logo">
 
 ![logo](shared/logos/marp-logo.svg)
 
@@ -34,10 +34,10 @@ style: |
 
 </header>
 
-<div class="poster-columns">
-<div class="poster-col">
+<div class="paper-columns">
+<div class="paper-col">
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Introduction
 
@@ -46,7 +46,7 @@ style: |
 
 </section>
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Method
 
@@ -57,9 +57,9 @@ style: |
 </section>
 
 </div>
-<div class="poster-col">
+<div class="paper-col">
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Approach
 
@@ -69,7 +69,7 @@ Brief description of the system or pipeline.
 
 </section>
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Results
 
@@ -81,9 +81,9 @@ Brief description of the system or pipeline.
 </section>
 
 </div>
-<div class="poster-col">
+<div class="paper-col">
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Discussion
 
@@ -92,7 +92,7 @@ Brief description of the system or pipeline.
 
 </section>
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Conclusion
 
@@ -104,15 +104,15 @@ Brief description of the system or pipeline.
 </div>
 </div>
 
-<footer class="poster-footer">
+<footer class="paper-footer">
 
-<div class="poster-refs">
+<div class="paper-refs">
 
 **References** [1] Author et al., _Title_, Venue Year. [2] Author et al., _Title_, Venue Year.
 
 </div>
 
-<div class="poster-contact">
+<div class="paper-contact">
 
 📧 you@example.com
 🔗 lab.example.edu

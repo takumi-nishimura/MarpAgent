@@ -135,7 +135,7 @@ section:not(.title) {
 }
 
 /* Add top margin to content to make space for header */
-section:not(.title) > header + * {
+section:not(.title) > header:not(.paper-header) + * {
   margin-top: 70px;
 }
 
@@ -199,7 +199,7 @@ section.title.invert header {
    when --logos-dark contains multiple comma-separated URLs, mixing them with
    the gradient in one background-image causes the gradient to receive a logo's
    position/size instead of 'left center' / '100% 100%', creating a top gap. */
-section:not(.title) header {
+section:not(.title) header:not(.paper-header) {
   /* Position header flush with page top */
   position: absolute;
   top: 0;
@@ -233,7 +233,7 @@ section:not(.title) header {
 }
 
 /* Logos in ::after — isolated from the gradient so position/size never cycles */
-section:not(.title) header::after {
+section:not(.title) header:not(.paper-header)::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -255,7 +255,7 @@ section:not(.title) header::after {
 }
 
 /* Non-title slide with invert - use light logo */
-section:not(.title).invert header::after {
+section:not(.title).invert header:not(.paper-header)::after {
   background-image: var(--logos-light);
 }
 

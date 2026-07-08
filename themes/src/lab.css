@@ -1,4 +1,10 @@
-/*! @theme lab */
+/*!
+ * @theme lab
+ * @size 16:9 1280px 720px
+ * @size 4:3 1024px 768px
+ * @size a4-portrait 210mm 297mm
+ * @size a4-landscape 297mm 210mm
+ */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
 @import "tailwindcss" source(none);
 @source "../../decks/**/*.md";
@@ -11,6 +17,7 @@
 @import "./_shared/_colors.css";
 @import "./_shared/_typography.css";
 @import "./_shared/_layouts.css";
+@import "./_shared/_paper.css";
 @import "./_shared/_callouts.css";
 @import "./_shared/_code.css";
 @import "./_shared/_colorschemes.css";

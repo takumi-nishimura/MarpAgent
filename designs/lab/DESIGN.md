@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: MarpAgent Lab
-description: Research presentation design system for MarpAgent lab slides and posters.
+description: Research presentation design system for MarpAgent lab slides and A-series paper layouts.
 colors:
   primary: "#202228"
   secondary: "#7F7F7F"
@@ -451,7 +451,7 @@ components:
 ## Overview
 
 MarpAgent Lab is a research-presentation design system for technical talks,
-lab meetings, and A0 posters. It should feel clear, precise, and scholarly
+lab meetings, and A-series paper layouts. It should feel clear, precise, and scholarly
 rather than decorative. Slides are optimized for repeated authoring by agents:
 stable layout primitives, predictable density limits, and readable Japanese /
 English mixed text matter more than expressive one-off styling.

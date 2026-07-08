@@ -263,7 +263,7 @@ text so long lines wrap at natural phrase points instead of arbitrary
 character positions. BudouX also sets `word-break:keep-all` so the browser
 only breaks at ZWSP or spaces — long katakana compounds stay intact and
 particles like 「は」 start a new line rather than splitting mid-word.
-This applies to both the `lab` (slide) and `poster` themes, and is
+This applies to both `lab` slide decks and A-series paper layouts, and is
 visible in serve, screenshot, and PDF output.
 
 Do NOT hand-insert `<br>` or `<wbr>` for aesthetic wrapping — BudouX

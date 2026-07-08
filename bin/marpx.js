@@ -26,7 +26,7 @@ Options:
   --screenshot <page>      Screenshot a slide (1-based displayed page)
   -v, --validate           Validate deck
   -n, --new                Create new deck
-  --poster                 Scaffold an A0 poster deck (with --new)
+  --paper                  Scaffold an A-series paper deck (with --new)
   --outline                Generate outline from brief
   --no-strict-brief        Allow incomplete brief schema for --outline
   --format <fmt>           Output format: text, json, sarif
@@ -49,7 +49,7 @@ Examples:
   marpx decks/2025/talk/slide.md --screenshot 5  Screenshot slide 5
   marpx decks/2025/talk/slide.md -v         Validate
   marpx -n decks/2025/talk                  New deck
-  marpx -n decks/2025/poster --poster       New A0 poster deck
+  marpx -n decks/2025/paper --paper         New A-series paper deck
   marpx decks/2025/talk/brief.md --outline  Generate outline
   marpx --doctor                             Environment diagnostics
   marpx --theme                             Build all themes
@@ -73,6 +73,7 @@ try {
       strict: { type: "boolean", default: false },
       validate: { type: "boolean", short: "v", default: false },
       new: { type: "boolean", short: "n", default: false },
+      paper: { type: "boolean", default: false },
       poster: { type: "boolean", default: false },
       outline: { type: "boolean", default: false },
       "no-strict-brief": { type: "boolean", default: false },
@@ -132,8 +133,13 @@ if (values["no-strict-brief"] && mode !== "outline") {
   process.exit(1);
 }
 
-if (values.poster && mode !== "new") {
-  console.error("Error: --poster can only be used with --new");
+if (values.poster) {
+  console.error("Error: --poster has been replaced by --paper.");
+  process.exit(1);
+}
+
+if (values.paper && mode !== "new") {
+  console.error("Error: --paper can only be used with --new");
   process.exit(1);
 }
 
@@ -332,8 +338,8 @@ switch (mode) {
 
   case "new": {
     const args = [...positionals];
-    if (values.poster) {
-      args.push("--poster");
+    if (values.paper) {
+      args.push("--paper");
     }
     runScript("new-deck.js", args);
     break;

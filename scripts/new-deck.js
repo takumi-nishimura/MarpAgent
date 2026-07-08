@@ -6,14 +6,28 @@ const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 enforceSupportedNodeRuntime();
 
 const rawArgs = process.argv.slice(2);
-const posterMode = rawArgs.includes("--poster");
+if (rawArgs.includes("--poster")) {
+  console.error("Error: --poster has been replaced by --paper.");
+  process.exit(1);
+}
+
+const supportedFlags = new Set(["--paper"]);
+const unsupportedFlag = rawArgs.find(
+  (arg) => arg.startsWith("--") && !supportedFlags.has(arg),
+);
+if (unsupportedFlag) {
+  console.error(`Error: unsupported option ${unsupportedFlag}`);
+  process.exit(1);
+}
+
+const paperMode = rawArgs.includes("--paper");
 const name = rawArgs.find((arg) => !arg.startsWith("--"));
 if (!name) {
-  console.error("Usage: npx marpx -n <path> [--poster]");
+  console.error("Usage: npx marpx -n <path> [--paper]");
   console.error("Path is relative to repository root.");
   console.error("Examples:");
   console.error("  npx marpx -n decks/2025/presentation");
-  console.error("  npx marpx -n decks/2026/conf-poster --poster");
+  console.error("  npx marpx -n decks/2026/conf-paper --paper");
   process.exit(1);
 }
 
@@ -21,13 +35,13 @@ if (!name) {
 const repoRoot = path.resolve(__dirname, "..");
 const templateDir = path.join(repoRoot, "template");
 const decksRoot = path.join(repoRoot, "decks");
-// A poster is a single full-page deck; a slide deck gets a brief + slides.
-// Posters also ship a sibling README with authoring notes that used to live
-// inside the poster.md body as HTML comments.
-const templateFiles = posterMode
+// A paper deck is a single full-page canvas; a slide deck gets a brief + slides.
+// Paper decks also ship a sibling README with authoring notes that used to live
+// inside the rendered markdown body as HTML comments.
+const templateFiles = paperMode
   ? [
-      ["poster.md", "poster.md"],
-      ["poster-README.md", "README.md"],
+      ["paper.md", "paper.md"],
+      ["paper-README.md", "README.md"],
     ]
   : [
       ["brief.md", "brief.md"],
@@ -105,22 +119,18 @@ try {
   const symlinkType = os.platform() === "win32" ? "junction" : "dir";
   fs.symlinkSync(relativePath, sharedPath, symlinkType);
   const relativeToRepo = path.relative(repoRoot, deckDir);
-  console.log(
-    `✓ Created${posterMode ? " poster deck" : ""}: ${relativeToRepo}/`,
-  );
+  console.log(`✓ Created${paperMode ? " paper deck" : ""}: ${relativeToRepo}/`);
   for (const [, outputName] of templateFiles) {
     console.log(`  - ${outputName}`);
   }
   console.log(`  - assets/img/`);
   console.log(`  - assets/video/`);
   console.log(`  - shared -> ${relativePath}`);
-  if (posterMode) {
-    console.log(`\nEdit ${relativeToRepo}/poster.md, then:`);
-    console.log(`  npx marpx ${relativeToRepo}/poster.md       # live preview`);
-    console.log(`  npx marpx ${relativeToRepo}/poster.md -v    # validate`);
-    console.log(
-      `  npx marpx ${relativeToRepo}/poster.md --pdf # export A0 PDF`,
-    );
+  if (paperMode) {
+    console.log(`\nEdit ${relativeToRepo}/paper.md, then:`);
+    console.log(`  npx marpx ${relativeToRepo}/paper.md       # live preview`);
+    console.log(`  npx marpx ${relativeToRepo}/paper.md -v    # validate`);
+    console.log(`  npx marpx ${relativeToRepo}/paper.md --pdf # export PDF`);
   }
 } catch (err) {
   console.error(`Error creating symlink: ${err.message}`);

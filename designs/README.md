@@ -8,7 +8,8 @@ The default design is `lab`:
 Designs and surfaces are separate concepts:
 
 - A **design** owns visual identity, tokens, and rationale.
-- A **surface** owns output form and layout model, such as slides or posters.
+- A **canvas family** owns output form and aspect ratio, such as `16:9`, `4:3`,
+  A-series paper, or custom pixels.
 
-The current `poster` implementation is a surface of the `lab` design, not a
-separate design system.
+Paper layout is part of the `lab` design implementation, not a separate design
+system or Marp theme.
