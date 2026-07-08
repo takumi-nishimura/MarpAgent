@@ -163,6 +163,13 @@ spacing:
   header-height: 80px
   footer-height: 40px
   header-title-inset: 0px
+  header-title-x: 56px
+  header-logo-x: 80px
+  content-surface-edge: 40px
+  content-surface-inset: 40px
+  title-heading-top: 160px
+  title-heading-inset: 160px
+  title-subtitle-right-inset: 80px
   logo-title-size: 72px
   logo-header-size: 54px
 components:
@@ -557,10 +564,11 @@ Use built-in layout primitives before adding scoped CSS:
 Deck-specific visual adjustment should prefer frontmatter CSS variables and
 theme variants. One-off scoped CSS is a last resort.
 
-Official-looking assets stay opt-in. Use `.bil-logo` only when the deck provides
-`--logos-dark`; the provided logo sits in the upper-right header area and leaves
-the left header label alignment unchanged. Use `.bil-visual` only when the deck
-provides `--bil-main-visual`.
+Official-looking assets stay data-driven. The theme defaults both
+`--logos-dark` and `--bil-main-visual` to `none`, but when a deck provides those
+variables the non-title header logo and background visual appear automatically.
+For decks that use the standard shared asset symlink, set the main visual in
+frontmatter with `--bil-main-visual: url("shared/logos/bil/BIL_mv.png");`.
 
 ## Elevation & Depth
 
@@ -582,7 +590,7 @@ from the theme before skills recommend it in generated slides.
 
 - **Slide header:** gray project header with a 24px section label centered
   between the page top and white content surface, aligned away from the page
-  edge. The BIL mark is opt-in via `.bil-logo` and appears in the upper-right
+  edge. When `--logos-dark` is provided, the BIL mark appears in the upper-right
   header corner.
 - **Summary box:** white pill-like surface for one concise takeaway or action
   statement.

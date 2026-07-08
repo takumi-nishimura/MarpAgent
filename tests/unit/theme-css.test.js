@@ -210,6 +210,12 @@ test("generated design token CSS is fresh for all designs", () => {
         /--spacing-header-height:\s*80px;/,
         /--spacing-footer-height:\s*40px;/,
         /--spacing-header-title-inset:\s*0px;/,
+        /--spacing-header-title-x:\s*56px;/,
+        /--spacing-header-logo-x:\s*80px;/,
+        /--spacing-content-surface-edge:\s*40px;/,
+        /--spacing-content-surface-inset:\s*40px;/,
+        /--spacing-title-heading-inset:\s*160px;/,
+        /--spacing-title-subtitle-right-inset:\s*80px;/,
         /--spacing-logo-header-size:\s*54px;/,
       ],
     ],
@@ -345,16 +351,25 @@ test("bil theme maps source visual tokens through DESIGN.md", () => {
   assert.match(design, /bil-gray:\s*"#D9DCDE"/);
   assert.match(css, /--bg:\s*var\(--color-bil-gray\)/);
   assert.match(css, /--header-title-inset:\s*var\(--spacing-header-title-inset\)/);
+  assert.match(css, /--header-title-x:\s*var\(--spacing-header-title-x\)/);
+  assert.match(css, /--header-logo-x:\s*var\(--spacing-header-logo-x\)/);
+  assert.match(css, /--content-surface-inset:\s*var\(--spacing-content-surface-inset\)/);
+  assert.match(css, /--title-heading-inset:\s*var\(--spacing-title-heading-inset\)/);
   assert.match(css, /--logos-dark:\s*none/);
   assert.match(css, /--bil-main-visual:\s*none/);
-  assert.match(css, /section:not\(\.title\)\.bil-visual\s*\{[\s\S]*background-image:\s*var\(--bil-main-visual\)/);
-  assert.match(css, /section:not\(\.title\)\.bil-logo\s*\{[\s\S]*--bil-header-logo-area:/);
+  assert.match(css, /section:not\(\.title\)\s*\{[\s\S]*background-image:\s*var\(--bil-main-visual\)/);
+  assert.match(css, /--bil-header-logo-area:\s*calc\(var\(--logo-header-size\) \+ var\(--spacing-md\)\)/);
   assert.match(css, /color:\s*var\(--color-bil-violet\)/);
+  assert.match(css, /margin-left:\s*var\(--title-heading-inset\)/);
+  assert.match(css, /margin-right:\s*var\(--title-subtitle-right-inset\)/);
   assert.match(css, /border-radius:\s*var\(--radius-md\)/);
   assert.match(css, /top:\s*var\(--header-height\)/);
   assert.match(css, /bottom:\s*var\(--footer-height\)/);
+  assert.match(css, /left:\s*var\(--content-surface-edge\)/);
+  assert.match(css, /right:\s*var\(--content-surface-edge\)/);
+  assert.match(css, /opacity:\s*1/);
   assert.match(css, /background-color:\s*transparent/);
-  assert.match(css, /background-image:\s*none/);
+  assert.match(css, /background-image:\s*var\(--logos-dark\)/);
   assert.match(css, /border-bottom:\s*0/);
   assert.match(css, /\.tip\s*\{[\s\S]*var\(--color-tip\) 14%/);
   assert.match(css, /\.important\s*\{[\s\S]*var\(--color-important\) 18%/);
@@ -362,14 +377,14 @@ test("bil theme maps source visual tokens through DESIGN.md", () => {
   assert.match(css, /padding-top:\s*0/);
   assert.match(css, /padding-bottom:\s*0/);
   assert.match(css, /align-items:\s*center/);
-  assert.match(css, /background-position:\s*right calc\(var\(--padding-x\) \+ var\(--spacing-lg\)\) center/);
+  assert.match(css, /background-position:\s*right calc\(var\(--padding-x\) \+ var\(--header-logo-x\)\) center/);
   assert.match(
     css,
-    /padding-left:\s*calc\(var\(--padding-x\) \+ var\(--spacing-lg\) \+ var\(--header-title-inset\)\)/,
+    /padding-left:\s*calc\(var\(--padding-x\) \+ var\(--header-title-x\) \+ var\(--header-title-inset\)\)/,
   );
   assert.match(
     css,
-    /padding-right:\s*calc\(var\(--padding-x\) \+ var\(--spacing-lg\) \+ var\(--bil-header-logo-area\)\)/,
+    /padding-right:\s*calc\(var\(--padding-x\) \+ var\(--header-logo-x\) \+ var\(--bil-header-logo-area\)\)/,
   );
   assert.doesNotMatch(css, /mv@pc\.png/);
   assert.doesNotMatch(css, /icon-512x512/);

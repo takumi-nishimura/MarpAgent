@@ -3,8 +3,9 @@ marp: true
 theme: bil
 paginate: true
 style: |
-  section.bil-logo {
+  section {
     --logos-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'%3E%3Cpath fill='%23009bda' d='M40 0L0 40h20l20-20V0z'/%3E%3Cpath fill='%2378c5e9' d='M40 20v20h20V0L40 20z'/%3E%3Cpath fill='%23007aad' d='M20 40h20V20L20 40z'/%3E%3C/svg%3E");
+    --bil-main-visual: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Ccircle cx='80' cy='80' r='68' fill='%234726ff' fill-opacity='.16'/%3E%3Ccircle cx='108' cy='52' r='32' fill='%235fff99' fill-opacity='.28'/%3E%3C/svg%3E");
   }
 ---
 
@@ -16,7 +17,6 @@ style: |
 Framework for highly skilled robots
 
 ---
-<!-- _class: bil-logo -->
 <!-- _header: Theme Smoke -->
 
 ## Token Surfaces

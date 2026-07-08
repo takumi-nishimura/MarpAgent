@@ -143,6 +143,13 @@
   --spacing-header-height: 80px;
   --spacing-footer-height: 40px;
   --spacing-header-title-inset: 0px;
+  --spacing-header-title-x: 56px;
+  --spacing-header-logo-x: 80px;
+  --spacing-content-surface-edge: 40px;
+  --spacing-content-surface-inset: 40px;
+  --spacing-title-heading-top: 160px;
+  --spacing-title-heading-inset: 160px;
+  --spacing-title-subtitle-right-inset: 80px;
   --spacing-logo-title-size: 72px;
   --spacing-logo-header-size: 54px;
 }

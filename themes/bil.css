@@ -131,13 +131,19 @@
     --font-weight-display: 400;
     --font-weight-label-md: 600;
     --radius-none: 0px;
-    --spacing-sm: 16px;
     --spacing-md: 24px;
     --spacing-lg: 40px;
     --spacing-slide-x: 56px;
     --spacing-header-height: 80px;
     --spacing-footer-height: 40px;
     --spacing-header-title-inset: 0px;
+    --spacing-header-title-x: 56px;
+    --spacing-header-logo-x: 80px;
+    --spacing-content-surface-edge: 40px;
+    --spacing-content-surface-inset: 40px;
+    --spacing-title-heading-top: 160px;
+    --spacing-title-heading-inset: 160px;
+    --spacing-title-subtitle-right-inset: 80px;
     --spacing-logo-title-size: 72px;
     --spacing-logo-header-size: 54px;
     --color-deck-white: var(--color-neutral);
@@ -1373,13 +1379,21 @@ section {
   --header-height: var(--spacing-header-height);
   --footer-height: var(--spacing-footer-height);
   --header-title-inset: var(--spacing-header-title-inset);
+  --header-title-x: var(--spacing-header-title-x);
+  --header-logo-x: var(--spacing-header-logo-x);
+  --content-surface-edge: var(--spacing-content-surface-edge);
+  --content-surface-inset: var(--spacing-content-surface-inset);
+  --content-padding-x: calc(var(--content-surface-edge) + var(--content-surface-inset));
+  --title-heading-top: var(--spacing-title-heading-top);
+  --title-heading-inset: var(--spacing-title-heading-inset);
+  --title-subtitle-right-inset: var(--spacing-title-subtitle-right-inset);
   --logo-title-size: var(--spacing-logo-title-size);
   --logo-header-size: var(--spacing-logo-header-size);
   --paper-section-radius: var(--radius-md);
   --logos-dark: none;
   --logos-light: var(--logos-dark);
   --bil-main-visual: none;
-  --bil-header-logo-area: 0px;
+  --bil-header-logo-area: calc(var(--logo-header-size) + var(--spacing-md));
   font-family: var(--font-body-md), "Noto Sans JP", sans-serif;
   font-size: var(--text-body-md);
 }
@@ -1398,7 +1412,9 @@ section.title header {
 }
 section.title h1 {
   max-width: 780px;
-  margin-top: 150px;
+  margin-top: var(--title-heading-top);
+  margin-left: var(--title-heading-inset);
+  margin-right: 0;
   border-bottom: 0;
   color: var(--color-bil-violet);
   font-size: var(--text-display);
@@ -1410,32 +1426,41 @@ section.title > p {
   max-width: 520px;
   margin-top: 36px;
   margin-left: auto;
-  margin-right: 48px;
+  margin-right: var(--title-subtitle-right-inset);
   color: var(--color-bil-ink);
   font-size: var(--text-headline-md);
   line-height: var(--leading-headline-md);
   text-align: left;
 }
-section:not(.title).bil-visual {
+section.title .author {
+  max-width: 520px;
+  margin-top: 36px;
+  margin-left: auto;
+  margin-right: var(--title-subtitle-right-inset);
+  color: var(--color-bil-ink);
+  font-size: var(--text-headline-md);
+  line-height: var(--leading-headline-md);
+  text-align: left;
+  align-items: flex-start;
+}
+section:not(.title) {
+  --padding-x: var(--content-padding-x);
   background-image: var(--bil-main-visual);
   background-repeat: no-repeat;
   background-position: right -400px top -118px;
   background-size: auto 930px;
-}
-section:not(.title).bil-logo {
-  --bil-header-logo-area: calc(var(--logo-header-size) + var(--spacing-md));
 }
 section:not(.title)::before {
   content: "";
   position: absolute;
   z-index: 0;
   top: var(--header-height);
-  right: var(--spacing-lg);
+  right: var(--content-surface-edge);
   bottom: var(--footer-height);
-  left: var(--spacing-lg);
+  left: var(--content-surface-edge);
   background: var(--color-surface);
   border-radius: var(--radius-none);
-  opacity: 0.94;
+  opacity: 1;
 }
 section:not(.title) > :not(header) {
   position: relative;
@@ -1451,22 +1476,19 @@ section:not(.title) header:not(.paper-header) {
   font-size: var(--text-body-md);
   font-weight: var(--font-weight-label-md);
   letter-spacing: 0;
-  padding-left: calc(var(--padding-x) + var(--spacing-lg) + var(--header-title-inset));
-  padding-right: calc(var(--padding-x) + var(--spacing-lg) + var(--bil-header-logo-area));
+  padding-left: calc(var(--padding-x) + var(--header-title-x) + var(--header-title-inset));
+  padding-right: calc(var(--padding-x) + var(--header-logo-x) + var(--bil-header-logo-area));
   padding-top: 0;
   padding-bottom: 0;
   align-items: center;
 }
 section:not(.title) header:not(.paper-header)::after {
-  background-image: none;
-  background-position: right calc(var(--padding-x) + var(--spacing-lg)) center;
+  background-image: var(--logos-dark);
+  background-position: right calc(var(--padding-x) + var(--header-logo-x)) center;
   background-size: auto var(--logo-header-size);
 }
-section:not(.title).bil-logo header:not(.paper-header)::after {
-  background-image: var(--logos-dark);
-}
 section:not(.title) header:not(.paper-header) + * {
-  margin-top: calc(var(--header-height) + var(--spacing-sm));
+  margin-top: calc(var(--header-height) + var(--content-surface-inset));
 }
 .summary-box, .gap-box, .context-panel, .feature-grid > div, .note, .tip, .important, .warning, .caution, .paper-section {
   border-radius: var(--radius-md);
