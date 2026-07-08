@@ -85,7 +85,7 @@ function countTopLevelBullets(raw) {
 }
 
 function detectTinyTypography(raw) {
-  const classMatches = raw.match(/\btext-xs(?:2|3)?\b/g) || [];
+  const classMatches = raw.match(/\btext-xs(?:2|3)\b/g) || [];
   const inlineMatches =
     raw.match(/font-size\s*:\s*(?:0\.[0-7]\d*|[1-9]\d?px)/gi) || [];
   const smallTags = raw.match(/<small>/g) || [];

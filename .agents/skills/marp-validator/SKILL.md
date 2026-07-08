@@ -38,7 +38,7 @@ Content excluded from counting: `<style>`, `<script>`, `<div class="footnote">` 
 | `overflow-risk` | Body > 600 chars or >= 10 text lines or >= 12 top-level bullets (heuristic fallback) | Split slide |
 | `dense-bullets` | >= 9 top-level bullets | Split slide |
 | `long-heading` | Heading >= 48 chars (warn) / >= 70 (error) | Shorten to < 48; move detail to body |
-| `typography-drift` | `.text-xs2` or `.text-xs3` in use | Remove class; split content instead |
+| `typography-drift` | `.text-xs2`, `.text-xs3`, `<small>`, or tiny inline `font-size` in use | Remove tiny styling; split content instead |
 | `figure-text-density` | Image + >= 6 top-level bullets or text lines | Move text to next slide |
 | `comparison-overpacked` | Table >= 5 cols x 3 rows, or two-column with >= 10 top-level bullets | Split into two slides |
 
@@ -58,4 +58,4 @@ For each finding, apply one action:
 
 - **Split** — too much content; divide into two slides
 - **Trim** — heading or line too long; shorten the text
-- **Retype** — forbidden class (`.text-xs2`, `.text-xs3`); remove it, split if needed
+- **Retype** — forbidden tiny text (`.text-xs2`, `.text-xs3`, `<small>`, tiny inline `font-size`); remove it, split if needed

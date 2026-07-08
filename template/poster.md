@@ -5,7 +5,7 @@ size: a0
 paginate: false
 style: |
   section {
-    --accent: #0969da;        /* section bars, borders, links */
+    --accent: var(--color-tertiary);        /* section bars, borders, links */
   }
 ---
 

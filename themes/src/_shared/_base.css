@@ -5,14 +5,15 @@ section {
   --fg-muted: var(--color-deck-gray);
 
   /* Accent color for gradients - overridden by color schemes */
-  --highlight: #0969da;
+  --highlight: var(--color-tertiary);
 
   /* Gradient mid color: avoid transparency to keep PDF rendering stable across engines */
   --gradient-mid: color-mix(in srgb, var(--highlight) 40%, var(--bg));
+  --bg-gray-5: var(--color-surface-muted);
 
   /* Emphasis colors - overridden by color schemes */
-  --color-em: var(--color-deck-yellow);
-  --color-strong: #d97706; /* Orange for better visibility on light background */
+  --color-em: var(--color-emphasis);
+  --color-strong: var(--color-accent-strong); /* Orange for better visibility on light background */
 
   /* New list-based logo variables - configurable per-slide via style directive */
   --logos-light: url(logos/logo_light.svg);
@@ -58,10 +59,10 @@ section {
 section.invert {
   --fg: var(--color-deck-white);
   --bg: var(--color-deck-black);
-  --fg-muted: #aaa;
+  --fg-muted: var(--color-muted-invert);
 
   /* Lighter accent for dark mode */
-  --highlight: #58a6ff;
+  --highlight: var(--color-highlight-invert);
 
   /* No swap needed - logo filenames already indicate their purpose */
   /* logo_light.svg = light colored logo for dark backgrounds */
@@ -186,7 +187,7 @@ section.title header {
 section.title.invert {
   --fg: var(--color-deck-white);
   --bg: var(--color-deck-black);
-  --fg-muted: #aaa;
+  --fg-muted: var(--color-muted-invert);
 }
 section.title.invert header {
   /* Use light logo (logo_light.svg) for dark background */
@@ -274,13 +275,13 @@ table {
   margin-bottom: 2em;
 }
 th, td {
-  border: 1px solid #999;
+  border: 1px solid var(--color-table-border);
   padding: 6px 10px;
 }
 th {
-  background: #f0f0f0;
+  background: var(--color-table-header);
   text-align: left;
 }
 tbody tr:nth-child(even) {
-  background: #fafafa;
+  background: var(--color-table-stripe);
 }

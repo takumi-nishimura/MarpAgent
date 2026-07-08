@@ -325,6 +325,23 @@ shrunk content
   assert.match(finding.title, /\.text-xs2/);
 });
 
+test("validator allows the supported text-xs utility", () => {
+  const markdown = `# Slide
+
+<div class="text-xs">
+
+caption-sized but supported content
+
+</div>
+`;
+  const result = validateDeckMarkdown(markdown);
+
+  assert.equal(
+    result.findings.some((f) => f.ruleId === "typography-drift"),
+    false,
+  );
+});
+
 test("figure-text-density message names the contributing count", () => {
   const bullets = Array.from({ length: 7 }, (_, i) => `- item ${i + 1}`).join(
     "\n",

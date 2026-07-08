@@ -23,7 +23,7 @@ size: a0            # portrait (default). Landscape: size: a0-landscape
 paginate: false
 style: |
   section {
-    --accent: #0969da;   # section bars, borders, footer tint, links
+    --accent: var(--color-tertiary);   # section bars, borders, footer tint, links
   }
 ---
 ```

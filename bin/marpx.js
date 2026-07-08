@@ -185,6 +185,32 @@ function getTailwindBin() {
   return path.join(repoRoot, "node_modules", ".bin", "tailwindcss");
 }
 
+function generateDesignTokens() {
+  execFileSync(
+    process.execPath,
+    [path.join(scriptsDir, "generate-design-tokens.js")],
+    { cwd: repoRoot, stdio: "inherit" },
+  );
+}
+
+function watchDesignTokens() {
+  const designPath = path.join(repoRoot, "designs", "lab", "DESIGN.md");
+  let timer = null;
+
+  fs.watch(designPath, () => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      try {
+        generateDesignTokens();
+      } catch (error) {
+        console.error(
+          `Error: failed to regenerate design tokens: ${error.message}`,
+        );
+      }
+    }, 100);
+  });
+}
+
 function runMarp(extraArgs) {
   const chromePath = getChromePath();
   const child = spawn(
@@ -338,6 +364,8 @@ switch (mode) {
   }
 
   case "theme": {
+    generateDesignTokens();
+
     const allThemes = discoverThemes();
 
     if (allThemes.length === 0) {
@@ -361,6 +389,8 @@ switch (mode) {
     const tailwind = getTailwindBin();
     const watchFlag = values.watch;
     const children = [];
+
+    if (watchFlag) watchDesignTokens();
 
     for (const name of themes) {
       const input = path.join(repoRoot, "themes", "src", `${name}.css`);

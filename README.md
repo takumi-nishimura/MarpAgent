@@ -106,6 +106,15 @@ The `lab` theme is built on Tailwind CSS v4 and provides:
 - Laser pointer effect during presentation
 - Mermaid diagram support with MathJax
 
+See `designs/README.md` for the design index, `designs/lab/DESIGN.md` for the lab
+visual identity, and `docs/theme-contract.md` for the engineering contract
+shared by CSS, templates, skills, Tailwind, and the validator.
+
+`designs/lab/DESIGN.md` is the source of truth for lab design tokens.
+`npm run marpx -- --theme` regenerates
+`themes/src/_generated/lab-design-tokens.css` before compiling the tracked
+theme CSS files.
+
 ### Mermaid sizing
 
 Mermaid diagrams are rendered to SVG before the slide is styled. Changing

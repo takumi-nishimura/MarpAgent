@@ -5,11 +5,15 @@
  * @size a0-landscape 1189mm 841mm
  */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap");
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@source "../../decks/**/*.md";
+@source "../../fixtures/**/*.md";
+@source "../../.agents/skills/**/*.md";
 
 /* Shared partials reused from the lab theme.
    _base.css is intentionally NOT imported: it encodes slide-specific layout
    (full-bleed headers, pagination, title slide) that does not apply to a poster. */
+@import "./_generated/lab-design-tokens.css";
 @import "./_shared/_colors.css";
 @import "./_shared/_typography.css";
 @import "./_shared/_callouts.css";
@@ -26,11 +30,11 @@ section {
   --fg: var(--color-deck-black);
   --bg: var(--color-deck-white);
   --fg-muted: var(--color-deck-gray);
-  --highlight: #0969da;
+  --highlight: var(--color-tertiary);
   --accent: var(--highlight);
   --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--bg));
-  --color-em: var(--color-deck-yellow);
-  --color-strong: #d97706;
+  --color-em: var(--color-emphasis);
+  --color-strong: var(--color-accent-strong);
 
   /* Poster geometry */
   --poster-pad: 30mm;
@@ -60,8 +64,8 @@ section {
 section.invert {
   --fg: var(--color-deck-white);
   --bg: var(--color-deck-black);
-  --fg-muted: #aaa;
-  --highlight: #58a6ff;
+  --fg-muted: var(--color-muted-invert);
+  --highlight: var(--color-highlight-invert);
 }
 
 /* ===================================================================
@@ -262,7 +266,7 @@ table {
   border-collapse: collapse;
 }
 th, td {
-  border: 1px solid #999;
+  border: 1px solid var(--color-table-border);
   padding: 0.3em 0.5em;
 }
 th {

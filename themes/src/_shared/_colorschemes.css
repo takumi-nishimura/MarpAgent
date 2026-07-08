@@ -1,13 +1,13 @@
 /* Dracula - https://draculatheme.com */
 section.dracula,
 section.title.dracula {
-  --bg: #282a36;
-  --fg: #f8f8f2;
-  --fg-muted: #6272a4;
-  --highlight: #bd93f9;
+  --bg: var(--color-dracula-bg);
+  --fg: var(--color-dracula-fg);
+  --fg-muted: var(--color-dracula-muted);
+  --highlight: var(--color-dracula-highlight);
   /* Emphasis colors */
-  --color-em: #f1fa8c; /* Yellow */
-  --color-strong: #ff79c6; /* Pink */
+  --color-em: var(--color-dracula-emphasis);
+  --color-strong: var(--color-dracula-strong);
 }
 
 /* Dracula theme: use light logo for dark background */
@@ -21,13 +21,13 @@ section:not(.title).dracula header::after {
 /* One Dark Pro */
 section.one-dark,
 section.title.one-dark {
-  --bg: #282c34;
-  --fg: #abb2bf;
-  --fg-muted: #5c6370;
-  --highlight: #61afef;
+  --bg: var(--color-one-dark-bg);
+  --fg: var(--color-one-dark-fg);
+  --fg-muted: var(--color-one-dark-muted);
+  --highlight: var(--color-one-dark-highlight);
   /* Emphasis colors */
-  --color-em: #e5c07b; /* Yellow */
-  --color-strong: #e06c75; /* Red */
+  --color-em: var(--color-one-dark-emphasis);
+  --color-strong: var(--color-one-dark-strong);
 }
 
 /* One Dark theme: use light logo for dark background */
@@ -41,13 +41,13 @@ section:not(.title).one-dark header::after {
 /* Nord - https://nordtheme.com */
 section.nord,
 section.title.nord {
-  --bg: #2e3440;
-  --fg: #eceff4;
-  --fg-muted: #4c566a;
-  --highlight: #88c0d0;
+  --bg: var(--color-nord-bg);
+  --fg: var(--color-nord-fg);
+  --fg-muted: var(--color-nord-muted);
+  --highlight: var(--color-nord-highlight);
   /* Emphasis colors */
-  --color-em: #ebcb8b; /* Yellow */
-  --color-strong: #bf616a; /* Red */
+  --color-em: var(--color-nord-emphasis);
+  --color-strong: var(--color-nord-strong);
 }
 
 /* Nord theme: use light logo for dark background */
@@ -61,27 +61,27 @@ section:not(.title).nord header::after {
 /* Neogaia - inspired by Marp's Gaia theme */
 section.neogaia,
 section.title.neogaia {
-  --bg: #455a64; /* Dark blue-gray (gaia invert mode) */
-  --fg: #fff8e1; /* Warm white */
-  --fg-muted: #b0bec5; /* Light gray for muted text */
-  --highlight: #d1e8ff; /* Light blue for header gradient */
+  --bg: var(--color-neogaia-dark-bg);
+  --fg: var(--color-neogaia-dark-fg);
+  --fg-muted: var(--color-neogaia-dark-muted);
+  --highlight: var(--color-neogaia-dark-highlight);
 
   /* Emphasis colors */
-  --color-em: #ff6; /* Bright yellow (matches old-deck) */
-  --color-strong: #ffeb3b; /* Bright yellow */
+  --color-em: var(--color-neogaia-dark-emphasis);
+  --color-strong: var(--color-neogaia-dark-strong);
 }
 
 /* Neogaia with invert - light mode */
 section.neogaia.invert,
 section.title.neogaia.invert {
-  --bg: #fff8e1; /* Warm white background */
-  --fg: #455a64; /* Dark blue-gray text */
-  --fg-muted: #607d8b; /* Darker gray for muted text */
-  --highlight: #0288d1; /* Darker blue for header gradient */
+  --bg: var(--color-neogaia-light-bg);
+  --fg: var(--color-neogaia-light-fg);
+  --fg-muted: var(--color-neogaia-light-muted);
+  --highlight: var(--color-neogaia-light-highlight);
 
   /* Emphasis colors for light background */
-  --color-em: #bf8700; /* Darker yellow for visibility */
-  --color-strong: #d97706; /* Orange for better contrast */
+  --color-em: var(--color-neogaia-light-emphasis);
+  --color-strong: var(--color-neogaia-light-strong);
 }
 
 /* Neogaia theme: use light logo for dark background (default) */
@@ -103,11 +103,11 @@ section:not(.title).neogaia.invert header::after {
 /* GitHub Light */
 section.github-light,
 section.title.github-light {
-  --bg: #ffffff;
-  --fg: #24292f;
-  --fg-muted: #57606a;
-  --highlight: #0969da;
+  --bg: var(--color-github-light-bg);
+  --fg: var(--color-github-light-fg);
+  --fg-muted: var(--color-github-light-muted);
+  --highlight: var(--color-github-light-highlight);
   /* Emphasis colors */
-  --color-em: #bf8700; /* Yellow-orange */
-  --color-strong: #cf222e; /* Red */
+  --color-em: var(--color-github-light-emphasis);
+  --color-strong: var(--color-github-light-strong);
 }
