@@ -321,6 +321,7 @@ section {
   --padding-bottom: 0;
   --header-height: 60px;
   --logo-title-size: 80px;
+  --logo-title-background-size: auto 50px;
   --logo-title-spacing: 10px;
   --logo-header-size: 50px;
   --logo-header-spacing: 35px;
@@ -421,7 +422,7 @@ section.title header {
   background-image: var(--logos-dark);
   background-repeat: no-repeat;
   background-position: left 20px top 10px, left calc(20px + (var(--logo-title-size) + var(--logo-title-spacing))) top 10px, left calc(20px + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc(20px + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc(20px + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
-  background-size: var(--logo-title-size), var(--logo-title-size), var(--logo-title-size), var(--logo-title-size), var(--logo-title-size);
+  background-size: var(--logo-title-background-size), var(--logo-title-background-size), var(--logo-title-background-size), var(--logo-title-background-size), var(--logo-title-background-size);
   min-height: calc(var(--logo-title-size) + 20px);
   padding-right: var(--padding-x);
   text-align: right;

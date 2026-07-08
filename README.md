@@ -142,6 +142,20 @@ flowchart TD
 ```
 ````
 
+### Title logo sizing
+
+Title slides default to height-based logo sizing so wide wordmarks remain
+legible. Override `--logo-title-background-size` in deck frontmatter only when
+you need a different title logo height:
+
+```yaml
+style: |
+  section {
+    --logos-dark: url(shared/logos/haptics_lab/logo_gray.svg);
+    --logo-title-background-size: auto 50px;
+  }
+```
+
 ```bash
 npm run marpx -- --theme lab   # build theme
 npm run marpx -- --theme -w    # watch mode
