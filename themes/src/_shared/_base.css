@@ -34,7 +34,7 @@ section {
 
   /* Logo dimensions and spacing */
   --logo-title-size: 80px;
-  --logo-title-background-size: auto var(--logo-title-size);
+  --logo-title-background-size: auto 50px;
   --logo-title-spacing: 10px;
   --logo-header-size: 50px;
   --logo-header-spacing: 35px;

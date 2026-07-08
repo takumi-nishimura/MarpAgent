@@ -28,7 +28,7 @@ logo height:
 style: |
   section {
     --logos-dark: url(shared/logos/haptics_lab/logo_gray.svg);
-    --logo-title-background-size: auto 60px;
+    --logo-title-background-size: auto 50px;
   }
 ```
 

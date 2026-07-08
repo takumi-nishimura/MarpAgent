@@ -29,7 +29,7 @@ test("title logo background sizing defaults to height-based and remains overrida
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
     assert.match(
       css,
-      /--logo-title-background-size:\s*auto var\(--logo-title-size\)/,
+      /--logo-title-background-size:\s*auto 50px/,
     );
     assert.match(
       css,
