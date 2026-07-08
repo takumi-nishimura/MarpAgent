@@ -87,6 +87,67 @@ test("theme CSS defines default subtle panel token", () => {
   }
 });
 
+test("lab default highlight follows the warm accent token", () => {
+  for (const relativePath of [
+    "themes/src/_shared/_base.css",
+    "themes/lab.css",
+  ]) {
+    const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+    assert.match(css, /--highlight:\s*var\(--color-accent-strong\)/);
+    assert.doesNotMatch(css, /--highlight:\s*var\(--color-tertiary\)/);
+  }
+});
+
+test("normal slide header uses a flat surface with an accent rule", () => {
+  for (const relativePath of [
+    "themes/src/_shared/_base.css",
+    "themes/lab.css",
+  ]) {
+    const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+    assert.match(
+      css,
+      /section:not\(\.title\) header:not\(\.paper-header\)\s*\{[\s\S]*background:\s*var\(--bg\)/,
+    );
+    assert.match(
+      css,
+      /--accent-rule:\s*color-mix\(in srgb, var\(--highlight\) 40%, transparent\)/,
+    );
+    assert.match(
+      css,
+      /--accent-rule-width:\s*2px/,
+    );
+    assert.match(
+      css,
+      /section:not\(\.title\) header:not\(\.paper-header\)\s*\{[\s\S]*border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/,
+    );
+    assert.match(
+      css,
+      /section:not\(\.title\) header:not\(\.paper-header\)\s*\{[\s\S]*color:\s*var\(--fg\)/,
+    );
+    assert.doesNotMatch(
+      css,
+      /section:not\(\.title\) header:not\(\.paper-header\)\s*\{[\s\S]*background-image:\s*linear-gradient/,
+    );
+  }
+});
+
+test("title and normal slide rules share the same accent treatment", () => {
+  for (const relativePath of [
+    "themes/src/_shared/_base.css",
+    "themes/lab.css",
+  ]) {
+    const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+    assert.match(
+      css,
+      /section\.title h1\s*\{[\s\S]*border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/,
+    );
+    assert.doesNotMatch(
+      css,
+      /section\.title h1\s*\{[\s\S]*border-bottom:\s*1px solid var\(--fg\)/,
+    );
+  }
+});
+
 test("theme sources explicitly bound Tailwind class detection", () => {
   for (const themeName of ["lab", "muji"]) {
     const css = fs.readFileSync(

@@ -4,10 +4,12 @@ section {
   --bg: var(--color-deck-white);
   --fg-muted: var(--color-deck-gray);
 
-  /* Accent color for gradients - overridden by color schemes */
-  --highlight: var(--color-tertiary);
+  /* Accent color for rules and paper accents - overridden by color schemes */
+  --highlight: var(--color-accent-strong);
+  --accent-rule: color-mix(in srgb, var(--highlight) 40%, transparent);
+  --accent-rule-width: 2px;
 
-  /* Gradient mid color: avoid transparency to keep PDF rendering stable across engines */
+  /* Gradient mid color for components that still use gradients */
   --gradient-mid: color-mix(in srgb, var(--highlight) 40%, var(--bg));
   --bg-gray-5: var(--color-surface-muted);
 
@@ -61,7 +63,7 @@ section.invert {
   --bg: var(--color-deck-black);
   --fg-muted: var(--color-muted-invert);
 
-  /* Lighter accent for dark mode */
+  /* Lighter warm accent for dark mode */
   --highlight: var(--color-highlight-invert);
 
   /* No swap needed - logo filenames already indicate their purpose */
@@ -148,7 +150,7 @@ section.title h1 {
   text-align: center;
   margin-top: 150px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--fg);
+  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
 }
 section.title > p {
   text-align: right;
@@ -194,10 +196,10 @@ section.title.invert header {
   background-image: var(--logos-light);
 }
 
-/* Non-title slide header with gradient background */
+/* Non-title slide header with a flat surface and accent rule */
 /* Logos are placed in ::after to avoid background-position/size cycling:
    when --logos-dark contains multiple comma-separated URLs, mixing them with
-   the gradient in one background-image causes the gradient to receive a logo's
+   other backgrounds in one background-image causes those backgrounds to receive a logo's
    position/size instead of 'left center' / '100% 100%', creating a top gap. */
 section:not(.title) header:not(.paper-header) {
   /* Position header flush with page top */
@@ -206,21 +208,13 @@ section:not(.title) header:not(.paper-header) {
   left: calc(-1 * var(--padding-x));  /* Full-bleed left */
   width: calc(100% + (var(--padding-x) * 2));  /* Full-bleed width */
 
-  /* Gradient only — always covers the full header */
-  background-image: linear-gradient(
-    to right,
-    var(--fg) 10%,
-    var(--gradient-mid) 65%,
-    var(--bg) 100%
-  );
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: 100% 100%;
+  background: var(--bg);
+  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
 
   text-align: left;
   padding-left: calc(var(--padding-x) + 20px);  /* Extra margin for visual spacing */
 
-  color: var(--bg);
+  color: var(--fg);
   font-size: 1rem;
   font-weight: 600;
 
@@ -232,7 +226,7 @@ section:not(.title) header:not(.paper-header) {
   align-items: center;
 }
 
-/* Logos in ::after — isolated from the gradient so position/size never cycles */
+/* Logos in ::after - isolated from header backgrounds so position/size never cycles */
 section:not(.title) header:not(.paper-header)::after {
   content: '';
   position: absolute;

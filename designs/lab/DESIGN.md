@@ -14,7 +14,7 @@ colors:
   accent-strong: "#D97706"
   emphasis: "#D1C600"
   muted-invert: "#AAAAAA"
-  highlight-invert: "#58A6FF"
+  highlight-invert: "#FDBA74"
   table-border: "#999999"
   table-header: "#F0F0F0"
   table-stripe: "#FAFAFA"
@@ -171,8 +171,8 @@ components:
     textColor: "{colors.on-surface}"
     typography: "{typography.display}"
   header-band:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.on-primary}"
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.on-surface}"
     typography: "{typography.label-md}"
     height: "{spacing.header-height}"
   summary-box:
@@ -191,8 +191,8 @@ components:
     typography: "{typography.caption}"
     padding: 0.3em
   accent-marker:
-    backgroundColor: "{colors.tertiary}"
-    textColor: "{colors.on-primary}"
+    backgroundColor: "{colors.accent-strong}"
+    textColor: "{colors.on-surface}"
     typography: "{typography.body-sm}"
   emphasis-marker:
     backgroundColor: "{colors.emphasis}"
@@ -462,19 +462,21 @@ too much material onto one slide.
 
 ## Colors
 
-The palette is neutral-first with one technical blue accent and restrained
-semantic colors for callouts.
+The palette is neutral-first with a warm orange accent and restrained semantic
+colors for callouts.
 
-- **Primary (#202228):** near-black ink for body text, title rules, and dark
-  header bands.
+- **Primary (#202228):** near-black ink for body text, title rules, and
+  high-contrast labels.
 - **Secondary (#7F7F7F):** muted gray for metadata, captions, pagination, and
   non-essential labels.
-- **Tertiary (#0969DA):** technical blue for highlights and theme accents.
+- **Tertiary (#0969DA):** technical blue reserved for note-style highlights,
+  links, and utility emphasis; it is not the default theme accent.
 - **Neutral / Surface (#FFFFFF):** white canvas for projection and PDF export.
 - **Surface muted (#F6F8FA):** subtle panel fill for summaries, feature cards,
   and compact explanatory blocks.
-- **Accent strong (#D97706):** warm emphasis for `strong` text. Use sparingly;
-  it should not dominate a slide.
+- **Accent strong (#D97706):** warm emphasis for accent markers and `strong`
+  text. Header and title rules use a semi-transparent treatment of this color
+  so they support structure without dominating the slide.
 
 Utility colors preserve the existing lab theme vocabulary for inline emphasis:
 red, blue, light-blue, green, yellow, orange, cyan, pink, and purple.
@@ -523,7 +525,7 @@ theme variants. One-off scoped CSS is a last resort.
 ## Elevation & Depth
 
 Depth is intentionally flat. Visual hierarchy comes from type scale, spacing,
-header bands, muted surfaces, and callout color rather than shadows. Avoid
+header rules, muted surfaces, and callout color rather than shadows. Avoid
 decorative depth, floating cards, and heavy gradients in normal research slides.
 
 ## Shapes

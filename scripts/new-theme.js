@@ -170,7 +170,7 @@ section {
   --fg: var(--color-on-surface);
   --bg: var(--color-neutral);
   --fg-muted: var(--color-secondary);
-  --highlight: var(--color-tertiary);
+  --highlight: var(--color-accent-strong);
   --gradient-mid: color-mix(in srgb, var(--highlight) 40%, var(--bg));
   --bg-gray-5: var(--color-surface-muted);
   --color-em: var(--color-emphasis);
