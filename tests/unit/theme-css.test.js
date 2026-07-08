@@ -21,7 +21,7 @@ test("Mermaid theme CSS exposes sizing custom properties", () => {
   }
 });
 
-test("title logo background sizing is overridable without changing header logos", () => {
+test("title logo background sizing defaults to height-based and remains overridable", () => {
   for (const relativePath of [
     "themes/src/_shared/_base.css",
     "themes/lab.css",
@@ -29,7 +29,7 @@ test("title logo background sizing is overridable without changing header logos"
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
     assert.match(
       css,
-      /--logo-title-background-size:\s*var\(--logo-title-size\)/,
+      /--logo-title-background-size:\s*auto var\(--logo-title-size\)/,
     );
     assert.match(
       css,
