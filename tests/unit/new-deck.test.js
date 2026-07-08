@@ -53,53 +53,54 @@ test("new-deck scaffolds brief and slide templates", () => {
   }
 });
 
-test("new-deck --poster scaffolds a single poster template", () => {
-  const deckName = `decks/test-new-poster-${process.pid}-${Date.now()}`;
+test("new-deck --paper scaffolds a single A-series paper template", () => {
+  const deckName = `decks/test-new-paper-${process.pid}-${Date.now()}`;
   const deckDir = path.join(repoRoot, deckName);
 
   fs.rmSync(deckDir, { recursive: true, force: true });
 
   try {
-    execFileSync(process.execPath, [scriptPath, deckName, "--poster"], {
+    execFileSync(process.execPath, [scriptPath, deckName, "--paper"], {
       cwd: repoRoot,
       env: process.env,
       stdio: "pipe",
     });
 
-    const posterPath = path.join(deckDir, "poster.md");
+    const paperPath = path.join(deckDir, "paper.md");
 
-    assert.equal(fs.existsSync(posterPath), true);
-    // A poster deck has no brief/slide/outline.
+    assert.equal(fs.existsSync(paperPath), true);
+    // A paper deck has no brief/slide/outline.
     assert.equal(fs.existsSync(path.join(deckDir, "brief.md")), false);
     assert.equal(fs.existsSync(path.join(deckDir, "slide.md")), false);
     assert.equal(fs.existsSync(path.join(deckDir, "assets", "img")), true);
 
-    const poster = fs.readFileSync(posterPath, "utf8");
-    assert.match(poster, /theme: poster/);
-    assert.match(poster, /size: a0/);
-    assert.match(poster, /class="poster-columns"/);
+    const paper = fs.readFileSync(paperPath, "utf8");
+    assert.match(paper, /theme: lab/);
+    assert.match(paper, /size: a4-portrait/);
+    assert.doesNotMatch(paper, /class:\s*poster/);
+    assert.match(paper, /class="paper-columns"/);
 
     // Scaffold should not preload a highlight card — that placeholder used to
     // push authors into adding a hero number even when one wasn't warranted.
-    assert.equal(poster.includes("poster-section highlight"), false);
-    assert.equal(poster.includes("poster-stat"), false);
+    assert.equal(paper.includes("paper-section highlight"), false);
+    assert.equal(paper.includes("paper-stat"), false);
 
     // Authoring guidance now lives in a sibling README.md, not in body HTML
-    // comments inside the rendered poster.
-    const bodyAfterFrontmatter = poster
+    // comments inside the rendered paper.
+    const bodyAfterFrontmatter = paper
       .split(/^---\s*$/m)
       .slice(2)
       .join("---");
     assert.equal(
       /<!--[\s\S]*?-->/.test(bodyAfterFrontmatter),
       false,
-      "scaffolded poster body should contain no HTML comments",
+      "scaffolded paper body should contain no HTML comments",
     );
 
     const readmePath = path.join(deckDir, "README.md");
     assert.equal(fs.existsSync(readmePath), true);
     const readme = fs.readFileSync(readmePath, "utf8");
-    assert.match(readme, /A0 poster/);
+    assert.match(readme, /A-series paper/);
     assert.match(readme, /Highlight card/);
   } finally {
     fs.rmSync(deckDir, { recursive: true, force: true });

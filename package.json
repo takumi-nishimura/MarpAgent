@@ -10,6 +10,10 @@
     "marpx": "node bin/marpx.js",
     "test": "node scripts/run-node-tests.js",
     "doctor": "node scripts/doctor.js",
+    "design:lint": "node scripts/lint-designs.js",
+    "design:tokens": "node scripts/generate-design-tokens.js --all",
+    "design:tokens:check": "node scripts/generate-design-tokens.js --all --check",
+    "theme:new": "node scripts/new-theme.js",
     "lint:deck": "node scripts/lint-deck.js",
     "validate:fixtures": "node scripts/ci-validate-fixtures.js",
     "quality:gate": "npm test && npm run validate:fixtures && npm run test:e2e",
@@ -37,6 +41,7 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
+    "@google/design.md": "^0.3.0",
     "@playwright/test": "^1.58.1",
     "playwright": "^1.58.1",
     "prettier": "3.8.1"

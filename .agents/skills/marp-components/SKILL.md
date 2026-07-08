@@ -32,14 +32,8 @@ style: |
   }
 ```
 
-**`--bg-gray-5` is NOT built into the theme.** Declare it in frontmatter `style:` before use:
-
-```yaml
-style: |
-  section {
-    --bg-gray-5: color-mix(in srgb, var(--color-deck-gray) 5%, transparent);
-  }
-```
+`--bg-gray-5` is built into the theme for subtle panel backgrounds. Override it
+in frontmatter only when the whole deck needs a different panel tint.
 
 ## Typography
 
@@ -50,7 +44,7 @@ style: |
 | `.text-sm` | Dense tables, captions |
 | `.text-xs` | Fine print only (smallest allowed) |
 
-**Forbidden:** `.text-xs2`, `.text-xs3` — triggers `typography-drift`. Split the slide instead.
+**Forbidden:** `.text-xs2`, `.text-xs3`, `<small>`, and tiny inline `font-size` values — triggers `typography-drift`. Split the slide instead.
 
 ## Callouts
 
@@ -228,10 +222,8 @@ Two-column slide with footnotes — use scoped `.footnote-col`:
 
 ## Summary Box
 
-Requires `--bg-gray-5` declared in frontmatter:
-
 ```markdown
-<div style="background: var(--bg-gray-5); padding: 0.4em 1em; margin-top: 1em;">
+<div class="summary-box">
 
 Key takeaway or summary sentence here.
 
@@ -271,7 +263,7 @@ text so long lines wrap at natural phrase points instead of arbitrary
 character positions. BudouX also sets `word-break:keep-all` so the browser
 only breaks at ZWSP or spaces — long katakana compounds stay intact and
 particles like 「は」 start a new line rather than splitting mid-word.
-This applies to both the `lab` (slide) and `poster` themes, and is
+This applies to both `lab` slide decks and A-series paper layouts, and is
 visible in serve, screenshot, and PDF output.
 
 Do NOT hand-insert `<br>` or `<wbr>` for aesthetic wrapping — BudouX
