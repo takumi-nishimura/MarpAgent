@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const { Marp } = require("@marp-team/marp-core");
 
 const repoRoot = path.join(__dirname, "../..");
 
@@ -87,12 +88,20 @@ test("theme CSS defines default subtle panel token", () => {
 });
 
 test("theme sources explicitly bound Tailwind class detection", () => {
-  const css = fs.readFileSync(path.join(repoRoot, "themes/src/lab.css"), "utf8");
-  assert.match(css, /@import "tailwindcss" source\(none\);/);
-  assert.match(css, /@source "\.\.\/\.\.\/decks\/\*\*\/\*\.md";/);
-  assert.match(css, /@source "\.\.\/\.\.\/fixtures\/\*\*\/\*\.md";/);
-  assert.match(css, /@source "\.\.\/\.\.\/\.agents\/skills\/\*\*\/\*\.md";/);
-  assert.match(css, /@import "\.\/_generated\/lab-design-tokens\.css";/);
+  for (const themeName of ["lab", "muji"]) {
+    const css = fs.readFileSync(
+      path.join(repoRoot, "themes/src", `${themeName}.css`),
+      "utf8",
+    );
+    assert.match(css, /@import "tailwindcss" source\(none\);/);
+    assert.match(css, /@source "\.\.\/\.\.\/decks\/\*\*\/\*\.md";/);
+    assert.match(css, /@source "\.\.\/\.\.\/fixtures\/\*\*\/\*\.md";/);
+    assert.match(css, /@source "\.\.\/\.\.\/\.agents\/skills\/\*\*\/\*\.md";/);
+    assert.match(
+      css,
+      new RegExp(`@import "\\./_generated/${themeName}-design-tokens\\.css";`),
+    );
+  }
 });
 
 test("lab theme declares canvas size families and imports paper components", () => {
@@ -121,34 +130,53 @@ test("lab theme declares canvas size families and imports paper components", () 
   assert.match(paper, /\.paper-footer\b/);
 });
 
-test("generated design token CSS is fresh", () => {
+test("generated design token CSS is fresh for all designs", () => {
   const result = spawnSync(
     process.execPath,
-    ["scripts/generate-design-tokens.js", "--check"],
+    ["scripts/generate-design-tokens.js", "--all", "--check"],
     { cwd: repoRoot, encoding: "utf8" },
   );
   assert.equal(result.status, 0, result.stderr || result.stdout);
 
-  const generated = fs.readFileSync(
-    path.join(repoRoot, "themes/src/_generated/lab-design-tokens.css"),
-    "utf8",
-  );
-  assert.match(generated, /Generated from designs\/lab\/DESIGN\.md/);
-  assert.match(generated, /--color-primary:\s*#202228;/);
-  assert.match(generated, /--text-body-md:\s*26px;/);
-  assert.match(generated, /--spacing-slide-x:\s*40px;/);
+  for (const [name, expectations] of [
+    [
+      "lab",
+      [/--color-primary:\s*#202228;/, /--text-body-md:\s*26px;/],
+    ],
+    [
+      "muji",
+      [
+        /--color-muji-red:\s*#7f0019;/,
+        /--text-body-md:\s*24px;/,
+        /--spacing-header-title-inset:\s*20px;/,
+      ],
+    ],
+  ]) {
+    const generated = fs.readFileSync(
+      path.join(repoRoot, `themes/src/_generated/${name}-design-tokens.css`),
+      "utf8",
+    );
+    assert.match(generated, new RegExp(`Generated from designs/${name}/DESIGN\\.md`));
+    for (const expectation of expectations) assert.match(generated, expectation);
+  }
 });
 
-test("lab DESIGN.md passes designmd lint without warnings", () => {
-  const result = spawnSync(getDesignmdBin(), ["lint", "designs/lab/DESIGN.md"], {
-    cwd: repoRoot,
-    encoding: "utf8",
-  });
-  assert.equal(result.status, 0, result.stderr || result.stdout);
+test("all DESIGN.md files pass designmd lint without warnings", () => {
+  for (const designName of ["lab", "muji"]) {
+    const result = spawnSync(
+      getDesignmdBin(),
+      ["lint", `designs/${designName}/DESIGN.md`],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+      },
+    );
+    assert.equal(result.status, 0, result.stderr || result.stdout);
 
-  const report = JSON.parse(result.stdout);
-  assert.equal(report.summary.errors, 0);
-  assert.equal(report.summary.warnings, 0);
+    const report = JSON.parse(result.stdout);
+    assert.equal(report.summary.errors, 0);
+    assert.equal(report.summary.warnings, 0);
+  }
 });
 
 test("theme source colors come from generated design tokens", () => {
@@ -177,33 +205,57 @@ test("legacy deck color variables map to lab design tokens", () => {
   assert.match(css, /--color-deck-blue:\s*var\(--color-blue\)/);
 });
 
-test("lab DESIGN.md follows the Google design.md document shape", () => {
-  const design = fs.readFileSync(path.join(repoRoot, "designs/lab/DESIGN.md"), "utf8");
-  assert.match(design, /^---\n/);
-  assert.match(design, /\n---\n\n# MarpAgent Lab Design\n/);
+test("DESIGN.md files follow the Google design.md document shape", () => {
+  for (const designName of ["lab", "muji"]) {
+    const design = fs.readFileSync(
+      path.join(repoRoot, "designs", designName, "DESIGN.md"),
+      "utf8",
+    );
+    assert.match(design, /^---\n/);
+    assert.match(design, /\n---\n\n# .+ Design\n/);
 
-  for (const key of [
-    "version:",
-    "name:",
-    "description:",
-    "colors:",
-    "typography:",
-    "rounded:",
-    "spacing:",
-    "components:",
-  ]) {
-    assert.match(design, new RegExp(`^${key}`, "m"));
+    for (const key of [
+      "version:",
+      "name:",
+      "description:",
+      "colors:",
+      "typography:",
+      "rounded:",
+      "spacing:",
+      "components:",
+    ]) {
+      assert.match(design, new RegExp(`^${key}`, "m"));
+    }
+
+    const headings = [...design.matchAll(/^## (.+)$/gm)].map((match) => match[1]);
+    assert.deepEqual(headings, [
+      "Overview",
+      "Colors",
+      "Typography",
+      "Layout",
+      "Elevation & Depth",
+      "Shapes",
+      "Components",
+      "Do's and Don'ts",
+    ]);
   }
+});
 
-  const headings = [...design.matchAll(/^## (.+)$/gm)].map((match) => match[1]);
-  assert.deepEqual(headings, [
-    "Overview",
-    "Colors",
-    "Typography",
-    "Layout",
-    "Elevation & Depth",
-    "Shapes",
-    "Components",
-    "Do's and Don'ts",
-  ]);
+test("muji theme renders a smoke deck", () => {
+  const marp = new Marp();
+  marp.themeSet.add(fs.readFileSync(path.join(repoRoot, "themes/muji.css"), "utf8"));
+  const markdown = fs.readFileSync(path.join(repoRoot, "fixtures/muji-slide.md"), "utf8");
+  const { html } = marp.render(markdown);
+
+  assert.match(html, /MUJI Theme/);
+  assert.match(html, /data-theme="muji"/);
+});
+
+test("muji header title inset comes from design tokens", () => {
+  const css = fs.readFileSync(path.join(repoRoot, "themes/src/muji.css"), "utf8");
+  assert.match(css, /--header-title-inset:\s*var\(--spacing-header-title-inset\)/);
+  assert.match(
+    css,
+    /padding-left:\s*calc\(var\(--padding-x\) \+ var\(--header-title-inset\)\)/,
+  );
 });

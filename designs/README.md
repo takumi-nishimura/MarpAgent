@@ -1,9 +1,11 @@
 # MarpAgent Designs
 
-The default design is `lab`:
+Available designs:
 
-- Design source: `designs/lab/DESIGN.md`
-- Generated Tailwind tokens: `themes/src/_generated/lab-design-tokens.css`
+| Design | Source | Generated tokens | Theme |
+| :----- | :----- | :--------------- | :---- |
+| `lab` | `designs/lab/DESIGN.md` | `themes/src/_generated/lab-design-tokens.css` | `theme: lab` |
+| `muji` | `designs/muji/DESIGN.md` | `themes/src/_generated/muji-design-tokens.css` | `theme: muji` |
 
 Designs and surfaces are separate concepts:
 

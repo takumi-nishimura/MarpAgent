@@ -97,7 +97,13 @@ MarpAgent/
 
 ## Theme
 
-The `lab` design is built on Tailwind CSS v4 and provides:
+MarpAgent themes are built on Tailwind CSS v4 from design-level `DESIGN.md`
+token sources. Available themes:
+
+- `lab` — default research presentation design
+- `muji` — quiet, minimal MUJI-inspired design
+
+Common capabilities:
 
 - Five color schemes: Dracula, One Dark Pro, Nord, Neogaia, GitHub Light
 - Slide layouts: title, content, two-column
@@ -106,20 +112,20 @@ The `lab` design is built on Tailwind CSS v4 and provides:
 - Laser pointer effect during presentation
 - Mermaid diagram support with MathJax
 
-See `designs/README.md` for the design index, `designs/lab/DESIGN.md` for the lab
-visual identity, and `docs/theme-contract.md` for the engineering contract
+See `designs/README.md` for the design index, `designs/<name>/DESIGN.md` for
+each visual identity, and `docs/theme-contract.md` for the engineering contract
 shared by CSS, templates, skills, Tailwind, and the validator.
 
-`designs/lab/DESIGN.md` is the source of truth for lab design tokens.
-`npm run marpx -- --theme` regenerates
-`themes/src/_generated/lab-design-tokens.css` before compiling the tracked
-theme CSS files.
+`designs/<name>/DESIGN.md` is the source of truth for each design's tokens.
+`npm run marpx -- --theme` regenerates the matching
+`themes/src/_generated/<name>-design-tokens.css` files before compiling the
+tracked theme CSS files.
 
-Use `theme: lab` for slide decks and A-series paper layouts. Canvas size is an
-explicit frontmatter concern: `16:9`, `4:3`, `a4-portrait`, `a4-landscape`, or a
-custom pixel size such as `400x200`. Paper layout is selected by the
-`.paper-header` / `.paper-columns` structure, not by a separate theme or slide
-class.
+Use `theme: lab` or `theme: muji` for slide decks and A-series paper layouts.
+Canvas size is an explicit frontmatter concern: `16:9`, `4:3`, `a4-portrait`,
+`a4-landscape`, or a custom pixel size such as `400x200`. Paper layout is
+selected by the `.paper-header` / `.paper-columns` structure, not by a separate
+theme or slide class.
 
 ### Mermaid sizing
 

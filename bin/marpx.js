@@ -191,30 +191,42 @@ function getTailwindBin() {
   return path.join(repoRoot, "node_modules", ".bin", "tailwindcss");
 }
 
-function generateDesignTokens() {
+function designExists(name) {
+  return fs.existsSync(path.join(repoRoot, "designs", name, "DESIGN.md"));
+}
+
+function generateDesignTokens(name) {
+  if (!designExists(name)) return;
   execFileSync(
     process.execPath,
-    [path.join(scriptsDir, "generate-design-tokens.js")],
+    [path.join(scriptsDir, "generate-design-tokens.js"), "--design", name],
     { cwd: repoRoot, stdio: "inherit" },
   );
 }
 
-function watchDesignTokens() {
-  const designPath = path.join(repoRoot, "designs", "lab", "DESIGN.md");
-  let timer = null;
+function watchDesignTokens(names) {
+  const timers = new Map();
 
-  fs.watch(designPath, () => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      try {
-        generateDesignTokens();
-      } catch (error) {
-        console.error(
-          `Error: failed to regenerate design tokens: ${error.message}`,
-        );
-      }
-    }, 100);
-  });
+  for (const name of names) {
+    if (!designExists(name)) continue;
+    const designPath = path.join(repoRoot, "designs", name, "DESIGN.md");
+    fs.watch(designPath, () => {
+      const currentTimer = timers.get(name);
+      if (currentTimer) clearTimeout(currentTimer);
+      timers.set(
+        name,
+        setTimeout(() => {
+          try {
+            generateDesignTokens(name);
+          } catch (error) {
+            console.error(
+              `Error: failed to regenerate ${name} design tokens: ${error.message}`,
+            );
+          }
+        }, 100),
+      );
+    });
+  }
 }
 
 function runMarp(extraArgs) {
@@ -370,8 +382,6 @@ switch (mode) {
   }
 
   case "theme": {
-    generateDesignTokens();
-
     const allThemes = discoverThemes();
 
     if (allThemes.length === 0) {
@@ -392,11 +402,13 @@ switch (mode) {
       process.exit(1);
     }
 
+    for (const name of themes) generateDesignTokens(name);
+
     const tailwind = getTailwindBin();
     const watchFlag = values.watch;
     const children = [];
 
-    if (watchFlag) watchDesignTokens();
+    if (watchFlag) watchDesignTokens(themes);
 
     for (const name of themes) {
       const input = path.join(repoRoot, "themes", "src", `${name}.css`);

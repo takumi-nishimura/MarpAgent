@@ -8,30 +8,54 @@ enforceSupportedNodeRuntime();
 
 const repoRoot = path.resolve(__dirname, "..");
 const checkOnly = process.argv.includes("--check");
+const allDesigns = process.argv.includes("--all");
 const designArgIndex = process.argv.indexOf("--design");
 const designName =
   designArgIndex >= 0 ? process.argv[designArgIndex + 1] : "lab";
 
-if (!designName || designName.startsWith("--")) {
-  console.error("Usage: generate-design-tokens.js [--design <name>] [--check]");
+if (allDesigns && designArgIndex >= 0) {
+  console.error(
+    "Usage: generate-design-tokens.js [--all | --design <name>] [--check]",
+  );
   process.exit(1);
 }
 
-const designPath = path.join(repoRoot, "designs", designName, "DESIGN.md");
-const outputPath = path.join(
-  repoRoot,
-  "themes",
-  "src",
-  "_generated",
-  `${designName}-design-tokens.css`,
-);
+if (!allDesigns && (!designName || designName.startsWith("--"))) {
+  console.error(
+    "Usage: generate-design-tokens.js [--all | --design <name>] [--check]",
+  );
+  process.exit(1);
+}
 
 function getDesignmdBin() {
   const binName = process.platform === "win32" ? "designmd.cmd" : "designmd";
   return path.join(repoRoot, "node_modules", ".bin", binName);
 }
 
-function exportTokens() {
+function discoverDesigns() {
+  const designsDir = path.join(repoRoot, "designs");
+  return fs
+    .readdirSync(designsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .filter((name) =>
+      fs.existsSync(path.join(designsDir, name, "DESIGN.md")),
+    )
+    .sort();
+}
+
+function getOutputPath(name) {
+  return path.join(
+    repoRoot,
+    "themes",
+    "src",
+    "_generated",
+    `${name}-design-tokens.css`,
+  );
+}
+
+function exportTokens(name) {
+  const designPath = path.join(repoRoot, "designs", name, "DESIGN.md");
   const css = execFileSync(
     getDesignmdBin(),
     ["export", "--format", "css-tailwind", designPath],
@@ -43,27 +67,33 @@ function exportTokens() {
   );
 
   return [
-    `/* Generated from designs/${designName}/DESIGN.md by scripts/generate-design-tokens.js. Do not edit. */`,
+    `/* Generated from designs/${name}/DESIGN.md by scripts/generate-design-tokens.js. Do not edit. */`,
     css.trimEnd(),
     "",
   ].join("\n");
 }
 
-const generated = exportTokens();
+function generateOne(name) {
+  const outputPath = getOutputPath(name);
+  const generated = exportTokens(name);
 
-if (checkOnly) {
-  const current = fs.existsSync(outputPath)
-    ? fs.readFileSync(outputPath, "utf8")
-    : "";
-  if (current !== generated) {
-    console.error(
-      `Generated ${designName} design tokens are stale. Run \`npm run design:tokens\`.`,
-    );
-    process.exit(1);
+  if (checkOnly) {
+    const current = fs.existsSync(outputPath)
+      ? fs.readFileSync(outputPath, "utf8")
+      : "";
+    if (current !== generated) {
+      console.error(
+        `Generated ${name} design tokens are stale. Run \`npm run design:tokens\`.`,
+      );
+      process.exitCode = 1;
+    }
+    return;
   }
-  process.exit(0);
+
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+  fs.writeFileSync(outputPath, generated);
+  console.log(`Generated ${path.relative(repoRoot, outputPath)}`);
 }
 
-fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-fs.writeFileSync(outputPath, generated);
-console.log(`Generated ${path.relative(repoRoot, outputPath)}`);
+const designNames = allDesigns ? discoverDesigns() : [designName];
+for (const name of designNames) generateOne(name);

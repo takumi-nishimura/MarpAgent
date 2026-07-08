@@ -12,9 +12,9 @@ from that source and should be regenerated after theme source changes.
 | File | Role |
 | :--- | :--- |
 | `designs/README.md` | repo-level design index and default pointer |
-| `designs/lab/DESIGN.md` | lab visual identity, design tokens, and design rationale |
-| `themes/src/_generated/lab-design-tokens.css` | generated Tailwind v4 `@theme` tokens from `designs/lab/DESIGN.md` |
-| `themes/src/lab.css` | Marp theme entry point for lab slides and paper layouts |
+| `designs/<name>/DESIGN.md` | visual identity, design tokens, and design rationale |
+| `themes/src/_generated/<name>-design-tokens.css` | generated Tailwind v4 `@theme` tokens from `designs/<name>/DESIGN.md` |
+| `themes/src/<name>.css` | Marp theme entry point for a design |
 | `themes/src/_shared/_base.css` | slide canvas, title/header layout, tables, footnotes |
 | `themes/src/_shared/_paper.css` | A-series paper layout components using the lab design tokens |
 | `themes/src/_shared/_layouts.css` | reusable author-facing layout components |
@@ -29,7 +29,8 @@ A design is the visual identity described by `designs/<name>/DESIGN.md`.
 A Marp theme entry is a CSS file that Marp can select with `theme:`.
 Those are intentionally separate concepts.
 
-The current default design is `lab`. It supports these canvas families:
+The current default design is `lab`; `muji` is also available as a separate
+design and Marp theme. Theme entries support these canvas families:
 
 - `16:9`, selected with `theme: lab` and `size: 16:9`;
 - `4:3`, selected with `theme: lab` and `size: 4:3`;
@@ -51,10 +52,11 @@ Tailwind compiles `themes/src/*.css` into `themes/*.css`. Automatic class
 detection is disabled with `source(none)` so prose documents do not mutate
 compiled theme output by mentioning class names.
 
-Before Tailwind runs, `marpx --theme` regenerates
-`themes/src/_generated/lab-design-tokens.css` from `designs/lab/DESIGN.md` with
-`@google/design.md`. In watch mode, `designs/lab/DESIGN.md` is watched and the
-generated CSS is refreshed when the design tokens change.
+Before Tailwind runs, `marpx --theme <name>` regenerates
+`themes/src/_generated/<name>-design-tokens.css` from
+`designs/<name>/DESIGN.md` with `@google/design.md`. In watch mode, the matching
+`DESIGN.md` files are watched and the generated CSS is refreshed when the design
+tokens change.
 
 Registered Tailwind sources:
 
@@ -62,8 +64,8 @@ Registered Tailwind sources:
 - `fixtures/**/*.md`
 - `.agents/skills/**/*.md`
 
-Design documents are not class-scanning sources. They are token sources. The
-generated lab token CSS is imported by `themes/src/lab.css`.
+Design documents are not class-scanning sources. They are token sources. Each
+theme entry imports only its matching generated token CSS.
 
 Useful commands:
 

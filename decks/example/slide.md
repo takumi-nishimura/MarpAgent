@@ -1,6 +1,6 @@
 ---
 marp: true
-theme: lab
+theme: muji
 class: normal
 paginate: true
 transition: slide
