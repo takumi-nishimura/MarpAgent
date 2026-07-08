@@ -9,7 +9,9 @@ const {
 } = require("../../src/mermaid-patch");
 
 test("version guard accepts the currently supported beautiful-mermaid version", () => {
-  const packageJsonPath = resolvePackageJsonPath(require.resolve("beautiful-mermaid"));
+  const packageJsonPath = resolvePackageJsonPath(
+    require.resolve("beautiful-mermaid"),
+  );
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
   assert.doesNotThrow(() => {
@@ -23,7 +25,7 @@ test("version guard rejects unsupported beautiful-mermaid versions", () => {
   }, /Unsupported beautiful-mermaid version/);
 });
 
-test("patch canary applies CJK width patch to the current source", () => {
+test("patch canary applies CJK width and multiline label patches to the current source", () => {
   const modulePath = require.resolve("beautiful-mermaid");
   const source = fs.readFileSync(modulePath, "utf8");
   const patched = applyBeautifulMermaidPatch(source);
@@ -41,6 +43,12 @@ test("patch canary applies CJK width patch to the current source", () => {
     assert.match(
       patched.source,
       /return _effectiveLength\(text\) \* fontSize \* 0\.6;/,
+    );
+    assert.match(patched.source, /function _splitExplicitLabelLines\(label\)/);
+    assert.match(patched.source, /_measureExplicitLabelSize\(label,/);
+    assert.match(
+      patched.source,
+      /const explicitLabelLines = _splitExplicitLabelLines\(node\.label\);/,
     );
   }
 });
@@ -68,5 +76,7 @@ function resolvePackageJsonPath(entryPath) {
     dir = path.dirname(dir);
   }
 
-  throw new Error("Could not resolve beautiful-mermaid package.json from module entry path.");
+  throw new Error(
+    "Could not resolve beautiful-mermaid package.json from module entry path.",
+  );
 }
