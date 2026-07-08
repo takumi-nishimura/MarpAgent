@@ -1,13 +1,12 @@
 ---
 marp: true
-theme: lab
+theme: muji
 class: normal
 paginate: true
 transition: slide
 style: |
     section {
       --logos-dark: url(shared/logos/marp-logo.svg);
-      --bg-gray-5: color-mix(in srgb, var(--color-deck-gray) 5%, transparent);
     }
 ---
 

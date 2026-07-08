@@ -1,23 +1,16 @@
 @theme {
-  --color-deck-white: #fff;
-  --color-deck-black: #202228;
-  --color-deck-gray: #7f7f7f;
-  --color-deck-red: #f55;
-  --color-deck-blue: #38f;
-  --color-deck-light-blue: #61dbfb;
-  --color-deck-green: #2eab7f;
-  --color-deck-yellow: rgb(209, 198, 0);
-  --color-deck-orange: #f80;
-  --color-deck-cyan: #0cc;
-  --color-deck-pink: #f5a;
-  --color-deck-purple: #673ab8;
-
-  /* Callout colors */
-  --color-note: #316dca;
-  --color-tip: #347d39;
-  --color-important: #8256d0;
-  --color-warning: #cc9d35;
-  --color-caution: #c93c37;
+  --color-deck-white: var(--color-neutral);
+  --color-deck-black: var(--color-primary);
+  --color-deck-gray: var(--color-secondary);
+  --color-deck-red: var(--color-red);
+  --color-deck-blue: var(--color-blue);
+  --color-deck-light-blue: var(--color-light-blue);
+  --color-deck-green: var(--color-green);
+  --color-deck-yellow: var(--color-yellow);
+  --color-deck-orange: var(--color-orange);
+  --color-deck-cyan: var(--color-cyan);
+  --color-deck-pink: var(--color-pink);
+  --color-deck-purple: var(--color-purple);
 }
 
 @layer utilities {

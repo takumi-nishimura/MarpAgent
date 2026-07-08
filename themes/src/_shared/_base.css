@@ -4,15 +4,18 @@ section {
   --bg: var(--color-deck-white);
   --fg-muted: var(--color-deck-gray);
 
-  /* Accent color for gradients - overridden by color schemes */
-  --highlight: #0969da;
+  /* Accent color for rules and paper accents - overridden by color schemes */
+  --highlight: var(--color-accent-strong);
+  --accent-rule: color-mix(in srgb, var(--highlight) 40%, transparent);
+  --accent-rule-width: 2px;
 
-  /* Gradient mid color: avoid transparency to keep PDF rendering stable across engines */
+  /* Gradient mid color for components that still use gradients */
   --gradient-mid: color-mix(in srgb, var(--highlight) 40%, var(--bg));
+  --bg-gray-5: var(--color-surface-muted);
 
   /* Emphasis colors - overridden by color schemes */
-  --color-em: var(--color-deck-yellow);
-  --color-strong: #d97706; /* Orange for better visibility on light background */
+  --color-em: var(--color-emphasis);
+  --color-strong: var(--color-accent-strong); /* Orange for better visibility on light background */
 
   /* New list-based logo variables - configurable per-slide via style directive */
   --logos-light: url(logos/logo_light.svg);
@@ -58,10 +61,10 @@ section {
 section.invert {
   --fg: var(--color-deck-white);
   --bg: var(--color-deck-black);
-  --fg-muted: #aaa;
+  --fg-muted: var(--color-muted-invert);
 
-  /* Lighter accent for dark mode */
-  --highlight: #58a6ff;
+  /* Lighter warm accent for dark mode */
+  --highlight: var(--color-highlight-invert);
 
   /* No swap needed - logo filenames already indicate their purpose */
   /* logo_light.svg = light colored logo for dark backgrounds */
@@ -134,7 +137,7 @@ section:not(.title) {
 }
 
 /* Add top margin to content to make space for header */
-section:not(.title) > header + * {
+section:not(.title) > header:not(.paper-header) + * {
   margin-top: 70px;
 }
 
@@ -147,7 +150,7 @@ section.title h1 {
   text-align: center;
   margin-top: 150px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--fg);
+  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
 }
 section.title > p {
   text-align: right;
@@ -186,40 +189,32 @@ section.title header {
 section.title.invert {
   --fg: var(--color-deck-white);
   --bg: var(--color-deck-black);
-  --fg-muted: #aaa;
+  --fg-muted: var(--color-muted-invert);
 }
 section.title.invert header {
   /* Use light logo (logo_light.svg) for dark background */
   background-image: var(--logos-light);
 }
 
-/* Non-title slide header with gradient background */
+/* Non-title slide header with a flat surface and accent rule */
 /* Logos are placed in ::after to avoid background-position/size cycling:
    when --logos-dark contains multiple comma-separated URLs, mixing them with
-   the gradient in one background-image causes the gradient to receive a logo's
+   other backgrounds in one background-image causes those backgrounds to receive a logo's
    position/size instead of 'left center' / '100% 100%', creating a top gap. */
-section:not(.title) header {
+section:not(.title) header:not(.paper-header) {
   /* Position header flush with page top */
   position: absolute;
   top: 0;
   left: calc(-1 * var(--padding-x));  /* Full-bleed left */
   width: calc(100% + (var(--padding-x) * 2));  /* Full-bleed width */
 
-  /* Gradient only — always covers the full header */
-  background-image: linear-gradient(
-    to right,
-    var(--fg) 10%,
-    var(--gradient-mid) 65%,
-    var(--bg) 100%
-  );
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: 100% 100%;
+  background: var(--bg);
+  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
 
   text-align: left;
   padding-left: calc(var(--padding-x) + 20px);  /* Extra margin for visual spacing */
 
-  color: var(--bg);
+  color: var(--fg);
   font-size: 1rem;
   font-weight: 600;
 
@@ -231,8 +226,8 @@ section:not(.title) header {
   align-items: center;
 }
 
-/* Logos in ::after — isolated from the gradient so position/size never cycles */
-section:not(.title) header::after {
+/* Logos in ::after - isolated from header backgrounds so position/size never cycles */
+section:not(.title) header:not(.paper-header)::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -254,7 +249,7 @@ section:not(.title) header::after {
 }
 
 /* Non-title slide with invert - use light logo */
-section:not(.title).invert header::after {
+section:not(.title).invert header:not(.paper-header)::after {
   background-image: var(--logos-light);
 }
 
@@ -274,13 +269,13 @@ table {
   margin-bottom: 2em;
 }
 th, td {
-  border: 1px solid #999;
+  border: 1px solid var(--color-table-border);
   padding: 6px 10px;
 }
 th {
-  background: #f0f0f0;
+  background: var(--color-table-header);
   text-align: left;
 }
 tbody tr:nth-child(even) {
-  background: #fafafa;
+  background: var(--color-table-stripe);
 }

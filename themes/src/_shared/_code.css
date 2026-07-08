@@ -1,6 +1,6 @@
 /* Inline code styling - use transparent overlay like gaia */
 code {
-  background-color: rgba(128, 128, 128, 0.2);
+  background-color: var(--color-code-inline-bg);
   font-size: 0.8em;
   font-family: "Source Code Pro", monospace;
   padding: 0.1em 0.3em;
@@ -9,7 +9,7 @@ code {
 
 /* Code blocks (pre > code) */
 pre {
-  background-color: rgba(128, 128, 128, 0.15);
+  background-color: var(--color-code-block-bg);
   border-radius: 0.5em;
   padding: 0.8em 1em;
   overflow-x: auto;
@@ -37,7 +37,7 @@ code[name]::before {
   border-bottom-right-radius: 8px;
   content: attr(name);
   font-size: 0.75em;
-  background: rgba(128, 128, 128, 0.2);
+  background: var(--color-code-inline-bg);
 }
 
 /* ===== Syntax Highlighting (highlight.js) ===== */
@@ -45,13 +45,13 @@ code[name]::before {
 /* Light mode - GitHub inspired */
 section pre code .hljs-comment,
 section pre code .hljs-quote {
-  color: #6a737d;
+  color: var(--color-code-comment);
   font-style: italic;
 }
 
 section pre code .hljs-keyword,
 section pre code .hljs-selector-tag {
-  color: #d73a49;
+  color: var(--color-code-keyword);
 }
 
 section pre code .hljs-string,
@@ -59,7 +59,7 @@ section pre code .hljs-doctag,
 section pre code .hljs-template-variable,
 section pre code .hljs-variable,
 section pre code .hljs-template-tag {
-  color: #032f62;
+  color: var(--color-code-string);
 }
 
 section pre code .hljs-number,
@@ -67,37 +67,37 @@ section pre code .hljs-literal,
 section pre code .hljs-type,
 section pre code .hljs-params,
 section pre code .hljs-link {
-  color: #005cc5;
+  color: var(--color-code-number);
 }
 
 section pre code .hljs-function,
 section pre code .hljs-title {
-  color: #6f42c1;
+  color: var(--color-code-function);
 }
 
 section pre code .hljs-tag,
 section pre code .hljs-name,
 section pre code .hljs-attribute {
-  color: #22863a;
+  color: var(--color-code-tag);
 }
 
 section pre code .hljs-built_in,
 section pre code .hljs-builtin-name {
-  color: #e36209;
+  color: var(--color-code-builtin);
 }
 
 section pre code .hljs-meta {
-  color: #735c0f;
+  color: var(--color-code-meta);
 }
 
 section pre code .hljs-deletion {
-  color: #b31d28;
-  background-color: #ffeef0;
+  color: var(--color-code-deletion);
+  background-color: var(--color-code-deletion-bg);
 }
 
 section pre code .hljs-addition {
-  color: #22863a;
-  background-color: #f0fff4;
+  color: var(--color-code-addition);
+  background-color: var(--color-code-addition-bg);
 }
 
 /* Dark mode (invert) - One Dark inspired */
@@ -109,7 +109,7 @@ section.one-dark pre code .hljs-comment,
 section.one-dark pre code .hljs-quote,
 section.nord pre code .hljs-comment,
 section.nord pre code .hljs-quote {
-  color: #7f848e;
+  color: var(--color-code-dark-comment);
   font-style: italic;
 }
 
@@ -121,7 +121,7 @@ section.one-dark pre code .hljs-keyword,
 section.one-dark pre code .hljs-selector-tag,
 section.nord pre code .hljs-keyword,
 section.nord pre code .hljs-selector-tag {
-  color: #c678dd;
+  color: var(--color-code-dark-keyword);
 }
 
 section.invert pre code .hljs-string,
@@ -135,7 +135,7 @@ section.one-dark pre code .hljs-string,
 section.one-dark pre code .hljs-doctag,
 section.nord pre code .hljs-string,
 section.nord pre code .hljs-doctag {
-  color: #98c379;
+  color: var(--color-code-dark-string);
 }
 
 section.invert pre code .hljs-number,
@@ -149,7 +149,7 @@ section.one-dark pre code .hljs-number,
 section.one-dark pre code .hljs-literal,
 section.nord pre code .hljs-number,
 section.nord pre code .hljs-literal {
-  color: #d19a66;
+  color: var(--color-code-dark-number);
 }
 
 section.invert pre code .hljs-function,
@@ -160,7 +160,7 @@ section.one-dark pre code .hljs-function,
 section.one-dark pre code .hljs-title,
 section.nord pre code .hljs-function,
 section.nord pre code .hljs-title {
-  color: #61afef;
+  color: var(--color-code-dark-function);
 }
 
 section.invert pre code .hljs-tag,
@@ -172,7 +172,7 @@ section.one-dark pre code .hljs-tag,
 section.one-dark pre code .hljs-name,
 section.nord pre code .hljs-tag,
 section.nord pre code .hljs-name {
-  color: #e06c75;
+  color: var(--color-code-dark-tag);
 }
 
 section.invert pre code .hljs-built_in,
@@ -180,12 +180,12 @@ section.invert pre code .hljs-builtin-name,
 section.dracula pre code .hljs-built_in,
 section.one-dark pre code .hljs-built_in,
 section.nord pre code .hljs-built_in {
-  color: #e6c07b;
+  color: var(--color-code-dark-builtin);
 }
 
 section.invert pre code .hljs-meta,
 section.dracula pre code .hljs-meta,
 section.one-dark pre code .hljs-meta,
 section.nord pre code .hljs-meta {
-  color: #56b6c2;
+  color: var(--color-code-dark-meta);
 }

@@ -26,11 +26,15 @@ Options:
   --screenshot <page>      Screenshot a slide (1-based displayed page)
   -v, --validate           Validate deck
   -n, --new                Create new deck
-  --poster                 Scaffold an A0 poster deck (with --new)
+  --paper                  Scaffold an A-series paper deck (with --new)
   --outline                Generate outline from brief
   --no-strict-brief        Allow incomplete brief schema for --outline
   --format <fmt>           Output format: text, json, sarif
   --theme [name]           Build theme(s) (all if name omitted)
+  --theme-new              Scaffold a new theme
+  --source-url <url>       Source URL note for --theme-new
+  --force                  Overwrite existing scaffold files for --theme-new
+  --no-build               Scaffold only; skip token/theme build for --theme-new
   -w, --watch              Watch mode (for --theme)
   --output <path>          Output path (for --outline)
   --report-dir <dir>       Report directory (for --validate)
@@ -49,11 +53,12 @@ Examples:
   marpx decks/2025/talk/slide.md --screenshot 5  Screenshot slide 5
   marpx decks/2025/talk/slide.md -v         Validate
   marpx -n decks/2025/talk                  New deck
-  marpx -n decks/2025/poster --poster       New A0 poster deck
+  marpx -n decks/2025/paper --paper         New A-series paper deck
   marpx decks/2025/talk/brief.md --outline  Generate outline
   marpx --doctor                             Environment diagnostics
   marpx --theme                             Build all themes
   marpx --theme lab                         Build lab theme only
+  marpx --theme-new my-theme --source-url https://example.com/design  New theme scaffold
   marpx --theme -w                          Watch all themes`);
 }
 
@@ -73,11 +78,16 @@ try {
       strict: { type: "boolean", default: false },
       validate: { type: "boolean", short: "v", default: false },
       new: { type: "boolean", short: "n", default: false },
+      paper: { type: "boolean", default: false },
       poster: { type: "boolean", default: false },
       outline: { type: "boolean", default: false },
       "no-strict-brief": { type: "boolean", default: false },
       format: { type: "string" },
       theme: { type: "boolean", default: false },
+      "theme-new": { type: "boolean", default: false },
+      "source-url": { type: "string" },
+      force: { type: "boolean", default: false },
+      "no-build": { type: "boolean", default: false },
       watch: { type: "boolean", short: "w", default: false },
       output: { type: "string" },
       "report-dir": { type: "string" },
@@ -111,6 +121,7 @@ const modes = [
   "new",
   "outline",
   "theme",
+  "theme-new",
 ].filter(
   (m) => values[m],
 );
@@ -132,8 +143,33 @@ if (values["no-strict-brief"] && mode !== "outline") {
   process.exit(1);
 }
 
-if (values.poster && mode !== "new") {
-  console.error("Error: --poster can only be used with --new");
+if (values.poster) {
+  console.error("Error: --poster has been replaced by --paper.");
+  process.exit(1);
+}
+
+if (values.paper && mode !== "new") {
+  console.error("Error: --paper can only be used with --new");
+  process.exit(1);
+}
+
+if (values.watch && mode !== "theme") {
+  console.error("Error: --watch can only be used with --theme");
+  process.exit(1);
+}
+
+if (values["source-url"] && mode !== "theme-new") {
+  console.error("Error: --source-url can only be used with --theme-new");
+  process.exit(1);
+}
+
+if (values.force && mode !== "theme-new") {
+  console.error("Error: --force can only be used with --theme-new");
+  process.exit(1);
+}
+
+if (values["no-build"] && mode !== "theme-new") {
+  console.error("Error: --no-build can only be used with --theme-new");
   process.exit(1);
 }
 
@@ -183,6 +219,44 @@ function discoverThemes() {
 
 function getTailwindBin() {
   return path.join(repoRoot, "node_modules", ".bin", "tailwindcss");
+}
+
+function designExists(name) {
+  return fs.existsSync(path.join(repoRoot, "designs", name, "DESIGN.md"));
+}
+
+function generateDesignTokens(name) {
+  if (!designExists(name)) return;
+  execFileSync(
+    process.execPath,
+    [path.join(scriptsDir, "generate-design-tokens.js"), "--design", name],
+    { cwd: repoRoot, stdio: "inherit" },
+  );
+}
+
+function watchDesignTokens(names) {
+  const timers = new Map();
+
+  for (const name of names) {
+    if (!designExists(name)) continue;
+    const designPath = path.join(repoRoot, "designs", name, "DESIGN.md");
+    fs.watch(designPath, () => {
+      const currentTimer = timers.get(name);
+      if (currentTimer) clearTimeout(currentTimer);
+      timers.set(
+        name,
+        setTimeout(() => {
+          try {
+            generateDesignTokens(name);
+          } catch (error) {
+            console.error(
+              `Error: failed to regenerate ${name} design tokens: ${error.message}`,
+            );
+          }
+        }, 100),
+      );
+    });
+  }
 }
 
 function runMarp(extraArgs) {
@@ -306,8 +380,8 @@ switch (mode) {
 
   case "new": {
     const args = [...positionals];
-    if (values.poster) {
-      args.push("--poster");
+    if (values.paper) {
+      args.push("--paper");
     }
     runScript("new-deck.js", args);
     break;
@@ -358,9 +432,13 @@ switch (mode) {
       process.exit(1);
     }
 
+    for (const name of themes) generateDesignTokens(name);
+
     const tailwind = getTailwindBin();
     const watchFlag = values.watch;
     const children = [];
+
+    if (watchFlag) watchDesignTokens(themes);
 
     for (const name of themes) {
       const input = path.join(repoRoot, "themes", "src", `${name}.css`);
@@ -403,6 +481,21 @@ switch (mode) {
         if (exited === children.length) process.exit(exitCode);
       });
     }
+    break;
+  }
+
+  case "theme-new": {
+    const args = [...positionals];
+    if (values["source-url"]) {
+      args.push("--source-url", values["source-url"]);
+    }
+    if (values.force) {
+      args.push("--force");
+    }
+    if (values["no-build"]) {
+      args.push("--no-build");
+    }
+    runScript("new-theme.js", args);
     break;
   }
 }

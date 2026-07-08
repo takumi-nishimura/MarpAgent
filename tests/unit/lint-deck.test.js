@@ -20,6 +20,7 @@ marp: true
 # Title
 
 <div class="text-xs3">detail</div>
+<div class="text-xs">caption</div>
 <small>footnote</small>
 `,
     );
@@ -40,6 +41,7 @@ marp: true
     assert.equal(result.status, 0);
     const updated = fs.readFileSync(deckPath, "utf8");
     assert.equal(updated.includes("text-xs3"), false);
+    assert.equal(updated.includes("text-xs\">caption"), true);
     assert.equal(updated.includes("<small>"), false);
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });

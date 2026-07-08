@@ -67,6 +67,54 @@
   .centered > .caution {
     align-self: stretch;
   }
+
+  .summary-box {
+    background: var(--bg-gray-5);
+    padding: 0.4em 1em;
+    margin-top: 1em;
+  }
+
+  .gap-cols {
+    align-items: stretch;
+    gap: 0.8em;
+  }
+  .gap-cols > div {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .gap-cols ul,
+  .gap-cols ol {
+    font-size: var(--text-sm);
+    line-height: 1.35;
+    margin: 0.2em 0 0;
+    padding-left: 1.2em;
+  }
+  .gap-box {
+    background: var(--bg-gray-5);
+    padding: 0.3em 0.3em;
+    text-align: center;
+    font-weight: bold;
+    font-size: var(--text-sm);
+  }
+  .gap-cols > div > .gap-box {
+    margin-top: auto;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5em 0.5em;
+    margin-top: 0.2em;
+    font-size: var(--text-xs);
+  }
+  .feature-grid > div {
+    background: var(--bg-gray-5);
+    padding: 0.3em 0.5em;
+  }
+  .feature-grid strong {
+    font-size: var(--text-sm);
+  }
 }
 
 /* .author paragraph reset — outside @layer so it wins over unlayered section p rule */

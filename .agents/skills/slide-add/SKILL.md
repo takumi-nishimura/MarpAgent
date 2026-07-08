@@ -24,10 +24,7 @@ If the user does not specify an exact insertion point, infer the most relevant n
    - Otherwise infer: comparison/visual split → `two-column`; everything else → `content`
    - Apply the matching template from the **marp-slide-types** skill
 
-3. If the slide uses `var(--bg-gray-5)` (three-column, feature-grid, summary-box):
-   - Check frontmatter `style:` for the declaration
-   - If missing, add: `--bg-gray-5: color-mix(in srgb, var(--color-deck-gray) 5%, transparent);`
-   - See **marp-components** skill for details
+3. If the slide uses three-column, feature-grid, or summary-box patterns, use the built-in theme classes from **marp-slide-types**. Do not add scoped component CSS unless the user asks for a one-off custom layout.
 
 4. Insert the slide(s).
    - Preserve the existing `<!-- _header: ... -->` values on neighboring slides

@@ -81,7 +81,6 @@ function applyAutoFixes(markdown) {
   // Safe typography fix: lift tiny utility classes to a readable baseline.
   replace(/\btext-xs2\b/g, "text-sm");
   replace(/\btext-xs3\b/g, "text-sm");
-  replace(/\btext-xs\b/g, "text-sm");
 
   // Remove <small> wrappers and keep the text content.
   replace(/<small>([\s\S]*?)<\/small>/gi, "$1");

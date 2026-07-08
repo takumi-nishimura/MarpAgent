@@ -1,0 +1,154 @@
+/*!
+ * @theme muji
+ * @size 16:9 1280px 720px
+ * @size 4:3 1024px 768px
+ * @size a4-portrait 210mm 297mm
+ * @size a4-landscape 297mm 210mm
+ */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
+@import "tailwindcss" source(none);
+@source "../../decks/**/*.md";
+@source "../../fixtures/**/*.md";
+@source "../../.agents/skills/**/*.md";
+
+@import "./_generated/muji-design-tokens.css";
+@import "./_shared/_base.css";
+@import "./_shared/_colors.css";
+@import "./_shared/_typography.css";
+@import "./_shared/_layouts.css";
+@import "./_shared/_paper.css";
+@import "./_shared/_callouts.css";
+@import "./_shared/_code.css";
+@import "./_shared/_colorschemes.css";
+
+section {
+  --fg: var(--color-text-primary);
+  --bg: var(--color-background);
+  --fg-muted: var(--color-text-secondary);
+  --highlight: var(--color-muji-red);
+  --gradient-mid: var(--color-border-light);
+  --bg-gray-5: var(--color-background-secondary);
+  --color-em: var(--color-kinari);
+  --color-strong: var(--color-muji-red);
+  --padding-x: var(--spacing-slide-x);
+  --header-height: var(--spacing-header-height);
+  --header-title-inset: var(--spacing-header-title-inset);
+  --logo-title-size: var(--spacing-logo-title-size);
+  --logo-header-size: var(--spacing-logo-header-size);
+
+  font-family: "Helvetica Neue", Arial, "Noto Sans JP", "Noto Sans JP Fallback", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  font-size: var(--text-body-md);
+  line-height: 1.6;
+}
+
+section.invert {
+  --fg: var(--color-neutral);
+  --bg: var(--color-primary);
+  --fg-muted: var(--color-muted-invert);
+  --highlight: var(--color-beige);
+  --bg-gray-5: var(--color-gray-800);
+}
+
+section h1,
+section h2 {
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+section h1 {
+  font-size: 2.15em;
+}
+
+section h2 {
+  font-size: 1.35em;
+}
+
+section h3 {
+  font-size: 1.08em;
+  line-height: 1.15;
+  letter-spacing: 0.09em;
+}
+
+section.title {
+  padding-top: 44px;
+}
+
+section.title h1 {
+  text-align: left;
+  margin-top: 120px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+section.title > p,
+section.title .author {
+  text-align: left;
+  margin-top: 56px;
+  margin-right: 0;
+  color: var(--fg-muted);
+}
+
+section.title header {
+  background-position:
+    left var(--padding-x) top 16px,
+    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px,
+    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px,
+    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px,
+    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
+}
+
+section:not(.title) > header:not(.paper-header) + * {
+  margin-top: 78px;
+}
+
+section:not(.title) header:not(.paper-header) {
+  background: var(--bg);
+  background-image: none;
+  border-bottom: 1px solid var(--color-border-light);
+  color: var(--fg);
+  font-weight: 700;
+  padding-left: calc(var(--padding-x) + var(--header-title-inset));
+}
+
+section:not(.title) header:not(.paper-header)::after {
+  opacity: 0.86;
+}
+
+section::after {
+  color: var(--color-text-tertiary);
+}
+
+.summary-box,
+.gap-box,
+.feature-card {
+  border: 1px solid var(--color-border-light);
+  background: var(--color-background-secondary);
+  box-shadow: none;
+  border-radius: var(--radius-none);
+}
+
+.paper-header {
+  background: var(--color-kinari);
+  color: var(--fg);
+  border: 1px solid var(--color-border-light);
+}
+
+.paper-section {
+  border-color: var(--color-border-light);
+}
+
+.paper-section > h2 {
+  background: var(--color-background-secondary);
+  color: var(--fg);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.paper-section.highlight {
+  border-color: var(--color-muji-red);
+  background: var(--color-kinari);
+}
+
+.paper-section.highlight > h2 {
+  background: var(--color-muji-red);
+  color: var(--color-neutral);
+}

@@ -1,6 +1,6 @@
 /*! tailwindcss v4.2.1 | MIT License | https://tailwindcss.com */
 /*!
- * @theme lab
+ * @theme muji
  * @size 16:9 1280px 720px
  * @size 4:3 1024px 768px
  * @size a4-portrait 210mm 297mm
@@ -15,6 +15,7 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-gray-800: #3c3c43;
     --spacing: 0.25rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
@@ -26,97 +27,112 @@
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
-    --color-primary: #202228;
-    --color-secondary: #7f7f7f;
-    --color-tertiary: #0969da;
+    --color-primary: #3c3c43;
+    --color-secondary: #6d6d72;
+    --color-tertiary: #7f0019;
     --color-neutral: #ffffff;
-    --color-surface-muted: #f6f8fa;
-    --color-accent-strong: #d97706;
-    --color-emphasis: #d1c600;
-    --color-muted-invert: #aaaaaa;
-    --color-highlight-invert: #fdba74;
-    --color-table-border: #999999;
-    --color-table-header: #f0f0f0;
-    --color-table-stripe: #fafafa;
-    --color-cursor-orange: #ff5c31;
-    --color-cursor-glow: #ff5c3180;
-    --color-note: #316dca;
-    --color-note-strong: #3282ef;
-    --color-tip: #347d39;
-    --color-tip-strong: #009606;
-    --color-important: #8256d0;
-    --color-important-strong: #602fb6;
-    --color-warning: #cc9d35;
-    --color-warning-strong: #d78722;
-    --color-caution: #c93c37;
-    --color-caution-strong: #e5534b;
-    --color-red: #ff5555;
-    --color-blue: #3388ff;
-    --color-light-blue: #61dbfb;
-    --color-green: #2eab7f;
-    --color-yellow: #d1c600;
-    --color-orange: #ff8800;
-    --color-cyan: #00cccc;
-    --color-pink: #ff55aa;
-    --color-purple: #673ab8;
-    --color-dracula-bg: #282a36;
-    --color-dracula-fg: #f8f8f2;
-    --color-dracula-muted: #6272a4;
-    --color-dracula-highlight: #bd93f9;
-    --color-dracula-emphasis: #f1fa8c;
-    --color-dracula-strong: #ff79c6;
-    --color-one-dark-bg: #282c34;
-    --color-one-dark-fg: #abb2bf;
-    --color-one-dark-muted: #5c6370;
-    --color-one-dark-highlight: #61afef;
-    --color-one-dark-emphasis: #e5c07b;
-    --color-one-dark-strong: #e06c75;
-    --color-nord-bg: #2e3440;
-    --color-nord-fg: #eceff4;
-    --color-nord-muted: #4c566a;
-    --color-nord-highlight: #88c0d0;
-    --color-nord-emphasis: #ebcb8b;
-    --color-nord-strong: #bf616a;
-    --color-neogaia-dark-bg: #455a64;
-    --color-neogaia-dark-fg: #fff8e1;
-    --color-neogaia-dark-muted: #b0bec5;
-    --color-neogaia-dark-highlight: #d1e8ff;
-    --color-neogaia-dark-emphasis: #ffff66;
-    --color-neogaia-dark-strong: #ffeb3b;
-    --color-neogaia-light-bg: #fff8e1;
-    --color-neogaia-light-fg: #455a64;
-    --color-neogaia-light-muted: #607d8b;
-    --color-neogaia-light-highlight: #0288d1;
-    --color-neogaia-light-emphasis: #bf8700;
-    --color-neogaia-light-strong: #d97706;
+    --color-surface-muted: #f5f5f5;
+    --color-accent-strong: #7f0019;
+    --color-emphasis: #f4eede;
+    --color-muted-invert: #c4c4c6;
+    --color-highlight-invert: #e0ceaa;
+    --color-table-border: #d8d8d9;
+    --color-table-header: #f5f5f5;
+    --color-table-stripe: #ffffff;
+    --color-muji-red: #7f0019;
+    --color-red: #dd0c14;
+    --color-kinari: #f4eede;
+    --color-beige: #e0ceaa;
+    --color-text-primary: #3c3c43;
+    --color-text-secondary: #6d6d72;
+    --color-text-tertiary: #76767b;
+    --color-border: #d8d8d9;
+    --color-border-light: #ebebec;
+    --color-background: #ffffff;
+    --color-background-secondary: #f5f5f5;
+    --color-note: #6d6d72;
+    --color-note-strong: #3c3c43;
+    --color-tip: #e0ceaa;
+    --color-tip-strong: #7f0019;
+    --color-important: #7f0019;
+    --color-important-strong: #7f0019;
+    --color-warning: #e0ceaa;
+    --color-warning-strong: #7f0019;
+    --color-caution: #dd0c14;
+    --color-caution-strong: #dd0c14;
+    --color-blue: #6d6d72;
+    --color-light-blue: #9d9da0;
+    --color-green: #6d6d72;
+    --color-yellow: #e0ceaa;
+    --color-orange: #7f0019;
+    --color-cyan: #76767b;
+    --color-pink: #7f0019;
+    --color-purple: #6d6d72;
+    --color-dracula-bg: #3c3c43;
+    --color-dracula-fg: #ffffff;
+    --color-dracula-muted: #c4c4c6;
+    --color-dracula-highlight: #e0ceaa;
+    --color-dracula-emphasis: #f4eede;
+    --color-dracula-strong: #dd0c14;
+    --color-one-dark-bg: #3c3c43;
+    --color-one-dark-fg: #ffffff;
+    --color-one-dark-muted: #c4c4c6;
+    --color-one-dark-highlight: #e0ceaa;
+    --color-one-dark-emphasis: #f4eede;
+    --color-one-dark-strong: #dd0c14;
+    --color-nord-bg: #3c3c43;
+    --color-nord-fg: #ffffff;
+    --color-nord-muted: #c4c4c6;
+    --color-nord-highlight: #e0ceaa;
+    --color-nord-emphasis: #f4eede;
+    --color-nord-strong: #dd0c14;
+    --color-neogaia-dark-bg: #3c3c43;
+    --color-neogaia-dark-fg: #f4eede;
+    --color-neogaia-dark-muted: #c4c4c6;
+    --color-neogaia-dark-highlight: #e0ceaa;
+    --color-neogaia-dark-emphasis: #f4eede;
+    --color-neogaia-dark-strong: #dd0c14;
+    --color-neogaia-light-bg: #f4eede;
+    --color-neogaia-light-fg: #3c3c43;
+    --color-neogaia-light-muted: #6d6d72;
+    --color-neogaia-light-highlight: #7f0019;
+    --color-neogaia-light-emphasis: #e0ceaa;
+    --color-neogaia-light-strong: #dd0c14;
     --color-github-light-bg: #ffffff;
-    --color-github-light-fg: #24292f;
-    --color-github-light-muted: #57606a;
-    --color-github-light-highlight: #0969da;
-    --color-github-light-emphasis: #bf8700;
-    --color-github-light-strong: #cf222e;
-    --color-code-inline-bg: #80808033;
-    --color-code-block-bg: #80808026;
-    --color-code-comment: #6a737d;
-    --color-code-keyword: #d73a49;
-    --color-code-string: #032f62;
-    --color-code-number: #005cc5;
-    --color-code-function: #6f42c1;
-    --color-code-tag: #22863a;
-    --color-code-builtin: #e36209;
-    --color-code-meta: #735c0f;
-    --color-code-deletion: #b31d28;
-    --color-code-deletion-bg: #ffeef0;
-    --color-code-addition: #22863a;
-    --color-code-addition-bg: #f0fff4;
-    --color-code-dark-comment: #7f848e;
-    --color-code-dark-keyword: #c678dd;
-    --color-code-dark-string: #98c379;
-    --color-code-dark-number: #d19a66;
-    --color-code-dark-function: #61afef;
-    --color-code-dark-tag: #e06c75;
-    --color-code-dark-builtin: #e6c07b;
-    --color-code-dark-meta: #56b6c2;
+    --color-github-light-fg: #3c3c43;
+    --color-github-light-muted: #6d6d72;
+    --color-github-light-highlight: #7f0019;
+    --color-github-light-emphasis: #e0ceaa;
+    --color-github-light-strong: #dd0c14;
+    --color-code-inline-bg: #d8d8d973;
+    --color-code-block-bg: #f5f5f5;
+    --color-code-comment: #76767b;
+    --color-code-keyword: #7f0019;
+    --color-code-string: #3c3c43;
+    --color-code-number: #7f0019;
+    --color-code-function: #3c3c43;
+    --color-code-tag: #7f0019;
+    --color-code-builtin: #3c3c43;
+    --color-code-meta: #6d6d72;
+    --color-code-deletion: #dd0c14;
+    --color-code-deletion-bg: #f4eede;
+    --color-code-addition: #3c3c43;
+    --color-code-addition-bg: #f5f5f5;
+    --color-code-dark-comment: #c4c4c6;
+    --color-code-dark-keyword: #e0ceaa;
+    --color-code-dark-string: #ffffff;
+    --color-code-dark-number: #e0ceaa;
+    --color-code-dark-function: #ffffff;
+    --color-code-dark-tag: #e0ceaa;
+    --color-code-dark-builtin: #ffffff;
+    --color-code-dark-meta: #c4c4c6;
+    --text-body-md: 24px;
+    --radius-none: 0px;
+    --spacing-slide-x: 56px;
+    --spacing-header-height: 56px;
+    --spacing-header-title-inset: 20px;
+    --spacing-logo-title-size: 64px;
+    --spacing-logo-header-size: 38px;
     --color-deck-white: var(--color-neutral);
     --color-deck-black: var(--color-primary);
     --color-deck-gray: var(--color-secondary);
@@ -361,12 +377,7 @@ section {
   --fg: var(--color-deck-black);
   --bg: var(--color-deck-white);
   --fg-muted: var(--color-deck-gray);
-  --highlight: var(--color-accent-strong);
-  --accent-rule: var(--highlight);
-  @supports (color: color-mix(in lab, red, red)) {
-    --accent-rule: color-mix(in srgb, var(--highlight) 40%, transparent);
-  }
-  --accent-rule-width: 2px;
+  --highlight: var(--color-tertiary);
   --gradient-mid: var(--highlight);
   @supports (color: color-mix(in lab, red, red)) {
     --gradient-mid: color-mix(in srgb, var(--highlight) 40%, var(--bg));
@@ -476,7 +487,7 @@ section.title h1 {
   text-align: center;
   margin-top: 150px;
   padding-bottom: 20px;
-  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
+  border-bottom: 1px solid var(--fg);
 }
 section.title > p {
   text-align: right;
@@ -507,11 +518,13 @@ section:not(.title) header:not(.paper-header) {
   top: 0;
   left: calc(-1 * var(--padding-x));
   width: calc(100% + (var(--padding-x) * 2));
-  background: var(--bg);
-  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
+  background-image: linear-gradient( to right, var(--fg) 10%, var(--gradient-mid) 65%, var(--bg) 100% );
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 100% 100%;
   text-align: left;
   padding-left: calc(var(--padding-x) + 20px);
-  color: var(--fg);
+  color: var(--bg);
   font-size: 1rem;
   font-weight: 600;
   height: var(--header-height);
@@ -1047,31 +1060,31 @@ section:has(> .paper-header) .mermaid-diagram > svg {
     margin: 0;
   }
   .note {
-    background-color: color-mix(in srgb, #316dca 28%, transparent);
+    background-color: color-mix(in srgb, #6d6d72 28%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in srgb, var(--color-note) 28%, transparent);
     }
   }
   .tip {
-    background-color: color-mix(in srgb, #347d39 28%, transparent);
+    background-color: color-mix(in srgb, #e0ceaa 28%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in srgb, var(--color-tip) 28%, transparent);
     }
   }
   .important {
-    background-color: color-mix(in srgb, #8256d0 28%, transparent);
+    background-color: color-mix(in srgb, #7f0019 28%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in srgb, var(--color-important) 28%, transparent);
     }
   }
   .warning {
-    background-color: color-mix(in srgb, #cc9d35 28%, transparent);
+    background-color: color-mix(in srgb, #e0ceaa 28%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in srgb, var(--color-warning) 28%, transparent);
     }
   }
   .caution {
-    background-color: color-mix(in srgb, #c93c37 28%, transparent);
+    background-color: color-mix(in srgb, #dd0c14 28%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in srgb, var(--color-caution) 28%, transparent);
     }
@@ -1300,11 +1313,106 @@ section.github-light, section.title.github-light {
   --color-strong: var(--color-github-light-strong);
 }
 section {
-  --bespoke-marp-cursor-size: 6px;
-  --bespoke-marp-cursor-color: var(--color-cursor-orange);
-  --bespoke-marp-cursor-glow: var(--color-cursor-glow);
-  --bespoke-marp-cursor-duration: 0.35s;
-  --bespoke-marp-cursor-idle: 0.75s;
+  --fg: var(--color-text-primary);
+  --bg: var(--color-background);
+  --fg-muted: var(--color-text-secondary);
+  --highlight: var(--color-muji-red);
+  --gradient-mid: var(--color-border-light);
+  --bg-gray-5: var(--color-background-secondary);
+  --color-em: var(--color-kinari);
+  --color-strong: var(--color-muji-red);
+  --padding-x: var(--spacing-slide-x);
+  --header-height: var(--spacing-header-height);
+  --header-title-inset: var(--spacing-header-title-inset);
+  --logo-title-size: var(--spacing-logo-title-size);
+  --logo-header-size: var(--spacing-logo-header-size);
+  font-family: "Helvetica Neue", Arial, "Noto Sans JP", "Noto Sans JP Fallback", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  font-size: var(--text-body-md);
+  line-height: 1.6;
+}
+section.invert {
+  --fg: var(--color-neutral);
+  --bg: var(--color-primary);
+  --fg-muted: var(--color-muted-invert);
+  --highlight: var(--color-beige);
+  --bg-gray-5: var(--color-gray-800);
+}
+section h1, section h2 {
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+section h1 {
+  font-size: 2.15em;
+}
+section h2 {
+  font-size: 1.35em;
+}
+section h3 {
+  font-size: 1.08em;
+  line-height: 1.15;
+  letter-spacing: 0.09em;
+}
+section.title {
+  padding-top: 44px;
+}
+section.title h1 {
+  text-align: left;
+  margin-top: 120px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+section.title > p, section.title .author {
+  text-align: left;
+  margin-top: 56px;
+  margin-right: 0;
+  color: var(--fg-muted);
+}
+section.title header {
+  background-position: left var(--padding-x) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
+}
+section:not(.title) > header:not(.paper-header) + * {
+  margin-top: 78px;
+}
+section:not(.title) header:not(.paper-header) {
+  background: var(--bg);
+  background-image: none;
+  border-bottom: 1px solid var(--color-border-light);
+  color: var(--fg);
+  font-weight: 700;
+  padding-left: calc(var(--padding-x) + var(--header-title-inset));
+}
+section:not(.title) header:not(.paper-header)::after {
+  opacity: 0.86;
+}
+section::after {
+  color: var(--color-text-tertiary);
+}
+.summary-box, .gap-box, .feature-card {
+  border: 1px solid var(--color-border-light);
+  background: var(--color-background-secondary);
+  box-shadow: none;
+  border-radius: var(--radius-none);
+}
+.paper-header {
+  background: var(--color-kinari);
+  color: var(--fg);
+  border: 1px solid var(--color-border-light);
+}
+.paper-section {
+  border-color: var(--color-border-light);
+}
+.paper-section > h2 {
+  background: var(--color-background-secondary);
+  color: var(--fg);
+  border-bottom: 1px solid var(--color-border-light);
+}
+.paper-section.highlight {
+  border-color: var(--color-muji-red);
+  background: var(--color-kinari);
+}
+.paper-section.highlight > h2 {
+  background: var(--color-muji-red);
+  color: var(--color-neutral);
 }
 @property --tw-border-style {
   syntax: "*";

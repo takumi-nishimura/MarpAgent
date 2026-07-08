@@ -116,7 +116,7 @@ When to use: final slide of a deck — summarizes key takeaways and optionally i
 </div>
 ```
 
-With call to action (requires `--bg-gray-5` in frontmatter — see marp-components skill):
+With call to action:
 
 ```markdown
 ---
@@ -130,7 +130,7 @@ With call to action (requires `--bg-gray-5` in frontmatter — see marp-componen
 2. **Second point** — brief description
 3. **Third point** — brief description
 
-<div style="background: var(--bg-gray-5); padding: 0.4em 1em; margin-top: 1em;">
+<div class="summary-box">
 
 Next step or call to action here.
 
@@ -187,45 +187,12 @@ Narrower right column
 
 ### three-column variant
 
-Declare `--bg-gray-5` in frontmatter `style:` first (see marp-components skill).
-
 Bullet budget: the validator sums top-level bullets across all three columns, so keep each column to ≤ 2 bullets and put the takeaway in `.gap-box`. Same rule for `feature-grid`.
 
 ```markdown
 ---
 
 <!-- _header: Section Name -->
-
-<style scoped>
-.gap-cols {
-  display: flex;
-  align-items: stretch;
-  gap: 0.8em;
-}
-.gap-cols > div {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-}
-.gap-cols ul,
-.gap-cols ol {
-  font-size: var(--text-sm);
-  line-height: 1.35;
-  margin: 0.2em 0 0;
-  padding-left: 1.2em;
-}
-.gap-box {
-  background: var(--bg-gray-5);
-  padding: 0.3em 0.3em;
-  text-align: center;
-  font-weight: bold;
-  font-size: var(--text-sm);
-}
-.gap-cols > div > .gap-box {
-  margin-top: auto;
-  margin-top: 1em;
-}
-</style>
 
 ## Slide Heading
 
@@ -265,7 +232,7 @@ Bullet budget: the validator sums top-level bullets across all three columns, so
 
 ### feature-grid variant
 
-2×N CSS grid of feature cards. Declare `--bg-gray-5` in frontmatter `style:` first.
+2×N CSS grid of feature cards.
 
 Density rule: the validator counts source-body lines, not rendered rows. The block-form `<div>` + `**Heading**` + sub-bullet shown below is fine up to ~4 cards. For 5+ cards, collapse each card to a single source line — `<div>**Heading** — body sentence.</div>` — so card count, not source layout, drives the body-line budget.
 
@@ -273,23 +240,6 @@ Density rule: the validator counts source-body lines, not rendered rows. The blo
 ---
 
 <!-- _header: Section Name -->
-
-<style scoped>
-.feature-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5em 0.5em;
-  margin-top: 0.2em;
-  font-size: var(--text-xs);
-}
-.feature-grid > div {
-  background: var(--bg-gray-5);
-  padding: 0.3em 0.5em;
-}
-.feature-grid strong {
-  font-size: var(--text-sm);
-}
-</style>
 
 ## Slide Heading
 

@@ -1,30 +1,30 @@
 ---
 marp: true
-theme: poster
-size: a0
+theme: lab
+size: a4-portrait
 paginate: false
 style: |
-  section { --accent: #0969da; }
+  section { --paper-accent: var(--color-tertiary); }
 ---
 
-<header class="poster-header">
+<header class="paper-header">
 
-<div class="poster-logo">
+<div class="paper-logo">
 
 ![logo](shared/logos/marp-logo.svg)
 
 </div>
 
-<div class="poster-title">
+<div class="paper-title">
 
 # Wearable Skin-Stretch Feedback for Spatial Guidance in VR
 
-<p class="poster-authors">Takumi Nishimura, Co-Author Two, Co-Author Three</p>
-<p class="poster-affil">Haptics Lab, Department of Information Science, Example University</p>
+<p class="paper-authors">Takumi Nishimura, Co-Author Two, Co-Author Three</p>
+<p class="paper-affil">Haptics Lab, Department of Information Science, Example University</p>
 
 </div>
 
-<div class="poster-logo">
+<div class="paper-logo">
 
 ![logo](shared/logos/marp-logo.svg)
 
@@ -32,10 +32,10 @@ style: |
 
 </header>
 
-<div class="poster-columns">
-<div class="poster-col">
+<div class="paper-columns">
+<div class="paper-col">
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Background
 
@@ -47,7 +47,7 @@ style: |
 
 </section>
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Research Question
 
@@ -59,7 +59,7 @@ Can lightweight skin-stretch feedback guide users along a target path **as accur
 
 </section>
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Apparatus
 
@@ -72,9 +72,9 @@ Can lightweight skin-stretch feedback guide users along a target path **as accur
 </section>
 
 </div>
-<div class="poster-col">
+<div class="paper-col">
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Method
 
@@ -92,11 +92,11 @@ Each session lasted ~45 min including a 5-min familiarization block.
 
 </section>
 
-<section class="poster-section highlight">
+<section class="paper-section highlight">
 
 ## Key Result
 
-<div class="poster-stat">
+<div class="paper-stat">
 
 Skin-stretch matched audio on **path error**
 (2.1 cm vs 2.0 cm, *n.s.*) while cutting
@@ -106,7 +106,7 @@ perceived workload by **31%**.
 
 </section>
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Results
 
@@ -121,9 +121,9 @@ Lower workload without loss of accuracy.
 </section>
 
 </div>
-<div class="poster-col">
+<div class="paper-col">
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Discussion
 
@@ -135,7 +135,7 @@ Lower workload without loss of accuracy.
 
 </section>
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Conclusion
 
@@ -146,7 +146,7 @@ Lower workload without loss of accuracy.
 
 </section>
 
-<section class="poster-section">
+<section class="paper-section">
 
 ## Future Work
 
@@ -159,15 +159,15 @@ Lower workload without loss of accuracy.
 </div>
 </div>
 
-<footer class="poster-footer">
+<footer class="paper-footer">
 
-<div class="poster-refs">
+<div class="paper-refs">
 
 **References** [1] Author et al., *Skin-stretch for navigation*, CHI 2024. [2] Author et al., *Haptic guidance survey*, ToH 2023. [3] Author et al., *Spatial audio in VR*, UIST 2022.
 
 </div>
 
-<div class="poster-contact">
+<div class="paper-contact">
 
 📧 24takumin@gmail.com
 🔗 haptics-lab.example.edu

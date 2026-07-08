@@ -39,7 +39,7 @@ Create a new deck at `decks/$ARGUMENTS`.
    - `title` maps to the opening cover slide template
    - `content (...)` keeps the `content` base type and applies the named variant
    - `two-column` maps to the standard two-column template unless the outline or user explicitly asks for `three-column` or `feature-grid`
-   - If using `--bg-gray-5` (three-column / feature-grid / summary-box), declare it in frontmatter `style:` — see **marp-components** skill.
+   - Three-column, feature-grid, and summary-box styles are built into the theme — do not paste scoped component CSS into `slide.md`.
 
 7. Author `decks/$ARGUMENTS/slide.md`:
    - One slide per `---` separator
