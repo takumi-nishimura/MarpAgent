@@ -1,0 +1,4 @@
+interface:
+  display_name: "Theme New"
+  short_description: "Create MarpAgent themes from design references"
+  default_prompt: "Create a new MarpAgent theme from a URL or brief."

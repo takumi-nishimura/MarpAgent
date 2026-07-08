@@ -1,5 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 
@@ -51,4 +52,51 @@ test("marpx --poster reports replacement", () => {
 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /--poster has been replaced by --paper/);
+});
+
+test("marpx theme scaffold options require --theme-new", () => {
+  for (const args of [
+    ["--source-url", "https://example.com/design"],
+    ["--force"],
+    ["--no-build"],
+  ]) {
+    const result = runNodeScript("bin/marpx.js", args);
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /can only be used with --theme-new/);
+  }
+});
+
+test("marpx --theme-new forwards scaffold options", () => {
+  const themeName = `test-theme-${process.pid}-${Date.now()}`;
+  const cleanupPaths = [
+    path.join(repoRoot, "designs", themeName),
+    path.join(repoRoot, "themes", "src", `${themeName}.css`),
+    path.join(repoRoot, "fixtures", `${themeName}-slide.md`),
+  ];
+
+  for (const targetPath of cleanupPaths) {
+    fs.rmSync(targetPath, { recursive: true, force: true });
+  }
+
+  try {
+    const result = runNodeScript("bin/marpx.js", [
+      "--theme-new",
+      themeName,
+      "--source-url",
+      "https://example.com/design",
+      "--no-build",
+    ]);
+
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    const design = fs.readFileSync(
+      path.join(repoRoot, "designs", themeName, "DESIGN.md"),
+      "utf8",
+    );
+    assert.match(design, /Scaffold source: https:\/\/example\.com\/design/);
+  } finally {
+    for (const targetPath of cleanupPaths) {
+      fs.rmSync(targetPath, { recursive: true, force: true });
+    }
+  }
 });

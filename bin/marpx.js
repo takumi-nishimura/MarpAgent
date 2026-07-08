@@ -31,6 +31,10 @@ Options:
   --no-strict-brief        Allow incomplete brief schema for --outline
   --format <fmt>           Output format: text, json, sarif
   --theme [name]           Build theme(s) (all if name omitted)
+  --theme-new              Scaffold a new theme
+  --source-url <url>       Source URL note for --theme-new
+  --force                  Overwrite existing scaffold files for --theme-new
+  --no-build               Scaffold only; skip token/theme build for --theme-new
   -w, --watch              Watch mode (for --theme)
   --output <path>          Output path (for --outline)
   --report-dir <dir>       Report directory (for --validate)
@@ -54,6 +58,7 @@ Examples:
   marpx --doctor                             Environment diagnostics
   marpx --theme                             Build all themes
   marpx --theme lab                         Build lab theme only
+  marpx --theme-new my-theme --source-url https://example.com/design  New theme scaffold
   marpx --theme -w                          Watch all themes`);
 }
 
@@ -79,6 +84,10 @@ try {
       "no-strict-brief": { type: "boolean", default: false },
       format: { type: "string" },
       theme: { type: "boolean", default: false },
+      "theme-new": { type: "boolean", default: false },
+      "source-url": { type: "string" },
+      force: { type: "boolean", default: false },
+      "no-build": { type: "boolean", default: false },
       watch: { type: "boolean", short: "w", default: false },
       output: { type: "string" },
       "report-dir": { type: "string" },
@@ -112,6 +121,7 @@ const modes = [
   "new",
   "outline",
   "theme",
+  "theme-new",
 ].filter(
   (m) => values[m],
 );
@@ -140,6 +150,26 @@ if (values.poster) {
 
 if (values.paper && mode !== "new") {
   console.error("Error: --paper can only be used with --new");
+  process.exit(1);
+}
+
+if (values.watch && mode !== "theme") {
+  console.error("Error: --watch can only be used with --theme");
+  process.exit(1);
+}
+
+if (values["source-url"] && mode !== "theme-new") {
+  console.error("Error: --source-url can only be used with --theme-new");
+  process.exit(1);
+}
+
+if (values.force && mode !== "theme-new") {
+  console.error("Error: --force can only be used with --theme-new");
+  process.exit(1);
+}
+
+if (values["no-build"] && mode !== "theme-new") {
+  console.error("Error: --no-build can only be used with --theme-new");
   process.exit(1);
 }
 
@@ -451,6 +481,21 @@ switch (mode) {
         if (exited === children.length) process.exit(exitCode);
       });
     }
+    break;
+  }
+
+  case "theme-new": {
+    const args = [...positionals];
+    if (values["source-url"]) {
+      args.push("--source-url", values["source-url"]);
+    }
+    if (values.force) {
+      args.push("--force");
+    }
+    if (values["no-build"]) {
+      args.push("--no-build");
+    }
+    runScript("new-theme.js", args);
     break;
   }
 }

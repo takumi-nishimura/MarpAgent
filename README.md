@@ -71,6 +71,7 @@ npm run marpx -- decks/my-talk/slide.md --overview
 | `npm run marpx -- --doctor` | Run environment diagnostics |
 | `npm run marpx -- --theme` | Build all themes |
 | `npm run marpx -- --theme lab` | Build a single theme |
+| `npm run marpx -- --theme-new <name> --source-url <url>` | Scaffold a new theme |
 | `npm run marpx -- --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
 | `npm run quality:gate` | Run unit tests + fixture validation gate |
@@ -120,6 +121,18 @@ shared by CSS, templates, skills, Tailwind, and the validator.
 `npm run marpx -- --theme` regenerates the matching
 `themes/src/_generated/<name>-design-tokens.css` files before compiling the
 tracked theme CSS files.
+
+To create another visual identity, start from the scaffold command and then
+edit the generated `DESIGN.md` as the token source of truth:
+
+```bash
+npm run marpx -- --theme-new <name> --source-url <url> --no-build
+```
+
+The scaffold creates `designs/<name>/DESIGN.md`, `themes/src/<name>.css`, and
+`fixtures/<name>-slide.md`. The `theme-new` agent skill describes the full
+extract-adapt-validate workflow for URL, brand-guide, and existing DESIGN.md
+sources.
 
 Use `theme: lab` or `theme: muji` for slide decks and A-series paper layouts.
 Canvas size is an explicit frontmatter concern: `16:9`, `4:3`, `a4-portrait`,
@@ -221,6 +234,7 @@ Skills in `.agents/skills/` provide authoring guidance to AI coding agents:
 | `marp-components` | reference (auto) | Callouts, figures, Mermaid, footnotes |
 | `marp-paper` | reference (auto) | A-series paper authoring |
 | `marp-validator` | reference (auto) | Validator rules and hard limits |
+| `theme-new` | task | Create or adapt a theme from a URL, brand guide, or DESIGN.md |
 | `/slide-new <name>` | task | Create a new deck end-to-end |
 | `/slide-add <slide.md>` | task | Add slides to an existing deck |
 | `/slide-review <name>` | task | Validate and remediate a deck |

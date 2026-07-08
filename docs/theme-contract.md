@@ -46,6 +46,25 @@ metadata at render time by `src/canvas-size.js`; they are not separate compiled
 theme files. Future designs should add a new `designs/<name>/DESIGN.md` and
 matching generated token file before remapping canvas behavior.
 
+## Theme Creation Boundary
+
+New visual identities should start from the scaffold command:
+
+```bash
+npm run marpx -- --theme-new <name> --source-url <url> --no-build
+```
+
+The scaffold creates:
+
+- `designs/<name>/DESIGN.md`, seeded with the complete `lab` token schema;
+- `themes/src/<name>.css`, a Marp theme entry that imports the matching
+  generated token CSS and shared components;
+- `fixtures/<name>-slide.md`, a smoke deck for validation.
+
+After scaffolding, edit `DESIGN.md` first. Literal design values belong there,
+not in `themes/src/<name>.css`. Compile with `npm run marpx -- --theme <name>`
+only after the design rationale and tokens have been adapted from the source.
+
 ## Tailwind Boundary
 
 Tailwind compiles `themes/src/*.css` into `themes/*.css`. Automatic class

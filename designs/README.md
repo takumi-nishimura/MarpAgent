@@ -7,6 +7,15 @@ Available designs:
 | `lab` | `designs/lab/DESIGN.md` | `themes/src/_generated/lab-design-tokens.css` | `theme: lab` |
 | `muji` | `designs/muji/DESIGN.md` | `themes/src/_generated/muji-design-tokens.css` | `theme: muji` |
 
+Create another design with:
+
+```bash
+npm run marpx -- --theme-new <name> --source-url <url> --no-build
+```
+
+Then replace the scaffolded `designs/<name>/DESIGN.md` notes with the extracted
+design rationale and token values before compiling the theme.
+
 Designs and surfaces are separate concepts:
 
 - A **design** owns visual identity, tokens, and rationale.

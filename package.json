@@ -13,6 +13,7 @@
     "design:lint": "node scripts/lint-designs.js",
     "design:tokens": "node scripts/generate-design-tokens.js --all",
     "design:tokens:check": "node scripts/generate-design-tokens.js --all --check",
+    "theme:new": "node scripts/new-theme.js",
     "lint:deck": "node scripts/lint-deck.js",
     "validate:fixtures": "node scripts/ci-validate-fixtures.js",
     "quality:gate": "npm test && npm run validate:fixtures && npm run test:e2e",

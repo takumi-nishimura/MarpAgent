@@ -8,6 +8,7 @@ Detailed authoring reference is in `.agents/skills/`:
 | `marp-components` | callouts, figures, Mermaid, footnotes, CSS variables |
 | `marp-paper` | A-series paper authoring (header/columns/footer) |
 | `marp-validator` | validator rules, hard limits, remediation |
+| `theme-new` | create or adapt a theme from a URL, brand guide, or DESIGN.md |
 | `/slide-new <name>` | create a new deck end-to-end |
 | `/slide-add <slide.md>` | add slides to an existing deck |
 | `/slide-review <name>` | validate and remediate a deck |
@@ -78,4 +79,5 @@ resize. Scale the rendered SVG/container instead, e.g.
 | `npm run marpx -- decks/<name>/slide.md --pdf` | Export to PDF |
 | `npm run marpx -- --theme` | Build all themes |
 | `npm run marpx -- --theme lab` | Build lab theme only |
+| `npm run marpx -- --theme-new <name> --source-url <url>` | Scaffold a new theme |
 | `npm run marpx -- --theme -w` | Watch-build themes |
