@@ -51,7 +51,7 @@ matching generated token file before remapping canvas behavior.
 New visual identities should start from the scaffold command:
 
 ```bash
-npm run marpx -- --theme-new <name> --source-url <url> --no-build
+marpx --theme-new <name> --source-url <url> --no-build
 ```
 
 The scaffold creates:
@@ -62,7 +62,7 @@ The scaffold creates:
 - `fixtures/<name>-slide.md`, a smoke deck for validation.
 
 After scaffolding, edit `DESIGN.md` first. Literal design values belong there,
-not in `themes/src/<name>.css`. Compile with `npm run marpx -- --theme <name>`
+not in `themes/src/<name>.css`. Compile with `marpx --theme <name>`
 only after the design rationale and tokens have been adapted from the source.
 
 ## Tailwind Boundary
@@ -91,7 +91,7 @@ Useful commands:
 - `npm run design:lint`
 - `npm run design:tokens`
 - `npm run design:tokens:check`
-- `npm run marpx -- --theme`
+- `marpx --theme`
 
 ## Component Boundary
 

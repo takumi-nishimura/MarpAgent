@@ -13,7 +13,7 @@ test("parseNodeMajor extracts major from semver values", () => {
   assert.equal(parseNodeMajor("not-a-version"), undefined);
 });
 
-test("getRuntimePolicy loads required major from package volta.node", () => {
+test("getRuntimePolicy loads required major from .mise.toml tools.node", () => {
   const policy = getRuntimePolicy();
   assert.equal(typeof policy.requiredMajor, "number");
   assert.match(policy.configuredVersion, /^\d+\.\d+\.\d+$/);

@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const packageJsonPath = path.resolve(__dirname, "..", "package.json");
+const miseConfigPath = path.resolve(__dirname, "..", ".mise.toml");
 
 function parseNodeMajor(version) {
   const normalized = String(version || "").trim().replace(/^v/i, "");
@@ -12,16 +12,17 @@ function parseNodeMajor(version) {
 }
 
 function getRuntimePolicy() {
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
-  const configuredVersion = packageJson?.volta?.node;
+  const miseConfig = fs.readFileSync(miseConfigPath, "utf8");
+  const nodeMatch = miseConfig.match(/^\s*node\s*=\s*["']([^"']+)["']\s*$/m);
+  const configuredVersion = nodeMatch?.[1];
 
   if (!configuredVersion) {
-    throw new Error("Missing package.json volta.node runtime policy.");
+    throw new Error("Missing .mise.toml tools.node runtime policy.");
   }
 
   const requiredMajor = parseNodeMajor(configuredVersion);
   if (!Number.isInteger(requiredMajor) || requiredMajor < 1) {
-    throw new Error(`Invalid package.json volta.node value: ${configuredVersion}`);
+    throw new Error(`Invalid .mise.toml tools.node value: ${configuredVersion}`);
   }
 
   return {
@@ -47,7 +48,7 @@ function assertSupportedNodeRuntime({
 
   const actual = String(currentVersion || "unknown");
   throw new Error(
-    `Unsupported Node.js runtime ${actual}. Required major is ${policy.requiredMajor}.x (volta.node=${policy.configuredVersion}).`,
+    `Unsupported Node.js runtime ${actual}. Required major is ${policy.requiredMajor}.x (.mise.toml node=${policy.configuredVersion}).`,
   );
 }
 

@@ -16,7 +16,7 @@ function parseArgs(argv) {
   let strictVisual = process.env.MARP_AGENT_REQUIRE_VISUAL === "1";
   let format = "text";
   const usage =
-    "Usage: npx marpx <path/to/slide.md> --lint [--autofix] [--strict-visual] [--format text|json|sarif]";
+    "Usage: marpx <path/to/slide.md> --lint [--autofix] [--strict-visual] [--format text|json|sarif]";
 
   const fail = (message) => {
     console.error(usage);

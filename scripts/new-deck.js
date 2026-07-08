@@ -23,11 +23,11 @@ if (unsupportedFlag) {
 const paperMode = rawArgs.includes("--paper");
 const name = rawArgs.find((arg) => !arg.startsWith("--"));
 if (!name) {
-  console.error("Usage: npx marpx -n <path> [--paper]");
+  console.error("Usage: marpx -n <path> [--paper]");
   console.error("Path is relative to repository root.");
   console.error("Examples:");
-  console.error("  npx marpx -n decks/2025/presentation");
-  console.error("  npx marpx -n decks/2026/conf-paper --paper");
+  console.error("  marpx -n decks/2025/presentation");
+  console.error("  marpx -n decks/2026/conf-paper --paper");
   process.exit(1);
 }
 
@@ -128,9 +128,9 @@ try {
   console.log(`  - shared -> ${relativePath}`);
   if (paperMode) {
     console.log(`\nEdit ${relativeToRepo}/paper.md, then:`);
-    console.log(`  npx marpx ${relativeToRepo}/paper.md       # live preview`);
-    console.log(`  npx marpx ${relativeToRepo}/paper.md -v    # validate`);
-    console.log(`  npx marpx ${relativeToRepo}/paper.md --pdf # export PDF`);
+    console.log(`  marpx ${relativeToRepo}/paper.md       # live preview`);
+    console.log(`  marpx ${relativeToRepo}/paper.md -v    # validate`);
+    console.log(`  marpx ${relativeToRepo}/paper.md --pdf # export PDF`);
   }
 } catch (err) {
   console.error(`Error creating symlink: ${err.message}`);

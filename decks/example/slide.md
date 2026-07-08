@@ -191,18 +191,19 @@ AIがワークフロー全体をアシストするため, Markdown の記法を�
 
 ```bash
 # 1. デッキを作成
-npx marpx -n decks/my-talk
+marpx -n decks/my-talk
 
 # 2. brief を埋めてアウトラインを生成
-npx marpx decks/my-talk/brief.md --outline
+marpx decks/my-talk/brief.md --outline
 
 # 3. スライドを書いてバリデーション
-npx marpx decks/my-talk/slide.md -v
+marpx decks/my-talk/slide.md -v
 ```
 
 <div class="tip">
 
-ライブプレビューは `npx marpx <slide.md>`, 単発 preview は `npx marpx <slide.md> -p`, overview は `npx marpx <slide.md> --overview` で起動
+ライブプレビューは `marpx <slide.md>` で起動
+単発 preview は `-p`, overview は `--overview` を付ける
 
 </div>
 

@@ -21,7 +21,7 @@ const configPath = path.join(repoRoot, "marp.config.js");
 enforceSupportedNodeRuntime();
 
 function printUsage() {
-  console.error("Usage: npx marpx <deck.md> [displayed-page]");
+  console.error("Usage: marpx <deck.md> [displayed-page]");
 }
 
 function main() {

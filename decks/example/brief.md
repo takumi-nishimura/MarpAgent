@@ -23,7 +23,7 @@
 
 ## Audience Action
 
-- What the audience should think, decide, or do after the talk: MarpAgentを自分のプロジェクトで試してみようと思い, `npx marpx -n` でデッキを作り始める
+- What the audience should think, decide, or do after the talk: MarpAgentを自分のプロジェクトで試してみようと思い, `marpx -n` でデッキを作り始める
 
 ## Required Sections
 
