@@ -1,9 +1,7 @@
 const SUPPORTED_VERSION_PATTERN = /^0\.1\.\d+$/;
 
-const REQUIRED_PATCH_MARKERS = [
+const REQUIRED_STRUCTURAL_PATCH_MARKERS = [
   "function estimateTextWidth(",
-  "return text.length * fontSize * widthRatio;",
-  "return text.length * fontSize * 0.6;",
   "function estimateNodeSize(id, label, shape) {",
   "  const textWidth = estimateTextWidth(label, FONT_SIZES.nodeLabel, FONT_WEIGHTS.nodeLabel);\n" +
     "  let width = textWidth + NODE_PADDING.horizontal * 2;\n" +
@@ -11,7 +9,18 @@ const REQUIRED_PATCH_MARKERS = [
   '  return `<text x="${cx}" y="${cy}" text-anchor="middle" dy="${TEXT_BASELINE_SHIFT}" font-size="${FONT_SIZES.nodeLabel}" font-weight="${FONT_WEIGHTS.nodeLabel}" fill="${textColor}">${escapeXml(node.label)}</text>`;',
 ];
 
-const MARP_AGENT_MERMAID_HELPERS =
+const TEXT_WIDTH_MARKERS = [
+  [
+    "return text.length * fontSize * widthRatio;",
+    "return _effectiveLength(text) * fontSize * widthRatio;",
+  ],
+  [
+    "return text.length * fontSize * 0.6;",
+    "return _effectiveLength(text) * fontSize * 0.6;",
+  ],
+];
+
+const EFFECTIVE_LENGTH_HELPER =
   "function _effectiveLength(text) {\n" +
   "  let len = 0\n" +
   "  for (const ch of text) {\n" +
@@ -23,7 +32,9 @@ const MARP_AGENT_MERMAID_HELPERS =
   "      len += 1\n" +
   "  }\n" +
   "  return len\n" +
-  "}\n" +
+  "}\n";
+
+const EXPLICIT_LABEL_HELPERS =
   "function _stripMermaidQuoteWrapper(text) {\n" +
   '  if (text.startsWith("\\"") && text.endsWith("\\"")) {\n' +
   "    return text.slice(1, -1)\n" +
@@ -95,17 +106,34 @@ function assertSupportedBeautifulMermaidVersion(version) {
 }
 
 function assertPatchMarkersPresent(source) {
-  for (const marker of REQUIRED_PATCH_MARKERS) {
+  for (const marker of REQUIRED_STRUCTURAL_PATCH_MARKERS) {
     if (!source.includes(marker)) {
       throw new Error(`Patch canary failed: missing marker "${marker}"`);
+    }
+  }
+
+  for (const markers of TEXT_WIDTH_MARKERS) {
+    if (!markers.some((marker) => source.includes(marker))) {
+      throw new Error(`Patch canary failed: missing marker "${markers[0]}"`);
     }
   }
 }
 
 function applyBeautifulMermaidPatch(source) {
+  const hasEffectiveLength = source.includes("function _effectiveLength(text)");
+  const hasExplicitLabelHelpers = source.includes(
+    "function _splitExplicitLabelLines(label)",
+  );
+
   if (
-    source.includes("function _effectiveLength(text)") &&
-    source.includes("function _splitExplicitLabelLines(label)")
+    hasEffectiveLength &&
+    hasExplicitLabelHelpers &&
+    source.includes(
+      "const labelSize = _measureExplicitLabelSize(label, FONT_SIZES.nodeLabel, FONT_WEIGHTS.nodeLabel);",
+    ) &&
+    source.includes(
+      "const explicitLabelLines = _splitExplicitLabelLines(node.label);",
+    )
   ) {
     return {
       source,
@@ -116,10 +144,14 @@ function applyBeautifulMermaidPatch(source) {
 
   assertPatchMarkersPresent(source);
 
+  const helperInsertion =
+    (hasEffectiveLength ? "" : EFFECTIVE_LENGTH_HELPER) +
+    (hasExplicitLabelHelpers ? "" : EXPLICIT_LABEL_HELPERS);
+
   const patchedSource = source
     .replace(
       "function estimateTextWidth(",
-      MARP_AGENT_MERMAID_HELPERS + "function estimateTextWidth(",
+      helperInsertion + "function estimateTextWidth(",
     )
     .replace(
       "return text.length * fontSize * widthRatio;",
