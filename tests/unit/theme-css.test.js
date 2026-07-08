@@ -71,9 +71,52 @@ test("theme CSS provides reusable layout component classes", () => {
   ]) {
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
     assert.match(css, /\.summary-box\b/);
-    assert.match(css, /\.gap-cols\b/);
+    assert.match(css, /\.col\.with-summary\b/);
     assert.match(css, /\.gap-box\b/);
     assert.match(css, /\.feature-grid\b/);
+    assert.match(css, /\.col\.visual\b/);
+    assert.match(css, /\.metric-grid\b/);
+    assert.match(css, /\.timeline\b/);
+    assert.match(css, /\.box\b/);
+    assert.match(css, /\.box,\s*\.col\s*>\s*div\s*\{[\s\S]*display:\s*flex/);
+    assert.match(
+      css,
+      /\.box,\s*\.col\s*>\s*div\s*\{[\s\S]*flex-direction:\s*column/,
+    );
+    assert.match(css, /\.summary-box\s*\{[\s\S]*width:\s*fit-content/);
+    assert.match(css, /\.self-center\s*\{[\s\S]*margin-left:\s*auto/);
+    assert.match(css, /section:not\(\.title\):has\(>\s*\.fill\)/);
+    assert.match(css, /section:not\(\.title\)\s*>\s*\.fill\s*\{[\s\S]*flex:\s*1/);
+    assert.match(css, /--fill-bottom-safe:\s*1\.25em/);
+    assert.match(css, /margin-bottom:\s*var\(--fill-bottom-safe\)/);
+    assert.match(css, /--place-block:\s*flex-start/);
+    assert.match(css, /--place-inline:\s*stretch/);
+    assert.match(css, /\.place-middle\s*\{[\s\S]*--place-block:\s*center/);
+    assert.match(css, /\.place-spread\s*\{[\s\S]*--place-block:\s*space-between/);
+    assert.match(css, /\.place-center\s*\{[\s\S]*--place-inline:\s*center/);
+    assert.doesNotMatch(css, /\.v-center\b/);
+    assert.doesNotMatch(css, /\.h-center\b/);
+    assert.doesNotMatch(css, /\.center\b/);
+    assert.match(css, /--timeline-gap:\s*1\.1em/);
+    assert.match(css, /--timeline-arrow-offset:\s*0\.55em/);
+    assert.match(css, /--timeline-marker-fg:\s*var\(--highlight\)/);
+    assert.match(css, /\.timeline\s*>\s*li::before\s*\{[\s\S]*content:\s*none/);
+    assert.match(css, /ol\.timeline\s*\{[\s\S]*counter-reset:\s*timeline-step/);
+    assert.match(
+      css,
+      /ol\.timeline\s*>\s*li\s*\{[\s\S]*counter-increment:\s*timeline-step/,
+    );
+    assert.match(
+      css,
+      /ol\.timeline\s*>\s*li::before\s*\{[\s\S]*content:\s*counter\(timeline-step\)/,
+    );
+    assert.match(css, /color:\s*var\(--timeline-marker-fg\)/);
+    assert.doesNotMatch(css, /--timeline-marker-bg/);
+    assert.match(css, /\.timeline\s*>\s*li::marker\b/);
+    assert.match(css, /\.timeline\s*>\s*li:not\(:last-child\)::after\b/);
+    assert.match(css, /left:\s*calc\(100% \+ var\(--timeline-arrow-offset\)\)/);
+    assert.match(css, /border-top:\s*var\(--timeline-arrow-stroke\) solid var\(--accent-rule\)/);
+    assert.match(css, /border-right:\s*var\(--timeline-arrow-stroke\) solid var\(--accent-rule\)/);
   }
 });
 

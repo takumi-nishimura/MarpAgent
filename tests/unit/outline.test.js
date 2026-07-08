@@ -134,7 +134,7 @@ test("outline carries bracketed variant hint from required-section text", () => 
 ## Audience Action
 - Act
 ## Required Sections
-- Three-vendor comparison [three-column]
+- Three-vendor comparison [multi-column]
 - Closing (closing variant)
 `);
   const outline = buildOutlineMarkdown(brief, {
@@ -142,7 +142,7 @@ test("outline carries bracketed variant hint from required-section text", () => 
     sourcePath: "brief.md",
   });
 
-  assert.match(outline, /Layout hint: two-column \(three-column variant\)/);
+  assert.match(outline, /Layout hint: two-column \(multi-column variant\)/);
   assert.match(outline, /Layout hint: content \(closing variant\)/);
   // Variant markers should be stripped from the displayed Title
   assert.match(outline, /- Title: Three-vendor comparison\n/);
@@ -167,6 +167,32 @@ test("outline carries 'using the X variant' prose variant hint", () => {
   });
 
   assert.match(outline, /Layout hint: two-column \(feature-grid variant\)/);
+});
+
+test("outline carries newer layout hints and strips their markers", () => {
+  const brief = parseBrief(`## Audience
+- A
+## Duration
+- 10 min
+## Core Message
+- One-sentence takeaway: T
+## Audience Action
+- Act
+## Required Sections
+- Evidence snapshot [metric-grid]
+- Rollout sequence (timeline)
+- Demo walkthrough using the visual variant
+`);
+  const outline = buildOutlineMarkdown(brief, {
+    generatedDate: "2026-06-21",
+    sourcePath: "brief.md",
+  });
+
+  assert.match(outline, /Layout hint: content \(metric-grid variant\)/);
+  assert.match(outline, /Layout hint: content \(timeline variant\)/);
+  assert.match(outline, /Layout hint: two-column \(visual variant\)/);
+  assert.match(outline, /- Title: Evidence snapshot\n/);
+  assert.match(outline, /- Title: Rollout sequence\n/);
 });
 
 test("generateOutlineFile rejects incomplete brief by default", () => {

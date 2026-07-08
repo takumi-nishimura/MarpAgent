@@ -230,6 +230,17 @@ Key takeaway or summary sentence here.
 </div>
 ```
 
+The box fits its content by default. Add `self-center` when the fitted box
+itself should be centered in the available row or column.
+
+```markdown
+<div class="summary-box self-center">
+
+Centered takeaway.
+
+</div>
+```
+
 ## Scoped Styles
 
 Apply CSS only to the current slide. Place after `---` and comment directives:

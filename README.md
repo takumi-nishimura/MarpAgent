@@ -120,7 +120,8 @@ token sources. Available themes:
 Common capabilities:
 
 - Five color schemes: Dracula, One Dark Pro, Nord, Neogaia, GitHub Light
-- Slide layouts: title, content, two-column
+- Slide layouts: title, content, multi-column, visual col,
+  metric grid, timeline, placement utilities
 - Callouts: `.note`, `.tip`, `.important`, `.warning`, `.caution`
 - Typography scale: `.text-xs` through `.text-xl5`
 - Laser pointer effect during presentation
