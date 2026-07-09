@@ -15,8 +15,14 @@ brief.md → outline.md → slide.md → HTML / PDF / PPTX
 
 ## Prerequisites
 
-- Node.js 25.x (pinned by `volta.node` in `package.json`)
-- `npm run marpx --` (repo-local CLI script; avoid `npx marpx` in this checkout because the package's own bin is not linked into `node_modules/.bin`)
+- mise with shell activation enabled
+  (`eval "$(mise activate zsh)"` in your zsh startup file)
+- `.mise.toml` pins `node = "25.6.0"` and adds this repository root to `PATH`,
+  so `marpx decks/...` works without `./`
+- Use `./marpx ...` as the fallback when the current shell has not loaded mise
+- Use `npm run marpx --` for automation and CI
+- Avoid `npx marpx` in this checkout because the package's own bin is not
+  linked into `node_modules/.bin`
 
 ```bash
 npm install
@@ -26,57 +32,64 @@ npm install
 
 ```bash
 # 1. Create a deck
-npm run marpx -- -n decks/my-talk
+marpx -n decks/my-talk
 
 # 2. Fill in decks/my-talk/brief.md (8 sections)
 
 # 3. Generate outline
-npm run marpx -- decks/my-talk/brief.md --outline
+marpx decks/my-talk/brief.md --outline
 
 # 4. Author decks/my-talk/slide.md
 
 # 5. Live preview while editing
-npm run marpx -- decks/my-talk/slide.md
+marpx decks/my-talk/slide.md
 
 # 6. Validate
-npm run marpx -- decks/my-talk/slide.md -v
+marpx decks/my-talk/slide.md -v
 
 # 7. Single-shot preview (optional)
-npm run marpx -- decks/my-talk/slide.md -p
+marpx decks/my-talk/slide.md -p
 
 # 8. Open thumbnail overview (optional)
-npm run marpx -- decks/my-talk/slide.md --overview
+marpx decks/my-talk/slide.md --overview
 ```
 
 ## Commands
 
 | Command | Description |
 | :------ | :---------- |
-| `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
-| `npm run marpx -- -n decks/<path> --paper` | Scaffold a new A-series paper deck |
-| `npm run marpx -- <brief.md> --outline` | Generate outline |
-| `npm run marpx -- <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
-| `npm run marpx -- <slide.md>` | Serve with live reload |
-| `npm run marpx -- <slide.md> <page>` | Serve and open at displayed page |
-| `npm run marpx -- <slide.md> --screenshot <page>` | Screenshot a slide to `/tmp` |
-| `npm run marpx -- <slide.md> -p` | Single-shot preview |
-| `npm run marpx -- <slide.md> --overview` | Thumbnail overview |
-| `npm run marpx -- <slide.md> --pdf` | Export to PDF |
-| `npm run marpx -- <slide.md> --lint` | Lint with deck validator rules |
-| `npm run marpx -- <slide.md> --lint --autofix` | Apply safe autofixes, then lint again |
-| `npm run marpx -- <slide.md> -v` | Validate |
-| `npm run marpx -- <slide.md> -v --strict` | Validate and fail if visual check falls back |
-| `npm run marpx -- <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |
-| `npm run marpx -- <slide.md> -v --report-dir out/<name>` | Validate with report |
-| `npm run marpx -- --doctor` | Run environment diagnostics |
-| `npm run marpx -- --theme` | Build all themes |
-| `npm run marpx -- --theme lab` | Build a single theme |
-| `npm run marpx -- --theme-new <name> --source-url <url>` | Scaffold a new theme |
-| `npm run marpx -- --theme -w` | Watch-build themes |
+| `marpx -n decks/<path>` | Scaffold a new deck |
+| `marpx -n decks/<path> --paper` | Scaffold a new A-series paper deck |
+| `marpx <brief.md> --outline` | Generate outline |
+| `marpx <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
+| `marpx <slide.md>` | Serve with live reload |
+| `marpx <slide.md> <page>` | Serve and open at displayed page |
+| `marpx <slide.md> --screenshot <page>` | Screenshot a slide to `/tmp` |
+| `marpx <slide.md> -p` | Single-shot preview |
+| `marpx <slide.md> --overview` | Thumbnail overview |
+| `marpx <slide.md> --pdf` | Export to PDF |
+| `marpx <slide.md> --lint` | Lint with deck validator rules |
+| `marpx <slide.md> --lint --autofix` | Apply safe autofixes, then lint again |
+| `marpx <slide.md> -v` | Validate |
+| `marpx <slide.md> -v --strict` | Validate and fail if visual check falls back |
+| `marpx <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |
+| `marpx <slide.md> -v --report-dir out/<name>` | Validate with report |
+| `marpx --doctor` | Run environment diagnostics |
+| `marpx --theme` | Build all themes |
+| `marpx --theme lab` | Build a single theme |
+| `marpx --theme-new <name> --source-url <url>` | Scaffold a new theme |
+| `marpx --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
 | `npm run quality:gate` | Run unit tests + fixture validation gate |
 | `npm run quality:gate:strict` | Enforce visual checks + strict e2e policy |
 | `npm run test:e2e` | Run Playwright CLI smoke tests |
+
+For interactive authoring, use `marpx ...`. `.mise.toml` adds the repository
+root to `PATH` when mise is active, and the repo-local wrapper runs the npm
+script through `mise exec`, so it keeps the Node.js 25 runtime pinned by this
+project while still letting the shell complete paths such as
+`decks/example/slide.md`. If the current shell has not loaded mise yet, use
+`./marpx ...` from the repository root.
 
 ## File Structure
 
@@ -108,7 +121,8 @@ token sources. Available themes:
 Common capabilities:
 
 - Five color schemes: Dracula, One Dark Pro, Nord, Neogaia, GitHub Light
-- Slide layouts: title, content, two-column
+- Slide layouts: title, content, multi-column, visual col,
+  metric grid, timeline, placement utilities
 - Callouts: `.note`, `.tip`, `.important`, `.warning`, `.caution`
 - Typography scale: `.text-xs` through `.text-xl5`
 - Laser pointer effect during presentation
@@ -119,7 +133,7 @@ each visual identity, and `docs/theme-contract.md` for the engineering contract
 shared by CSS, templates, skills, Tailwind, and the validator.
 
 `designs/<name>/DESIGN.md` is the source of truth for each design's tokens.
-`npm run marpx -- --theme` regenerates the matching
+`marpx --theme` regenerates the matching
 `themes/src/_generated/<name>-design-tokens.css` files before compiling the
 tracked theme CSS files.
 
@@ -127,7 +141,7 @@ To create another visual identity, start from the scaffold command and then
 edit the generated `DESIGN.md` as the token source of truth:
 
 ```bash
-npm run marpx -- --theme-new <name> --source-url <url> --no-build
+marpx --theme-new <name> --source-url <url> --no-build
 ```
 
 The scaffold creates `designs/<name>/DESIGN.md`, `themes/src/<name>.css`, and
@@ -194,8 +208,8 @@ style: |
 ```
 
 ```bash
-npm run marpx -- --theme lab   # build theme
-npm run marpx -- --theme -w    # watch mode
+marpx --theme lab   # build theme
+marpx --theme -w    # watch mode
 ```
 
 ## A-Series Paper Layouts
@@ -205,12 +219,12 @@ paper canvas instead of a slide sequence.
 
 ```bash
 # Scaffold a paper deck (A4 portrait)
-npm run marpx -- -n decks/my-paper --paper
+marpx -n decks/my-paper --paper
 
 # Edit decks/my-paper/paper.md, then preview / validate / export
-npm run marpx -- decks/my-paper/paper.md        # live preview
-npm run marpx -- decks/my-paper/paper.md -v     # validate
-npm run marpx -- decks/my-paper/paper.md --pdf  # export PDF for printing
+marpx decks/my-paper/paper.md        # live preview
+marpx decks/my-paper/paper.md -v     # validate
+marpx decks/my-paper/paper.md --pdf  # export PDF for printing
 ```
 
 - **Portrait:** `size: a4-portrait` in the front matter

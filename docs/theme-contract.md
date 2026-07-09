@@ -51,7 +51,7 @@ matching generated token file before remapping canvas behavior.
 New visual identities should start from the scaffold command:
 
 ```bash
-npm run marpx -- --theme-new <name> --source-url <url> --no-build
+marpx --theme-new <name> --source-url <url> --no-build
 ```
 
 The scaffold creates:
@@ -62,7 +62,7 @@ The scaffold creates:
 - `fixtures/<name>-slide.md`, a smoke deck for validation.
 
 After scaffolding, edit `DESIGN.md` first. Literal design values belong there,
-not in `themes/src/<name>.css`. Compile with `npm run marpx -- --theme <name>`
+not in `themes/src/<name>.css`. Compile with `marpx --theme <name>`
 only after the design rationale and tokens have been adapted from the source.
 
 ## Tailwind Boundary
@@ -91,7 +91,7 @@ Useful commands:
 - `npm run design:lint`
 - `npm run design:tokens`
 - `npm run design:tokens:check`
-- `npm run marpx -- --theme`
+- `marpx --theme`
 
 ## Component Boundary
 
@@ -103,13 +103,20 @@ Built-in layout primitives:
 
 | Class | Purpose |
 | :---- | :------ |
-| `.col` | flexible two-column row |
+| `.col` | flexible row for two or more columns |
 | `.centered` | body-area vertical centering for agenda/closing slides |
 | `.fit` | shrink-to-content block with max-width guard |
-| `.summary-box` | short call-to-action or takeaway box |
-| `.gap-cols` | three-column equal-height variant used with `.col` |
-| `.gap-box` | per-column conclusion box inside `.gap-cols` |
+| `.summary-box` | fit-to-content call-to-action or takeaway box |
+| `.box` | content-placement wrapper outside `.col` |
+| `.fill` | body-level layout fills remaining height above the footer safe area |
+| `.place-*` | content placement inside `.col > div` or `.box` |
+| `.self-*` | self-placement for fit-to-content components |
+| `.col.with-summary` | column layout whose per-column `.gap-box` sits at the bottom |
+| `.gap-box` | per-column conclusion box inside `.col.with-summary` |
 | `.feature-grid` | 2xN compact card grid |
+| `.col.visual` | figure/text variant of the standard two-column layout |
+| `.metric-grid` | compact numeric or KPI cards |
+| `.timeline` | horizontal process or step sequence with directional arrows; `ol` adds simple numeric markers |
 
 These components should preserve the current `lab` visual style unless a
 separate visual redesign change explicitly updates it.
@@ -158,5 +165,5 @@ inside those limits without shrinking text:
 - split dense content before reducing type size;
 - count top-level bullets across columns;
 - count callout body text as body text;
-- keep `three-column` and `feature-grid` slides to roughly two top-level bullets
+- keep multi-column and `feature-grid` slides to roughly two top-level bullets
   per column/card.

@@ -9,7 +9,7 @@ const repoRoot = path.resolve(__dirname, "..");
 function parseArgs(argv) {
   const args = [...argv];
   let format = "text";
-  const usage = "Usage: npx marpx --doctor [--format text|json]";
+  const usage = "Usage: marpx --doctor [--format text|json]";
 
   const fail = (message) => {
     console.error(usage);
@@ -47,7 +47,7 @@ async function checkNodeRuntime() {
   return {
     name: "node-runtime",
     status: "pass",
-    detail: `Node ${process.versions.node} matches volta.node ${policy.configuredVersion}.`,
+    detail: `Node ${process.versions.node} matches .mise.toml node ${policy.configuredVersion}.`,
   };
 }
 

@@ -11,7 +11,7 @@ Available designs:
 Create another design with:
 
 ```bash
-npm run marpx -- --theme-new <name> --source-url <url> --no-build
+marpx --theme-new <name> --source-url <url> --no-build
 ```
 
 Then replace the scaffolded `designs/<name>/DESIGN.md` notes with the extracted

@@ -150,10 +150,13 @@ function suggestLayout(title) {
     return "two-column";
   }
   if (/(process|workflow|flow|timeline|steps|state)/.test(lowered)) {
-    return "content";
+    return "content (timeline variant)";
+  }
+  if (/(metric|kpi|number|result|evidence|score)/.test(lowered)) {
+    return "content (metric-grid variant)";
   }
   if (/(demo|case study|example|figure|chart|asset)/.test(lowered)) {
-    return "two-column";
+    return "two-column (visual variant)";
   }
   return "content";
 }
@@ -170,14 +173,29 @@ const AGENDA_ALIASES = ["agenda", "アジェンダ", "目次", "もくじ"];
 
 const KNOWN_LAYOUTS = [
   {
-    aliases: ["three-column", "three column"],
+    aliases: ["multi-column", "multi column"],
     baseType: "two-column",
-    variant: "three-column variant",
+    variant: "multi-column variant",
   },
   {
     aliases: ["feature-grid", "feature grid"],
     baseType: "two-column",
     variant: "feature-grid variant",
+  },
+  {
+    aliases: ["visual", "figure", "media", "image-left", "image-right"],
+    baseType: "two-column",
+    variant: "visual variant",
+  },
+  {
+    aliases: ["metric-grid", "metric grid", "metrics", "kpi"],
+    baseType: "content",
+    variant: "metric-grid variant",
+  },
+  {
+    aliases: ["timeline", "steps", "step timeline"],
+    baseType: "content",
+    variant: "timeline variant",
   },
   {
     aliases: ["agenda"],
@@ -209,6 +227,10 @@ function formatLayoutHint(layout) {
     : layout.baseType;
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+}
+
 function sectionMatchesAlias(text, aliases) {
   const normalized = text.toLowerCase().trim();
   return aliases.some((alias) => {
@@ -226,7 +248,7 @@ function sectionMatchesAlias(text, aliases) {
 function parseLayoutHintFromText(text) {
   for (const layout of KNOWN_LAYOUTS) {
     for (const alias of layout.aliases) {
-      const escaped = alias.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+      const escaped = escapeRegExp(alias);
       const patterns = [
         new RegExp(`\\[\\s*${escaped}(?:\\s+(?:variant|layout))?\\s*\\]`, "i"),
         new RegExp(`\\(\\s*${escaped}(?:\\s+(?:variant|layout))?\\s*\\)`, "i"),
@@ -245,9 +267,16 @@ function parseLayoutHintFromText(text) {
 }
 
 function stripLayoutHintMarkers(text) {
+  const aliases = KNOWN_LAYOUTS.flatMap((layout) => layout.aliases)
+    .map(escapeRegExp)
+    .join("|");
+
   return text
     .replace(
-      /\s*[\[(]\s*(?:three-column|three column|feature-grid|feature grid|two-column|two column|content|title|agenda|summary|closing)(?:\s+(?:variant|layout))?\s*[\])]/gi,
+      new RegExp(
+        `\\s*[\\[(]\\s*(?:${aliases})(?:\\s+(?:variant|layout))?\\s*[\\])]`,
+        "gi",
+      ),
       "",
     )
     .trim();

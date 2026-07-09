@@ -25,7 +25,7 @@ Create a new deck at `decks/$ARGUMENTS`.
    ```bash
    npm run marpx -- decks/$ARGUMENTS/brief.md --outline
    ```
-   The generator dedupes any Title/Agenda the brief already lists and carries layout-variant hints (`[three-column]`, `(closing variant)`, `using the feature-grid variant`, …) through to the outline's `Layout hint:` field — no manual sweep needed.
+   The generator dedupes any Title/Agenda the brief already lists and carries layout-variant hints (`[multi-column]`, `(closing variant)`, `using the feature-grid variant`, …) through to the outline's `Layout hint:` field — no manual sweep needed.
 
 5. **Review outline with the user.** Present the slide plan (titles, layout hints, flow) and discuss:
    - Are the sections in the right order?
@@ -38,8 +38,8 @@ Create a new deck at `decks/$ARGUMENTS`.
 6. Read `decks/$ARGUMENTS/outline.md`. Each slide has a layout hint such as `title`, `content`, `content (agenda variant)`, `content (summary variant)`, `content (closing variant)`, or `two-column`. Apply the matching template from the **marp-slide-types** skill.
    - `title` maps to the opening cover slide template
    - `content (...)` keeps the `content` base type and applies the named variant
-   - `two-column` maps to the standard two-column template unless the outline or user explicitly asks for `three-column` or `feature-grid`
-   - Three-column, feature-grid, and summary-box styles are built into the theme — do not paste scoped component CSS into `slide.md`.
+   - `two-column` maps to the standard two-column template unless the outline or user explicitly asks for `multi-column` or `feature-grid`
+   - Multi-column, feature-grid, and summary-box styles are built into the theme — do not paste scoped component CSS into `slide.md`.
 
 7. Author `decks/$ARGUMENTS/slide.md`:
    - One slide per `---` separator

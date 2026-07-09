@@ -10,7 +10,7 @@ function parseArgs(argv) {
   let outputPath = null;
   let strictBrief = true;
   const usage =
-    "Usage: npx marpx <path/to/brief.md> --outline [--output <path/to/outline.md>] [--no-strict-brief]";
+    "Usage: marpx <path/to/brief.md> --outline [--output <path/to/outline.md>] [--no-strict-brief]";
   const fail = (message) => {
     console.error(usage);
     console.error(message);

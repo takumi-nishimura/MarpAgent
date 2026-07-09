@@ -513,11 +513,15 @@ stable under live preview, PDF export, and thumbnail overview rendering.
 
 Use built-in layout primitives before adding scoped CSS:
 
-- `.col` for two-column layouts.
+- `.col` for two or more columns.
 - `.centered` for agenda and closing slides.
-- `.summary-box` for a short takeaway.
-- `.gap-cols` and `.gap-box` for compact three-column comparison.
+- `.summary-box` for a short fit-to-content takeaway.
+- `.fill`, `.place-*`, `.self-*`, and `.box` for placement without scoped CSS.
+- `.col.with-summary` and `.gap-box` for compact column comparison.
 - `.feature-grid` for 2xN compact cards.
+- `.col.visual` for figure/text or before/after slides with stable visual ratios.
+- `.metric-grid` for compact evidence, KPI, or result tiles.
+- `.timeline` for process and step sequences; `ol` adds simple numeric markers.
 
 Deck-specific visual adjustment should prefer frontmatter CSS variables and
 theme variants. One-off scoped CSS is a last resort.
@@ -542,10 +546,24 @@ from the theme before skills recommend it in generated slides.
 - **Header band:** establishes slide context and carries logos without affecting
   content layout.
 - **Summary box:** one concise takeaway or action statement.
-- **Gap columns:** three balanced comparison columns with a per-column
-  conclusion box.
+- **Placement utilities:** `fill` lets a body-level layout use the remaining
+  slide body height above the footer safe area. `place-top`, `place-middle`,
+  `place-bottom`, `place-spread`, `place-left`, `place-center`, and
+  `place-right` place content inside `.col > div` or `.box`. `self-start`,
+  `self-center`, and `self-end` place fit-to-content components themselves.
+- **Summary columns:** `.col.with-summary` creates balanced comparison columns
+  with a per-column conclusion box.
 - **Feature grid:** compact repeated cards. Keep each card short; do not use it
   to hide long prose at caption size.
+- **Visual column:** the standard `.col` layout with the `visual` modifier for
+  media + interpretation. Prefer the CSS variables `--visual-left`,
+  `--visual-right`, and `--visual-gap` over scoped
+  CSS when adjusting proportions.
+- **Metric grid:** short quantitative cards. Each card should contain one
+  visible number or label and one short interpretation line.
+- **Timeline:** horizontal steps for process or chronology, with directional
+  arrows between cards. Keep each step to one short sentence; split the slide if
+  the sequence needs explanation.
 - **Callouts:** use note, tip, important, warning, and caution semantics.
   Callout body text still counts as body text for density checks.
 - **Figures and Mermaid diagrams:** size the rendered container, not only SVG

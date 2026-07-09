@@ -30,7 +30,7 @@ Markdown で作る, 構造化プレゼンテーション
 
 1. MarpAgent とは
 2. 構造化ワークフロー
-3. Lab テーマ
+3. Lab テーマとレイアウト
 4. プレゼンモード & バリデーション
 5. AI アシスト & 始め方
 
@@ -88,13 +88,11 @@ graph LR
 
 **カラースキーム (5種)**
 
-- Dracula / One Dark Pro
-- Nord / Neogaia
-- GitHub Light
+Dracula / One Dark Pro / Nord / Neogaia / GitHub Light
 
 **レイアウト**
 
-- title / content / two-column
+title / content / multi-column / visual col / metric-grid / timeline / placement utilities
 
 </div>
 <div>
@@ -106,6 +104,129 @@ graph LR
 - コードハイライト
 
 </div>
+</div>
+
+---
+
+<!-- _header: レイアウト -->
+
+## Multi-column
+
+<div class="col with-summary">
+<div>
+
+### 比較
+
+同じ粒度の観点を横並びにして，差分を一目で追えるようにする
+
+<div class="gap-box">短い結論を置く</div>
+
+</div>
+<div>
+
+### 分担
+
+担当・役割・制約など，独立した3要素を等幅で整理する
+
+<div class="gap-box">並列関係を保つ</div>
+
+</div>
+<div>
+
+### 選択肢
+
+候補案を増やしすぎず，3択程度に絞って比較する
+
+<div class="gap-box">判断材料にする</div>
+
+</div>
+</div>
+
+---
+
+<!-- _header: レイアウト -->
+
+## Visual column
+
+<div class="col visual" style="--visual-left: 1.2; --visual-right: 0.8;">
+<figure>
+<img src="assets/img/overview-mode.png" />
+<figcaption>視覚情報を大きく見せる</figcaption>
+</figure>
+<div>
+
+**読み取り方**
+
+- 左側に図やスクリーンショットを配置
+- 右側に観察点と判断を短く置く
+
+<div class="summary-box">図を主役にしたいスライド向け</div>
+
+</div>
+</div>
+
+---
+
+<!-- _header: レイアウト -->
+
+## Placement utilities
+
+<div class="col fill">
+<div class="place-middle">
+<div>
+
+**inline style を減らす**
+
+- `place-middle` で上下中央
+- `place-center` で左右中央
+- `fill` で下部余白を除いた本文領域を使う
+- 列の `div` に `place-middle place-center` で中身を中央配置
+
+<div class="summary-box self-center">配置を class で指定する</div>
+
+</div>
+</div>
+<div class="place-middle place-center">
+<figure>
+<img src="assets/img/overview-mode.png" />
+<figcaption>図と本文の高さが違っても中央で揃える</figcaption>
+</figure>
+</div>
+
+</div>
+
+---
+
+<!-- _header: レイアウト -->
+
+## Metric grid
+
+数値や結果をカードとして並べ，本文より先に量感を見せる
+
+<div class="metric-grid four">
+<div><strong>4</strong><span>追加された標準レイアウト</span></div>
+<div><strong>0</strong><span>deck固有CSSなしで使用</span></div>
+<div><strong>25.x</strong><span>実行時 Node.js の想定範囲</span></div>
+<div><strong>1</strong><span>Markdown を主役に保つ</span></div>
+</div>
+
+---
+
+<!-- _header: レイアウト -->
+
+## Timeline
+
+<ol class="timeline">
+<li><strong>Brief</strong> 対象者と目的を固定する</li>
+<li><strong>Outline</strong> 構成と layout hint を生成する</li>
+<li><strong>Slide</strong> Markdown で本文と図を入れる</li>
+<li><strong>Validate</strong> 表示崩れを検出して直す</li>
+</ol>
+
+<div class="tip">
+
+プロセス説明は箇条書きより，順序を持った横並びのほうが読みやすい
+
 </div>
 
 ---
@@ -191,18 +312,19 @@ AIがワークフロー全体をアシストするため, Markdown の記法を�
 
 ```bash
 # 1. デッキを作成
-npx marpx -n decks/my-talk
+marpx -n decks/my-talk
 
 # 2. brief を埋めてアウトラインを生成
-npx marpx decks/my-talk/brief.md --outline
+marpx decks/my-talk/brief.md --outline
 
 # 3. スライドを書いてバリデーション
-npx marpx decks/my-talk/slide.md -v
+marpx decks/my-talk/slide.md -v
 ```
 
 <div class="tip">
 
-ライブプレビューは `npx marpx <slide.md>`, 単発 preview は `npx marpx <slide.md> -p`, overview は `npx marpx <slide.md> --overview` で起動
+ライブプレビューは `marpx <slide.md>` で起動
+単発 preview は `-p`, overview は `--overview` を付ける
 
 </div>
 
