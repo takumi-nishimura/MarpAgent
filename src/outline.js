@@ -171,6 +171,8 @@ const TITLE_ALIASES = [
 
 const AGENDA_ALIASES = ["agenda", "アジェンダ", "目次", "もくじ"];
 
+// Layout hints are template labels for the outline generator, not CSS classes.
+// For example, the "two-column" template authors slides with the ".col" class.
 const KNOWN_LAYOUTS = [
   {
     aliases: ["multi-column", "multi column"],

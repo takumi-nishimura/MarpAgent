@@ -78,6 +78,7 @@ test("theme CSS provides reusable layout component classes", () => {
     assert.match(css, /\.metric-grid\b/);
     assert.match(css, /\.timeline\b/);
     assert.match(css, /\.box\b/);
+    assert.doesNotMatch(css, /\.two-column\b/);
     assert.match(css, /\.box,\s*\.col\s*>\s*div\s*\{[\s\S]*display:\s*flex/);
     assert.match(
       css,

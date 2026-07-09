@@ -101,6 +101,9 @@ from templates.
 
 Built-in layout primitives:
 
+Template layout labels such as `two-column` are not theme primitives. The
+`two-column` template is authored with the `.col` class below.
+
 | Class | Purpose |
 | :---- | :------ |
 | `.col` | flexible row for two or more columns |
@@ -114,7 +117,7 @@ Built-in layout primitives:
 | `.col.with-summary` | column layout whose per-column `.gap-box` sits at the bottom |
 | `.gap-box` | per-column conclusion box inside `.col.with-summary` |
 | `.feature-grid` | 2xN compact card grid |
-| `.col.visual` | figure/text variant of the standard two-column layout |
+| `.col.visual` | figure/text variant of the `.col`-based template |
 | `.metric-grid` | compact numeric or KPI cards |
 | `.timeline` | horizontal process or step sequence with directional arrows; `ol` adds simple numeric markers |
 

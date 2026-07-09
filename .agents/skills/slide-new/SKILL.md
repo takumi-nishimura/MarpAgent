@@ -35,10 +35,10 @@ Create a new deck at `decks/$ARGUMENTS`.
    Revise `outline.md` based on feedback before proceeding.
    Stop here again until the user approves the outline.
 
-6. Read `decks/$ARGUMENTS/outline.md`. Each slide has a layout hint such as `title`, `content`, `content (agenda variant)`, `content (summary variant)`, `content (closing variant)`, or `two-column`. Apply the matching template from the **marp-slide-types** skill.
+6. Read `decks/$ARGUMENTS/outline.md`. Each slide has a layout hint such as `title`, `content`, `content (agenda variant)`, `content (summary variant)`, `content (closing variant)`, or `two-column`. These are template labels, not theme class names. Apply the matching template from the **marp-slide-types** skill.
    - `title` maps to the opening cover slide template
    - `content (...)` keeps the `content` base type and applies the named variant
-   - `two-column` maps to the standard two-column template unless the outline or user explicitly asks for `multi-column` or `feature-grid`
+   - `two-column` maps to the standard `.col` template unless the outline or user explicitly asks for `multi-column` or `feature-grid`
    - Multi-column, feature-grid, and summary-box styles are built into the theme — do not paste scoped component CSS into `slide.md`.
 
 7. Author `decks/$ARGUMENTS/slide.md`:

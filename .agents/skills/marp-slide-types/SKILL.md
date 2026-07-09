@@ -4,7 +4,9 @@ description: Slide type templates for MarpAgent (lab theme). Use when authoring 
 user-invocable: false
 ---
 
-Three formal layout types. Every slide uses exactly one.
+Three formal template layout types. Every slide uses exactly one. These names
+are outline/template labels, not necessarily CSS classes: `two-column` renders
+with the theme's `.col` primitive.
 
 ## Quick Chooser
 
@@ -140,9 +142,11 @@ Next step or call to action here.
 </div>
 ```
 
-## two-column
+## two-column template
 
-When to use: comparisons, figure + text, before/after, feature lists.
+When to use: comparisons, figure + text, before/after, feature lists. This is
+an outline/template label; the authored slide uses `.col`, not a
+`.two-column` class.
 
 ```markdown
 ---
@@ -305,8 +309,9 @@ Short intro sentence.
 ### visual variant
 
 Use `.col.visual` for figure/media + interpretation. It extends the standard
-two-column layout instead of introducing a separate layout primitive. Adjust
-ratios with CSS variables rather than scoped CSS.
+`.col` primitive used by the `two-column` template instead of introducing a
+separate layout primitive. Adjust ratios with CSS variables rather than scoped
+CSS.
 
 ```markdown
 ---
@@ -387,6 +392,6 @@ the sequence.
 | `.place-top` / `.place-middle` / `.place-bottom` / `.place-spread` | Vertical placement inside `.col > div` or `.box` |
 | `.place-left` / `.place-center` / `.place-right` | Horizontal placement inside `.col > div` or `.box` |
 | `.self-start` / `.self-center` / `.self-end` | Place a fit-to-content component itself |
-| `.col.visual` | Figure/text variant of the standard two-column layout |
+| `.col.visual` | Figure/text variant of the `.col`-based template |
 | `.metric-grid` | Compact numeric or KPI cards |
 | `.timeline` | Horizontal process or step sequence with directional arrows; `ol` adds simple numeric markers |

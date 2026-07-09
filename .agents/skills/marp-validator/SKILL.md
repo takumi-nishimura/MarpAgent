@@ -40,7 +40,7 @@ Content excluded from counting: `<style>`, `<script>`, `<div class="footnote">` 
 | `long-heading` | Heading >= 48 chars (warn) / >= 70 (error) | Shorten to < 48; move detail to body |
 | `typography-drift` | `.text-xs2`, `.text-xs3`, `<small>`, or tiny inline `font-size` in use | Remove tiny styling; split content instead |
 | `figure-text-density` | Image + >= 6 top-level bullets or text lines | Move text to next slide |
-| `comparison-overpacked` | Table >= 5 cols x 3 rows, or two-column with >= 10 top-level bullets | Split into two slides |
+| `comparison-overpacked` | Table >= 5 cols x 3 rows, or two-column template with >= 10 top-level bullets | Split into two slides |
 
 ## A-Series Paper Mode
 
