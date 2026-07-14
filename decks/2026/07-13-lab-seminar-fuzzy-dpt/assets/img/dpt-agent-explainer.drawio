@@ -1,0 +1,92 @@
+<mxfile host="Electron" agent="Codex">
+  <diagram id="dpt-agent-explainer" name="DPT-Agent">
+    <mxGraphModel dx="984" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ddecff;fillOpacity=38;strokeColor=#3b82c4;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#174a7a;verticalAlign=top;spacingTop=12;spacingLeft=16;" value="&lt;b&gt;System 2&lt;/b&gt;｜非同期の推論" vertex="1">
+          <mxGeometry height="155" width="500" x="50" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="tom" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f6fbff;strokeColor=#3b82c4;strokeWidth=1.5;fontSize=17;fontColor=#1f2937;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;ToM&lt;/b&gt;&lt;br/&gt;相手の意図を推定" vertex="1">
+          <mxGeometry height="75" width="190" x="85" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="reflection" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f6fbff;strokeColor=#3b82c4;strokeWidth=1.5;fontSize=17;fontColor=#1f2937;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Reflection&lt;/b&gt;&lt;br/&gt;行動指針を更新" vertex="1">
+          <mxGeometry height="75" width="190" x="325" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3d6;fillOpacity=45;strokeColor=#e38b16;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#8a4b00;verticalAlign=top;spacingTop=12;spacingLeft=16;" value="&lt;b&gt;System 1&lt;/b&gt;｜リアルタイムの意思決定と実行" vertex="1">
+          <mxGeometry height="260" width="1050" x="50" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="policy" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffdf8;strokeColor=#e38b16;strokeWidth=1.5;fontSize=16;fontColor=#1f2937;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;code-as-policy&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px&quot;&gt;FSM の遷移規則を更新&lt;/font&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size:12px&quot;&gt;(&quot;lambda json_state:&lt;br&gt;json_state[&#39;objects&#39;][&#39;Fire&#39;] &amp;gt; 0&quot;,&lt;br&gt;(&quot;putout_fire&quot;, {}))&lt;/font&gt;" vertex="1">
+          <mxGeometry height="150" width="305" x="70" y="432.5" as="geometry" />
+        </mxCell>
+        <mxCell id="fsm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffdf8;strokeColor=#e38b16;strokeWidth=1.5;fontSize=16;fontColor=#1f2937;align=center;verticalAlign=top;spacingTop=8;" value="&lt;b&gt;FSM｜離散的な状態遷移&lt;/b&gt;&lt;br/&gt;&lt;font style=&quot;font-size:11px&quot;&gt;現在状態と更新後規則で遷移&lt;/font&gt;" vertex="1">
+          <mxGeometry height="185" width="300" x="405" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="fsm_idle" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e38b16;strokeWidth=1.2;fontSize=13;fontColor=#1f2937;align=center;verticalAlign=middle;" value="idle" vertex="1">
+          <mxGeometry height="32" width="68" x="421" y="510.5" as="geometry" />
+        </mxCell>
+        <mxCell id="fsm_making" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e38b16;strokeWidth=1.2;fontSize=13;fontColor=#1f2937;align=center;verticalAlign=middle;" value="making burger" vertex="1">
+          <mxGeometry height="38" width="118" x="571" y="471" as="geometry" />
+        </mxCell>
+        <mxCell id="fsm_serving" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e38b16;strokeWidth=1.2;fontSize=13;fontColor=#1f2937;align=center;verticalAlign=middle;" value="serve burger" vertex="1">
+          <mxGeometry height="35" width="100" x="580" y="555" as="geometry" />
+        </mxCell>
+        <mxCell id="executor" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffdf8;strokeColor=#e38b16;strokeWidth=1.5;fontSize=16;fontColor=#1f2937;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Executor&lt;/b&gt;&lt;br/&gt;&lt;font style=&quot;font-size:13px&quot;&gt;A* planning&lt;br/&gt;move / interact&lt;/font&gt;" vertex="1">
+          <mxGeometry height="105" width="120" x="960" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="environment" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f6df;strokeColor=#5b9f53;strokeWidth=2;fontSize=18;fontColor=#1f3b1c;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Environment&lt;/b&gt;&lt;br/&gt;現在状態・実行履歴" vertex="1">
+          <mxGeometry height="105" width="150" x="1070" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="tom_reflection" edge="1" parent="1" source="tom" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#3b82c4;" target="reflection" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reflection_policy" edge="1" parent="1" source="reflection" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;dashed=1;dashPattern=8 6;strokeWidth=2;strokeColor=#3b82c4;fontSize=14;fontColor=#174a7a;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="policy" value="Belief &amp;amp; Guideline">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="330" />
+              <mxPoint x="223" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="policy_fsm" edge="1" parent="1" source="policy" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#e38b16;fontSize=14;fontColor=#8a4b00;labelBackgroundColor=#ffffff;" target="fsm" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fsm_executor" edge="1" parent="1" source="fsm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#e38b16;fontSize=13;fontColor=#8a4b00;labelBackgroundColor=#ffffff;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="executor" value="">
+          <mxGeometry relative="1" x="-0.2308" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="executor_environment" edge="1" parent="1" source="executor" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#5b9f53;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="environment" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="environment_fsm" edge="1" parent="1" source="environment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#5b9f53;fontSize=14;fontColor=#1f3b1c;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" value="Current State">
+          <mxGeometry relative="1" x="0.5975" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1080" y="232.24" as="sourcePoint" />
+            <mxPoint x="800" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="environment_tom" edge="1" parent="1" source="environment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#5b9f53;fontSize=14;fontColor=#1f3b1c;labelBackgroundColor=#ffffff;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="s2" value="Trajectory">
+          <mxGeometry relative="1" x="0.5769" y="-8" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="idle_making" edge="1" parent="1" source="fsm_idle" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=1.5;strokeColor=#e38b16;fontSize=12;fontColor=#8a4b00;labelBackgroundColor=#fffdf8;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="fsm_making" value="order">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="455.0000000000001" y="500.0000000000001" as="sourcePoint" />
+            <mxPoint x="571.0000058688204" y="481.00847457627106" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="making_serving" edge="1" parent="1" source="fsm_making" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=1.5;strokeColor=#e38b16;fontSize=12;fontColor=#8a4b00;labelBackgroundColor=#fffdf8;" target="fsm_serving" value="burger ready">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="serving_idle" edge="1" parent="1" source="fsm_serving" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=1.5;strokeColor=#e38b16;fontSize=12;fontColor=#8a4b00;labelBackgroundColor=#fffdf8;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="fsm_idle" value="score">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="macro" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffdf8;strokeColor=#e38b16;strokeWidth=1.5;fontSize=16;fontColor=#1f2937;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Macro Action&lt;/b&gt;&lt;br/&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size:13px&quot;&gt;(&amp;quot;putout_fire&amp;quot;, {})&lt;/font&gt;" vertex="1">
+          <mxGeometry height="105" width="185" x="740" y="455" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
