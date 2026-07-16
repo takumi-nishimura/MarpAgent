@@ -400,9 +400,11 @@ section {
   --logo-title-spacing: 10px;
   --logo-header-size: 50px;
   --logo-header-spacing: 35px;
+  --font-body: "Noto Sans JP", sans-serif;
+  --font-display: var(--font-body, "Noto Sans JP", sans-serif);
   width: 1280px;
   height: 720px;
-  font-family: "Noto Sans JP", sans-serif;
+  font-family: var(--font-body);
   font-size: 26px;
   margin: 0;
   padding-top: var(--padding-top);
@@ -419,23 +421,27 @@ section.invert {
   --highlight: var(--color-highlight-invert);
 }
 section h1 {
+  font-family: var(--font-display, var(--font-body, "Noto Sans JP", sans-serif));
   font-size: 2.25em;
   margin-top: 0.5em;
   margin-bottom: 0.25em;
   font-weight: bold;
 }
 section h2 {
+  font-family: var(--font-display, var(--font-body, "Noto Sans JP", sans-serif));
   font-size: 1.5em;
   margin-top: 0.25em;
   margin-bottom: 0.25em;
   font-weight: bold;
 }
 section h3 {
+  font-family: var(--font-display, var(--font-body, "Noto Sans JP", sans-serif));
   font-size: 1.25em;
   margin-top: 0.25em;
   font-weight: bold;
 }
 section h4 {
+  font-family: var(--font-display, var(--font-body, "Noto Sans JP", sans-serif));
   font-size: 1.125em;
   margin-top: 0.25em;
   font-weight: bold;
