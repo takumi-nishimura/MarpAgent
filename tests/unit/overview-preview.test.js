@@ -67,19 +67,22 @@ test("buildWaitingDocument shows a reload-ready placeholder", () => {
   assert.match(html, /reloads automatically/);
 });
 
-test("buildOverviewDocument includes WebSocket live-reload script", () => {
+test("buildOverviewDocument includes polling live-reload script", () => {
   const html = buildOverviewDocument(renderedHtml, {
     reloadToken: "token",
     targetSlideId: undefined,
   });
 
-  assert.match(html, /connectLiveReload/);
-  assert.match(html, /__marp_agent__\/ws/);
+  assert.match(html, /setInterval\(pollForReload, 500\)/);
+  assert.match(html, /visibilitychange/);
+  assert.match(html, /pageshow/);
+  assert.doesNotMatch(html, /WebSocket/);
 });
 
-test("buildWaitingDocument includes WebSocket live-reload script", () => {
+test("buildWaitingDocument includes polling live-reload script", () => {
   const html = buildWaitingDocument("slide.md", "missing");
 
-  assert.match(html, /connectLiveReload/);
-  assert.match(html, /__marp_agent__\/ws/);
+  assert.match(html, /setInterval\(pollForReload, 500\)/);
+  assert.match(html, /__marp_agent__\/meta/);
+  assert.doesNotMatch(html, /WebSocket/);
 });

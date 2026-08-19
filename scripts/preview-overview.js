@@ -1,4 +1,3 @@
-const crypto = require("node:crypto");
 const fs = require("node:fs");
 const http = require("node:http");
 const path = require("node:path");
@@ -64,46 +63,6 @@ function sendText(response, statusCode, message) {
   response.end(message);
 }
 
-function acceptWebSocket(request, socket) {
-  const key = request.headers["sec-websocket-key"];
-  if (!key) {
-    socket.destroy();
-    return null;
-  }
-
-  const accept = crypto
-    .createHash("sha1")
-    .update(key + "258EAFA5-E914-47DA-95CA-5AB9FFC115E3")
-    .digest("base64");
-
-  socket.write(
-    "HTTP/1.1 101 Switching Protocols\r\n" +
-      "Upgrade: websocket\r\n" +
-      "Connection: Upgrade\r\n" +
-      `Sec-WebSocket-Accept: ${accept}\r\n` +
-      "\r\n",
-  );
-
-  return socket;
-}
-
-function sendWebSocketMessage(socket, message) {
-  const payload = Buffer.from(message, "utf8");
-  const header = [0x81]; // FIN + text opcode
-
-  if (payload.length < 126) {
-    header.push(payload.length);
-  } else if (payload.length < 65536) {
-    header.push(126, (payload.length >> 8) & 0xff, payload.length & 0xff);
-  }
-
-  try {
-    socket.write(Buffer.concat([Buffer.from(header), payload]));
-  } catch {
-    // Client disconnected.
-  }
-}
-
 function getMimeType(filePath) {
   const extension = path.extname(filePath).toLowerCase();
 
@@ -160,9 +119,6 @@ function resolveStaticPath(deckDir, requestPath) {
 }
 
 function createServer({ deckDir, deckPath, outputPath, targetSlideId }) {
-  const wsClients = new Set();
-  let lastToken = getReloadToken(outputPath);
-
   const server = http.createServer((request, response) => {
     const requestUrl = new URL(request.url || "/", "http://127.0.0.1");
 
@@ -205,76 +161,6 @@ function createServer({ deckDir, deckPath, outputPath, targetSlideId }) {
     });
     fs.createReadStream(filePath).pipe(response);
   });
-
-  server.on("upgrade", (request, socket) => {
-    const requestUrl = new URL(request.url || "/", "http://127.0.0.1");
-    if (requestUrl.pathname !== "/__marp_agent__/ws") {
-      socket.destroy();
-      return;
-    }
-
-    const ws = acceptWebSocket(request, socket);
-    if (!ws) return;
-
-    wsClients.add(ws);
-    ws.on("close", () => wsClients.delete(ws));
-    ws.on("error", () => wsClients.delete(ws));
-
-    // If the file changed before this client connected (e.g. the initial
-    // render completed before the browser's WebSocket was ready), notify
-    // the new client immediately so the waiting page transitions.
-    const currentToken = getReloadToken(outputPath);
-    if (currentToken !== lastToken) {
-      lastToken = currentToken;
-      sendWebSocketMessage(ws, JSON.stringify({ type: "reload" }));
-    }
-  });
-
-  function notifyClients() {
-    const currentToken = getReloadToken(outputPath);
-    if (currentToken === lastToken) return;
-    // Only advance lastToken when there are connected clients.  If no
-    // clients are present the stale token is kept so that the next client
-    // to connect will see the mismatch in the upgrade handler and get an
-    // immediate reload notification.
-    if (wsClients.size === 0) return;
-    lastToken = currentToken;
-
-    for (const client of wsClients) {
-      sendWebSocketMessage(client, JSON.stringify({ type: "reload" }));
-    }
-  }
-
-  let watcher = null;
-  let debounceTimer = null;
-
-  try {
-    const targetBasename = path.basename(outputPath);
-    watcher = fs.watch(path.dirname(outputPath), (_event, filename) => {
-      // filename can be null on some platforms; notify unconditionally in that
-      // case so the token-based check inside notifyClients decides.
-      if (filename == null || filename === targetBasename) {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(notifyClients, 50);
-      }
-    });
-    watcher.on("error", () => {
-      watcher?.close();
-      watcher = null;
-    });
-  } catch {
-    // Fallback: clients will still use polling if fs.watch is unavailable.
-  }
-
-  const originalClose = server.close.bind(server);
-  server.close = function close(callback) {
-    watcher?.close();
-    for (const client of wsClients) {
-      client.destroy();
-    }
-    wsClients.clear();
-    return originalClose(callback);
-  };
 
   return server;
 }
@@ -380,7 +266,5 @@ if (require.main === module) {
 }
 
 module.exports = {
-  acceptWebSocket,
   createServer,
-  sendWebSocketMessage,
 };

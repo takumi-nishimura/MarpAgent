@@ -8,14 +8,21 @@ module.exports = {
   use: {
     viewport: { width: 1280, height: 720 },  // Match slide dimensions
     screenshot: 'only-on-failure',
-    launchOptions: {
-      args: useSandbox ? [] : ['--no-sandbox', '--disable-setuid-sandbox'],
-    },
   },
   projects: [
     {
       name: 'chromium',
-      use: { browserName: 'chromium' },
+      use: {
+        browserName: 'chromium',
+        launchOptions: {
+          args: useSandbox ? [] : ['--no-sandbox', '--disable-setuid-sandbox'],
+        },
+      },
+    },
+    {
+      name: 'firefox-overview',
+      testMatch: /overview-live-reload\.spec\.js/,
+      use: { browserName: 'firefox' },
     },
   ],
 };

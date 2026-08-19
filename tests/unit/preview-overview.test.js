@@ -1,39 +1,14 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const crypto = require("node:crypto");
-const { EventEmitter } = require("node:events");
 const fs = require("node:fs");
 const http = require("node:http");
-const net = require("node:net");
 const path = require("node:path");
 
-const {
-  acceptWebSocket,
-  createServer,
-  sendWebSocketMessage,
-} = require("../../scripts/preview-overview");
+const { createServer } = require("../../scripts/preview-overview");
 
 function listenOnFreePort(server) {
   return new Promise((resolve) => {
     server.listen(0, "127.0.0.1", () => resolve(server.address().port));
-  });
-}
-
-function connectWs(port, wsPath = "/") {
-  return new Promise((resolve) => {
-    const key = crypto.randomBytes(16).toString("base64");
-    const client = net.connect(port, "127.0.0.1", () => {
-      client.write(
-        `GET ${wsPath} HTTP/1.1\r\n` +
-          "Host: 127.0.0.1\r\n" +
-          "Upgrade: websocket\r\n" +
-          "Connection: Upgrade\r\n" +
-          `Sec-WebSocket-Key: ${key}\r\n` +
-          "Sec-WebSocket-Version: 13\r\n" +
-          "\r\n",
-      );
-      resolve(client);
-    });
   });
 }
 
@@ -47,8 +22,18 @@ function requestPath(port, requestPath) {
         method: "GET",
       },
       (response) => {
-        response.resume();
-        response.on("end", () => resolve(response.statusCode));
+        let body = "";
+        response.setEncoding("utf8");
+        response.on("data", (chunk) => {
+          body += chunk;
+        });
+        response.on("end", () => {
+          resolve({
+            body,
+            headers: response.headers,
+            statusCode: response.statusCode,
+          });
+        });
       },
     );
     request.on("error", reject);
@@ -56,262 +41,141 @@ function requestPath(port, requestPath) {
   });
 }
 
-// Collects data from socket until predicate is true or timeout.
-function readUntil(socket, predicate, timeoutMs = 3000) {
-  return new Promise((resolve, reject) => {
-    let buffer = Buffer.alloc(0);
-    const timer = setTimeout(() => {
-      socket.removeListener("data", onData);
-      reject(new Error("readUntil timed out"));
-    }, timeoutMs);
-    function onData(data) {
-      buffer = Buffer.concat([buffer, data]);
-      if (predicate(buffer)) {
-        clearTimeout(timer);
-        socket.removeListener("data", onData);
-        resolve(buffer);
-      }
-    }
-    socket.on("data", onData);
-  });
-}
-
-function hasWsFrame(buf) {
-  const sep = Buffer.from("\r\n\r\n");
-  const hdrEnd = buf.indexOf(sep);
-  return hdrEnd !== -1 && buf.length >= hdrEnd + sep.length + 2;
-}
-
-function parseWsFrame(buf) {
-  const hdrEnd = buf.indexOf(Buffer.from("\r\n\r\n")) + 4;
-  const frame = buf.slice(hdrEnd);
-  assert.equal(frame[0], 0x81, "FIN + text opcode");
-  const payloadLen = frame[1] & 0x7f;
-  return frame.slice(2, 2 + payloadLen).toString();
-}
-
-// --- acceptWebSocket ---
-
-test("acceptWebSocket completes handshake with valid key", async () => {
-  const server = http.createServer();
-  const sockets = [];
-
-  server.on("upgrade", (req, socket) => {
-    const ws = acceptWebSocket(req, socket);
-    assert.ok(ws);
-    sockets.push(ws);
-  });
-
-  const port = await listenOnFreePort(server);
-  const client = await connectWs(port);
-  const data = await readUntil(client, (b) =>
-    b.toString().includes("\r\n\r\n"),
-  );
-
-  assert.match(data.toString(), /^HTTP\/1\.1 101/);
-  assert.match(data.toString(), /Sec-WebSocket-Accept:/);
-
-  client.destroy();
-  sockets.forEach((s) => s.destroy());
-  await new Promise((resolve) => server.close(resolve));
-});
-
-test("acceptWebSocket destroys socket when key is missing", async () => {
-  const server = http.createServer();
-
-  server.on("upgrade", (req, socket) => {
-    delete req.headers["sec-websocket-key"];
-    const result = acceptWebSocket(req, socket);
-    assert.equal(result, null);
-  });
-
-  const port = await listenOnFreePort(server);
-  const client = await connectWs(port);
-  await new Promise((resolve) => client.on("close", resolve));
-  await new Promise((resolve) => server.close(resolve));
-});
-
-// --- sendWebSocketMessage ---
-
-test("sendWebSocketMessage sends a valid text frame", async () => {
-  const server = http.createServer();
-  const sockets = [];
-
-  server.on("upgrade", (req, socket) => {
-    const ws = acceptWebSocket(req, socket);
-    sockets.push(ws);
-    sendWebSocketMessage(ws, '{"type":"reload"}');
-  });
-
-  const port = await listenOnFreePort(server);
-  const client = await connectWs(port);
-
-  const buffer = await readUntil(client, hasWsFrame);
-  const payload = parseWsFrame(buffer);
-  assert.equal(payload, '{"type":"reload"}');
-
-  client.destroy();
-  sockets.forEach((s) => s.destroy());
-  await new Promise((resolve) => server.close(resolve));
-});
-
-// --- createServer WebSocket integration ---
-
-test("createServer notifies WebSocket clients on file change", async () => {
-  const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
+function createFixture() {
+  const tmpDir = fs.mkdtempSync(path.join("/tmp", "overview-server-test-"));
   const outputPath = path.join(tmpDir, "output.html");
   const deckPath = path.join(tmpDir, "slide.md");
-  fs.writeFileSync(outputPath, "<html>initial</html>");
   fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
-  const originalWatch = fs.watch;
-  const fakeWatcher = new EventEmitter();
-  fakeWatcher.close = () => {};
-  fs.watch = () => fakeWatcher;
+  return { deckPath, outputPath, tmpDir };
+}
 
+async function closeServer(server) {
+  await new Promise((resolve) => server.close(resolve));
+}
+
+test("metadata reports missing output without caching", async () => {
+  const fixture = createFixture();
   const server = createServer({
-    deckDir: tmpDir,
-    deckPath,
-    outputPath,
+    deckDir: fixture.tmpDir,
+    deckPath: fixture.deckPath,
+    outputPath: fixture.outputPath,
     targetSlideId: undefined,
   });
 
   try {
     const port = await listenOnFreePort(server);
-    const client = await connectWs(port, "/__marp_agent__/ws");
+    const response = await requestPath(port, "/__marp_agent__/meta");
 
-    fs.writeFileSync(outputPath, "<html>updated</html>");
-    fakeWatcher.emit("change", "output.html");
-
-    const buffer = await readUntil(client, hasWsFrame, 3000);
-    const payload = parseWsFrame(buffer);
-    assert.equal(JSON.parse(payload).type, "reload");
-    client.destroy();
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.headers["cache-control"], "no-store");
+    assert.deepEqual(JSON.parse(response.body), { token: "missing" });
   } finally {
-    fs.watch = originalWatch;
-    await new Promise((resolve) => server.close(resolve));
-    fs.rmSync(tmpDir, { recursive: true, force: true });
+    await closeServer(server);
+    fs.rmSync(fixture.tmpDir, { recursive: true, force: true });
   }
 });
 
-test(
-  "createServer notifies late WebSocket client when file already changed",
-  async () => {
-    const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
-    const outputPath = path.join(tmpDir, "output.html");
-    const deckPath = path.join(tmpDir, "slide.md");
-    // Output does NOT exist yet (simulates waiting for first render).
-    fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
-    const originalWatch = fs.watch;
-    const fakeWatcher = new EventEmitter();
-    fakeWatcher.close = () => {};
-    fs.watch = () => fakeWatcher;
-
-    const server = createServer({
-      deckDir: tmpDir,
-      deckPath,
-      outputPath,
-      targetSlideId: undefined,
-    });
-
-    try {
-      const port = await listenOnFreePort(server);
-
-      // Create the output file BEFORE the WebSocket client connects.
-      fs.writeFileSync(outputPath, "<html>rendered</html>");
-      fakeWatcher.emit("change", "output.html");
-
-      // Let the internal debounce timer run once.
-      await new Promise((resolve) => setTimeout(resolve, 80));
-
-      // Now connect the WebSocket client — it should get an immediate reload.
-      const client = await connectWs(port, "/__marp_agent__/ws");
-      const buffer = await readUntil(client, hasWsFrame, 3000);
-      const payload = parseWsFrame(buffer);
-      assert.equal(JSON.parse(payload).type, "reload");
-      client.destroy();
-    } finally {
-      fs.watch = originalWatch;
-      await new Promise((resolve) => server.close(resolve));
-      fs.rmSync(tmpDir, { recursive: true, force: true });
-    }
-  },
-);
-
-test("createServer rejects WebSocket on wrong path", async () => {
-  const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
-  const outputPath = path.join(tmpDir, "output.html");
-  const deckPath = path.join(tmpDir, "slide.md");
-  fs.writeFileSync(outputPath, "<html>test</html>");
-  fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
-
+test("metadata token changes when rendered output changes", async () => {
+  const fixture = createFixture();
+  fs.writeFileSync(fixture.outputPath, "initial");
   const server = createServer({
-    deckDir: tmpDir,
-    deckPath,
-    outputPath,
-    targetSlideId: undefined,
-  });
-
-  const port = await listenOnFreePort(server);
-  const client = await connectWs(port, "/bad-path");
-  await new Promise((resolve) => client.on("close", resolve));
-
-  await new Promise((resolve) => server.close(resolve));
-  fs.rmSync(tmpDir, { recursive: true, force: true });
-});
-
-test("createServer returns 404 for malformed URL-encoded path and stays alive", async () => {
-  const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
-  const outputPath = path.join(tmpDir, "output.html");
-  const deckPath = path.join(tmpDir, "slide.md");
-  fs.writeFileSync(outputPath, "<html>test</html>");
-  fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
-
-  const server = createServer({
-    deckDir: tmpDir,
-    deckPath,
-    outputPath,
-    targetSlideId: undefined,
-  });
-
-  const port = await listenOnFreePort(server);
-  const malformedStatus = await requestPath(port, "/%E0%A4%A");
-  assert.equal(malformedStatus, 404);
-
-  const healthStatus = await requestPath(port, "/__marp_agent__/meta");
-  assert.equal(healthStatus, 200);
-
-  await new Promise((resolve) => server.close(resolve));
-  fs.rmSync(tmpDir, { recursive: true, force: true });
-});
-
-test("createServer survives fs.watch error events", async () => {
-  const tmpDir = fs.mkdtempSync(path.join("/tmp", "ws-test-"));
-  const outputPath = path.join(tmpDir, "output.html");
-  const deckPath = path.join(tmpDir, "slide.md");
-  fs.writeFileSync(outputPath, "<html>test</html>");
-  fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
-
-  const originalWatch = fs.watch;
-  const fakeWatcher = new EventEmitter();
-  fakeWatcher.close = () => {};
-  fs.watch = () => fakeWatcher;
-
-  const server = createServer({
-    deckDir: tmpDir,
-    deckPath,
-    outputPath,
+    deckDir: fixture.tmpDir,
+    deckPath: fixture.deckPath,
+    outputPath: fixture.outputPath,
     targetSlideId: undefined,
   });
 
   try {
     const port = await listenOnFreePort(server);
-    fakeWatcher.emit("error", new Error("EMFILE"));
+    const initial = await requestPath(port, "/__marp_agent__/meta");
+    fs.writeFileSync(fixture.outputPath, "updated output");
+    const updated = await requestPath(port, "/__marp_agent__/meta");
 
-    const status = await requestPath(port, "/__marp_agent__/meta");
-    assert.equal(status, 200);
+    assert.notEqual(
+      JSON.parse(updated.body).token,
+      JSON.parse(initial.body).token,
+    );
   } finally {
-    fs.watch = originalWatch;
-    await new Promise((resolve) => server.close(resolve));
-    fs.rmSync(tmpDir, { recursive: true, force: true });
+    await closeServer(server);
+    fs.rmSync(fixture.tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("overview page reports its current token without caching", async () => {
+  const fixture = createFixture();
+  fs.writeFileSync(
+    fixture.outputPath,
+    [
+      "<!doctype html>",
+      "<html><head><title>Deck</title></head><body>",
+      '<div id=":$p"><svg data-marpit-svg="" viewBox="0 0 1280 720">',
+      '<foreignObject><section id="1">Slide 1</section></foreignObject>',
+      "</svg></div></body></html>",
+    ].join(""),
+  );
+  const server = createServer({
+    deckDir: fixture.tmpDir,
+    deckPath: fixture.deckPath,
+    outputPath: fixture.outputPath,
+    targetSlideId: undefined,
+  });
+
+  try {
+    const port = await listenOnFreePort(server);
+    const metadata = await requestPath(port, "/__marp_agent__/meta");
+    const overview = await requestPath(port, "/");
+    const token = JSON.parse(metadata.body).token;
+
+    assert.equal(overview.statusCode, 200);
+    assert.equal(overview.headers["cache-control"], "no-store");
+    assert.match(overview.body, new RegExp(`data-reload-token="${token}"`));
+    assert.match(overview.body, /Slide 1/);
+  } finally {
+    await closeServer(server);
+    fs.rmSync(fixture.tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("malformed URL-encoded path returns 404 and server stays available", async () => {
+  const fixture = createFixture();
+  fs.writeFileSync(fixture.outputPath, "<html>test</html>");
+  const server = createServer({
+    deckDir: fixture.tmpDir,
+    deckPath: fixture.deckPath,
+    outputPath: fixture.outputPath,
+    targetSlideId: undefined,
+  });
+
+  try {
+    const port = await listenOnFreePort(server);
+    const malformed = await requestPath(port, "/%E0%A4%A");
+    const health = await requestPath(port, "/__marp_agent__/meta");
+
+    assert.equal(malformed.statusCode, 404);
+    assert.equal(health.statusCode, 200);
+  } finally {
+    await closeServer(server);
+    fs.rmSync(fixture.tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("removed WebSocket endpoint is not served", async () => {
+  const fixture = createFixture();
+  fs.writeFileSync(fixture.outputPath, "<html>test</html>");
+  const server = createServer({
+    deckDir: fixture.tmpDir,
+    deckPath: fixture.deckPath,
+    outputPath: fixture.outputPath,
+    targetSlideId: undefined,
+  });
+
+  try {
+    const port = await listenOnFreePort(server);
+    const response = await requestPath(port, "/__marp_agent__/ws");
+
+    assert.equal(response.statusCode, 404);
+  } finally {
+    await closeServer(server);
+    fs.rmSync(fixture.tmpDir, { recursive: true, force: true });
   }
 });
