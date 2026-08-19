@@ -141,7 +141,7 @@ test("overview smoke", async ({ browserName }, testInfo) => {
     }
 
     const page = await browser.newPage();
-    await page.goto(overviewUrl, { waitUntil: "networkidle" });
+    await page.goto(overviewUrl, { waitUntil: "domcontentloaded" });
     await expect(page.locator("section[id]").first()).toBeVisible();
     await browser.close();
   } finally {

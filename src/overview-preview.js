@@ -420,52 +420,16 @@ function buildWaitingDocument(deckName, reloadToken) {
 function buildReloadScript(metaUrl) {
   return `
         const reloadToken = document.body.dataset.reloadToken;
-        let wsRetries = 0;
-        const maxWsRetries = 5;
-
-        function connectLiveReload() {
-          const wsProtocol = location.protocol === "https:" ? "wss:" : "ws:";
-          const wsUrl = \`\${wsProtocol}//\${location.host}/__marp_agent__/ws\`;
-
-          try {
-            const ws = new WebSocket(wsUrl);
-
-            ws.addEventListener("open", () => { wsRetries = 0; });
-
-            ws.addEventListener("message", (event) => {
-              try {
-                const data = JSON.parse(event.data);
-                if (data.type === "reload") {
-                  window.location.reload();
-                }
-              } catch {
-                // Ignore malformed messages.
-              }
-            });
-
-            ws.addEventListener("close", () => {
-              wsRetries++;
-              if (wsRetries >= maxWsRetries) {
-                startPolling();
-                return;
-              }
-              setTimeout(connectLiveReload, 1000);
-            });
-
-            ws.addEventListener("error", () => {
-              ws.close();
-            });
-          } catch {
-            startPolling();
-          }
-        }
+        let pollingTimer;
+        let reloadStarted = false;
 
         async function pollForReload() {
           try {
             const response = await fetch("${metaUrl}", { cache: "no-store" });
             const payload = await response.json();
 
-            if (payload.token !== reloadToken) {
+            if (payload.token !== reloadToken && !reloadStarted) {
+              reloadStarted = true;
               window.location.reload();
             }
           } catch {
@@ -474,10 +438,17 @@ function buildReloadScript(metaUrl) {
         }
 
         function startPolling() {
-          window.setInterval(pollForReload, 500);
+          if (pollingTimer !== undefined) return;
+          pollForReload();
+          pollingTimer = window.setInterval(pollForReload, 500);
         }
 
-        connectLiveReload();`;
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") pollForReload();
+        });
+        window.addEventListener("pageshow", pollForReload);
+
+        startPolling();`;
 }
 
 function escapeHtml(value) {
