@@ -220,7 +220,7 @@ test("title and normal slide rules share the same accent treatment", () => {
 });
 
 test("theme sources explicitly bound Tailwind class detection", () => {
-  for (const themeName of ["lab", "muji"]) {
+  for (const themeName of ["lab", "muji", "toshiba"]) {
     const css = fs.readFileSync(
       path.join(repoRoot, "themes/src", `${themeName}.css`),
       "utf8",
@@ -294,7 +294,7 @@ test("generated design token CSS is fresh for all designs", () => {
 });
 
 test("all DESIGN.md files pass designmd lint without warnings", () => {
-  for (const designName of ["lab", "muji"]) {
+  for (const designName of ["lab", "muji", "toshiba"]) {
     const result = spawnSync(
       getDesignmdBin(),
       ["lint", `designs/${designName}/DESIGN.md`],
