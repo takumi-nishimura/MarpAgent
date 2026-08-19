@@ -22,7 +22,19 @@
 @import "./_shared/_code.css";
 @import "./_shared/_colorschemes.css";
 
-/* lab theme specific settings (add as needed) */
+/* Lab theme font defaults remain overridable from deck-local styles. */
+section {
+  --font-body: "Noto Sans JP", sans-serif;
+  --font-display: var(--font-body);
+  font-family: var(--font-body);
+}
+
+section h1,
+section h2,
+section h3,
+section h4 {
+  font-family: var(--font-display);
+}
 
 /* Presenter cursor (laser pointer) settings */
 section {
