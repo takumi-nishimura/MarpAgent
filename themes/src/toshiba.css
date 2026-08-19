@@ -1,0 +1,271 @@
+/*!
+ * @theme toshiba
+ * @size 16:9 1280px 720px
+ * @size 4:3 1024px 768px
+ * @size a4-portrait 210mm 297mm
+ * @size a4-landscape 297mm 210mm
+ */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
+@import "tailwindcss" source(none);
+@source "../../decks/**/*.md";
+@source "../../fixtures/**/*.md";
+@source "../../.agents/skills/**/*.md";
+
+@import "./_generated/toshiba-design-tokens.css";
+@import "./_shared/_base.css";
+@import "./_shared/_colors.css";
+@import "./_shared/_typography.css";
+@import "./_shared/_layouts.css";
+@import "./_shared/_paper.css";
+@import "./_shared/_callouts.css";
+@import "./_shared/_code.css";
+@import "./_shared/_colorschemes.css";
+
+section {
+  --fg: var(--color-on-surface);
+  --bg: var(--color-neutral);
+  --fg-muted: var(--color-secondary);
+  --highlight: var(--color-accent-strong);
+  --accent-rule: var(--color-accent-strong);
+  --accent-rule-width: var(--spacing-line-width);
+  --action-blue-soft: color-mix(
+    in srgb,
+    var(--color-tertiary) 12%,
+    var(--color-neutral)
+  );
+  --gradient-mid: var(--action-blue-soft);
+  --bg-gray-5: var(--color-surface-muted);
+  --color-em: var(--color-emphasis);
+  --color-strong: var(--color-on-surface);
+  --padding-x: var(--spacing-slide-x);
+  --header-height: var(--spacing-header-height);
+  --header-title-inset: var(--spacing-header-title-inset);
+  --header-group-left-shift: var(--spacing-header-group-left-shift);
+  --title-stripe-start: var(--spacing-title-stripe-start);
+  --title-stripe-light-end: var(--spacing-title-stripe-light-end);
+  --title-stripe-blue-end: var(--spacing-title-stripe-blue-end);
+  --title-stripe-red-end: var(--spacing-title-stripe-red-end);
+  --logo-title-size: var(--spacing-logo-title-size);
+  --logo-header-size: var(--spacing-logo-header-size);
+
+  font-family: var(--font-body-md), sans-serif;
+  font-size: var(--text-body-md);
+}
+
+section.invert {
+  --fg: var(--color-on-primary);
+  --bg: var(--color-primary);
+  --fg-muted: var(--color-muted-invert);
+  --highlight: var(--color-light-blue);
+  --accent-rule: var(--color-light-blue);
+  --bg-gray-5: var(--color-secondary);
+}
+
+section h1,
+section h2,
+section h3,
+section h4 {
+  color: var(--fg);
+  font-weight: var(--font-weight-headline-md);
+  letter-spacing: var(--tracking-headline-md);
+}
+
+section a {
+  color: var(--color-tertiary);
+}
+
+section.invert a {
+  color: var(--color-light-blue);
+}
+
+section strong {
+  color: var(--color-strong);
+  font-weight: var(--font-weight-label-md);
+}
+
+section.invert strong {
+  color: var(--color-on-primary);
+}
+
+/* Underline accents follow the brand red instead of the shared deck blue,
+   kept thin and offset so the rule reads as an accent rather than a marker */
+section .underline {
+  text-decoration-color: var(--color-accent-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+section.title {
+  background-color: var(--bg);
+  background-image: linear-gradient(
+    135deg,
+    transparent 0 var(--title-stripe-start),
+    var(--action-blue-soft) var(--title-stripe-start)
+      var(--title-stripe-light-end),
+    var(--color-tertiary) var(--title-stripe-light-end)
+      var(--title-stripe-blue-end),
+    var(--color-accent-strong) var(--title-stripe-blue-end)
+      var(--title-stripe-red-end),
+    transparent var(--title-stripe-red-end)
+  );
+}
+
+section.title h1 {
+  box-sizing: border-box;
+  max-width: var(--spacing-title-copy-width);
+  margin-top: var(--spacing-title-heading-top);
+  margin-left: 0;
+  margin-right: auto;
+  padding: 0 0 0 var(--spacing-title-heading-inset);
+  border: 0;
+  border-left: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+  color: var(--color-on-surface);
+  font-size: var(--text-display);
+  font-weight: var(--font-weight-display);
+  text-align: left;
+}
+
+section.title > p,
+section.title .author {
+  max-width: var(--spacing-title-copy-width);
+  margin-top: var(--spacing-title-subtitle-top);
+  margin-left: calc(
+    var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset)
+  );
+  margin-right: auto;
+  color: var(--color-secondary);
+  font-size: var(--text-body-md);
+  text-align: left;
+  align-items: flex-start;
+}
+
+section.title.invert h1 {
+  color: var(--color-on-primary);
+}
+
+section.title.invert > p,
+section.title.invert .author {
+  color: var(--color-muted-invert);
+}
+
+section:not(.title) > header:not(.paper-header) + * {
+  margin-top: var(--spacing-content-top-gap);
+}
+
+section:not(.title) header:not(.paper-header) {
+  background: var(--bg);
+  border-bottom: var(--spacing-line-width) solid var(--color-table-border);
+  color: var(--fg);
+  font-size: var(--text-label-md);
+  font-weight: var(--font-weight-label-md);
+  padding-left: calc(
+    (var(--padding-x) * 2) - var(--header-group-left-shift) +
+      var(--spacing-accent-bar-width) + var(--header-title-inset)
+  );
+}
+
+section:not(.title) header:not(.paper-header)::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc((var(--padding-x) * 2) - var(--header-group-left-shift));
+  width: var(--spacing-accent-bar-width);
+  height: var(--spacing-accent-bar-height);
+  background: var(--color-accent-strong);
+  transform: translateY(-50%);
+}
+
+section:not(.title) header:not(.paper-header)::after {
+  background-size:
+    auto var(--logo-header-size),
+    auto var(--logo-header-size),
+    auto var(--logo-header-size),
+    auto var(--logo-header-size),
+    auto var(--logo-header-size);
+}
+
+section::after {
+  color: var(--color-secondary);
+}
+
+section.invert::after {
+  color: var(--color-muted-invert);
+}
+
+.summary-box,
+.gap-box,
+.feature-grid > div,
+.metric-grid > *,
+.timeline > li {
+  background: var(--bg-gray-5);
+  border-radius: var(--radius-none);
+}
+
+.summary-box {
+  border-left: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.gap-box,
+.feature-grid > div {
+  border: var(--spacing-line-width) solid var(--color-table-border);
+}
+
+.metric-grid > * {
+  border-top: var(--spacing-line-width) solid var(--color-table-border);
+  border-right: var(--spacing-line-width) solid var(--color-table-border);
+  border-bottom: var(--spacing-line-width) solid var(--color-table-border);
+  border-left: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+}
+
+.timeline {
+  --timeline-marker-fg: var(--color-tertiary);
+}
+
+.timeline > li {
+  border-top: var(--spacing-accent-bar-width) solid var(--color-tertiary);
+}
+
+.timeline > li:not(:last-child)::after {
+  border-color: var(--color-tertiary);
+}
+
+.note,
+.tip,
+.important,
+.warning,
+.caution {
+  border-radius: var(--radius-md);
+}
+
+.paper-header {
+  background: var(--color-tertiary);
+  border-left: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+  border-radius: var(--radius-none);
+}
+
+.paper-section {
+  border-color: var(--color-table-border);
+  border-radius: var(--radius-none);
+}
+
+.paper-section > h2 {
+  background: var(--color-surface-muted);
+  border-left: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+  color: var(--color-on-surface);
+}
+
+.paper-section.highlight {
+  border-color: var(--color-accent-strong);
+  background: var(--action-blue-soft);
+}
+
+.paper-section.highlight > h2 {
+  background: var(--color-accent-strong);
+  color: var(--color-on-primary);
+}
+
+.paper-footer {
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-none);
+}

@@ -31,12 +31,15 @@
 
   /* Let body-level centering and fill layouts use the remaining space. */
   section:not(.title):has(> .centered),
-  section:not(.title):has(> .fill) {
+  section:has(> .fill) {
     --fill-bottom-safe: 1.25em;
     display: flex;
     flex-direction: column;
   }
-  section:not(.title) > .fill {
+  section.title:has(> .fill) {
+    --fill-bottom-safe: 0;
+  }
+  section > .fill {
     flex: 1;
     margin-bottom: var(--fill-bottom-safe);
     min-height: 0;
@@ -273,25 +276,35 @@
   .col.fill > * {
     min-height: 0;
   }
-  .place-top {
+  .col.fill {
+    align-items: stretch;
+  }
+  .box.place-top,
+  .col > div.place-top {
     --place-block: flex-start;
   }
-  .place-middle {
+  .box.place-middle,
+  .col > div.place-middle {
     --place-block: center;
   }
-  .place-bottom {
+  .box.place-bottom,
+  .col > div.place-bottom {
     --place-block: flex-end;
   }
-  .place-spread {
+  .box.place-spread,
+  .col > div.place-spread {
     --place-block: space-between;
   }
-  .place-left {
+  .box.place-left,
+  .col > div.place-left {
     --place-inline: flex-start;
   }
-  .place-center {
+  .box.place-center,
+  .col > div.place-center {
     --place-inline: center;
   }
-  .place-right {
+  .box.place-right,
+  .col > div.place-right {
     --place-inline: flex-end;
   }
 }

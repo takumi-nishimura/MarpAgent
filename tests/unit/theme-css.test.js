@@ -86,15 +86,29 @@ test("theme CSS provides reusable layout component classes", () => {
     );
     assert.match(css, /\.summary-box\s*\{[\s\S]*width:\s*fit-content/);
     assert.match(css, /\.self-center\s*\{[\s\S]*margin-left:\s*auto/);
-    assert.match(css, /section:not\(\.title\):has\(>\s*\.fill\)/);
-    assert.match(css, /section:not\(\.title\)\s*>\s*\.fill\s*\{[\s\S]*flex:\s*1/);
+    assert.match(css, /section:has\(>\s*\.fill\)/);
+    assert.match(css, /section\s*>\s*\.fill\s*\{[\s\S]*flex:\s*1/);
+    assert.match(
+      css,
+      /section\.title:has\(>\s*\.fill\)\s*\{[\s\S]*--fill-bottom-safe:\s*0/,
+    );
     assert.match(css, /--fill-bottom-safe:\s*1\.25em/);
     assert.match(css, /margin-bottom:\s*var\(--fill-bottom-safe\)/);
+    assert.match(css, /\.col\.fill\s*\{[\s\S]*align-items:\s*stretch/);
     assert.match(css, /--place-block:\s*flex-start/);
     assert.match(css, /--place-inline:\s*stretch/);
-    assert.match(css, /\.place-middle\s*\{[\s\S]*--place-block:\s*center/);
-    assert.match(css, /\.place-spread\s*\{[\s\S]*--place-block:\s*space-between/);
-    assert.match(css, /\.place-center\s*\{[\s\S]*--place-inline:\s*center/);
+    assert.match(
+      css,
+      /\.box\.place-middle,\s*\.col\s*>\s*div\.place-middle\s*\{[\s\S]*--place-block:\s*center/,
+    );
+    assert.match(
+      css,
+      /\.box\.place-spread,\s*\.col\s*>\s*div\.place-spread\s*\{[\s\S]*--place-block:\s*space-between/,
+    );
+    assert.match(
+      css,
+      /\.box\.place-center,\s*\.col\s*>\s*div\.place-center\s*\{[\s\S]*--place-inline:\s*center/,
+    );
     assert.doesNotMatch(css, /\.v-center\b/);
     assert.doesNotMatch(css, /\.h-center\b/);
     assert.doesNotMatch(css, /\.center\b/);
@@ -139,6 +153,19 @@ test("lab default highlight follows the warm accent token", () => {
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
     assert.match(css, /--highlight:\s*var\(--color-accent-strong\)/);
     assert.doesNotMatch(css, /--highlight:\s*var\(--color-tertiary\)/);
+  }
+});
+
+test("lab font defaults remain overridable after theme compilation", () => {
+  for (const relativePath of ["themes/src/lab.css", "themes/lab.css"]) {
+    const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+    assert.match(css, /--font-body:\s*"Noto Sans JP",\s*sans-serif/);
+    assert.match(css, /--font-display:\s*var\(--font-body\)/);
+    assert.match(css, /font-family:\s*var\(--font-body\)/);
+    assert.match(
+      css,
+      /section h1,?[\s\S]*section h2,?[\s\S]*section h3,?[\s\S]*section h4\s*\{[\s\S]*font-family:\s*var\(--font-display\)/,
+    );
   }
 });
 
@@ -193,7 +220,7 @@ test("title and normal slide rules share the same accent treatment", () => {
 });
 
 test("theme sources explicitly bound Tailwind class detection", () => {
-  for (const themeName of ["lab", "muji"]) {
+  for (const themeName of ["lab", "muji", "toshiba"]) {
     const css = fs.readFileSync(
       path.join(repoRoot, "themes/src", `${themeName}.css`),
       "utf8",
@@ -267,7 +294,7 @@ test("generated design token CSS is fresh for all designs", () => {
 });
 
 test("all DESIGN.md files pass designmd lint without warnings", () => {
-  for (const designName of ["lab", "muji"]) {
+  for (const designName of ["lab", "muji", "toshiba"]) {
     const result = spawnSync(
       getDesignmdBin(),
       ["lint", `designs/${designName}/DESIGN.md`],
@@ -354,6 +381,21 @@ test("muji theme renders a smoke deck", () => {
 
   assert.match(html, /MUJI Theme/);
   assert.match(html, /data-theme="muji"/);
+});
+
+test("toshiba theme renders a smoke deck", () => {
+  const marp = new Marp();
+  marp.themeSet.add(
+    fs.readFileSync(path.join(repoRoot, "themes/toshiba.css"), "utf8"),
+  );
+  const markdown = fs.readFileSync(
+    path.join(repoRoot, "fixtures/toshiba-slide.md"),
+    "utf8",
+  );
+  const { html } = marp.render(markdown);
+
+  assert.match(html, /Toshiba Theme/);
+  assert.match(html, /data-theme="toshiba"/);
 });
 
 test("muji header title inset comes from design tokens", () => {
