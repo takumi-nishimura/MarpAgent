@@ -1,41 +1,23 @@
 ---
 name: slide-review
-description: Validate a MarpAgent slide deck and remediate all findings until clean.
+description: Review MarpAgent deck content and rendered layout, report actionable findings, and fix them when remediation is requested.
 argument-hint: <deck-name>
 ---
 
-Validate and remediate `decks/$ARGUMENTS/slide.md`.
+# Review a deck
 
-## Steps
+Resolve `decks/<name>/slide.md` or the explicit deck path. Match the review scope: a report-only request does not authorize editing slides; when fixes are requested, complete them within the agreed content and design constraints. Do not turn a review of a claim into a redesign of the whole deck.
 
-1. Run validation with a report:
-   ```bash
-   npm run marpx -- decks/$ARGUMENTS/slide.md -v --report-dir out/$ARGUMENTS
-   ```
+Read the deck and relevant brief/source material, then use [marp-validator](../marp-validator/SKILL.md):
 
-2. Read `out/$ARGUMENTS/report.md`. For each finding, classify the action using the **marp-validator** skill:
-   - **Split** — `visual-overflow`, `overflow-risk`, `dense-bullets`, `figure-text-density`, `comparison-overpacked`
-   - **Trim** — heading or line too long
-   - **Retype** — forbidden class in use (`typography-drift`)
-   - **Resize** — `visual-overflow` on a figure-only slide (no body text to split). Add `style="width: N%;"` to the `<figure>` per **marp-components** until the slide fits. This is the exception to the split-first rule.
+```sh
+npm run marpx -- decks/<name>/slide.md -v --report-dir out/<review-run>
+```
 
-3. Apply remediations one slide at a time.
-   - If one slide has multiple findings, fix that slide in one pass before re-validating
-   - After each remediation pass, re-run:
-     ```bash
-     npm run marpx -- decks/$ARGUMENTS/slide.md -v --report-dir out/$ARGUMENTS
-     ```
-     Re-read the refreshed report before the next pass
+Use a fresh report directory or a verified directory belonging to this review. Read the findings and actual rendered slides: the validator does not check scientific support, narrative, every collision, or asset meaning. Distinguish pre-existing problems, introduced regressions, and confirmed heuristic false positives.
 
-4. `typography-drift` → remove `.text-xs2` / `.text-xs3`; split content across two slides.
+For authorized fixes, group related corrections into coherent passes. Trim or split dense text while preserving the claim; resize an oversized figure without shrinking body text; correct the layout primitive or source link when that is the cause. If splitting conflicts with a fixed slide count or changes meaning, resolve the concrete tradeoff rather than blindly applying the same remedy to every finding.
 
-5. `long-heading` → shorten to < 48 chars; move cut detail into the slide body.
+Revalidate and reread affected slides after meaningful edits. Stop repeating a check when it has passed and no new relevant changes were made. If an environment failure or unresolved content decision prevents completion, report the actual state; do not claim a clean rendered deck from `Findings: 0` alone.
 
-6. Final check:
-   ```bash
-   npm run marpx -- decks/$ARGUMENTS/slide.md -v
-   ```
-
-## Done When
-
-`Findings: 0`. Then delete `out/$ARGUMENTS/`.
+Deliver actionable findings or the repaired deck, relevant validation/visual evidence, and remaining limitations. Retain the requested report and screenshots. Do not delete the entire `out/<name>/` directory as a success step; remove only disposable artifacts created by this run when cleanup is appropriate.

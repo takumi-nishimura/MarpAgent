@@ -1,59 +1,24 @@
 ---
 name: paper-new
-description: Create a new MarpAgent A-series paper deck end-to-end — scaffold, author the single-page paper, validate.
+description: Create a single-page MarpAgent research handout or poster using the A4 portrait or landscape paper canvas.
 disable-model-invocation: true
 argument-hint: <deck-name>
 ---
 
-Create a new A-series paper deck at `decks/$ARGUMENTS`.
+# New paper canvas
 
-A paper deck is one full-page A-series canvas, not a slide sequence. Follow the
-**marp-paper** skill for all structure and class details.
+Create the requested one-page research output under `decks/<name>/`. Read [marp-paper](../marp-paper/SKILL.md) for its structure. Use the supplied orientation, sections, sources, and output format. If unspecified, start with A4 portrait and an appropriate section plan, stating consequential assumptions. Pause for a design review only when requested or when a missing requirement materially changes the result.
 
-## Steps
+Inspect the destination first: the scaffolder overwrites existing files. Use a new destination or preserve existing work.
 
-1. Scaffold:
-   ```bash
-   npm run marpx -- -n decks/$ARGUMENTS --paper
-   ```
-   This creates a single `paper.md` (A4 portrait) plus `assets/` and `shared`.
-   No `brief.md` / `outline.md` — a paper deck does not use that pipeline.
+```sh
+npm run marpx -- -n decks/<name> --paper
+```
 
-2. **Confirm orientation and sections with the user.** Default is A4 portrait
-   with three columns. Ask whether they want landscape (`size: a4-landscape`,
-   four columns) and which sections the page needs (e.g. Introduction, Method,
-   Results, Conclusion, References). Revise the placeholder structure until
-   they approve.
+The scaffold creates `paper.md`, an informational `README.md`, assets, and a shared-assets link. It has no brief/outline pipeline. Replace placeholder authors, text, contacts, and assets with verified content; omit unknown optional details rather than inventing them. Do not delete a README merely because the template once generated it.
 
-3. Author `decks/$ARGUMENTS/paper.md`:
-   - Keep the `<header>` band, `<div class="paper-columns">` body, and
-     `<footer>` band — one slide, no `---` separators in the body.
-   - One `<div class="paper-col">` per column; one
-     `<section class="paper-section">` per topic.
-   - If the work has a single headline result (e.g. a percentage, RMSE, or
-     n-vs-baseline number), add a `paper-section highlight` + `paper-stat`
-     block — the scaffold does NOT include one by default. Fuse it with the
-     Results section per **marp-paper** placement rules. If the contribution is
-     qualitative (protocol, framework, taxonomy), skip the highlight card
-     entirely.
-   - The sibling `README.md` written by the scaffold is informational only;
-     delete it once the author no longer needs the reminder.
-   - Replace placeholder text instead of appending to it.
+Keep one canvas with header, paper columns, and footer, with no body-level slide separators. Use result emphasis only when supported: a headline metric belongs inside its Results card; a qualitative contribution needs no invented number. Preserve source attribution and readable figures.
 
-4. Validate and fix:
-   ```bash
-   npm run marpx -- decks/$ARGUMENTS/paper.md -v
-   ```
-   On `visual-overflow`: trim a card, rebalance columns, or move a card to
-   another column. Never shrink the font below readability. Repeat until clean.
+Validate using [marp-validator](../marp-validator/SKILL.md) and inspect the entire rendered page, including captions and footer. Rebalance columns or shorten cards when necessary; do not convert the paper into a slide sequence or shrink text below readability to pass. A paper's zero heuristic findings do not demonstrate a successful visual check.
 
-5. Optional — export for printing (run only when the user asks for a PDF):
-   ```bash
-   npm run marpx -- decks/$ARGUMENTS/paper.md --pdf
-   ```
-
-## Done When
-
-`Findings: 0` reported by the validator, and the paper deck reviews well in a
-single-shot preview. PDF export is a separate request, not part of the success
-contract.
+Deliver the completed page and the requested output formats, including PDF when requested for printing. State its actual page size and any enlargement instructions. Report remaining findings or unavailable checks instead of presenting an unverified render as print-ready.

@@ -1,80 +1,31 @@
 ---
 name: theme-new
-description: Create or adapt a MarpAgent theme from a URL, brand guide, existing DESIGN.md, or visual brief. Use when adding a design token source, theme CSS entry, and smoke fixture for a new MarpAgent visual identity.
+description: Create or adapt a reusable MarpAgent theme from a visual reference, brand guide, or DESIGN.md, preserving shared slide and paper components.
 ---
 
-# Theme New
+# New theme
 
-## Overview
+Inspect the supplied reference: browse a provided URL or read the brand guide/DESIGN.md, then identify the colors, typography, spacing, shapes, and visual tone needed for this theme. Distinguish observed choices from adaptations; do not copy long source prose or silently redesign an unrelated deck.
 
-Create a new MarpAgent visual design while keeping `DESIGN.md` as the token
-source of truth. The generated theme should reuse shared slide and A-series
-paper components, with theme-specific choices expressed through design tokens.
+Inspect existing target files before scaffolding. Use `--force` only for an intended, reviewed overwrite that preserves unrelated work.
 
-## Workflow
+```sh
+npm run marpx -- --theme-new <name> --no-build
+```
 
-1. Inspect the source material.
-   - If the user provides a URL, browse it first and extract the visual system:
-     colors, typography, spacing, shape, component tone, and examples.
-   - If the source is another `DESIGN.md`, treat that document as the design
-     reference, but adapt it to MarpAgent's required token schema.
-   - Summarize and adapt the design; do not copy long source prose into the repo.
+Add `--source-url <url>` when a URL is the reference; it records provenance and does not extract the design for you. The scaffold creates `designs/<name>/DESIGN.md`, `themes/src/<name>.css`, and `fixtures/<name>-slide.md`.
 
-2. Scaffold the theme.
+Make `DESIGN.md` the source of literal brand values. Preserve its required frontmatter, structure, and shared-component compatibility tokens; replace scaffold rationale with source-specific decisions. The CSS entry imports `./_generated/<name>-design-tokens.css` and maps tokens to behavior, reusing `themes/src/_shared/` before introducing local components. Do not duplicate brand colors, typography, spacing, or radii in CSS or generated files.
 
-   ```bash
-   npm run marpx -- --theme-new <name> --source-url <url> --no-build
-   ```
+Build and verify the result:
 
-   Use `--no-build` while source tokens are still being edited. Omit it only
-   when the scaffold is already final enough to compile. Use `--force` only
-   after checking the existing files and confirming overwrite is intended.
+```sh
+npm run marpx -- --theme <name>
+npm run design:lint
+npm run design:tokens:check
+npm run marpx -- fixtures/<name>-slide.md -v --strict-visual
+```
 
-3. Edit `designs/<name>/DESIGN.md`.
-   - Keep Google design.md frontmatter and section structure intact.
-   - Keep all compatibility tokens required by shared CSS unless the shared
-     theme contract is being changed in the same work.
-   - Replace scaffold notes and `lab`-derived rationale with source-specific
-     rationale.
-   - Make `DESIGN.md` the only source of literal theme values such as colors,
-     typography sizes, spacing, and radii.
+Inspect the rendered fixture and any relevant paper layout, plus the generated token CSS and compiled theme. Keep smoke content focused on stable theme primitives. If shared CSS/runtime behavior changes, run the affected unit tests and `validate:fixtures`/Playwright checks; a theme-token edit does not require unrelated test cycles after its relevant checks pass. Report pre-existing failures separately from regressions.
 
-4. Edit `themes/src/<name>.css` only for mapping and component behavior.
-   - Import `./_generated/<name>-design-tokens.css`.
-   - Do not add literal colors, `rgba(...)`, or hard-coded brand values.
-   - Prefer shared imports from `themes/src/_shared/` before adding new CSS.
-   - Keep slide sizes as canvas families: `16:9`, `4:3`, `a4-portrait`,
-     `a4-landscape`, and custom pixel sizes handled by the existing runtime.
-
-5. Validate the theme.
-
-   ```bash
-   npm run marpx -- --theme <name>
-   npm run design:lint
-   npm run design:tokens:check
-   npm test
-   npm run marpx -- fixtures/<name>-slide.md -v
-   ```
-
-   If the theme changes shared behavior, also run:
-
-   ```bash
-   npm run validate:fixtures
-   npx playwright test
-   ```
-
-6. Review generated artifacts.
-   - Ensure `themes/src/_generated/<name>-design-tokens.css` is updated.
-   - Ensure `themes/<name>.css` is updated when the theme is compiled.
-   - Keep the smoke fixture focused on stable theme primitives, not deck-specific
-     content.
-
-## Boundaries
-
-- Do not modify deck templates or existing default theme selection unless the
-  user explicitly asks.
-- Do not introduce a separate poster theme; use A-series canvas sizes and paper
-  layout components.
-- Do not use deck-local CSS as a substitute for reusable theme components.
-- Do not shrink content with `.text-xs2`, `.text-xs3`, `<small>`, or tiny inline
-  font sizes to make a fixture pass validation.
+Preserve default theme selection and deck templates unless their change is requested. Use supported canvas sizes and shared paper components rather than inventing a separate poster theme. Do not use deck-local CSS or unreadably small type to make the fixture pass. Deliver the design source, CSS, generated artifacts, fixture, and actual validation status.

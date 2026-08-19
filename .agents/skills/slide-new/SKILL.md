@@ -1,57 +1,30 @@
 ---
 name: slide-new
-description: Create a new MarpAgent slide deck end-to-end — scaffold, fill brief, generate outline, author slides, validate.
+description: Create a new MarpAgent presentation from a brief or topic, including the outline, authored slides, and validation.
 disable-model-invocation: true
 argument-hint: <deck-name>
 ---
 
-Create a new deck at `decks/$ARGUMENTS`.
+# New slide deck
 
-## Steps
+Create the requested presentation under `decks/<name>/`. Use the supplied audience, duration, message, sources, and assets; ask only for missing information that materially changes the deck. If the user requests brief/outline approval stages, honor them. Otherwise use stated assumptions and continue to the requested finished draft without mandatory approval pauses.
 
-1. Scaffold:
-   ```bash
-   npm run marpx -- -n decks/$ARGUMENTS
-   ```
-   The scaffold creates placeholder `brief.md` and `slide.md` files. Before outline approval, treat `slide.md` as an untouched scaffold artifact, not authored content.
+Inspect the target before scaffolding: the current scaffolder overwrites files in an existing directory. Choose a new destination or preserve the existing work rather than rerunning it blindly.
 
-2. Fill `decks/$ARGUMENTS/brief.md` — all 8 sections, no placeholders:
-   Audience, Duration, Core Message, Audience Action, Required Sections, Must-Use Assets, Forbidden Patterns, References.
+```sh
+npm run marpx -- -n decks/<name>
+```
 
-3. **Review brief with the user.** Present the completed brief and ask for feedback before proceeding. Revise until the user approves.
-   Stop here until the user responds. Do not generate `outline.md` yet.
+Complete the eight brief sections: Audience, Duration, Core Message, Audience Action, Required Sections, Must-Use Assets, Forbidden Patterns, and References. Use verified source paths/URLs, mark consequential assumptions, and use “none specified” where appropriate instead of inventing requirements.
 
-4. Generate outline:
-   ```bash
-   npm run marpx -- decks/$ARGUMENTS/brief.md --outline
-   ```
-   The generator dedupes any Title/Agenda the brief already lists and carries layout-variant hints (`[multi-column]`, `(closing variant)`, `using the feature-grid variant`, …) through to the outline's `Layout hint:` field — no manual sweep needed.
+```sh
+npm run marpx -- decks/<name>/brief.md --outline
+```
 
-5. **Review outline with the user.** Present the slide plan (titles, layout hints, flow) and discuss:
-   - Are the sections in the right order?
-   - Should any slides be added, removed, or merged?
-   - Are the layout choices appropriate?
+Use the generated outline as an editable plan; inspect it before authoring and preserve intentional human edits when regenerating. The generator deduplicates Title/Agenda and carries variant hints, but the narrative and evidence still need review. Do not stop at the scaffold or outline when the request is for a deck.
 
-   Revise `outline.md` based on feedback before proceeding.
-   Stop here again until the user approves the outline.
+Read [marp-slide-types](../marp-slide-types/SKILL.md) for the chosen layouts and [marp-components](../marp-components/SKILL.md) only for components used. Replace scaffold placeholders in `slide.md`, preserve a coherent section-header/pagination flow, and use the requested theme. `two-column` is a template label using `.col`, not a theme class. Keep existing shared components and repository media-ownership conventions.
 
-6. Read `decks/$ARGUMENTS/outline.md`. Each slide has a layout hint such as `title`, `content`, `content (agenda variant)`, `content (summary variant)`, `content (closing variant)`, or `two-column`. These are template labels, not theme class names. Apply the matching template from the **marp-slide-types** skill.
-   - `title` maps to the opening cover slide template
-   - `content (...)` keeps the `content` base type and applies the named variant
-   - `two-column` maps to the standard `.col` template unless the outline or user explicitly asks for `multi-column` or `feature-grid`
-   - Multi-column, feature-grid, and summary-box styles are built into the theme — do not paste scoped component CSS into `slide.md`.
+Validate with [marp-validator](../marp-validator/SKILL.md), fix actual issues, and inspect the rendered deck. Prefer trimming, splitting, or resizing a figure over making text unreadable; respect any fixed slide-count constraint. Recheck after substantive corrections, not after every unrelated small edit.
 
-7. Author `decks/$ARGUMENTS/slide.md`:
-   - One slide per `---` separator
-   - Carry `<!-- _header: ... -->` consistently within each section
-   - Replace the scaffold placeholder content instead of appending to it
-
-8. Validate and fix:
-   ```bash
-   npm run marpx -- decks/$ARGUMENTS/slide.md -v
-   ```
-   On `visual-overflow`, `overflow-risk`, `dense-bullets`, `figure-text-density`, or `comparison-overpacked`: split the slide. Never shrink text. Repeat until clean.
-
-## Done When
-
-`Findings: 0` reported by the validator.
+Complete when the requested content is source-backed, placeholders are replaced, narrative and assets are checked, and validation plus visual inspection support the delivered deck. Report any remaining findings or unavailable checks accurately. Deliver the requested formats; export PDF when included in the request, and do not start a persistent preview server unless needed or requested.

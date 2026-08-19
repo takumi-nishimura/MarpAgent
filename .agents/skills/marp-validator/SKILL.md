@@ -1,61 +1,27 @@
 ---
 name: marp-validator
-description: Validator rules and hard limits for MarpAgent slides. Use when running validation, remediating findings, or checking whether a slide is within safe content bounds.
+description: Run and interpret MarpAgent content and visual-overflow checks, then guide proportionate slide or paper repairs.
 user-invocable: false
 ---
 
-## Run Validation
+# Deck validation
 
-```bash
-npm run marpx -- decks/<name>/slide.md -v
-# With report output:
-npm run marpx -- decks/<name>/slide.md -v --report-dir out/<name>
+Run from the repository root using the supported Node version in `package.json`. `--report-dir` retains findings and screenshots for a review; use a fresh or verified run-owned directory.
+
+```sh
+npm run marpx -- decks/<name>/slide.md -v --report-dir out/<review-run>
 ```
 
-## Hard Limits
+For a final claim that visual validation passed, require the actual visual check rather than accepting the heuristic fallback:
 
-| Metric | Warn | Error |
-| :----- | :--- | :---- |
-| Top-level bullet count | >= 9 | >= 12 |
-| Text lines | — | >= 10 |
-| Body characters (excl. tables) | — | >= 600 |
-| Heading characters | >= 48 | >= 70 |
-| Single line characters | — | >= 140 |
+```sh
+npm run marpx -- decks/<name>/slide.md -v --strict-visual --report-dir out/<review-run>
+```
 
-**Rule: Split the slide before shrinking text.**
+The same commands accept `paper.md`. If tooling is unavailable, report partial validation and the reason; do not describe `Findings: 0` from fallback as a verified render. Use `--format json` or `sarif` only when structured results are useful. Read [rule interpretation](references/rules.md) for thresholds, counting limits, and remediation choices.
 
-Content excluded from counting: `<style>`, `<script>`, `<div class="footnote">` blocks, and HTML-only structural lines.
+Fix the cause while preserving meaning and the requested format: trim or split dense material, rebalance paper columns, repair layout, or resize a figure as appropriate. Do not shrink body typography or rewrite source formatting merely to defeat the counter. If a fixed slide/page count makes the tradeoff material, resolve that choice with the user rather than discarding content.
 
-**Counting rules (pre-emptive guidance — the messages name the breakdown when a rule fires):**
-- Multi-column bullet counts are summed across columns. Target ≤ 2 bullets per column for multi-column and `feature-grid` slides.
-- Callout body text (`> [!NOTE]` / `<div class="note">`, all five callout types) counts toward body chars and the 140-char single-line cap.
+Compare findings by rule, slide identity/content, and severity, accounting for slide renumbering. A stable count can hide a new issue. Recheck after relevant edits and inspect the rendered result; overflow detection is not a complete assessment of overlap, horizontal clipping, missing assets, narrative, or scientific correctness.
 
-## Validator Rules
-
-| Rule | Trigger | Remediation |
-| :--- | :------ | :---------- |
-| `visual-overflow` | Rendered slide content overflows viewport (pixel-accurate, supersedes `overflow-risk`) | Split slide |
-| `overflow-risk` | Body > 600 chars or >= 10 text lines or >= 12 top-level bullets (heuristic fallback) | Split slide |
-| `dense-bullets` | >= 9 top-level bullets | Split slide |
-| `long-heading` | Heading >= 48 chars (warn) / >= 70 (error) | Shorten to < 48; move detail to body |
-| `typography-drift` | `.text-xs2`, `.text-xs3`, `<small>`, or tiny inline `font-size` in use | Remove tiny styling; split content instead |
-| `figure-text-density` | Image + >= 6 top-level bullets or text lines | Move text to next slide |
-| `comparison-overpacked` | Table >= 5 cols x 3 rows, or two-column template with >= 10 top-level bullets | Split into two slides |
-
-## A-Series Paper Mode
-
-Decks with an A-series orientation size such as `size: a4-portrait` or
-`size: a4-landscape` are validated as a single paper canvas. The per-slide density
-heuristics above (`dense-bullets`, `long-heading`, `figure-text-density`,
-`comparison-overpacked`, `typography-drift`, `overflow-risk`) are **skipped** —
-a dense full page is expected. The pixel-accurate `visual-overflow` check still
-runs: if content exceeds the page, fix by trimming a card, rebalancing columns,
-or moving a card to another column. See the `marp-paper` skill.
-
-## Remediation Classification
-
-For each finding, apply one action:
-
-- **Split** — too much content; divide into two slides
-- **Trim** — heading or line too long; shorten the text
-- **Retype** — forbidden tiny text (`.text-xs2`, `.text-xs3`, `<small>`, tiny inline `font-size`); remove it, split if needed
+Report the findings, whether visual measurement actually ran, the relevant artifacts, and unresolved limits. Keep confirmed heuristic false positives visible with supporting render evidence rather than claiming zero findings. Do not delete an existing report directory to make completion look clean.

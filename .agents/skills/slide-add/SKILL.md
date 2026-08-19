@@ -1,43 +1,17 @@
 ---
 name: slide-add
-description: Add one or more slides to an existing MarpAgent deck.
+description: Add slides to an existing MarpAgent presentation while preserving its structure, style, and existing content.
 argument-hint: <path/to/slide.md>
 ---
 
-Add slides to `$ARGUMENTS`.
+# Add slides
 
-Expected inputs:
+Resolve the target `slide.md`, requested content, and insertion point from the arguments or conversation. Read the deck and relevant brief/outline. If no exact insertion point is given, choose a coherent position and state the assumption; ask only if the choice materially changes the user's plan.
 
-- First argument: path to the target `slide.md`
-- Optional second argument: one of the template labels `title`, `content`, `two-column`, `agenda`, `summary`, `closing`, `multi-column`, `feature-grid`, `visual`, `metric-grid`, `timeline`
+Before editing, establish the affected slides' content and current validation findings. Preserve neighboring headers, local directives, pagination, media links, and intentional existing content. Use [marp-slide-types](../marp-slide-types/SKILL.md) to select a layout appropriate to the content or an explicit variant hint. Read [marp-components](../marp-components/SKILL.md) only for the elements being added.
 
-If the user does not specify an exact insertion point, infer the most relevant neighboring slide from the request and state the assumption in your response.
+Insert the requested slides and update a maintained outline when the addition would leave it misleading. Use built-in theme components instead of duplicating their CSS. Do not change unrelated slides or the global theme to accommodate one addition.
 
-## Steps
+Validate the resulting deck using [marp-validator](../marp-validator/SKILL.md) and visually inspect the additions and affected neighbors. Compare findings by rule and actual slide content, accounting for renumbering; unchanged totals can hide a new regression. Fix newly introduced problems and report pre-existing ones separately.
 
-1. Read `$ARGUMENTS` to identify the insertion point and the active `<!-- _header: ... -->` value of neighboring slides.
-
-2. Determine the slide type:
-   - Use the optional second argument if provided
-   - Map `agenda`, `summary`, and `closing` to the `content` base type with that variant
-   - Map `multi-column`, `feature-grid`, and `visual` to the `two-column` template base type with that variant
-   - Map `metric-grid` and `timeline` to the `content` base type with that variant
-   - Otherwise infer: comparison/figure-text visual column → `two-column`; everything else → `content`
-   - Treat `two-column` as a template label that authors a `.col` layout, not as a theme class
-   - Apply the matching template from the **marp-slide-types** skill
-
-3. If the slide uses multi-column, feature-grid, summary-box, or placement patterns, use the built-in theme classes from **marp-slide-types**. Do not add scoped component CSS unless the user asks for a one-off custom layout.
-
-4. Insert the slide(s).
-   - Preserve the existing `<!-- _header: ... -->` values on neighboring slides
-   - Give the new slide the section header that keeps the local flow coherent
-
-5. Validate:
-   ```bash
-   npm run marpx -- $ARGUMENTS -v
-   ```
-   Fix any new findings. Confirm no regressions on previously clean slides.
-
-## Done When
-
-Slide count increased by the expected amount AND validator finding count unchanged (or zero).
+Finish with the requested content inserted, the expected slide-count change, preserved neighboring content, and no unexplained new findings. Report the actual insertion and any limits of the checks performed.
