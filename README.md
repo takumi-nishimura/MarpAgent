@@ -109,6 +109,20 @@ MarpAgent/
 └── .agents/skills/     # AI agent authoring skills
 ```
 
+### Media ownership and reuse
+
+Keep presentation-specific images and videos under the deck that owns them. When another deck reuses a file, add a named relative symlink for that file in the corresponding local media directory instead of copying it, linking the owner's complete `assets/` directory, or using a raw `../other-deck/` path. For example, from the repository root:
+
+```bash
+mkdir -p decks/consumer-deck/assets/img
+ln -s ../../../source-deck/assets/img/example.png \
+  decks/consumer-deck/assets/img/from-source-example.png
+```
+
+The consuming deck can then use a stable path such as `assets/img/from-source-example.png`. Add another symlink only when it reuses another file. Before renaming or deleting owned media, search the repository for symlinks and Markdown references that consume it.
+
+Use the repository-level `assets/` directory only for stable resources with no single owning deck, such as shared logos and fonts. On Windows, enable symlink support before checkout and verify that Git did not materialize a link as an ordinary file or copied directory.
+
 ## Theme
 
 MarpAgent themes are built on Tailwind CSS v4 from design-level `DESIGN.md`
