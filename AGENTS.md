@@ -26,6 +26,15 @@ decks/<name>/
 └── shared -> ../../assets  # Shared assets (logos, fonts, etc.)
 ```
 
+## Shared Media
+
+- Keep one-off media in the deck-local `assets/` directory.
+- When another deck reuses that media, keep the original deck as the owner and add a named relative symlink for each reused file, such as `assets/img/from-source-example.png`, in the consuming deck.
+- Reference cross-deck media through that file symlink, not through a raw `../other-deck/` path or a symlink to the owner's complete `assets/` directory.
+- Keep symlink targets inside the repository. Before changing or deleting owned media, search for consuming symlinks and references.
+- Promote media to the repository-level `assets/` directory only when no single deck is the clear owner or the media is a stable repository-wide resource.
+- On Windows, verify that Git checked out links as symlinks before editing or committing reused media.
+
 ## Frontmatter
 
 ```yaml
