@@ -1,0 +1,56 @@
+---
+id: ISS-0018
+title: Consolidate --lint and -v into one validation command
+type: issue
+status: open
+date: '2026-09-23'
+updated: '2026-09-23'
+authors:
+- claude-code
+scope:
+- scripts/lint-deck.js
+- scripts/validate-deck.js
+- bin/marpx.js
+tags:
+- refactor
+- dx
+depends_on: []
+supersedes: []
+artifacts:
+  revisions: []
+  manifests: []
+  results: []
+  commands: []
+---
+
+# Consolidate --lint and -v into one validation command
+
+## Problem
+
+`scripts/lint-deck.js` and `scripts/validate-deck.js` duplicate argument parsing, output formatting, and exit-code handling. `--lint` is effectively `-v` without `--report-dir`, without diagnostics, and without the heuristic fallback when visual validation throws. Its only unique feature is `--autofix`. The two commands have diverged: `--lint` drops visual-check diagnostics (`scripts/lint-deck.js:105-107`), and `-v` cannot autofix. The README and skills present them as separate tools, so users and agents must choose between near-identical commands.
+
+## Goal
+
+One validation entry point with a single behavior. Autofix is an option of it.
+
+## Acceptance criteria
+
+- [ ] `-v` accepts `--autofix`, and the shared implementation lives in one module.
+- [ ] `--lint` either becomes an alias of `-v` that prints a deprecation notice or is removed; the choice is recorded in the issue before implementation.
+- [ ] `--autofix` gains `--dry-run` (or prints a diff) so changes can be reviewed before writing.
+- [ ] README, AGENTS.md, and `.agents/skills/marp-validator` document the single command.
+- [ ] Existing `lint-deck` and `validate-deck` tests pass against the consolidated command or are merged.
+
+## Out of scope
+
+- Changes to rule logic.
+
+## Notes
+
+Coordinate with ISS-0008 (diagnostics) and ISS-0011 (autofix scope).
+
+## Files
+
+- `scripts/lint-deck.js`, `scripts/validate-deck.js`, `bin/marpx.js`
+- `tests/unit/lint-deck.test.js`, `tests/unit/validate-deck.test.js`, `tests/unit/cli-args.test.js`
+- `README.md`, `AGENTS.md`, `.agents/skills/marp-validator/`

@@ -1,10 +1,31 @@
 ---
-title: "--poster scaffold: drop authoring HTML comments and conditional highlight placeholder"
-status: open
-created: 2026-06-21
-updated: 2026-06-21
-labels: [refactor, dx]
+id: ISS-0002
+title: 'Poster scaffold: drop authoring HTML comments and conditional highlight placeholder'
+type: issue
+status: closed
+date: '2026-06-21'
+updated: '2026-09-23'
+authors:
+- takumi-nishimura
+scope:
+- scripts/new-deck.js
+- template/
+tags:
+- refactor
+- dx
+depends_on: []
+supersedes: []
+resolution: completed
+resolved: '2026-07-08'
+artifacts:
+  revisions:
+  - 5d47202
+  manifests: []
+  results: []
+  commands: []
 ---
+
+# Poster scaffold: drop authoring HTML comments and conditional highlight placeholder
 
 ## Problem
 
@@ -21,10 +42,10 @@ The scaffolded `poster.md` is closer to the minimum viable poster: required stru
 
 ## Acceptance criteria
 
-- [ ] Scaffolded `poster.md` contains no `<!-- author guidance -->`-style HTML comments inside the slide body. (Comment-style frontmatter directives like `<!-- _paginate: skip -->` are fine — these are Marp directives, not author guidance.)
-- [ ] Authoring guidance previously embedded in the scaffold body moves to a sibling `decks/<name>/README.md` *or* is dropped in favor of the `marp-poster` skill content.
-- [ ] Scaffolded `poster.md` does NOT include a `poster-section highlight` / `poster-stat` block by default. A separate `--poster --with-highlight` flag (or similar) opts in, OR the skill instructs authors to add it when applicable.
-- [ ] Existing tests still pass; new tests cover the slimmer scaffold output.
+- [x] Scaffolded `poster.md` contains no `<!-- author guidance -->`-style HTML comments inside the slide body. (Comment-style frontmatter directives like `<!-- _paginate: skip -->` are fine — these are Marp directives, not author guidance.)
+- [x] Authoring guidance previously embedded in the scaffold body moves to a sibling `decks/<name>/README.md` *or* is dropped in favor of the `marp-poster` skill content.
+- [x] Scaffolded `poster.md` does NOT include a `poster-section highlight` / `poster-stat` block by default. A separate `--poster --with-highlight` flag (or similar) opts in, OR the skill instructs authors to add it when applicable.
+- [x] Existing tests still pass; new tests cover the slimmer scaffold output.
 
 ## Out of scope
 
@@ -40,3 +61,7 @@ The scaffolded `poster.md` is closer to the minimum viable poster: required stru
 ## Notes
 
 Surfaced by empirical-prompt-tuning of `.agents/skills/poster-new` on 2026-06-21. After this landed: `poster-new/SKILL.md` step 3 dropped the "Delete scaffold authoring-instruction HTML comments" bullet (the scaffold no longer emits them) and inverted the highlight guidance from "use it when applicable" to "add it when applicable — the scaffold does NOT include one by default." A sibling `README.md` is now scaffolded with the authoring notes that used to live as HTML comments inside `poster.md`.
+
+## Resolution
+
+Closed 2026-09-23 as completed. The poster surface was replaced by the A-series paper scaffold in 5d47202 (`marpx -n <dir> --paper`; `--poster` now errors). `template/paper.md` has no body guidance comments and no highlight card; guidance lives in the scaffolded `README.md` (`template/paper-README.md`). Covered by `tests/unit/new-deck.test.js`.
