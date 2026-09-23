@@ -3,6 +3,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const { isASeriesCanvas } = require("./canvas-size");
+const { findMissingAssets } = require("./media-assets");
 const { splitNonEmptySlides } = require("./markdown-slides");
 
 function splitSlides(markdown) {
@@ -163,7 +164,8 @@ function detectTableMetrics(lines) {
 }
 
 // Severity model (ADR-0001):
-// - "error": a visible defect measured on the rendered slide; fails the run.
+// - "error": a visible defect measured on the rendered slide, or a media file
+//   the deck references that is definitely missing; fails the run.
 // - "warning": a source heuristic reported while rendering was unavailable.
 // - "info": a source heuristic reported alongside a successful render; a
 //   non-blocking hint that is hidden from the text summary by default.
@@ -650,6 +652,65 @@ function writeArtifacts(result, options = {}) {
   };
 }
 
+function describeMissingAsset(item) {
+  if (item.reason !== "broken symlink") {
+    return `${item.reference} (${item.reason})`;
+  }
+  const link = item.link ? ` ${item.link}` : "";
+  return `${item.reference} (broken symlink${link} -> ${item.target})`;
+}
+
+/**
+ * Merge the source-level file check with rendered media failures into one
+ * `missing-asset` error per slide (ISS-0024). A reference the file check
+ * already reports is not repeated from the render. The finding's source is
+ * "render" only when every item came from the render (for example an image
+ * that exists but cannot be decoded); otherwise it is "files".
+ */
+function buildMissingAssetFindings(fileResults, renderedSlides = []) {
+  const bySlide = new Map();
+  const itemsFor = (slideNumber) => {
+    if (!bySlide.has(slideNumber)) bySlide.set(slideNumber, []);
+    return bySlide.get(slideNumber);
+  };
+
+  for (const { slideNumber, missing } of fileResults) {
+    for (const item of missing) {
+      itemsFor(slideNumber).push({ ...item, source: "files" });
+    }
+  }
+  for (const slideAudit of renderedSlides) {
+    for (const item of slideAudit.missingMedia || []) {
+      const items = itemsFor(slideAudit.slideNumber);
+      const duplicate = items.some(
+        (existing) =>
+          (existing.path && item.path && existing.path === item.path) ||
+          existing.reference === item.reference,
+      );
+      if (!duplicate) items.push({ ...item, source: "render" });
+    }
+  }
+
+  const findings = [];
+  for (const [slideNumber, items] of bySlide) {
+    if (items.length === 0) continue;
+    const source = items.every((item) => item.source === "render")
+      ? "render"
+      : "files";
+    findings.push(
+      buildFinding(
+        { number: slideNumber },
+        "missing-asset",
+        "error",
+        `Media referenced by the slide did not load: ${items.map(describeMissingAsset).join(", ")}.`,
+        "Restore the file or fix the reference; repoint a broken symlink at an existing file inside the repository.",
+        source,
+      ),
+    );
+  }
+  return findings;
+}
+
 /**
  * Heuristic-only validation, used when rendering is unavailable. Findings are
  * warnings and the result records why the visual check did not run.
@@ -665,6 +726,11 @@ function validateDeckFile(deckPath, options = {}) {
       reason: "visual check was not attempted",
     },
   };
+  // The file check needs no browser, so missing media still fail the run.
+  result.findings.push(
+    ...buildMissingAssetFindings(findMissingAssets(deckPath, markdown)),
+  );
+  result.findings.sort((a, b) => a.slide - b.slide);
   const artifacts = writeArtifacts(result, {
     deckPath,
     reportDir: options.reportDir,
@@ -760,6 +826,15 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
       );
     }
   }
+
+  // The file check runs whether or not the render succeeded; rendered media
+  // failures add what it cannot see, such as files that fail to decode.
+  result.findings.push(
+    ...buildMissingAssetFindings(
+      findMissingAssets(deckPath, markdown),
+      measured ? measurement.slides : [],
+    ),
+  );
 
   // Sort findings by slide number for consistent output
   result.findings.sort((a, b) => a.slide - b.slide);

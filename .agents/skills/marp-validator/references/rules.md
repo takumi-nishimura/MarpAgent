@@ -1,12 +1,12 @@
 # Rule interpretation
 
-The current implementation is `src/deck-validator.js`, with rendered measurement in `src/visual-overflow.js` and CLI fallback/strict behavior in `scripts/validate-deck.js`. Check these sources if the runtime report differs from this reference. The policy is recorded in `docs/decisions/ADR-0001-make-rendered-measurement-the-authority-for-deck-validation.md`.
+The current implementation is `src/deck-validator.js`, with rendered measurement in `src/visual-overflow.js`, the media file check in `src/media-assets.js`, and CLI fallback/strict behavior in `scripts/validate-deck.js`. Check these sources if the runtime report differs from this reference. The policy is recorded in `docs/decisions/ADR-0001-make-rendered-measurement-the-authority-for-deck-validation.md`.
 
 ## Severity and exit codes
 
 | Severity | Meaning | Exit code |
 |---|---|---|
-| `error` | A visible defect measured on the rendered slide | 1 |
+| `error` | A visible defect measured on the rendered slide, or a referenced media file that is definitely missing (`missing-asset`) | 1 |
 | `warning` | A design risk measured on the render (`edge-crowding`), or a source heuristic reported because rendering was unavailable | 0 (use `--strict` to fail when rendering is unavailable) |
 | `info` (hint) | A source heuristic reported alongside a successful render; hidden unless `--hints` is passed | 0 |
 
@@ -18,6 +18,9 @@ The CLI exits 2 for an execution failure, including a strict run whose render fa
 |---|---|---|
 | `content-clipped` (error) | Visible text lines or media (`img`, `svg`, `video`, `canvas`, `iframe`, `object`) extend past the slide canvas. Trailing margins, empty boxes, and parts already cropped by an `overflow` container do not count. Text is allowed 2px of rounding; media also up to 2% of its size on one edge. | Resize or move the listed element; for text, trim, rebalance, or split. The message names each element, the edge, and the overflow in slide pixels. |
 | `edge-crowding` (warning) | Unclipped content lies within the safe margin of the slide edge: 20px at a 720px-tall canvas (the theme's pagination inset), scaled with canvas height. Text is checked at the bottom, left, and right; media only at the bottom, since media boxes often include transparent side margins. The top edge, absolutely positioned content, header/footer, and footnote blocks (any class containing `footnote`) are exempt. | Leave breathing room: trim or rebalance so the last line or figure clears the margin, or move the element inward. It does not fail validation. |
+| `missing-asset` (error) | Local media that the slide references do not load. The file check (`source: files`) resolves every Markdown image (including `![bg ...]` and size keywords such as `![w:300](...)`), the `src`/`poster`/`data` of `img`, `video`, `audio`, `source`, `object`, and `embed`, and CSS `url(...)` in `<style>`, `style` attributes, directive comments, and the front matter relative to the deck file, and reports each file that is not found or is a broken symlink (naming the link target). It runs even when rendering is skipped. The rendered check (`source: render`) adds an `img` that finished with `naturalWidth === 0` (failed to decode) and a `video`/`audio` with a media error or no usable source (failed to load), after waiting for image decode and video metadata. One finding per slide lists each reference once with its reason. Front-matter references are reported on the first slide; hidden slides, code, and speaker notes are ignored. | Restore the file or fix the path; for a broken cross-deck symlink, repoint it at the owner's file (see Shared Media in `AGENTS.md`). Replace an undecodable file with a valid export. |
+
+Remote media (`http(s)://` and protocol-relative `//` URLs) are not checked: the file check never fetches them, and a remote image or video that fails in the render is ignored, so the result does not depend on the network. `data:` URLs are skipped too. Check remote media yourself if the deck relies on them.
 
 The rendered check uses Marp's bare template, so every slide is laid out and measured. It does not yet detect overlapping elements or rendered text that is too small to read; inspect screenshots for those.
 
@@ -40,6 +43,6 @@ Do not alter formatting or move meaningful content into excluded blocks to silen
 
 The paper detector recognizes `a4-portrait` and `a4-landscape`. Paper decks skip the source hints; the rendered check still applies to the full page.
 
-Without a browser, validation falls back to source heuristics as warnings and prints `Visual check: skipped (<reason>)`. A paper can then show `Findings: 0` without any layout measurement. Use `--strict` before claiming validation succeeded, and report unavailable checks instead of converting fallback into a success claim.
+Without a browser, validation falls back to source heuristics as warnings and prints `Visual check: skipped (<reason>)`. The `missing-asset` file check still runs and still fails the run. A paper can then show `Findings: 0` without any layout measurement. Use `--strict` before claiming validation succeeded, and report unavailable checks instead of converting fallback into a success claim.
 
 For paper clipping, rebalance columns or shorten a card while keeping one page. For a fixed slide count, preserve the user's constraint and discuss a concrete content tradeoff if it cannot be met readably.
