@@ -284,6 +284,39 @@ test("measured clipping becomes a blocking content-clipped error", async () => {
   }
 });
 
+test("measured edge crowding is a non-blocking edge-crowding warning", async () => {
+  const { dir, deckPath } = writeTempDeck("# One\n");
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        {
+          slideNumber: 1,
+          clipped: [],
+          maxOverflowPx: 0,
+          crowded: [{ label: '"last line"', edge: "bottom", gapPx: 4 }],
+          safeMarginPx: 20,
+        },
+      ]),
+    });
+
+    const [finding] = result.findings;
+    assert.equal(result.findings.length, 1);
+    assert.equal(finding.ruleId, "edge-crowding");
+    assert.equal(finding.severity, "warning");
+    assert.equal(finding.source, "render");
+    assert.match(finding.title, /20px safe margin/);
+    assert.match(finding.title, /"last line" \(bottom 4px\)/);
+    assert.equal(exitCodeFor(result), 0);
+    assert.match(
+      formatSummary(deckPath, result),
+      /\[warning\] slide 1 edge-crowding:/,
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("skipped visual check keeps heuristics as non-blocking warnings", async () => {
   const bullets = Array.from({ length: 10 }, (_, i) => `- item ${i + 1}`).join("\n");
   const { dir, deckPath } = writeTempDeck(`# Dense\n\n${bullets}\n`);

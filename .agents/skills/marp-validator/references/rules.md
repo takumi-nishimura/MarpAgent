@@ -7,7 +7,7 @@ The current implementation is `src/deck-validator.js`, with rendered measurement
 | Severity | Meaning | Exit code |
 |---|---|---|
 | `error` | A visible defect measured on the rendered slide | 1 |
-| `warning` | A source heuristic, reported only when rendering was unavailable | 0 (use `--strict` to fail when rendering is unavailable) |
+| `warning` | A design risk measured on the render (`edge-crowding`), or a source heuristic reported because rendering was unavailable | 0 (use `--strict` to fail when rendering is unavailable) |
 | `info` (hint) | A source heuristic reported alongside a successful render; hidden unless `--hints` is passed | 0 |
 
 The CLI exits 2 for an execution failure, including a strict run whose render failed.
@@ -16,7 +16,8 @@ The CLI exits 2 for an execution failure, including a strict run whose render fa
 
 | Rule | What is measured | Likely response |
 |---|---|---|
-| `content-clipped` | Visible text lines or media (`img`, `svg`, `video`, `canvas`, `iframe`, `object`) extend past the slide canvas. Trailing margins, empty boxes, and parts already cropped by an `overflow` container do not count. Text is allowed 2px of rounding; media also up to 2% of its size on one edge. | Resize or move the listed element; for text, trim, rebalance, or split. The message names each element, the edge, and the overflow in slide pixels. |
+| `content-clipped` (error) | Visible text lines or media (`img`, `svg`, `video`, `canvas`, `iframe`, `object`) extend past the slide canvas. Trailing margins, empty boxes, and parts already cropped by an `overflow` container do not count. Text is allowed 2px of rounding; media also up to 2% of its size on one edge. | Resize or move the listed element; for text, trim, rebalance, or split. The message names each element, the edge, and the overflow in slide pixels. |
+| `edge-crowding` (warning) | Unclipped content lies within the safe margin of the slide edge: 20px at a 720px-tall canvas (the theme's pagination inset), scaled with canvas height. Text is checked at the bottom, left, and right; media only at the bottom, since media boxes often include transparent side margins. The top edge, absolutely positioned content, header/footer, and footnote blocks (any class containing `footnote`) are exempt. | Leave breathing room: trim or rebalance so the last line or figure clears the margin, or move the element inward. It does not fail validation. |
 
 The rendered check uses Marp's bare template, so every slide is laid out and measured. It does not yet detect overlapping elements or rendered text that is too small to read; inspect screenshots for those.
 

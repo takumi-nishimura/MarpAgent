@@ -210,6 +210,65 @@ This sentence starts near the bottom edge and is cut off.
   }
 });
 
+test("measureRenderedSlides reports content crowding the slide edge", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-crowding-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+---
+
+# Crowded bottom
+
+<div style="height: 544px"></div>
+
+<p style="margin: 0">This last line sits right above the bottom edge.</p>
+
+---
+
+# Footnotes and wide media
+
+<div style="margin-right: -38px">
+<svg width="1238" height="120" viewBox="0 0 1238 120"><rect width="1238" height="120" fill="#ddd"/></svg>
+</div>
+
+<div class="footnote">[1] Theme footnote placed at the bottom edge.</div>
+
+---
+
+# Clean
+
+Plenty of room around this sentence.
+`,
+  );
+
+  try {
+    const result = await measureRenderedSlides(deckPath);
+
+    assert.equal(result.status, "measured");
+    const bySlide = Object.fromEntries(
+      result.slides.map((slide) => [slide.slideNumber, slide]),
+    );
+    assert.deepEqual(bySlide[1].clipped, []);
+    assert.equal(bySlide[1].safeMarginPx, 20);
+    assert.equal(bySlide[1].crowded.length, 1);
+    assert.equal(bySlide[1].crowded[0].edge, "bottom");
+    assert.match(bySlide[1].crowded[0].label, /This last line/);
+    assert.equal(bySlide[1].crowded[0].gapPx < 20, true);
+    assert.deepEqual(bySlide[2].crowded, []);
+    assert.deepEqual(bySlide[3].crowded, []);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("measureRenderedSlides reports a skipped check instead of throwing", async () => {
   process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE = "1";
   try {

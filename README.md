@@ -11,7 +11,7 @@ brief.md → outline.md → slide.md → HTML / PDF / PPTX
 - **brief.md** — define audience, duration, core message, and required sections
 - **outline.md** — auto-generated slide plan with layout hints
 - **slide.md** — Marp Markdown using the `lab` theme
-- **Validator** — renders every slide and flags visible content that is clipped at the slide edge; source-count heuristics are optional hints
+- **Validator** — renders every slide, fails on visible content clipped at the slide edge, and warns when content crowds the edge; source-count heuristics are optional hints
 
 ## Prerequisites
 

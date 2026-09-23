@@ -12,6 +12,12 @@ const CLIP_TOLERANCE_PX = 2;
 // pixels of an image or diagram margin are not a visible defect, while a few
 // pixels of a text line are.
 const MEDIA_CLIP_TOLERANCE_RATIO = 0.02;
+// Unclipped content closer than this to the bottom, left, or right edge is
+// reported as crowding (ADR-0001, ISS-0023). The value is in slide pixels at
+// a 720px-tall canvas, matching the theme's pagination inset, and scales with
+// canvas height.
+const EDGE_SAFE_MARGIN_PX = 20;
+const EDGE_REFERENCE_HEIGHT_PX = 720;
 
 function emitDiagnostic(onDiagnostic, payload) {
   if (typeof onDiagnostic === "function") {
@@ -84,7 +90,12 @@ function renderToHtml(deckPath) {
  * count. Runs inside the page via `page.evaluate`, so it must stay
  * self-contained.
  */
-function auditSlidesInPage({ tolerancePx, mediaToleranceRatio }) {
+function auditSlidesInPage({
+  tolerancePx,
+  mediaToleranceRatio,
+  safeMarginPx,
+  referenceHeightPx,
+}) {
   const REPLACED = "img,video,canvas,iframe,object,svg";
 
   function snippet(text) {
@@ -117,6 +128,21 @@ function auditSlidesInPage({ tolerancePx, mediaToleranceRatio }) {
       if (right <= left || bottom <= top) return null;
     }
     return { left, top, right, bottom };
+  }
+
+  // Absolutely positioned content, header/footer bands, and footnote blocks
+  // (the theme's citation treatment, including in-flow variants such as
+  // `.footnote-col`) sit at the edge on purpose, so they never count as
+  // crowding.
+  function isPlacedByLayout(element, section) {
+    for (let node = element; node && node !== section; node = node.parentElement) {
+      const tag = node.tagName.toLowerCase();
+      if (tag === "header" || tag === "footer") return true;
+      if ([...node.classList].some((name) => name.includes("footnote"))) return true;
+      const { position } = getComputedStyle(node);
+      if (position === "absolute" || position === "fixed") return true;
+    }
+    return false;
   }
 
   function isNestedSvgContent(node, section) {
@@ -155,7 +181,9 @@ function auditSlidesInPage({ tolerancePx, mediaToleranceRatio }) {
       }
     }
 
+    const margin = safeMarginPx * (height / referenceHeightPx);
     const byLabel = new Map();
+    const crowdedByLabel = new Map();
     for (const box of boxes) {
       const visible = clipByAncestors(box.rect, box.element, section);
       if (!visible) continue;
@@ -170,7 +198,22 @@ function auditSlidesInPage({ tolerancePx, mediaToleranceRatio }) {
       const allowed = box.media
         ? Math.max(tolerancePx, extent * mediaToleranceRatio)
         : tolerancePx;
-      if (overflowPx <= allowed) continue;
+      if (overflowPx <= allowed) {
+        if (isPlacedByLayout(box.element, section)) continue;
+        // Text is checked on three edges; media only at the bottom, because
+        // media boxes often include transparent side margins.
+        const checked = box.media ? ["bottom"] : ["bottom", "left", "right"];
+        const [nearEdge, gap] = checked
+          .map((name) => [name, -edges[name]])
+          .sort((a, b) => a[1] - b[1])[0];
+        if (gap >= margin) continue;
+        const gapPx = Math.max(0, Math.round(gap));
+        const nearest = crowdedByLabel.get(box.label);
+        if (!nearest || nearest.gapPx > gapPx) {
+          crowdedByLabel.set(box.label, { label: box.label, edge: nearEdge, gapPx });
+        }
+        continue;
+      }
       const previous = byLabel.get(box.label);
       if (!previous || previous.overflowPx < overflowPx) {
         byLabel.set(box.label, { label: box.label, edge, overflowPx: Math.round(overflowPx) });
@@ -178,12 +221,17 @@ function auditSlidesInPage({ tolerancePx, mediaToleranceRatio }) {
     }
 
     const clipped = [...byLabel.values()].sort((a, b) => b.overflowPx - a.overflowPx);
+    const crowded = [...crowdedByLabel.values()]
+      .filter((item) => !byLabel.has(item.label))
+      .sort((a, b) => a.gapPx - b.gapPx);
     return {
       slideIndex,
       width,
       height,
       clipped,
       maxOverflowPx: clipped.length > 0 ? clipped[0].overflowPx : 0,
+      crowded,
+      safeMarginPx: Math.round(margin),
     };
   });
 }
@@ -191,12 +239,14 @@ function auditSlidesInPage({ tolerancePx, mediaToleranceRatio }) {
 /**
  * Launch Playwright Chromium and audit every rendered slide.
  * Returns one entry per rendered slide:
- * { slideIndex, width, height, clipped: [{ label, edge, overflowPx }], maxOverflowPx }.
+ * { slideIndex, width, height, clipped: [{ label, edge, overflowPx }],
+ *   maxOverflowPx, crowded: [{ label, edge, gapPx }], safeMarginPx }.
  */
 async function measureSlidesInBrowser(htmlPath, options = {}) {
   const {
     tolerancePx = CLIP_TOLERANCE_PX,
     mediaToleranceRatio = MEDIA_CLIP_TOLERANCE_RATIO,
+    safeMarginPx = EDGE_SAFE_MARGIN_PX,
   } = options;
   let playwright;
   try {
@@ -217,6 +267,8 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
     return await page.evaluate(auditSlidesInPage, {
       tolerancePx,
       mediaToleranceRatio,
+      safeMarginPx,
+      referenceHeightPx: EDGE_REFERENCE_HEIGHT_PX,
     });
   } finally {
     await browser.close();
@@ -259,7 +311,8 @@ function buildRenderedToMarkdownMap(markdown) {
 
 /**
  * Render a deck and audit every slide for clipped visible content.
- * Returns { status: "measured", slides: [{ slideNumber, clipped, maxOverflowPx }] }
+ * Returns { status: "measured", slides: [{ slideNumber, clipped, maxOverflowPx,
+ * crowded, safeMarginPx }] }
  * where slideNumber is the markdown slide number, or
  * { status: "skipped", reason, slides: [] } when rendering or the browser is
  * unavailable. In strict mode a failure throws instead of being skipped.
@@ -285,6 +338,8 @@ async function measureRenderedSlides(deckPath, options = {}) {
         slideNumber: renderedToMarkdown[audit.slideIndex] ?? audit.slideIndex + 1,
         clipped: audit.clipped,
         maxOverflowPx: audit.maxOverflowPx,
+        crowded: audit.crowded,
+        safeMarginPx: audit.safeMarginPx,
       })),
     };
   } catch (error) {
@@ -354,6 +409,7 @@ async function screenshotSlide(htmlPath, slideId) {
 
 module.exports = {
   CLIP_TOLERANCE_PX,
+  EDGE_SAFE_MARGIN_PX,
   MEDIA_CLIP_TOLERANCE_RATIO,
   auditSlidesInPage,
   buildRenderedToMarkdownMap,

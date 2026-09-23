@@ -2,7 +2,7 @@
 id: ISS-0023
 title: "Warn when rendered content crowds the slide edge"
 type: issue
-status: open
+status: closed
 date: "2026-09-24"
 authors:
   - claude-code
@@ -14,6 +14,8 @@ tags:
   - feature
 depends_on: []
 supersedes: []
+resolution: completed
+resolved: "2026-09-24"
 artifacts:
   revisions: []
   manifests: []
@@ -34,13 +36,13 @@ Rendered content that is inside the canvas but within a safe margin of the edge 
 
 ## Acceptance criteria
 
-- [ ] The in-page audit reports unclipped visible content whose gap to the bottom, left, or right edge is below a safe margin of 20px at 720px canvas height, scaled with canvas height for other sizes.
-- [ ] Text lines are checked on the bottom, left, and right edges; media only on the bottom edge. The top edge is not checked.
-- [ ] Content with an absolutely or fixed-positioned ancestor (e.g. `.footnote`), and `header` / `footer` content, is excluded.
-- [ ] Each slide produces at most one `edge-crowding` finding (`warning`, `source: render`) that names the closest elements, their edge, and the gap; it does not change the exit code.
-- [ ] A slide already reported as `content-clipped` does not also report the clipped elements as crowding.
-- [ ] Unit tests cover a crowded bottom line, an exempt footnote, a media right edge that is not reported, and a clean slide.
-- [ ] The `marp-validator` rules reference documents the rule and the margin.
+- [x] The in-page audit reports unclipped visible content whose gap to the bottom, left, or right edge is below a safe margin of 20px at 720px canvas height, scaled with canvas height for other sizes.
+- [x] Text lines are checked on the bottom, left, and right edges; media only on the bottom edge. The top edge is not checked.
+- [x] Content with an absolutely or fixed-positioned ancestor (e.g. `.footnote`), and `header` / `footer` content, is excluded.
+- [x] Each slide produces at most one `edge-crowding` finding (`warning`, `source: render`) that names the closest elements, their edge, and the gap; it does not change the exit code.
+- [x] A slide already reported as `content-clipped` does not also report the clipped elements as crowding.
+- [x] Unit tests cover a crowded bottom line, an exempt footnote, a media right edge that is not reported, and a clean slide.
+- [x] The `marp-validator` rules reference documents the rule and the margin.
 
 ## Out of scope
 
@@ -49,3 +51,5 @@ Rendered content that is inside the canvas but within a safe margin of the edge 
 ## Notes
 
 Requested by the author on 2026-09-24 when accepting ADR-0001. The margin matches the theme's pagination inset (`padding-right` / `padding-bottom: 20px` on `section::after`). Media are excluded on the left and right edges because their boxes often include transparent margins: in XR-0001, an image box reached 5px from the right edge while its visible content stopped about 50px away.
+
+On the XR-0001 decks, the rule warns on slides 4, 12, 14, and 15 of the 2026-02-20 deck, each with body text or a caption 0–16px above the bottom edge. The in-flow `.footnote-col` citation blocks on slides 5 and 20 were initially reported, so footnote classes are now exempt, following the theme's citation treatment.

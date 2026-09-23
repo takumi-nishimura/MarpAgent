@@ -688,6 +688,17 @@ function formatClippedTitle(slideAudit) {
   return `Visible content extends past the slide edge by up to ${slideAudit.maxOverflowPx}px: ${parts.join(", ")}${more}.`;
 }
 
+function formatCrowdedTitle(slideAudit) {
+  const parts = slideAudit.crowded
+    .slice(0, 3)
+    .map((item) => `${item.label} (${item.edge} ${item.gapPx}px)`);
+  const more =
+    slideAudit.crowded.length > 3
+      ? ` and ${slideAudit.crowded.length - 3} more`
+      : "";
+  return `Content sits within the ${slideAudit.safeMarginPx}px safe margin of the slide edge: ${parts.join(", ")}${more}.`;
+}
+
 /**
  * Validate a deck by rendering it and measuring visible defects (ADR-0001).
  * When the render succeeds, measured defects are errors and source heuristics
@@ -731,6 +742,19 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
           "error",
           formatClippedTitle(slideAudit),
           "Resize or move the listed elements, trim the slide, or split it so everything fits inside the canvas.",
+          "render",
+        ),
+      );
+    }
+    for (const slideAudit of measurement.slides) {
+      if (!slideAudit.crowded || slideAudit.crowded.length === 0) continue;
+      result.findings.push(
+        buildFinding(
+          { number: slideAudit.slideNumber },
+          "edge-crowding",
+          "warning",
+          formatCrowdedTitle(slideAudit),
+          "Leave breathing room at the edge: trim or rebalance the content, or move the element inward.",
           "render",
         ),
       );

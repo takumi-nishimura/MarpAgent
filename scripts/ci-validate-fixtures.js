@@ -6,6 +6,7 @@ const validateScript = path.join(repoRoot, "scripts", "validate-deck.js");
 
 // Expected validator behavior per fixture (ADR-0001):
 // - errors: rule IDs of measured, blocking findings (render only);
+// - warnings: rule IDs of measured, non-blocking findings (render only);
 // - hints: rule IDs of source heuristics, reported as hints after a render
 //   or as warnings when rendering is unavailable.
 const expectations = [
@@ -41,6 +42,7 @@ const expectations = [
   {
     fixture: "fixtures/overflow-heavy-slide.md",
     errors: ["content-clipped"],
+    warnings: ["edge-crowding"],
     hints: ["dense-bullets"],
   },
 ];
@@ -76,11 +78,16 @@ if (strictVisual) {
 
 let failures = 0;
 
-for (const { fixture, errors, hints } of expectations) {
+for (const { fixture, errors, warnings = [], hints } of expectations) {
   const { status, report } = runValidation(fixture);
   const measured = report.visualCheck?.status === "measured";
   const actualErrors = sortedUnique(
     report.findings.filter((f) => f.severity === "error").map((f) => f.ruleId),
+  );
+  const actualWarnings = sortedUnique(
+    report.findings
+      .filter((f) => f.source === "render" && f.severity === "warning")
+      .map((f) => f.ruleId),
   );
   const actualHints = sortedUnique(
     report.findings
@@ -98,6 +105,13 @@ for (const { fixture, errors, hints } of expectations) {
     if (JSON.stringify(actualErrors) !== JSON.stringify(sortedUnique(errors))) {
       problems.push(
         `errors ${JSON.stringify(actualErrors)} != ${JSON.stringify(sortedUnique(errors))}`,
+      );
+    }
+    if (
+      JSON.stringify(actualWarnings) !== JSON.stringify(sortedUnique(warnings))
+    ) {
+      problems.push(
+        `warnings ${JSON.stringify(actualWarnings)} != ${JSON.stringify(sortedUnique(warnings))}`,
       );
     }
     const expectedStatus = errors.length > 0 ? 1 : 0;

@@ -6,7 +6,7 @@ source-heuristic hints for each fixture.
 
 ## Slide fixtures (validator rules)
 
-- `overflow-heavy-slide.md`: 20 bullets → rendered `content-clipped` error (hint: `dense-bullets`)
+- `overflow-heavy-slide.md`: 20 bullets → rendered `content-clipped` error and `edge-crowding` warning (hint: `dense-bullets`)
 - `dense-bullets-slide.md`: 9 top-level bullets → hint `dense-bullets`
 - `figure-heavy-slide.md`: Image + 6 bullets → hint `figure-text-density`
 - `long-japanese-slide.md`: Long heading + body → hint `long-heading` (`overflow-risk` only when rendering is unavailable)
