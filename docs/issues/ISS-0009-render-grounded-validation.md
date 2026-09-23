@@ -18,6 +18,7 @@ depends_on:
   - ISS-0021
   - ISS-0022
   - ISS-0023
+  - ISS-0024
 supersedes: []
 artifacts:
   revisions: []
@@ -65,5 +66,6 @@ This is an umbrella issue. On 2026-09-23 the author confirmed the main complaint
 - ISS-0021: overlapping text.
 - ISS-0022: rendered minimum font size in place of `typography-drift`.
 - ISS-0023: warn when rendered content crowds the slide edge.
+- ISS-0024: report media that fail to load.
 
 The remaining criteria here (horizontal and ancestor clipping, paper coverage, CJK-width fallback, documented thresholds) are covered by ISS-0019 or will be closed with the follow-ups.

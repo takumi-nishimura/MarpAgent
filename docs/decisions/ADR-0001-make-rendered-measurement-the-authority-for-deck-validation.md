@@ -25,6 +25,7 @@ issues:
   - ISS-0021
   - ISS-0022
   - ISS-0023
+  - ISS-0024
 artifacts:
   revisions: []
   manifests: []
