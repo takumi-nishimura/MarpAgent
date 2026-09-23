@@ -1,8 +1,13 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
-const { execFileSync } = require('node:child_process')
+const childProcess = require('node:child_process')
+const { execFileSync } = childProcess
+const fs = require('node:fs')
+const os = require('node:os')
 const path = require('node:path')
+const MarkdownIt = require('markdown-it')
 
+const marpMermaidPlugin = require('../../scripts/mermaid-plugin')
 const { postProcessLineBreaks } = require('../../src/mermaid-render')
 
 function renderMermaid(input) {
@@ -117,4 +122,156 @@ test('mermaid render sizes explicit multiline node labels before layout', () => 
     escapedNewlineRect.width < noBreakRect.width,
     `expected \\n width ${escapedNewlineRect.width} to be less than ${noBreakRect.width}`,
   )
+})
+
+function useTempCacheDir(t) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'marpagent-mermaid-'))
+  process.env.MARP_AGENT_MERMAID_CACHE_DIR = dir
+  t.after(() => {
+    delete process.env.MARP_AGENT_MERMAID_CACHE_DIR
+    fs.rmSync(dir, { recursive: true, force: true })
+  })
+  return dir
+}
+
+function stubExecFileSync(t, impl) {
+  const original = childProcess.execFileSync
+  let calls = 0
+  childProcess.execFileSync = (...args) => {
+    calls += 1
+    return impl(...args)
+  }
+  t.after(() => {
+    childProcess.execFileSync = original
+  })
+  return () => calls
+}
+
+function renderFence(code, plugin = marpMermaidPlugin) {
+  const md = new MarkdownIt()
+  md.use(plugin)
+  return md.render(`\`\`\`mermaid\n${code}\n\`\`\``)
+}
+
+test('mermaid cache reuses the rendered SVG without a second subprocess', (t) => {
+  useTempCacheDir(t)
+  const calls = stubExecFileSync(t, () => '<svg><text>ok</text></svg>')
+  const code = 'flowchart TD\n  A --> B\n'
+
+  const first = renderFence(code)
+  const second = renderFence(code)
+
+  assert.equal(calls(), 1)
+  assert.match(first, /<div class="mermaid-diagram"><svg>/)
+  assert.equal(second, first)
+})
+
+test('mermaid cache persists across plugin module instances', (t) => {
+  useTempCacheDir(t)
+  const calls = stubExecFileSync(t, () => '<svg><text>ok</text></svg>')
+  const code = 'flowchart TD\n  A --> B\n'
+
+  renderFence(code)
+
+  // A fresh module instance approximates a separate Marp process: no
+  // in-process state survives, so a hit proves the cache lives on disk.
+  const pluginPath = require.resolve('../../scripts/mermaid-plugin')
+  delete require.cache[pluginPath]
+  const freshPlugin = require(pluginPath)
+  const html = renderFence(code, freshPlugin)
+
+  assert.equal(calls(), 1)
+  assert.match(html, /<div class="mermaid-diagram"><svg>/)
+})
+
+test('mermaid cache does not store failed renders', (t) => {
+  useTempCacheDir(t)
+  let shouldFail = true
+  const calls = stubExecFileSync(t, () => {
+    if (shouldFail) {
+      shouldFail = false
+      const error = new Error('boom')
+      error.stderr = 'parse error'
+      throw error
+    }
+    return '<svg><text>ok</text></svg>'
+  })
+  const code = 'flowchart TD\n  A --> B\n'
+
+  const failed = renderFence(code)
+  assert.match(failed, /language-mermaid/)
+
+  const retried = renderFence(code)
+  assert.match(retried, /<div class="mermaid-diagram"><svg>/)
+
+  const cached = renderFence(code)
+  assert.equal(calls(), 2)
+  assert.equal(cached, retried)
+})
+
+test('MARP_AGENT_MERMAID_CACHE=0 disables the mermaid cache', (t) => {
+  const dir = useTempCacheDir(t)
+  process.env.MARP_AGENT_MERMAID_CACHE = '0'
+  t.after(() => {
+    delete process.env.MARP_AGENT_MERMAID_CACHE
+  })
+  const calls = stubExecFileSync(t, () => '<svg><text>ok</text></svg>')
+  const code = 'flowchart TD\n  A --> B\n'
+
+  renderFence(code)
+  renderFence(code)
+
+  assert.equal(calls(), 2)
+  assert.deepEqual(fs.readdirSync(dir), [])
+})
+
+test('mermaid cache key covers source, renderer files, and package versions', () => {
+  const fingerprint = {
+    render: 'render-hash',
+    patch: 'patch-hash',
+    beautifulMermaid: '0.1.3',
+    mathjax: '4.1.1',
+  }
+  const code = 'flowchart TD\n  A --> B\n'
+  const key = marpMermaidPlugin.buildCacheKey(code, fingerprint)
+
+  assert.match(key, /^[0-9a-f]{64}$/)
+  assert.notEqual(marpMermaidPlugin.buildCacheKey(`${code} `, fingerprint), key)
+  for (const field of Object.keys(fingerprint)) {
+    const changed = { ...fingerprint, [field]: 'changed' }
+    assert.notEqual(marpMermaidPlugin.buildCacheKey(code, changed), key)
+  }
+})
+
+test('mermaid cache fingerprint resolves renderer hashes and dependency versions', () => {
+  const fingerprint = marpMermaidPlugin.cacheFingerprint()
+  const beautifulMermaid = require('../../node_modules/beautiful-mermaid/package.json')
+  const mathjax = require('../../node_modules/mathjax/package.json')
+
+  assert.match(fingerprint.render, /^[0-9a-f]{64}$/)
+  assert.match(fingerprint.patch, /^[0-9a-f]{64}$/)
+  assert.equal(fingerprint.beautifulMermaid, beautifulMermaid.version)
+  assert.equal(fingerprint.mathjax, mathjax.version)
+})
+
+test('pruneCache evicts by age first, then oldest entries beyond the limit', (t) => {
+  const dir = useTempCacheDir(t)
+  const now = Date.now()
+  const files = []
+  for (let i = 0; i < 4; i += 1) {
+    const file = path.join(dir, `entry-${i}.svg`)
+    fs.writeFileSync(file, '<svg/>')
+    const mtime = new Date(now - (i + 1) * 1000)
+    fs.utimesSync(file, mtime, mtime)
+    files.push(file)
+  }
+  const stale = path.join(dir, 'stale.svg')
+  fs.writeFileSync(stale, '<svg/>')
+  const staleTime = new Date(now - 60 * 1000)
+  fs.utimesSync(stale, staleTime, staleTime)
+
+  marpMermaidPlugin.pruneCache(dir, { maxEntries: 2, maxAgeMs: 30 * 1000 })
+
+  const remaining = fs.readdirSync(dir).sort()
+  assert.deepEqual(remaining, ['entry-0.svg', 'entry-1.svg'])
 })
