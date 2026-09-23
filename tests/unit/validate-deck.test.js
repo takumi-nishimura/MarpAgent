@@ -6,6 +6,7 @@ const path = require("node:path");
 
 const {
   buildSarifReport,
+  exitCodeFor,
   formatSummary,
   isPaperDeck,
   splitSlides,
@@ -195,7 +196,7 @@ test("validator flags overflow-risk for very long body lines", () => {
   );
 });
 
-test("validateDeckWithVisualCheck produces visual-overflow findings for heavy slide", async (t) => {
+test("validateDeckWithVisualCheck reports clipped content on the heavy fixture", async (t) => {
   if (!(await supportsVisualChecks())) {
     t.skip("Visual overflow checks are unavailable in this environment.");
     return;
@@ -204,41 +205,190 @@ test("validateDeckWithVisualCheck produces visual-overflow findings for heavy sl
   const deckPath = fixture("overflow-heavy-slide.md");
   const result = await validateDeckWithVisualCheck(deckPath);
 
-  const visualFindings = result.findings.filter(
-    (f) => f.ruleId === "visual-overflow",
-  );
-  assert.equal(
-    visualFindings.length > 0,
-    true,
-    "Should have visual-overflow findings",
-  );
-  assert.match(visualFindings[0].title, /overflows by/);
+  assert.equal(result.visualCheck.status, "measured");
+  const clipped = result.findings.filter((f) => f.ruleId === "content-clipped");
+  assert.equal(clipped.length, 1);
+  assert.equal(clipped[0].severity, "error");
+  assert.equal(clipped[0].source, "render");
+  assert.match(clipped[0].title, /"Point twenty[^"]*" \(bottom \d+px\)/);
+  assert.equal(exitCodeFor(result), 1);
 });
 
-test("validateDeckWithVisualCheck removes heuristic overflow-risk when visual detects overflow", async (t) => {
-  if (!(await supportsVisualChecks())) {
-    t.skip("Visual overflow checks are unavailable in this environment.");
-    return;
+function measuredStub(slides = []) {
+  return async () => ({ status: "measured", slides });
+}
+
+function writeTempDeck(markdown) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-validate-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(deckPath, markdown);
+  return { dir, deckPath };
+}
+
+test("measured decks turn heuristics into hints and drop overflow-risk", async () => {
+  // A long single line trips overflow-risk; many bullets trip dense-bullets.
+  const bullets = Array.from({ length: 10 }, (_, i) => `- item ${i + 1}`).join("\n");
+  const { dir, deckPath } = writeTempDeck(
+    `# Short\n\n${"word ".repeat(30)}\n\n---\n\n# Dense\n\n${bullets}\n`,
+  );
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        { slideNumber: 1, clipped: [], maxOverflowPx: 0 },
+        { slideNumber: 2, clipped: [], maxOverflowPx: 0 },
+      ]),
+    });
+
+    assert.deepEqual(result.visualCheck, { status: "measured" });
+    assert.equal(result.findings.some((f) => f.ruleId === "overflow-risk"), false);
+    const dense = result.findings.find((f) => f.ruleId === "dense-bullets");
+    assert.ok(dense);
+    assert.equal(dense.severity, "info");
+    assert.equal(dense.source, "heuristic");
+    assert.equal(exitCodeFor(result), 0);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
   }
+});
 
-  const deckPath = fixture("overflow-heavy-slide.md");
-  const result = await validateDeckWithVisualCheck(deckPath);
+test("measured clipping becomes a blocking content-clipped error", async () => {
+  const { dir, deckPath } = writeTempDeck("# One\n\n---\n\n# Two\n");
 
-  const overflowRisk = result.findings.filter(
-    (f) => f.ruleId === "overflow-risk",
-  );
-  const visualOverflow = result.findings.filter(
-    (f) => f.ruleId === "visual-overflow",
-  );
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        { slideNumber: 1, clipped: [], maxOverflowPx: 0 },
+        {
+          slideNumber: 2,
+          clipped: [
+            { label: "<img assets/img/plot.svg>", edge: "bottom", overflowPx: 435 },
+            { label: '"caption"', edge: "bottom", overflowPx: 8 },
+          ],
+          maxOverflowPx: 435,
+        },
+      ]),
+    });
 
-  // If visual overflow detected that slide, heuristic overflow-risk should be removed for it
-  for (const vo of visualOverflow) {
-    assert.equal(
-      overflowRisk.some((or) => or.slide === vo.slide),
-      false,
-      `overflow-risk should be removed for slide ${vo.slide} when visual-overflow is present`,
+    const [finding] = result.findings;
+    assert.equal(result.findings.length, 1);
+    assert.equal(finding.slide, 2);
+    assert.equal(finding.ruleId, "content-clipped");
+    assert.equal(finding.severity, "error");
+    assert.match(finding.title, /up to 435px/);
+    assert.match(finding.title, /<img assets\/img\/plot\.svg> \(bottom 435px\)/);
+    assert.match(finding.title, /"caption" \(bottom 8px\)/);
+    assert.equal(exitCodeFor(result), 1);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("skipped visual check keeps heuristics as non-blocking warnings", async () => {
+  const bullets = Array.from({ length: 10 }, (_, i) => `- item ${i + 1}`).join("\n");
+  const { dir, deckPath } = writeTempDeck(`# Dense\n\n${bullets}\n`);
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: async () => ({
+        status: "skipped",
+        reason: "Playwright is not installed.",
+        slides: [],
+      }),
+    });
+
+    assert.deepEqual(result.visualCheck, {
+      status: "skipped",
+      reason: "Playwright is not installed.",
+    });
+    const dense = result.findings.find((f) => f.ruleId === "dense-bullets");
+    assert.equal(dense.severity, "warning");
+    assert.equal(exitCodeFor(result), 0);
+    assert.match(
+      formatSummary(deckPath, result),
+      /Visual check: skipped \(Playwright is not installed\.\)/,
     );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test("formatSummary hides hints unless requested", () => {
+  const result = {
+    slideCount: 1,
+    visualCheck: { status: "measured" },
+    findings: [
+      {
+        slide: 1,
+        ruleId: "dense-bullets",
+        severity: "info",
+        source: "heuristic",
+        title: "Slide contains 10 top-level bullet items.",
+        suggestion: "Split the list.",
+      },
+    ],
+  };
+
+  const hidden = formatSummary(null, result);
+  assert.match(hidden, /Visual check: measured/);
+  assert.match(hidden, /Findings: 0 \(errors: 0, warnings: 0\)/);
+  assert.match(hidden, /Hints: 1/);
+  assert.equal(hidden.includes("dense-bullets"), false);
+  assert.match(hidden, /--hints/);
+
+  const shown = formatSummary(null, result, { showHints: true });
+  assert.match(shown, /\[hint\] slide 1 dense-bullets:/);
+});
+
+test("reports record the visual check and screenshot only non-hint slides", () => {
+  const reportDir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-report-"));
+  let requestedSlides;
+
+  try {
+    const result = {
+      slideCount: 2,
+      visualCheck: { status: "measured" },
+      findings: [
+        { slide: 1, ruleId: "dense-bullets", severity: "info", source: "heuristic", title: "t", suggestion: "s" },
+        { slide: 2, ruleId: "content-clipped", severity: "error", source: "render", title: "t", suggestion: "s" },
+      ],
+    };
+    writeArtifacts(result, {
+      deckPath: "deck/slide.md",
+      reportDir,
+      imageExporter: ({ slideNumbers }) => {
+        requestedSlides = slideNumbers;
+        return [];
+      },
+    });
+
+    const report = JSON.parse(fs.readFileSync(path.join(reportDir, "report.json"), "utf8"));
+    const markdown = fs.readFileSync(path.join(reportDir, "report.md"), "utf8");
+    assert.deepEqual(requestedSlides, [2]);
+    assert.deepEqual(report.visualCheck, { status: "measured" });
+    assert.deepEqual(report.counts, { errors: 1, warnings: 0, hints: 1 });
+    assert.match(markdown, /Visual check: measured/);
+    assert.match(markdown, /## Hints/);
+  } finally {
+    fs.rmSync(reportDir, { recursive: true, force: true });
+  }
+});
+
+test("buildSarifReport records the visual check and maps hints to notes", () => {
+  const report = buildSarifReport("deck/slide.md", {
+    slideCount: 1,
+    visualCheck: { status: "skipped", reason: "no browser" },
+    findings: [
+      { slide: 1, ruleId: "dense-bullets", severity: "info", source: "heuristic", title: "t", suggestion: "s" },
+    ],
+  });
+
+  assert.deepEqual(report.runs[0].properties.visualCheck, {
+    status: "skipped",
+    reason: "no browser",
+  });
+  assert.equal(report.runs[0].results[0].level, "note");
+  assert.equal(report.runs[0].results[0].properties.source, "heuristic");
 });
 
 test("dense-bullets on multi-column slide reports per-column breakdown", () => {

@@ -1,6 +1,6 @@
 ---
 name: marp-validator
-description: Run and interpret MarpAgent content and visual-overflow checks, then guide proportionate slide or paper repairs.
+description: Run and interpret MarpAgent rendered-slide checks and source hints, then guide proportionate slide or paper repairs.
 user-invocable: false
 ---
 
@@ -12,16 +12,18 @@ Run from the repository root using the supported Node version in `package.json`.
 npm run marpx -- decks/<name>/slide.md -v --report-dir out/<review-run>
 ```
 
-For a final claim that visual validation passed, require the actual visual check rather than accepting the heuristic fallback:
+For a final claim that validation passed, require the rendered check rather than accepting the heuristic fallback:
 
 ```sh
-npm run marpx -- decks/<name>/slide.md -v --strict-visual --report-dir out/<review-run>
+npm run marpx -- decks/<name>/slide.md -v --strict --report-dir out/<review-run>
 ```
 
-The same commands accept `paper.md`. If tooling is unavailable, report partial validation and the reason; do not describe `Findings: 0` from fallback as a verified render. Use `--format json` or `sarif` only when structured results are useful. Read [rule interpretation](references/rules.md) for thresholds, counting limits, and remediation choices.
+The same commands accept `paper.md`. The summary's `Visual check:` line says whether the deck was rendered and measured (`measured`) or not (`skipped (<reason>)`). If it was skipped, report partial validation and the reason; do not describe `Findings: 0` from fallback as a verified render. Use `--format json` or `sarif` only when structured results are useful. Read [rule interpretation](references/rules.md) for what each finding measures and how to respond.
 
-Fix the cause while preserving meaning and the requested format: trim or split dense material, rebalance paper columns, repair layout, or resize a figure as appropriate. Do not shrink body typography or rewrite source formatting merely to defeat the counter. If a fixed slide/page count makes the tradeoff material, resolve that choice with the user rather than discarding content.
+Only `error` findings fail validation. They are defects measured on the rendered slide, such as `content-clipped`. Fix the cause while preserving meaning and the requested format: resize or move the listed element, trim or split material, rebalance paper columns, or repair layout. Do not shrink body typography merely to make content fit. If a fixed slide/page count makes the tradeoff material, resolve that choice with the user rather than discarding content.
 
-Compare findings by rule, slide identity/content, and severity, accounting for slide renumbering. A stable count can hide a new issue. Recheck after relevant edits and inspect the rendered result; overflow detection is not a complete assessment of overlap, horizontal clipping, missing assets, narrative, or scientific correctness.
+Source-heuristic hints (`--hints`) are counts of bullets, characters, and classes in the Markdown source. They are not failures and often do not match the rendered result. Use them only as prompts to look at the rendered slide; do not cut or restructure content just to silence a hint.
 
-Report the findings, whether visual measurement actually ran, the relevant artifacts, and unresolved limits. Keep confirmed heuristic false positives visible with supporting render evidence rather than claiming zero findings. Do not delete an existing report directory to make completion look clean.
+Compare findings by rule, slide identity/content, and severity, accounting for slide renumbering. A stable count can hide a new issue. Recheck after relevant edits and inspect the rendered result; the rendered check does not yet assess overlapping elements, small rendered text, missing assets, narrative, or scientific correctness.
+
+Report the errors, whether the rendered check actually ran, the relevant artifacts, and unresolved limits. Do not delete an existing report directory to make completion look clean.

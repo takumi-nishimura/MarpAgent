@@ -34,7 +34,7 @@ The visual pipeline works for any valid directory name and never leaves temp dir
 
 ## Acceptance criteria
 
-- [ ] Both call sites build the URL with `url.pathToFileURL(htmlPath).href`.
+- [x] Both call sites build the URL with `url.pathToFileURL(htmlPath).href`.
 - [ ] A test renders a deck whose directory name contains `#` and `%`.
 - [ ] `defaultImageExporter` cleans up in `finally`.
 - [ ] Copying the deck to temp skips media that rendering does not need (e.g. `*.pdf`, generated `.*.overview.html`), or the design comment explains why a full copy is required.
@@ -44,3 +44,7 @@ The visual pipeline works for any valid directory name and never leaves temp dir
 - `src/visual-overflow.js`
 - `src/deck-validator.js`
 - `tests/unit/visual-overflow.test.js`
+
+## Notes
+
+The file-URL fix landed with ISS-0019 on 2026-09-24. The directory-name test, temp cleanup in `defaultImageExporter`, and the copy scope remain open.

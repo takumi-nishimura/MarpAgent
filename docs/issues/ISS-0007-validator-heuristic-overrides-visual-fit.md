@@ -2,7 +2,7 @@
 id: ISS-0007
 title: Heuristic overflow-risk still fires when the visual check shows the slide fits
 type: issue
-status: open
+status: closed
 date: '2026-09-23'
 updated: '2026-09-23'
 authors:
@@ -14,6 +14,8 @@ tags:
 - bug
 depends_on: []
 supersedes: []
+resolution: completed
+resolved: "2026-09-24"
 artifacts:
   revisions: []
   manifests: []
@@ -37,10 +39,10 @@ When pixel measurement succeeds for a slide, its result replaces the heuristic o
 
 ## Acceptance criteria
 
-- [ ] `measureVisualOverflow` returns which slides were measured in addition to which overflowed, and distinguishes success from fallback.
-- [ ] A measured slide that fits produces no `overflow-risk` finding; the 149-character reproduction above exits 0.
-- [ ] When visual measurement fails (non-strict), heuristic `overflow-risk` findings are kept.
-- [ ] Unit tests cover measured-fit, measured-overflow, and fallback cases.
+- [x] `measureVisualOverflow` returns which slides were measured in addition to which overflowed, and distinguishes success from fallback.
+- [x] A measured slide that fits produces no `overflow-risk` finding; the 149-character reproduction above exits 0.
+- [x] When visual measurement fails (non-strict), heuristic `overflow-risk` findings are kept.
+- [x] Unit tests cover measured-fit, measured-overflow, and fallback cases.
 
 ## Out of scope
 
@@ -52,3 +54,7 @@ When pixel measurement succeeds for a slide, its result replaces the heuristic o
 - `src/deck-validator.js`
 - `src/visual-overflow.js`
 - `tests/unit/validate-deck.test.js`, `tests/unit/visual-overflow.test.js`
+
+## Notes
+
+Resolved by ISS-0019 under ADR-0001 on 2026-09-24. `measureVisualOverflow` was replaced by `measureRenderedSlides`, which returns `{ status: "measured" | "skipped", slides }` with one entry per rendered slide. After a measured render, `overflow-risk` is dropped and the other heuristics become non-blocking hints.

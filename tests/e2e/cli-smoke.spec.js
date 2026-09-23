@@ -96,6 +96,27 @@ test("screenshot smoke", () => {
   fs.rmSync(screenshotPath, { force: true });
 });
 
+test("screenshot of a later page", () => {
+  // The bespoke template hides inactive slides, so pages after the first used
+  // to time out; rendering with the bare template keeps every slide visible.
+  const result = runMarpx(["fixtures/paginate-skip-slide.md", "--screenshot", "2"]);
+
+  if (result.status !== 0 && canSkipForChromiumFailure(result.stderr)) {
+    if (strictE2E) {
+      expect(result.status, result.stderr).toBe(0);
+    }
+    test.skip("Chromium is unavailable in this environment.");
+    return;
+  }
+
+  expect(result.status, result.stderr).toBe(0);
+
+  const screenshotPath = result.stdout.trim().split(/\r?\n/).filter(Boolean).at(-1);
+  expect(screenshotPath).toBeTruthy();
+  expect(fs.statSync(screenshotPath).size).toBeGreaterThan(0);
+  fs.rmSync(screenshotPath, { force: true });
+});
+
 test("overview smoke", async ({ browserName }, testInfo) => {
   if (browserName !== "chromium") {
     if (strictE2E) {

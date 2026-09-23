@@ -13,7 +13,11 @@ scope:
 tags:
 - refactor
 - validator
-depends_on: []
+depends_on:
+  - ISS-0019
+  - ISS-0021
+  - ISS-0022
+  - ISS-0023
 supersedes: []
 artifacts:
   revisions: []
@@ -55,4 +59,11 @@ Findings about density and typography come from measurements of the rendered sli
 
 ## Notes
 
-This is an umbrella issue; split it into implementation issues once the author confirms which failure modes matter most. ISS-0007 and ISS-0008 are independent quick fixes that can land first.
+This is an umbrella issue. On 2026-09-23 the author confirmed the main complaint: the judgments are too strict, do not match their design sense, and produce many false positives. XR-0001 measured this on the author's accepted decks, and ADR-0001 (accepted 2026-09-24) sets the policy: rendered measurement is authoritative, and source heuristics are non-blocking hints. The work is split into:
+
+- ISS-0019: phase 1, render-measured clipping as the only blocking finding (done).
+- ISS-0021: overlapping text.
+- ISS-0022: rendered minimum font size in place of `typography-drift`.
+- ISS-0023: warn when rendered content crowds the slide edge.
+
+The remaining criteria here (horizontal and ancestor clipping, paper coverage, CJK-width fallback, documented thresholds) are covered by ISS-0019 or will be closed with the follow-ups.

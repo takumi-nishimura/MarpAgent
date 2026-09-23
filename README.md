@@ -11,7 +11,7 @@ brief.md → outline.md → slide.md → HTML / PDF / PPTX
 - **brief.md** — define audience, duration, core message, and required sections
 - **outline.md** — auto-generated slide plan with layout hints
 - **slide.md** — Marp Markdown using the `lab` theme
-- **Validator** — catches overflow, dense bullets, long headings, and font shrinking
+- **Validator** — renders every slide and flags visible content that is clipped at the slide edge; source-count heuristics are optional hints
 
 ## Prerequisites
 
@@ -71,7 +71,8 @@ marpx decks/my-talk/slide.md --overview
 | `marpx <slide.md> --lint` | Lint with deck validator rules |
 | `marpx <slide.md> --lint --autofix` | Apply safe autofixes, then lint again |
 | `marpx <slide.md> -v` | Validate |
-| `marpx <slide.md> -v --strict` | Validate and fail if visual check falls back |
+| `marpx <slide.md> -v --strict` | Validate and fail if the rendered check cannot run |
+| `marpx <slide.md> -v --hints` | Also list non-blocking source-heuristic hints |
 | `marpx <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |
 | `marpx <slide.md> -v --report-dir out/<name>` | Validate with report |
 | `marpx --doctor` | Run environment diagnostics |
@@ -251,8 +252,8 @@ marpx decks/my-paper/paper.md --pdf  # export PDF for printing
 - Callouts, figures, tables, code, and Mermaid all work inside cards
 
 Export at A4 and scale at print time when a larger physical sheet is needed.
-The validator skips the per-slide density heuristics for A-series paper outputs
-(a dense full page is expected) but still flags visual overflow. See
+The validator skips the per-slide source hints for A-series paper outputs
+(a dense full page is expected) but still flags content clipped at the page edge. See
 `decks/example-paper/paper.md` for a worked example and the `marp-paper` skill
 for authoring details.
 

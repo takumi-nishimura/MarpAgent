@@ -22,7 +22,8 @@ Options:
   --lint                   Lint deck and report findings
   --autofix                Apply safe autofixes (for --lint)
   --doctor                 Run environment diagnostics
-  --strict                 Enable strict mode for selected commands
+  --strict                 Require the rendered check (fail if it cannot run)
+  --hints                  List source-heuristic hints (for --validate/--lint)
   --screenshot <page>      Screenshot a slide (1-based displayed page)
   -v, --validate           Validate deck
   -n, --new                Create new deck
@@ -76,6 +77,7 @@ try {
       autofix: { type: "boolean", default: false },
       doctor: { type: "boolean", default: false },
       strict: { type: "boolean", default: false },
+      hints: { type: "boolean", default: false },
       validate: { type: "boolean", short: "v", default: false },
       new: { type: "boolean", short: "n", default: false },
       paper: { type: "boolean", default: false },
@@ -135,6 +137,11 @@ const mode = modes[0] || "serve";
 
 if (values.autofix && mode !== "lint") {
   console.error("Error: --autofix can only be used with --lint");
+  process.exit(1);
+}
+
+if (values.hints && mode !== "validate" && mode !== "lint") {
+  console.error("Error: --hints can only be used with --validate or --lint");
   process.exit(1);
 }
 
@@ -356,6 +363,9 @@ switch (mode) {
     if (values.strict) {
       args.push("--strict-visual");
     }
+    if (values.hints) {
+      args.push("--hints");
+    }
     if (values.format) {
       args.push("--format", values.format);
     }
@@ -370,6 +380,9 @@ switch (mode) {
     }
     if (values.strict) {
       args.push("--strict-visual");
+    }
+    if (values.hints) {
+      args.push("--hints");
     }
     if (values.format) {
       args.push("--format", values.format);

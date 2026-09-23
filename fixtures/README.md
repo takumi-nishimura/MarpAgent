@@ -1,16 +1,18 @@
 # Evaluation Fixtures
 
 These fixtures intentionally cover common deck-generation edge cases.
-Each slide fixture targets one or more validator rules in `src/deck-validator.js`.
+`scripts/ci-validate-fixtures.js` holds the expected rendered errors and
+source-heuristic hints for each fixture.
 
 ## Slide fixtures (validator rules)
 
-- `dense-bullets-slide.md`: 9 top-level bullets → `dense-bullets`
-- `figure-heavy-slide.md`: Image + 6 bullets → `figure-text-density`
-- `long-japanese-slide.md`: Long heading + body → `long-heading`, `overflow-risk`
-- `comparison-slide.md`: 5-column table → `comparison-overpacked`
-- `tiny-text-slide.md`: `<small>` tag → `typography-drift`
-- `clean-slide.md`: Well-structured slide with no findings (negative test)
+- `overflow-heavy-slide.md`: 20 bullets → rendered `content-clipped` error (hint: `dense-bullets`)
+- `dense-bullets-slide.md`: 9 top-level bullets → hint `dense-bullets`
+- `figure-heavy-slide.md`: Image + 6 bullets → hint `figure-text-density`
+- `long-japanese-slide.md`: Long heading + body → hint `long-heading` (`overflow-risk` only when rendering is unavailable)
+- `comparison-slide.md`: 5-column table → hint `comparison-overpacked`
+- `tiny-text-slide.md`: `<small>` tag → hint `typography-drift`
+- `clean-slide.md`, `paginate-skip-slide.md`, `muji-slide.md`, `toshiba-slide.md`: no findings (negative tests)
 
 ## Brief fixtures (outline generation)
 

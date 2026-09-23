@@ -2,7 +2,16 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
+const { pathToFileURL } = require("node:url");
 const { splitSlideRawBlocks } = require("./markdown-slides");
+
+// Visible content may cross an edge by this much before it counts as clipped,
+// which absorbs sub-pixel rounding of line boxes and image edges.
+const CLIP_TOLERANCE_PX = 2;
+// Media may additionally lose this fraction of its size on one edge: a few
+// pixels of an image or diagram margin are not a visible defect, while a few
+// pixels of a text line are.
+const MEDIA_CLIP_TOLERANCE_RATIO = 0.02;
 
 function emitDiagnostic(onDiagnostic, payload) {
   if (typeof onDiagnostic === "function") {
@@ -12,6 +21,9 @@ function emitDiagnostic(onDiagnostic, payload) {
 
 /**
  * Render deck markdown to self-contained HTML via Marp CLI.
+ * Uses the bare template so every slide is laid out and visible at once; the
+ * bespoke template hides inactive slides, which breaks element measurement
+ * and element screenshots.
  * Returns the path to the generated HTML file (caller must clean up tempDir).
  */
 function renderToHtml(deckPath) {
@@ -45,6 +57,8 @@ function renderToHtml(deckPath) {
     marpBinary,
     [
       "--html",
+      "--template",
+      "bare",
       "--allow-local-files",
       "--config-file",
       configPath,
@@ -63,11 +77,127 @@ function renderToHtml(deckPath) {
 }
 
 /**
- * Launch Playwright Chromium and measure overflow on each rendered slide.
- * Returns an array of { slideIndex, scrollHeight, clientHeight, overflowPx }
- * for slides that overflow.
+ * Browser-side audit: for every slide, find visible content that extends past
+ * the slide canvas. Visible content is text line boxes and replaced elements,
+ * each intersected with the clip rectangles of its overflow-clipping
+ * ancestors inside the slide, so intentional crops and trailing margins do not
+ * count. Runs inside the page via `page.evaluate`, so it must stay
+ * self-contained.
  */
-async function measureOverflowInBrowser(htmlPath) {
+function auditSlidesInPage({ tolerancePx, mediaToleranceRatio }) {
+  const REPLACED = "img,video,canvas,iframe,object,svg";
+
+  function snippet(text) {
+    const clean = text.replace(/\u200b/g, "").replace(/\s+/g, " ").trim();
+    return clean.length > 32 ? `${clean.slice(0, 31)}…` : clean;
+  }
+
+  function describe(element) {
+    const tag = element.tagName.toLowerCase();
+    const source = element.getAttribute("src") || element.getAttribute("data");
+    if (source) return `<${tag} ${source}>`;
+    const className = element.getAttribute("class");
+    return className ? `<${tag} class="${className}">` : `<${tag}>`;
+  }
+
+  function clipByAncestors(rect, element, section) {
+    let { left, top, right, bottom } = rect;
+    for (let node = element.parentElement; node && node !== section; node = node.parentElement) {
+      const style = getComputedStyle(node);
+      if (style.overflowX === "visible" && style.overflowY === "visible") continue;
+      const clip = node.getBoundingClientRect();
+      if (style.overflowX !== "visible") {
+        left = Math.max(left, clip.left);
+        right = Math.min(right, clip.right);
+      }
+      if (style.overflowY !== "visible") {
+        top = Math.max(top, clip.top);
+        bottom = Math.min(bottom, clip.bottom);
+      }
+      if (right <= left || bottom <= top) return null;
+    }
+    return { left, top, right, bottom };
+  }
+
+  function isNestedSvgContent(node, section) {
+    const svg = node.closest("svg");
+    return Boolean(svg && section.contains(svg) && svg !== node);
+  }
+
+  return [...document.querySelectorAll("section[id]")].map((section, slideIndex) => {
+    const canvas = section.getBoundingClientRect();
+    const scale = canvas.width / section.offsetWidth || 1;
+    const width = section.offsetWidth;
+    const height = section.offsetHeight;
+    const boxes = [];
+
+    const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const parent = node.parentElement;
+      if (!parent || !snippet(node.textContent)) continue;
+      if (isNestedSvgContent(parent, section)) continue;
+      if (!parent.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue;
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      for (const rect of range.getClientRects()) {
+        if (rect.width > 0 && rect.height > 0) {
+          boxes.push({ rect, element: parent, media: false, label: `"${snippet(node.textContent)}"` });
+        }
+      }
+    }
+
+    for (const element of section.querySelectorAll(REPLACED)) {
+      if (element.parentElement && isNestedSvgContent(element.parentElement, section)) continue;
+      if (!element.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue;
+      const rect = element.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        boxes.push({ rect, element, media: true, label: describe(element) });
+      }
+    }
+
+    const byLabel = new Map();
+    for (const box of boxes) {
+      const visible = clipByAncestors(box.rect, box.element, section);
+      if (!visible) continue;
+      const edges = {
+        top: (canvas.top - visible.top) / scale,
+        right: (visible.right - canvas.left) / scale - width,
+        bottom: (visible.bottom - canvas.top) / scale - height,
+        left: (canvas.left - visible.left) / scale,
+      };
+      const [edge, overflowPx] = Object.entries(edges).sort((a, b) => b[1] - a[1])[0];
+      const extent = (edge === "top" || edge === "bottom" ? box.rect.height : box.rect.width) / scale;
+      const allowed = box.media
+        ? Math.max(tolerancePx, extent * mediaToleranceRatio)
+        : tolerancePx;
+      if (overflowPx <= allowed) continue;
+      const previous = byLabel.get(box.label);
+      if (!previous || previous.overflowPx < overflowPx) {
+        byLabel.set(box.label, { label: box.label, edge, overflowPx: Math.round(overflowPx) });
+      }
+    }
+
+    const clipped = [...byLabel.values()].sort((a, b) => b.overflowPx - a.overflowPx);
+    return {
+      slideIndex,
+      width,
+      height,
+      clipped,
+      maxOverflowPx: clipped.length > 0 ? clipped[0].overflowPx : 0,
+    };
+  });
+}
+
+/**
+ * Launch Playwright Chromium and audit every rendered slide.
+ * Returns one entry per rendered slide:
+ * { slideIndex, width, height, clipped: [{ label, edge, overflowPx }], maxOverflowPx }.
+ */
+async function measureSlidesInBrowser(htmlPath, options = {}) {
+  const {
+    tolerancePx = CLIP_TOLERANCE_PX,
+    mediaToleranceRatio = MEDIA_CLIP_TOLERANCE_RATIO,
+  } = options;
   let playwright;
   try {
     playwright = require("playwright");
@@ -82,29 +212,12 @@ async function measureOverflowInBrowser(htmlPath) {
   try {
     const page = await browser.newPage();
     await page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
-
-    const results = await page.evaluate(() => {
-      const sections = document.querySelectorAll("section[id]");
-      const overflows = [];
-      let index = 0;
-      for (const section of sections) {
-        const scrollHeight = section.scrollHeight;
-        const clientHeight = section.clientHeight;
-        if (scrollHeight > clientHeight) {
-          overflows.push({
-            slideIndex: index,
-            scrollHeight,
-            clientHeight,
-            overflowPx: scrollHeight - clientHeight,
-          });
-        }
-        index++;
-      }
-      return overflows;
+    await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "networkidle" });
+    await page.evaluate(() => document.fonts.ready);
+    return await page.evaluate(auditSlidesInPage, {
+      tolerancePx,
+      mediaToleranceRatio,
     });
-
-    return results;
   } finally {
     await browser.close();
   }
@@ -145,11 +258,13 @@ function buildRenderedToMarkdownMap(markdown) {
 }
 
 /**
- * Measure visual overflow for a deck file.
- * Returns an array of { slideNumber, scrollHeight, clientHeight, overflowPx }.
- * Returns [] if Playwright is unavailable or any error occurs.
+ * Render a deck and audit every slide for clipped visible content.
+ * Returns { status: "measured", slides: [{ slideNumber, clipped, maxOverflowPx }] }
+ * where slideNumber is the markdown slide number, or
+ * { status: "skipped", reason, slides: [] } when rendering or the browser is
+ * unavailable. In strict mode a failure throws instead of being skipped.
  */
-async function measureVisualOverflow(deckPath, options = {}) {
+async function measureRenderedSlides(deckPath, options = {}) {
   const { onDiagnostic, strictVisual = false } = options;
   let tempRoot;
   try {
@@ -161,17 +276,17 @@ async function measureVisualOverflow(deckPath, options = {}) {
     const rendered = renderToHtml(deckPath);
     tempRoot = rendered.tempRoot;
 
-    const overflows = await measureOverflowInBrowser(rendered.htmlPath);
-    if (overflows.length === 0) return [];
-
+    const audits = await measureSlidesInBrowser(rendered.htmlPath);
     const renderedToMarkdown = buildRenderedToMarkdownMap(markdown);
 
-    return overflows.map((o) => ({
-      slideNumber: renderedToMarkdown[o.slideIndex] ?? o.slideIndex + 1,
-      scrollHeight: o.scrollHeight,
-      clientHeight: o.clientHeight,
-      overflowPx: o.overflowPx,
-    }));
+    return {
+      status: "measured",
+      slides: audits.map((audit) => ({
+        slideNumber: renderedToMarkdown[audit.slideIndex] ?? audit.slideIndex + 1,
+        clipped: audit.clipped,
+        maxOverflowPx: audit.maxOverflowPx,
+      })),
+    };
   } catch (error) {
     emitDiagnostic(onDiagnostic, {
       component: "visual-check",
@@ -204,7 +319,7 @@ async function measureVisualOverflow(deckPath, options = {}) {
       strictError.cause = error;
       throw strictError;
     }
-    return [];
+    return { status: "skipped", reason: error.message, slides: [] };
   } finally {
     if (tempRoot) {
       fs.rmSync(tempRoot, { recursive: true, force: true });
@@ -222,7 +337,7 @@ async function screenshotSlide(htmlPath, slideId) {
   try {
     const page = await browser.newPage();
     await page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
+    await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "networkidle" });
 
     const section = await page.$(`section[id="${slideId}"]`);
     if (!section) {
@@ -238,10 +353,13 @@ async function screenshotSlide(htmlPath, slideId) {
 }
 
 module.exports = {
+  CLIP_TOLERANCE_PX,
+  MEDIA_CLIP_TOLERANCE_RATIO,
+  auditSlidesInPage,
   buildRenderedToMarkdownMap,
   detectHiddenSlides,
-  measureOverflowInBrowser,
-  measureVisualOverflow,
+  measureRenderedSlides,
+  measureSlidesInBrowser,
   renderToHtml,
   screenshotSlide,
 };

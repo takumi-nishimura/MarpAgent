@@ -2,7 +2,7 @@
 id: ISS-0008
 title: Validator output does not say whether the visual check ran
 type: issue
-status: open
+status: closed
 date: '2026-09-23'
 updated: '2026-09-23'
 authors:
@@ -16,6 +16,8 @@ tags:
 - bug
 depends_on: []
 supersedes: []
+resolution: completed
+resolved: "2026-09-24"
 artifacts:
   revisions: []
   manifests: []
@@ -40,11 +42,11 @@ Every validator output states whether pixel measurement ran and, if not, why.
 
 ## Acceptance criteria
 
-- [ ] The text summary includes a line such as `Visual check: measured` or `Visual check: skipped (<reason>)`.
-- [ ] JSON, SARIF (run properties), `report.md`, and `report.json` carry the same status and reason.
-- [ ] `--lint` surfaces the fallback the same way as `-v`.
-- [ ] Tests force fallback with `MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE=1` and assert the status in each format.
-- [ ] `marp-validator/SKILL.md` refers to the new status line instead of inferring fallback from stderr.
+- [x] The text summary includes a line such as `Visual check: measured` or `Visual check: skipped (<reason>)`.
+- [x] JSON, SARIF (run properties), `report.md`, and `report.json` carry the same status and reason.
+- [x] `--lint` surfaces the fallback the same way as `-v`.
+- [x] Tests force fallback with `MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE=1` and assert the status in each format.
+- [x] `marp-validator/SKILL.md` refers to the new status line instead of inferring fallback from stderr.
 
 ## Out of scope
 
@@ -56,3 +58,7 @@ Every validator output states whether pixel measurement ran and, if not, why.
 - `scripts/validate-deck.js`, `scripts/lint-deck.js`
 - `tests/unit/validate-observability.test.js`
 - `.agents/skills/marp-validator/SKILL.md`
+
+## Notes
+
+Resolved by ISS-0019 on 2026-09-24. The text summary prints `Visual check: measured` or `Visual check: skipped (<reason>)`. JSON and `report.json` carry `visualCheck`, SARIF carries it in `runs[0].properties.visualCheck`, and `report.md` has a `Visual check:` line. `--lint` shares the summary formatter. `tests/unit/validate-observability.test.js` covers the text, JSON, and SARIF output on forced fallback; `tests/unit/validate-deck.test.js` covers the report files.
