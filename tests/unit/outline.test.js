@@ -195,6 +195,54 @@ test("outline carries newer layout hints and strips their markers", () => {
   assert.match(outline, /- Title: Rollout sequence\n/);
 });
 
+test("generateOutlineFile refuses to overwrite an existing output", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-outline-"));
+  const briefPath = path.join(tempDir, "brief.md");
+  const outputPath = path.join(tempDir, "outline.md");
+
+  try {
+    fs.copyFileSync(fixturePath, briefPath);
+    fs.writeFileSync(outputPath, "hand-edited outline\n");
+
+    assert.throws(
+      () => generateOutlineFile(briefPath, outputPath),
+      (error) => {
+        assert.match(error.message, /refusing to overwrite/);
+        assert.match(error.message, /--force/);
+        assert.match(error.message, /--output <path>/);
+        return true;
+      },
+    );
+
+    // The existing file is left untouched.
+    assert.equal(
+      fs.readFileSync(outputPath, "utf8"),
+      "hand-edited outline\n",
+    );
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("generateOutlineFile overwrites an existing output with force", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-outline-"));
+  const briefPath = path.join(tempDir, "brief.md");
+  const outputPath = path.join(tempDir, "outline.md");
+
+  try {
+    fs.copyFileSync(fixturePath, briefPath);
+    fs.writeFileSync(outputPath, "hand-edited outline\n");
+
+    generateOutlineFile(briefPath, outputPath, { force: true });
+
+    const outline = fs.readFileSync(outputPath, "utf8");
+    assert.match(outline, /# Outline/);
+    assert.equal(outline.includes("hand-edited outline"), false);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("generateOutlineFile rejects incomplete brief by default", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-outline-"));
   const briefPath = path.join(tempDir, "brief.md");
