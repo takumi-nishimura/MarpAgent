@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
+const { splitFenceSegments } = require("../src/markdown-slides");
 const {
   buildSarifReport,
   exitCodeFor,
@@ -73,26 +74,45 @@ function parseArgs(argv) {
   };
 }
 
+// Backtick runs open and close inline code spans; the closing run must match
+// the opening run's length.
+const INLINE_CODE_RE = /(`+)[\s\S]*?\1/g;
+
+function fixTypographyMarkers(text) {
+  return (
+    text
+      // Safe typography fix: lift tiny utility classes to a readable baseline.
+      .replace(/\btext-xs2\b/g, "text-sm")
+      .replace(/\btext-xs3\b/g, "text-sm")
+      // Remove <small> wrappers and keep the text content.
+      .replace(/<small>([\s\S]*?)<\/small>/gi, "$1")
+  );
+}
+
+/**
+ * Rewrite only editable text so autofixes never alter code examples: fenced
+ * blocks stay untouched via splitFenceSegments, and inline code spans inside
+ * the remaining text are skipped as well. Protected text is re-emitted
+ * verbatim, so it stays byte-identical.
+ */
 function applyAutoFixes(markdown) {
-  let updated = markdown;
-  let changed = false;
+  let updated = "";
 
-  const replace = (pattern, replacement) => {
-    const next = updated.replace(pattern, replacement);
-    if (next !== updated) {
-      changed = true;
-      updated = next;
+  for (const segment of splitFenceSegments(markdown)) {
+    if (segment.fenced) {
+      updated += segment.text;
+      continue;
     }
-  };
+    let offset = 0;
+    for (const match of segment.text.matchAll(INLINE_CODE_RE)) {
+      updated += fixTypographyMarkers(segment.text.slice(offset, match.index));
+      updated += match[0];
+      offset = match.index + match[0].length;
+    }
+    updated += fixTypographyMarkers(segment.text.slice(offset));
+  }
 
-  // Safe typography fix: lift tiny utility classes to a readable baseline.
-  replace(/\btext-xs2\b/g, "text-sm");
-  replace(/\btext-xs3\b/g, "text-sm");
-
-  // Remove <small> wrappers and keep the text content.
-  replace(/<small>([\s\S]*?)<\/small>/gi, "$1");
-
-  return { markdown: updated, changed };
+  return { markdown: updated, changed: updated !== markdown };
 }
 
 async function main() {

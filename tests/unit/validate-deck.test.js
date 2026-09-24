@@ -147,6 +147,54 @@ key: value
   assert.match(slides[0].raw, /key: value/);
 });
 
+test("bullet-like lines inside fenced code blocks are not counted", () => {
+  const yamlBullets = Array.from(
+    { length: 9 },
+    (_, i) => `- item ${i + 1}`,
+  ).join("\n");
+  const numberedSteps = Array.from(
+    { length: 4 },
+    (_, i) => `${i + 1}. step`,
+  ).join("\n");
+  const fenced = `# Slide
+
+\`\`\`yaml
+${yamlBullets}
+\`\`\`
+
+~~~markdown
+${numberedSteps}
+~~~
+`;
+  const unfenced = `# Slide
+
+${yamlBullets}
+
+${numberedSteps}
+`;
+
+  const fencedResult = validateDeckMarkdown(fenced);
+  assert.equal(
+    fencedResult.findings.some((f) => f.ruleId === "dense-bullets"),
+    false,
+  );
+  assert.equal(
+    fencedResult.findings.some((f) => f.ruleId === "overflow-risk"),
+    false,
+  );
+
+  // The same content outside fences still trips the heuristics.
+  const unfencedResult = validateDeckMarkdown(unfenced);
+  assert.equal(
+    unfencedResult.findings.some((f) => f.ruleId === "dense-bullets"),
+    true,
+  );
+  assert.equal(
+    unfencedResult.findings.some((f) => f.ruleId === "overflow-risk"),
+    true,
+  );
+});
+
 test("formatSummary reports zero findings cleanly", () => {
   const result = { slideCount: 2, findings: [] };
   const summary = formatSummary(null, result);

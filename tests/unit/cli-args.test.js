@@ -57,7 +57,6 @@ test("marpx --poster reports replacement", () => {
 test("marpx theme scaffold options require --theme-new", () => {
   for (const args of [
     ["--source-url", "https://example.com/design"],
-    ["--force"],
     ["--no-build"],
   ]) {
     const result = runNodeScript("bin/marpx.js", args);
@@ -65,6 +64,13 @@ test("marpx theme scaffold options require --theme-new", () => {
     assert.equal(result.status, 1);
     assert.match(result.stderr, /can only be used with --theme-new/);
   }
+});
+
+test("marpx --force requires --new or --theme-new", () => {
+  const result = runNodeScript("bin/marpx.js", ["--force"]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--force can only be used with --new or --theme-new/);
 });
 
 test("marpx --theme-new forwards scaffold options", () => {

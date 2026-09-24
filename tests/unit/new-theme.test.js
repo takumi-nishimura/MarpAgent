@@ -65,8 +65,13 @@ test("new-theme scaffolds design, theme source, and fixture", () => {
     );
     assert.match(css, /@theme plain/);
     assert.match(css, /@size 16:9 1280px 720px/);
-    assert.match(css, /@import "\.\/_generated\/plain-design-tokens\.css";/);
-    assert.match(css, /@source "\.\.\/\.\.\/decks\/\*\*\/\*\.md";/);
+    assert.match(
+      css,
+      /@import "\.\/_generated\/plain-design-tokens\.css" theme\(static\);/,
+    );
+    assert.match(css, /@import "tailwindcss" source\(none\);/);
+    assert.doesNotMatch(css, /@source\s+"/);
+    assert.match(css, /@import "\.\/_shared\/_safelist\.css";/);
 
     const fixture = fs.readFileSync(
       path.join(tempRoot, "fixtures", "plain-slide.md"),

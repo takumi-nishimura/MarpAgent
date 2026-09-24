@@ -107,6 +107,145 @@ test("new-deck --paper scaffolds a single A-series paper template", () => {
   }
 });
 
+test("new-deck refuses to overwrite existing scaffold files", () => {
+  const deckName = `decks/test-existing-${process.pid}-${Date.now()}`;
+  const deckDir = path.join(repoRoot, deckName);
+
+  fs.rmSync(deckDir, { recursive: true, force: true });
+  fs.mkdirSync(deckDir, { recursive: true });
+  fs.writeFileSync(path.join(deckDir, "brief.md"), "authored brief\n");
+  fs.writeFileSync(path.join(deckDir, "slide.md"), "authored slides\n");
+
+  try {
+    const result = spawnSync(process.execPath, [scriptPath, deckName], {
+      cwd: repoRoot,
+      env: process.env,
+      encoding: "utf8",
+    });
+
+    assert.equal(result.status, 1);
+    // Names every conflicting file and points at --force.
+    assert.match(result.stderr, /brief\.md/);
+    assert.match(result.stderr, /slide\.md/);
+    assert.match(result.stderr, /--force/);
+
+    // Nothing was written or created.
+    assert.equal(
+      fs.readFileSync(path.join(deckDir, "brief.md"), "utf8"),
+      "authored brief\n",
+    );
+    assert.equal(
+      fs.readFileSync(path.join(deckDir, "slide.md"), "utf8"),
+      "authored slides\n",
+    );
+    assert.equal(fs.existsSync(path.join(deckDir, "assets")), false);
+    assert.equal(fs.existsSync(path.join(deckDir, "shared")), false);
+  } finally {
+    fs.rmSync(deckDir, { recursive: true, force: true });
+  }
+});
+
+test("new-deck --force overwrites existing scaffold files", () => {
+  const deckName = `decks/test-force-${process.pid}-${Date.now()}`;
+  const deckDir = path.join(repoRoot, deckName);
+
+  fs.rmSync(deckDir, { recursive: true, force: true });
+  fs.mkdirSync(deckDir, { recursive: true });
+  fs.writeFileSync(path.join(deckDir, "slide.md"), "authored slides\n");
+
+  try {
+    const result = spawnSync(
+      process.execPath,
+      [scriptPath, deckName, "--force"],
+      {
+        cwd: repoRoot,
+        env: process.env,
+        encoding: "utf8",
+      },
+    );
+
+    assert.equal(result.status, 0, result.stderr);
+    const slide = fs.readFileSync(path.join(deckDir, "slide.md"), "utf8");
+    assert.match(slide, /marp: true/);
+    assert.equal(slide.includes("authored slides"), false);
+    assert.equal(fs.existsSync(path.join(deckDir, "brief.md")), true);
+  } finally {
+    fs.rmSync(deckDir, { recursive: true, force: true });
+  }
+});
+
+test("new-deck reports a non-symlink shared entry and leaves it untouched", () => {
+  const deckName = `decks/test-shared-dir-${process.pid}-${Date.now()}`;
+  const deckDir = path.join(repoRoot, deckName);
+
+  fs.rmSync(deckDir, { recursive: true, force: true });
+  fs.mkdirSync(path.join(deckDir, "shared"), { recursive: true });
+  fs.writeFileSync(path.join(deckDir, "shared", "keep.txt"), "keep me\n");
+
+  try {
+    for (const extraArgs of [[], ["--force"]]) {
+      const result = spawnSync(
+        process.execPath,
+        [scriptPath, deckName, ...extraArgs],
+        {
+          cwd: repoRoot,
+          env: process.env,
+          encoding: "utf8",
+        },
+      );
+
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /shared/);
+      assert.match(result.stderr, /not a symlink/);
+      assert.equal(
+        fs.readFileSync(path.join(deckDir, "shared", "keep.txt"), "utf8"),
+        "keep me\n",
+      );
+      // The refusal happens before any scaffold file is written.
+      assert.equal(fs.existsSync(path.join(deckDir, "brief.md")), false);
+    }
+  } finally {
+    fs.rmSync(deckDir, { recursive: true, force: true });
+  }
+});
+
+test("marpx -n forwards --force to new-deck", () => {
+  const deckName = `decks/test-marpx-force-${process.pid}-${Date.now()}`;
+  const deckDir = path.join(repoRoot, deckName);
+  const marpxPath = path.join(repoRoot, "bin", "marpx.js");
+
+  fs.rmSync(deckDir, { recursive: true, force: true });
+  fs.mkdirSync(deckDir, { recursive: true });
+  fs.writeFileSync(path.join(deckDir, "slide.md"), "authored slides\n");
+
+  try {
+    const refused = spawnSync(process.execPath, [marpxPath, "-n", deckName], {
+      cwd: repoRoot,
+      env: process.env,
+      encoding: "utf8",
+    });
+    assert.equal(refused.status, 1);
+    assert.match(refused.stderr, /refusing to overwrite/);
+
+    const forced = spawnSync(
+      process.execPath,
+      [marpxPath, "-n", deckName, "--force"],
+      {
+        cwd: repoRoot,
+        env: process.env,
+        encoding: "utf8",
+      },
+    );
+    assert.equal(forced.status, 0, forced.stderr);
+    assert.match(
+      fs.readFileSync(path.join(deckDir, "slide.md"), "utf8"),
+      /marp: true/,
+    );
+  } finally {
+    fs.rmSync(deckDir, { recursive: true, force: true });
+  }
+});
+
 test("new-deck rejects path traversal outside decks directory", () => {
   const result = spawnSync(process.execPath, [scriptPath, "../tmp/escape"], {
     cwd: repoRoot,

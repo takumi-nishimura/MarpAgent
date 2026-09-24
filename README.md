@@ -150,7 +150,10 @@ shared by CSS, templates, skills, Tailwind, and the validator.
 `designs/<name>/DESIGN.md` is the source of truth for each design's tokens.
 `marpx --theme` regenerates the matching
 `themes/src/_generated/<name>-design-tokens.css` files before compiling the
-tracked theme CSS files.
+tracked theme CSS files. Tailwind scans no deck or documentation files: decks
+may use the theme's documented classes and their own deck-local styles, but not
+arbitrary Tailwind utilities. `npm test` fails when a tracked theme differs from
+a fresh build.
 
 To create another visual identity, start from the scaffold command and then
 edit the generated `DESIGN.md` as the token source of truth:
