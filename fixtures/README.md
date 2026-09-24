@@ -14,6 +14,7 @@ rendering is unavailable.
 - `comparison-slide.md`: 5-column table → hint `comparison-overpacked`
 - `tiny-text-slide.md`: `<small>` tag, rendered at 20.8px → no finding after a render (`typography-drift` only when rendering is unavailable)
 - `scoped-small-text-slide.md`: scoped `<style>` sets the body to 10px → rendered `text-too-small` error (no source hint: the heuristic cannot see `<style>`)
+- `text-overlap-slide.md`: the closing sentence runs into the footnote block → rendered `text-overlap` error (no source hint)
 - `clean-slide.md`, `paginate-skip-slide.md`, `muji-slide.md`, `toshiba-slide.md`: no findings (negative tests)
 
 ## Brief fixtures (outline generation)

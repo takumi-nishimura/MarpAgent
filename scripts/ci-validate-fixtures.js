@@ -54,6 +54,13 @@ const expectations = [
     hints: [],
   },
   {
+    // The closing sentence runs into the absolutely positioned footnote
+    // block; the source heuristics cannot see it.
+    fixture: "fixtures/text-overlap-slide.md",
+    errors: ["text-overlap"],
+    hints: [],
+  },
+  {
     fixture: "fixtures/overflow-heavy-slide.md",
     errors: ["content-clipped"],
     warnings: ["edge-crowding"],

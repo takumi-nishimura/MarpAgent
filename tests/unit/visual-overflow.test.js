@@ -153,6 +153,10 @@ test("measureRenderedSlides reports nothing for a clean slide", async (t) => {
     result.slides.map((slide) => slide.clipped),
     [[]],
   );
+  assert.deepEqual(
+    result.slides.map((slide) => slide.overlaps),
+    [[]],
+  );
 });
 
 test("measureRenderedSlides ignores trailing margins and intentional crops", async (t) => {
@@ -394,6 +398,89 @@ test("measureRenderedSlides scales the font floor to a paper canvas", async (t) 
   // its width, so the floors shrink in proportion.
   assert.deepEqual(page.textFloorPx, { body: 7.4, secondary: 5 });
   assert.deepEqual(page.smallText, []);
+});
+
+test("measureRenderedSlides reports text that collides with text or media", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-overlap-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+math: katex
+---
+
+# Body runs into the footnote
+
+<div style="height: 380px"></div>
+
+<p style="margin: 0">This closing sentence runs into the citation.</p>
+
+<div class="footnote" style="top: 522px; bottom: auto">[1] Citation block placed where the body ends.</div>
+
+---
+
+# Text over a diagram
+
+<svg width="480" height="200" viewBox="0 0 480 200"><rect width="480" height="200" fill="#888"/></svg>
+
+<p style="margin-top: -120px">This paragraph is pulled up over the diagram.</p>
+
+---
+
+# Intended overlays
+
+<div style="display: flex; gap: 40px">
+<div style="background: #eee; padding: 0.25em 0.35em; text-align: center"><strong style="display: block; font-size: 1.15em; line-height: 1.05">36/36</strong><span style="display: block; font-size: 0.875em; line-height: 1.25">両条件で全クリア</span></div>
+<figure style="position: relative; margin: 0"><svg width="300" height="160" viewBox="0 0 300 160"><rect width="300" height="160" fill="#888"/></svg><figcaption style="position: absolute; top: 8px; left: 8px">Overlay caption</figcaption></figure>
+<div style="position: relative"><svg width="300" height="160" viewBox="0 0 300 160"><rect width="300" height="160" fill="#888"/></svg><div style="position: absolute; top: 40px; left: 20px; background: #fff; padding: 8px">Label on its own card</div></div>
+</div>
+
+Weights $w_{i,j} \\in [-1, 1]$ and $\\sum_{i=1}^{n} x_i^2$ inline.
+
+$$
+\\hat{x}_{t+1} = \\sum_{i \\times i} w_{i,j}^{(k)} x_j
+$$
+
+<div aria-hidden="true" style="position: absolute; top: 200px; left: 80px; font-size: 140px; opacity: 0.1">DRAFT</div>
+`,
+  );
+
+  try {
+    const result = await measureRenderedSlides(deckPath);
+
+    assert.equal(result.status, "measured");
+    const bySlide = Object.fromEntries(
+      result.slides.map((slide) => [slide.slideNumber, slide]),
+    );
+
+    // Body text that runs into an absolutely positioned footnote block.
+    assert.equal(bySlide[1].overlaps.length, 1);
+    const [footnote] = bySlide[1].overlaps;
+    assert.match(footnote.first, /^"This closing sentence/);
+    assert.match(footnote.second, /^"\[1\] Citation block/);
+    assert.equal(footnote.overlapPx >= 4, true);
+    assert.equal(bySlide[1].maxOverlapPx, footnote.overlapPx);
+
+    // Text from another block drawn over a diagram.
+    assert.equal(bySlide[2].overlaps.length, 1);
+    assert.match(bySlide[2].overlaps[0].first, /^"This paragraph is pulled up/);
+    assert.equal(bySlide[2].overlaps[0].second, "<svg>");
+
+    // Tight line boxes whose glyphs do not touch, a caption overlaid inside
+    // its figure, a label on its own background over media, math internals,
+    // and an aria-hidden decoration are intended and not reported.
+    assert.deepEqual(bySlide[3].overlaps, []);
+    assert.equal(bySlide[3].maxOverlapPx, 0);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test("measureRenderedSlides reports media that fail to load", async (t) => {

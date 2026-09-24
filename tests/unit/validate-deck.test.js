@@ -358,6 +358,57 @@ test("measured text below the floor is one blocking text-too-small error per sli
   }
 });
 
+test("measured overlapping text is one blocking text-overlap error per slide", async () => {
+  const { dir, deckPath } = writeTempDeck("# One\n\n---\n\n# Two\n");
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        { slideNumber: 1, clipped: [], maxOverflowPx: 0, overlaps: [], maxOverlapPx: 0 },
+        {
+          slideNumber: 2,
+          clipped: [],
+          maxOverflowPx: 0,
+          overlaps: [
+            {
+              first: '"closing sentence"',
+              second: '"[1] citation"',
+              widthPx: 194,
+              heightPx: 4,
+              overlapPx: 4,
+            },
+            {
+              first: '"pulled-up paragraph"',
+              second: '<img assets/img/plot.png>',
+              widthPx: 480,
+              heightPx: 27,
+              overlapPx: 27,
+            },
+          ],
+          maxOverlapPx: 27,
+        },
+      ]),
+    });
+
+    assert.equal(result.findings.length, 1);
+    const [finding] = result.findings;
+    assert.equal(finding.slide, 2);
+    assert.equal(finding.ruleId, "text-overlap");
+    assert.equal(finding.severity, "error");
+    assert.equal(finding.source, "render");
+    assert.match(finding.title, /up to 27px/);
+    assert.match(finding.title, /"closing sentence" and "\[1\] citation" \(4px\)/);
+    assert.match(finding.title, /"pulled-up paragraph" and <img assets\/img\/plot\.png> \(27px\)/);
+    assert.equal(exitCodeFor(result), 1);
+    assert.match(
+      formatSummary(deckPath, result),
+      /\[error\] slide 2 text-overlap:/,
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("typography-drift is superseded by a render and kept as a fallback warning", async () => {
   const deckPath = fixture("tiny-text-slide.md");
 
