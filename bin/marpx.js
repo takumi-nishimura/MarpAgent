@@ -22,11 +22,12 @@ Options:
   --pptx                   Export to PPTX
   --html                   Export to standalone HTML
   --images [png|jpeg]      Export each slide as an image (default: png)
-  --lint                   Lint deck and report findings
-  --autofix                Apply safe autofixes (for --lint)
+  --lint                   Deprecated alias of -v
+  --autofix                Apply safe autofixes (for -v, --lint)
+  --dry-run                Show an --autofix diff without writing
   --doctor                 Run environment diagnostics
   --strict                 Require the rendered check (fail if it cannot run)
-  --hints                  List source-heuristic hints (for --validate/--lint)
+  --hints                  List source-heuristic hints (for -v, --lint)
   --screenshot <page>      Screenshot a slide (1-based displayed page)
   -v, --validate           Validate deck
   -n, --new                Create new deck
@@ -41,7 +42,7 @@ Options:
   --no-build               Scaffold only; skip token/theme build for --theme-new
   -w, --watch              Watch mode (for --theme)
   -o, --output <path>      Output path (for --outline, exports, --screenshot)
-  --report-dir <dir>       Report directory (for --validate)
+  --report-dir <dir>       Report directory (for -v, --lint)
   -h, --help               Show this help
 
 Without options, starts a live-reload server (serve + watch).
@@ -56,11 +57,11 @@ Examples:
   marpx decks/2025/talk/slide.md --html     Export standalone HTML
   marpx decks/2025/talk/slide.md --images jpeg --output out/slide.jpg  Export slide images
   marpx decks/2025/talk/slide.md --pdf --output out/talk.pdf  Export PDF to a chosen path
-  marpx decks/2025/talk/slide.md --lint     Lint
-  marpx decks/2025/talk/slide.md --lint --autofix  Lint with safe autofix
   marpx decks/2025/talk/slide.md --screenshot 5  Screenshot slide 5
   marpx decks/2025/talk/slide.md --screenshot 5 --output out/slide5.png  Screenshot to a chosen path
   marpx decks/2025/talk/slide.md -v         Validate
+  marpx decks/2025/talk/slide.md -v --autofix  Validate with safe autofix
+  marpx decks/2025/talk/slide.md -v --autofix --dry-run  Preview autofix changes as a diff
   marpx -n decks/2025/talk                  New deck
   marpx -n decks/2025/paper --paper         New A-series paper deck
   marpx decks/2025/talk/brief.md --outline  Generate outline
@@ -96,6 +97,7 @@ try {
       screenshot: { type: "string" },
       lint: { type: "boolean", default: false },
       autofix: { type: "boolean", default: false },
+      "dry-run": { type: "boolean", default: false },
       doctor: { type: "boolean", default: false },
       strict: { type: "boolean", default: false },
       hints: { type: "boolean", default: false },
@@ -174,8 +176,13 @@ if (values.output && !outputModes.has(mode)) {
   process.exit(1);
 }
 
-if (values.autofix && mode !== "lint") {
-  console.error("Error: --autofix can only be used with --lint");
+if (values.autofix && mode !== "validate" && mode !== "lint") {
+  console.error("Error: --autofix can only be used with --validate or --lint");
+  process.exit(1);
+}
+
+if (values["dry-run"] && !values.autofix) {
+  console.error("Error: --dry-run requires --autofix");
   process.exit(1);
 }
 
@@ -430,29 +437,20 @@ switch (mode) {
     break;
   }
 
-  case "validate": {
+  // --lint is a deprecated alias of -v; scripts/lint-deck.js prints the
+  // deprecation notice so direct script use shows it too.
+  case "validate":
+  case "lint": {
     const args = [...positionals];
     if (values["report-dir"]) {
       args.push("--report-dir", values["report-dir"]);
     }
-    if (values.strict) {
-      args.push("--strict-visual");
-    }
-    if (values.hints) {
-      args.push("--hints");
-    }
-    if (values.format) {
-      args.push("--format", values.format);
-    }
-    runScript("validate-deck.js", args);
-    break;
-  }
-
-  case "lint": {
-    const args = [...positionals];
     if (values.autofix) {
       args.push("--autofix");
     }
+    if (values["dry-run"]) {
+      args.push("--dry-run");
+    }
     if (values.strict) {
       args.push("--strict-visual");
     }
@@ -462,7 +460,7 @@ switch (mode) {
     if (values.format) {
       args.push("--format", values.format);
     }
-    runScript("lint-deck.js", args);
+    runScript(mode === "lint" ? "lint-deck.js" : "validate-deck.js", args);
     break;
   }
 

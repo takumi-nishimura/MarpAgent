@@ -73,9 +73,9 @@ marpx decks/my-talk/slide.md --overview
 | `marpx <slide.md> --html` | Export to standalone HTML |
 | `marpx <slide.md> --images [png\|jpeg]` | Export each slide as an image (default: png) |
 | `marpx <slide.md> --pdf --output <path>` | Export to a chosen path (also `--pptx`, `--html`, `--images`) |
-| `marpx <slide.md> --lint` | Lint with deck validator rules |
-| `marpx <slide.md> --lint --autofix` | Apply safe autofixes, then lint again |
-| `marpx <slide.md> -v` | Validate |
+| `marpx <slide.md> -v` | Validate (`--lint` is a deprecated alias) |
+| `marpx <slide.md> -v --autofix` | Apply safe autofixes, then validate |
+| `marpx <slide.md> -v --autofix --dry-run` | Show the autofix diff without writing |
 | `marpx <slide.md> -v --strict` | Validate and fail if the rendered check cannot run |
 | `marpx <slide.md> -v --hints` | Also list non-blocking source-heuristic hints |
 | `marpx <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |

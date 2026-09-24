@@ -80,7 +80,9 @@ resize. Scale the rendered SVG/container instead, e.g.
 | `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
 | `npm run marpx -- -n decks/<path> --paper` | Scaffold a new A-series paper deck |
 | `npm run marpx -- decks/<name>/brief.md --outline` | Generate outline from brief.md |
-| `npm run marpx -- decks/<name>/slide.md -v` | Validate slide.md |
+| `npm run marpx -- decks/<name>/slide.md -v` | Validate slide.md (`--lint` is a deprecated alias) |
+| `npm run marpx -- decks/<name>/slide.md -v --autofix` | Apply safe autofixes, then validate |
+| `npm run marpx -- decks/<name>/slide.md -v --autofix --dry-run` | Show the autofix diff without writing |
 | `npm run marpx -- decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |
 | `npm run marpx -- decks/<name>/slide.md` | Serve with live reload |
 | `npm run marpx -- decks/<name>/slide.md --screenshot <page>` | Screenshot a slide to `/tmp` (headless) |

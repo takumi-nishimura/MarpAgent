@@ -80,6 +80,27 @@ test("marpx --output requires an export, screenshot, or outline mode", () => {
   }
 });
 
+test("marpx --autofix requires -v or --lint", () => {
+  const result = runNodeScript("bin/marpx.js", [
+    "fixtures/clean-slide.md",
+    "--autofix",
+  ]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--autofix can only be used with/);
+});
+
+test("marpx --dry-run requires --autofix", () => {
+  const result = runNodeScript("bin/marpx.js", [
+    "fixtures/clean-slide.md",
+    "-v",
+    "--dry-run",
+  ]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--dry-run requires --autofix/);
+});
+
 test("marpx --pdf requires a file path", () => {
   const result = runNodeScript("bin/marpx.js", ["--pdf"]);
 

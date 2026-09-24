@@ -1,6 +1,6 @@
 # Rule interpretation
 
-The current implementation is `src/deck-validator.js`, with rendered measurement in `src/visual-overflow.js`, the media file check in `src/media-assets.js`, and CLI fallback/strict behavior in `scripts/validate-deck.js`. Check these sources if the runtime report differs from this reference. The policy is recorded in `docs/decisions/ADR-0001-make-rendered-measurement-the-authority-for-deck-validation.md`.
+The current implementation is `src/deck-validator.js`, with rendered measurement in `src/visual-overflow.js`, the media file check in `src/media-assets.js`, and CLI fallback/strict behavior in `src/validate-cli.js` (entry points `scripts/validate-deck.js` and the deprecated `scripts/lint-deck.js`). Check these sources if the runtime report differs from this reference. The policy is recorded in `docs/decisions/ADR-0001-make-rendered-measurement-the-authority-for-deck-validation.md`.
 
 ## Severity and exit codes
 
@@ -39,7 +39,7 @@ These count Markdown source, not the rendered result. They ignore theme font siz
 | `typography-drift` | Fallback only: `.text-xs2`, `.text-xs3`, `<small>`, or a matched tiny inline font-size. It cannot see `<style>` blocks. |
 | `overflow-risk` | Fallback only: ≥ 12 bullets, ≥ 10 prose lines, ≥ 600 counted characters, heading ≥ 70, or a prose line ≥ 140 characters |
 
-Bullet-like lines inside fenced code blocks (`` ``` `` or `~~~`) are not counted, and `--lint --autofix` leaves fenced code and inline code spans byte-identical.
+Bullet-like lines inside fenced code blocks (`` ``` `` or `~~~`) are not counted, and `-v --autofix` leaves fenced code and inline code spans byte-identical.
 
 Do not alter formatting or move meaningful content into excluded blocks to silence a hint. When a hint points at a slide, judge the rendered slide; leave the content alone if it reads well.
 
