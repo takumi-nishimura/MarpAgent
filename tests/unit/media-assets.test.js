@@ -266,6 +266,60 @@ test("findMissingAssets ignores remote URLs and hidden slides", () => {
   }
 });
 
+test("findMissingAssets skips media on slides hidden with _hide", () => {
+  const dir = makeDeck();
+  try {
+    const deckPath = writeSlide(
+      dir,
+      `# Visible
+
+---
+
+<!--
+_class: lead
+_hide: true
+-->
+![Hidden](assets/img/hidden-missing.png)
+
+---
+
+# Still visible
+
+![Missing](assets/img/missing.png)
+`,
+    );
+
+    assert.deepEqual(missingBySlide(findMissingAssets(deckPath)), {
+      3: [["assets/img/missing.png", "not found"]],
+    });
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("findMissingAssets does not hide a slide over a fenced hide comment", () => {
+  const dir = makeDeck();
+  try {
+    const deckPath = writeSlide(
+      dir,
+      `# Visible
+
+\`\`\`md
+<!-- hide: true -->
+\`\`\`
+
+![Missing](assets/img/missing.png)
+`,
+    );
+
+    assert.deepEqual(missingBySlide(findMissingAssets(deckPath)), {
+      1: [["assets/img/missing.png", "not found"]],
+    });
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("findMissingAssets reports nothing when every asset exists", () => {
   const dir = makeDeck({
     "assets/img/my figure.png": "png",

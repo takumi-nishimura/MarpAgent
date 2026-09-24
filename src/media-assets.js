@@ -1,7 +1,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { fileURLToPath } = require("node:url");
-const { splitSlideRawBlocks } = require("./markdown-slides");
+const { detectHiddenSlides } = require("./hidden-slides");
+const { splitSlideRawBlocks, splitFenceSegments } = require("./markdown-slides");
 
 // Markdown image: `![alt](url)`, `![alt](<url with spaces>)`, optionally
 // followed by a quoted or parenthesized title. Marp keywords such as `bg` or
@@ -38,24 +39,11 @@ function blank(text) {
  * old image references).
  */
 function maskNonRendered(raw) {
-  const lines = raw.split("\n");
-  let fence = null;
-  const masked = lines.map((line) => {
-    const fenceMatch = line.trim().match(/^(```+|~~~+)/);
-    if (fenceMatch) {
-      const marker = fenceMatch[1];
-      if (!fence) {
-        fence = { char: marker[0], length: marker.length };
-      } else if (marker[0] === fence.char && marker.length >= fence.length) {
-        fence = null;
-      }
-      return blank(line);
-    }
-    return fence ? blank(line) : line;
-  });
+  const text = splitFenceSegments(raw)
+    .map((segment) => (segment.fenced ? blank(segment.text) : segment.text))
+    .join("");
 
-  return masked
-    .join("\n")
+  return text
     .replace(/(`+)(?:(?!\1).)+?\1/g, (match) => blank(match))
     .replace(HTML_COMMENT_RE, (match, body) =>
       CSS_DIRECTIVE_RE.test(body) ? match : blank(match),
@@ -223,10 +211,6 @@ function copyDeckForRender(deckPath, destinationDir) {
   });
 }
 
-function isHiddenSlide(raw) {
-  return /<!--\s*hide:\s*true\s*-->/.test(raw);
-}
-
 function extractFrontmatter(markdown) {
   const lines = String(markdown || "").split(/\r?\n/);
   if (lines[0]?.trim() !== "---") return "";
@@ -251,8 +235,9 @@ function findMissingAssets(
   markdown = fs.readFileSync(deckPath, "utf8"),
 ) {
   const deckDir = path.dirname(path.resolve(deckPath));
+  const hidden = detectHiddenSlides(markdown);
   const slides = splitSlideRawBlocks(markdown).filter(
-    (slide) => slide.raw.trim() !== "" && !isHiddenSlide(slide.raw),
+    (slide) => slide.raw.trim() !== "" && !hidden.has(slide.number),
   );
   if (slides.length === 0) return [];
 
