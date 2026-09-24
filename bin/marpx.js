@@ -19,6 +19,9 @@ Options:
   -p, --preview            Single-shot preview (like marp --preview)
   --overview               Open in overview mode
   --pdf                    Export to PDF
+  --pptx                   Export to PPTX
+  --html                   Export to standalone HTML
+  --images [png|jpeg]      Export each slide as an image (default: png)
   --lint                   Lint deck and report findings
   --autofix                Apply safe autofixes (for --lint)
   --doctor                 Run environment diagnostics
@@ -37,7 +40,7 @@ Options:
   --force                  Overwrite existing files (for --new, --theme-new, --outline)
   --no-build               Scaffold only; skip token/theme build for --theme-new
   -w, --watch              Watch mode (for --theme)
-  --output <path>          Output path (for --outline)
+  -o, --output <path>      Output path (for --outline, exports, --screenshot)
   --report-dir <dir>       Report directory (for --validate)
   -h, --help               Show this help
 
@@ -49,9 +52,14 @@ Examples:
   marpx decks/2025/talk/slide.md -p         Single-shot preview
   marpx decks/2025/talk/slide.md --overview Overview mode
   marpx decks/2025/talk/slide.md --pdf      Export PDF
+  marpx decks/2025/talk/slide.md --pptx     Export PPTX
+  marpx decks/2025/talk/slide.md --html     Export standalone HTML
+  marpx decks/2025/talk/slide.md --images jpeg --output out/slide.jpg  Export slide images
+  marpx decks/2025/talk/slide.md --pdf --output out/talk.pdf  Export PDF to a chosen path
   marpx decks/2025/talk/slide.md --lint     Lint
   marpx decks/2025/talk/slide.md --lint --autofix  Lint with safe autofix
   marpx decks/2025/talk/slide.md --screenshot 5  Screenshot slide 5
+  marpx decks/2025/talk/slide.md --screenshot 5 --output out/slide5.png  Screenshot to a chosen path
   marpx decks/2025/talk/slide.md -v         Validate
   marpx -n decks/2025/talk                  New deck
   marpx -n decks/2025/paper --paper         New A-series paper deck
@@ -63,15 +71,28 @@ Examples:
   marpx --theme -w                          Watch all themes`);
 }
 
+// Bare "--images" defaults to png; parseArgs string options require a value,
+// so expand it before parsing. A following non-flag token stays the value.
+const cliArgs = process.argv
+  .slice(2)
+  .map((arg, index, all) =>
+    arg === "--images" && (!all[index + 1] || all[index + 1].startsWith("-"))
+      ? "--images=png"
+      : arg,
+  );
+
 let parsed;
 
 try {
   parsed = parseArgs({
-    args: process.argv.slice(2),
+    args: cliArgs,
     options: {
       preview: { type: "boolean", short: "p", default: false },
       overview: { type: "boolean", default: false },
       pdf: { type: "boolean", default: false },
+      pptx: { type: "boolean", default: false },
+      html: { type: "boolean", default: false },
+      images: { type: "string" },
       screenshot: { type: "string" },
       lint: { type: "boolean", default: false },
       autofix: { type: "boolean", default: false },
@@ -91,7 +112,7 @@ try {
       force: { type: "boolean", default: false },
       "no-build": { type: "boolean", default: false },
       watch: { type: "boolean", short: "w", default: false },
-      output: { type: "string" },
+      output: { type: "string", short: "o" },
       "report-dir": { type: "string" },
       help: { type: "boolean", short: "h", default: false },
     },
@@ -116,6 +137,9 @@ const modes = [
   "preview",
   "overview",
   "pdf",
+  "pptx",
+  "html",
+  "images",
   "screenshot",
   "lint",
   "doctor",
@@ -134,6 +158,21 @@ if (modes.length > 1) {
 }
 
 const mode = modes[0] || "serve";
+
+const exportModes = new Set(["pdf", "pptx", "html", "images"]);
+const outputModes = new Set([...exportModes, "screenshot", "outline"]);
+
+if (values.images !== undefined && !["png", "jpeg"].includes(values.images)) {
+  console.error(`Error: --images must be "png" or "jpeg"`);
+  process.exit(1);
+}
+
+if (values.output && !outputModes.has(mode)) {
+  console.error(
+    "Error: --output can only be used with --outline, --screenshot, --pdf, --pptx, --html, or --images",
+  );
+  process.exit(1);
+}
 
 if (values.autofix && mode !== "lint") {
   console.error("Error: --autofix can only be used with --lint");
@@ -336,10 +375,13 @@ switch (mode) {
 
     screenshotSlide(htmlPath, slideId)
       .then((buffer) => {
-        const screenshotPath = path.join(
-          os.tmpdir(),
-          `marpx-screenshot-${path.basename(ssDeckPath, ".md")}-p${displayedPage}.png`,
-        );
+        const screenshotPath = values.output
+          ? path.resolve(values.output)
+          : path.join(
+              os.tmpdir(),
+              `marpx-screenshot-${path.basename(ssDeckPath, ".md")}-p${displayedPage}.png`,
+            );
+        fs.mkdirSync(path.dirname(screenshotPath), { recursive: true });
         fs.writeFileSync(screenshotPath, buffer);
         process.stdout.write(screenshotPath + "\n");
       })
@@ -353,12 +395,24 @@ switch (mode) {
     break;
   }
 
-  case "pdf": {
+  // HTML is Marp's default conversion: no format flag, directed by -o.
+  case "pdf":
+  case "pptx":
+  case "html":
+  case "images": {
     if (positionals.length === 0) {
-      console.error("Error: file path required for --pdf");
+      console.error(`Error: file path required for --${mode}`);
       process.exit(1);
     }
-    runMarp(["--pdf", "--allow-local-files", ...positionals]);
+
+    const args = [];
+    if (mode === "pdf") args.push("--pdf");
+    if (mode === "pptx") args.push("--pptx");
+    if (mode === "images") args.push("--images", values.images);
+    args.push("--allow-local-files");
+    if (values.output) args.push("-o", path.resolve(values.output));
+    args.push(...positionals);
+    runMarp(args);
     break;
   }
 
