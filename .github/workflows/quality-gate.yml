@@ -28,4 +28,10 @@ jobs:
         run: npx playwright install --with-deps chromium firefox
 
       - name: Run strict quality gate
+        env:
+          # GitHub's Ubuntu runners cannot start Chromium's sandbox for the
+          # browser that Marp CLI launches for PDF/PPTX/image export, so the
+          # browser exits with "Target closed". Playwright's own browsers are
+          # unaffected.
+          CHROME_NO_SANDBOX: "1"
         run: npm run quality:gate:strict

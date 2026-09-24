@@ -75,6 +75,70 @@ test("outline generation smoke", () => {
   }
 });
 
+test("export smoke: pptx, html, and images to a temp directory", () => {
+  // Three Chromium-backed conversions run back to back.
+  test.setTimeout(120000);
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-e2e-export-"));
+
+  try {
+    const pptxPath = path.join(tempDir, "deck.pptx");
+    const pptx = runMarpx([
+      "fixtures/clean-slide.md",
+      "--pptx",
+      "--output",
+      pptxPath,
+    ]);
+
+    if (pptx.status !== 0 && canSkipForChromiumFailure(pptx.stderr)) {
+      if (strictE2E) {
+        expect(pptx.status, pptx.stderr).toBe(0);
+      }
+      test.skip("Chromium is unavailable in this environment.");
+      return;
+    }
+
+    expect(pptx.status, pptx.stderr).toBe(0);
+    expect(fs.statSync(pptxPath).size).toBeGreaterThan(0);
+
+    const htmlPath = path.join(tempDir, "deck.html");
+    const html = runMarpx([
+      "fixtures/clean-slide.md",
+      "--html",
+      "--output",
+      htmlPath,
+    ]);
+
+    expect(html.status, html.stderr).toBe(0);
+    const htmlContent = fs.readFileSync(htmlPath, "utf8");
+    expect(htmlContent).toContain("<section");
+
+    const imagesPrefix = path.join(tempDir, "slide.png");
+    const images = runMarpx([
+      "fixtures/clean-slide.md",
+      "--images",
+      "png",
+      "--output",
+      imagesPrefix,
+    ]);
+
+    if (images.status !== 0 && canSkipForChromiumFailure(images.stderr)) {
+      if (strictE2E) {
+        expect(images.status, images.stderr).toBe(0);
+      }
+      test.skip("Chromium is unavailable in this environment.");
+      return;
+    }
+
+    expect(images.status, images.stderr).toBe(0);
+    const imageFiles = fs
+      .readdirSync(tempDir)
+      .filter((f) => /^slide\.\d+\.png$/.test(f));
+    expect(imageFiles.length).toBeGreaterThan(0);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("screenshot smoke", () => {
   const result = runMarpx(["fixtures/clean-slide.md", "--screenshot", "1"]);
 

@@ -7,10 +7,11 @@ const { spawnSync } = require("node:child_process");
 
 const repoRoot = path.join(__dirname, "../..");
 
-function runNodeScript(scriptPath, args) {
+function runNodeScript(scriptPath, args, timeout = 30000) {
   return spawnSync(process.execPath, [scriptPath, ...args], {
     cwd: repoRoot,
     encoding: "utf8",
+    timeout,
   });
 }
 
@@ -32,6 +33,58 @@ test("generate-outline fails when --output value is missing", () => {
 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Option --output requires a file path\./);
+});
+
+test("marpx export modes are mutually exclusive", () => {
+  for (const args of [
+    ["fixtures/clean-slide.md", "--pdf", "--pptx"],
+    ["fixtures/clean-slide.md", "--pdf", "--html"],
+    ["fixtures/clean-slide.md", "--pptx", "--images", "png"],
+    ["fixtures/clean-slide.md", "--html", "--screenshot", "1"],
+    ["fixtures/clean-slide.md", "--images", "png", "--lint"],
+  ]) {
+    const result = runNodeScript("bin/marpx.js", args);
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /conflicting options/);
+  }
+});
+
+test("marpx --images rejects an unsupported format", () => {
+  const result = runNodeScript("bin/marpx.js", [
+    "fixtures/clean-slide.md",
+    "--images",
+    "gif",
+  ]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--images must be "png" or "jpeg"/);
+});
+
+test("marpx --images defaults to png and requires a file", () => {
+  const result = runNodeScript("bin/marpx.js", ["--images"]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /file path required for --images/);
+});
+
+test("marpx --output requires an export, screenshot, or outline mode", () => {
+  for (const args of [
+    ["fixtures/clean-slide.md", "--output", "out.html"],
+    ["fixtures/clean-slide.md", "--lint", "--output", "out.html"],
+  ]) {
+    const result = runNodeScript("bin/marpx.js", args);
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /--output can only be used with/);
+  }
+});
+
+test("marpx --pdf requires a file path", () => {
+  const result = runNodeScript("bin/marpx.js", ["--pdf"]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /file path required for --pdf/);
 });
 
 test("marpx --paper requires --new", () => {

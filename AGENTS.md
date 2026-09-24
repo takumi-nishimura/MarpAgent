@@ -87,6 +87,10 @@ resize. Scale the rendered SVG/container instead, e.g.
 | `npm run marpx -- decks/<name>/slide.md -p` | Single-shot preview (opens browser) |
 | `npm run marpx -- decks/<name>/slide.md --overview` | Thumbnail overview (opens browser) |
 | `npm run marpx -- decks/<name>/slide.md --pdf` | Export to PDF |
+| `npm run marpx -- decks/<name>/slide.md --pptx` | Export to PPTX |
+| `npm run marpx -- decks/<name>/slide.md --html` | Export to standalone HTML (open from the deck dir so `assets/`/`shared/` resolve) |
+| `npm run marpx -- decks/<name>/slide.md --images [png\|jpeg]` | Export each slide as an image (default: png) |
+| `npm run marpx -- decks/<name>/slide.md --pdf --output <path>` | Export to a chosen path (also `--pptx`, `--html`, `--images`, `--screenshot`) |
 | `npm run marpx -- --theme` | Build all themes |
 | `npm run marpx -- --theme lab` | Build lab theme only |
 | `npm run marpx -- --theme-new <name> --source-url <url>` | Scaffold a new theme |
