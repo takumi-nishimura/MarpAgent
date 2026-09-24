@@ -203,15 +203,18 @@ Allowed author-facing text utilities:
 - `.text-sm`
 - `.text-xs` for captions, dense tables, and fine print
 
-Validator-disallowed authoring escapes:
+Discouraged authoring escapes:
 
 - `.text-xs2`
 - `.text-xs3`
 - `<small>`
 - tiny inline `font-size` values
 
-The theme may keep legacy render utilities for compatibility, but the validator
-should reject the disallowed escapes and allow `.text-xs`.
+The theme may keep legacy render utilities for compatibility. The validator
+judges the rendered size rather than these names: `text-too-small` fails text
+below the readable floor wherever it comes from, including scoped `<style>`
+overrides and transforms. The source heuristic `typography-drift` names the
+escapes only when rendering is unavailable.
 
 ## Validation Contract
 

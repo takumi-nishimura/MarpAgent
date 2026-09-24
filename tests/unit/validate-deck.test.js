@@ -365,6 +365,72 @@ test("measured edge crowding is a non-blocking edge-crowding warning", async () 
   }
 });
 
+test("measured text below the floor is one blocking text-too-small error per slide", async () => {
+  const { dir, deckPath } = writeTempDeck("# One\n\n---\n\n# Two\n");
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        {
+          slideNumber: 1,
+          clipped: [],
+          maxOverflowPx: 0,
+          smallText: [],
+          textFloorPx: { body: 12, secondary: 8 },
+        },
+        {
+          slideNumber: 2,
+          clipped: [],
+          maxOverflowPx: 0,
+          smallText: [
+            { label: '"[1] tiny note"', fontPx: 6.4, floorPx: 8, secondary: true },
+            { label: '"Scoped body text"', fontPx: 11, floorPx: 12, secondary: false },
+          ],
+          textFloorPx: { body: 12, secondary: 8 },
+        },
+      ]),
+    });
+
+    assert.equal(result.findings.length, 1);
+    const [finding] = result.findings;
+    assert.equal(finding.slide, 2);
+    assert.equal(finding.ruleId, "text-too-small");
+    assert.equal(finding.severity, "error");
+    assert.equal(finding.source, "render");
+    assert.match(finding.title, /12px body, 8px secondary/);
+    assert.match(finding.title, /"\[1\] tiny note" \(6\.4px secondary\)/);
+    assert.match(finding.title, /"Scoped body text" \(11px body\)/);
+    assert.equal(exitCodeFor(result), 1);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("typography-drift is superseded by a render and kept as a fallback warning", async () => {
+  const deckPath = fixture("tiny-text-slide.md");
+
+  const measured = await validateDeckWithVisualCheck(deckPath, {
+    measureRenderedSlides: measuredStub([
+      { slideNumber: 1, clipped: [], maxOverflowPx: 0, smallText: [] },
+    ]),
+  });
+  assert.equal(
+    measured.findings.some((f) => f.ruleId === "typography-drift"),
+    false,
+  );
+
+  const skipped = await validateDeckWithVisualCheck(deckPath, {
+    measureRenderedSlides: async () => ({
+      status: "skipped",
+      reason: "Playwright is not installed.",
+      slides: [],
+    }),
+  });
+  const drift = skipped.findings.find((f) => f.ruleId === "typography-drift");
+  assert.ok(drift);
+  assert.equal(drift.severity, "warning");
+});
+
 test("skipped visual check keeps heuristics as non-blocking warnings", async () => {
   const bullets = Array.from({ length: 10 }, (_, i) => `- item ${i + 1}`).join("\n");
   const { dir, deckPath } = writeTempDeck(`# Dense\n\n${bullets}\n`);
