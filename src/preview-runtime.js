@@ -40,7 +40,13 @@ function forwardLines(stream, writer, onLine = () => {}) {
   });
 }
 
-function resolveRequestedSlideId(deckPath, configPath, displayedPage, repoRoot) {
+/**
+ * Resolve a serve/overview page argument through the slide map. Returns
+ * undefined when no page was requested, or the resolved slide
+ * ({ slideId, displayedPage, slide, renderedSlide }); throws when no rendered
+ * slide matches.
+ */
+function resolveRequestedSlide(deckPath, configPath, displayedPage, repoRoot) {
   if (displayedPage === undefined) {
     return undefined;
   }
@@ -56,7 +62,12 @@ function resolveRequestedSlideId(deckPath, configPath, displayedPage, repoRoot) 
     );
   }
 
-  return resolved.slideId;
+  return resolved;
+}
+
+function resolveRequestedSlideId(deckPath, configPath, displayedPage, repoRoot) {
+  return resolveRequestedSlide(deckPath, configPath, displayedPage, repoRoot)
+    ?.slideId;
 }
 
 function forwardChildSignals(child) {
@@ -85,5 +96,6 @@ module.exports = {
   getMarpBin,
   isNotifierPortConflict,
   openBrowser,
+  resolveRequestedSlide,
   resolveRequestedSlideId,
 };

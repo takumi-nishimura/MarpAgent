@@ -12,6 +12,10 @@ The current implementation is `src/deck-validator.js`, with rendered measurement
 
 The CLI exits 2 for an execution failure, including a strict run whose render failed.
 
+## Slide identity
+
+Every finding is located through one slide map built from the configured Marp engine (`src/slide-map.js`), so hidden slides, empty slides, setext headings, and `headingDivider` count as Marp renders them. `slide` is the Markdown slide index (Marp's slide order, counting hidden and empty slides). JSON, SARIF, and `report.json` findings also carry `renderedSlide` (position among rendered slides, `null` when hidden), `sectionId`, `page` (the displayed page number, `null` when none is shown), and `line` (the slide's first source line, used as the SARIF `region.startLine`). Text output and `report.md` show `slide 11 (page 10)` when the displayed page differs and `(hidden)` for a hidden slide. Report screenshots are named `slide-NNN.png` by Markdown slide index and taken from the rendered slide.
+
 ## Rendered findings
 
 | Rule | What is measured | Likely response |

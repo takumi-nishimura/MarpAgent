@@ -116,7 +116,9 @@ function buildOverviewCards(slideSvgList) {
           slideId,
         )}">`,
         '  <div class="marp-agent-overview__card-header">',
-        `    <span class="marp-agent-overview__slide-number">Slide ${index + 1}</span>`,
+        // The section id is the Markdown slide index, the number the
+        // validator reports, so a hidden slide leaves a gap here too.
+        `    <span class="marp-agent-overview__slide-number">Slide ${escapeHtml(slideId)}</span>`,
         `    <span class="marp-agent-overview__page-label">${escapeHtml(label)}</span>`,
         "  </div>",
         '  <div class="marp-agent-overview__viewport">',

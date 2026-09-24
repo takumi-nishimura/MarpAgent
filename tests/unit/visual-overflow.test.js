@@ -155,7 +155,9 @@ test("buildRenderedToMarkdownMap skips a slide hidden with _hide", () => {
   assert.deepEqual(buildRenderedToMarkdownMap(markdown), [1, 3]);
 });
 
-test("buildRenderedToMarkdownMap skips empty slides", () => {
+// Marp renders an empty slide as its own section, so it keeps its place in
+// the rendered order (ISS-0006).
+test("buildRenderedToMarkdownMap keeps empty slides, which Marp renders", () => {
   const markdown = `---
 marp: true
 ---
@@ -169,10 +171,25 @@ marp: true
 # Slide 3
 `;
 
-  const map = buildRenderedToMarkdownMap(markdown);
-  assert.equal(map[0], 1);
-  assert.equal(map[1], 3);
-  assert.equal(map.length, 2);
+  assert.deepEqual(buildRenderedToMarkdownMap(markdown), [1, 2, 3]);
+});
+
+test("buildRenderedToMarkdownMap does not split on a setext heading underline", () => {
+  const markdown = `# Slide 1
+
+---
+
+Setext heading
+---
+
+<!-- _hide: true -->
+
+---
+
+# Slide 3
+`;
+
+  assert.deepEqual(buildRenderedToMarkdownMap(markdown), [1, 3]);
 });
 
 test("buildRenderedToMarkdownMap keeps --- inside fenced code in one slide", () => {

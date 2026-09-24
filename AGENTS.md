@@ -85,7 +85,7 @@ resize. Scale the rendered SVG/container instead, e.g.
 | `npm run marpx -- decks/<name>/slide.md -v --autofix --dry-run` | Show the autofix diff without writing |
 | `npm run marpx -- decks/<name>/slide.md -v --report-dir out/<name>` | Validate with report |
 | `npm run marpx -- decks/<name>/slide.md` | Serve with live reload |
-| `npm run marpx -- decks/<name>/slide.md --screenshot <page>` | Screenshot a slide to `/tmp` (headless) |
+| `npm run marpx -- decks/<name>/slide.md --screenshot <page>` | Screenshot the slide showing displayed page `<page>` to `/tmp` (headless) |
 | `npm run marpx -- decks/<name>/slide.md -p` | Single-shot preview (opens browser) |
 | `npm run marpx -- decks/<name>/slide.md --overview` | Thumbnail overview (opens browser) |
 | `npm run marpx -- decks/<name>/slide.md --pdf` | Export to PDF |

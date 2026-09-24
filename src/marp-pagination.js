@@ -1,57 +1,26 @@
-const fs = require("node:fs");
-const path = require("node:path");
+const { buildSlideMapForFile, findSlideByDisplayedPage } = require("./slide-map");
 
-const { Marp } = require("@marp-team/marp-core");
-
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function readAttribute(tag, name) {
-  const match = tag.match(new RegExp(`\\b${escapeRegExp(name)}="([^"]*)"`));
-  return match ? match[1] : undefined;
-}
-
-function extractSlidePageMap(html) {
-  const sections = html.match(/<section\b[^>]*>/g) || [];
-
-  return sections
-    .map((tag) => ({
-      slideId: readAttribute(tag, "id"),
-      displayedPage: readAttribute(tag, "data-marpit-pagination"),
-    }))
-    .filter((entry) => entry.slideId && entry.displayedPage)
-    .map((entry) => ({
-      slideId: entry.slideId,
-      displayedPage: Number(entry.displayedPage),
-    }));
-}
-
-function loadMarpConfig(configPath) {
-  const resolvedConfigPath = path.resolve(configPath);
-  delete require.cache[resolvedConfigPath];
-  return require(resolvedConfigPath);
-}
-
-function renderDeckHtml(deckPath, configPath) {
-  const markdown = fs.readFileSync(deckPath, "utf8");
-  const config = loadMarpConfig(configPath);
-  const marp = new Marp({ html: config.html ?? true });
-  const configuredMarp =
-    typeof config.engine === "function"
-      ? config.engine({ marp }) || marp
-      : marp;
-  const { html } = configuredMarp.render(markdown);
-  return html;
-}
-
+/**
+ * Resolve the page argument that `--screenshot`, serve, and `--overview`
+ * accept: the displayed page number, or the rendered position when the deck
+ * shows no page numbers (see findSlideByDisplayedPage in src/slide-map.js).
+ * Returns { slideId, displayedPage, slide, renderedSlide } for the rendered
+ * slide, where `slideId` is its `section` id, `slide` its Markdown slide index,
+ * and `renderedSlide` its 1-based rendered position; or undefined when no
+ * rendered slide matches. Hidden slides are never returned.
+ */
 function findSlideIdByDisplayedPage(deckPath, configPath, displayedPage) {
-  const html = renderDeckHtml(deckPath, configPath);
-  const slidePageMap = extractSlidePageMap(html);
-  return slidePageMap.find((entry) => entry.displayedPage === displayedPage);
+  const slideMap = buildSlideMapForFile(deckPath, { configPath });
+  const entry = findSlideByDisplayedPage(slideMap, displayedPage);
+  if (!entry) return undefined;
+  return {
+    slideId: entry.sectionId,
+    displayedPage: entry.page,
+    slide: entry.slide,
+    renderedSlide: entry.renderedSlide,
+  };
 }
 
 module.exports = {
-  extractSlidePageMap,
   findSlideIdByDisplayedPage,
 };

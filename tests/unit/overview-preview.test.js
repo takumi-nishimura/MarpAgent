@@ -23,6 +23,17 @@ const renderedHtml = `<!doctype html>
   </body>
 </html>`;
 
+test("buildOverviewDocument labels cards with the Markdown slide index", () => {
+  const html = buildOverviewDocument(
+    renderedHtml.replace('<section id="2"', '<section id="3"'),
+    { reloadToken: "token" },
+  );
+
+  assert.match(html, /Slide 1<\/span>/);
+  assert.match(html, /Slide 3<\/span>/);
+  assert.doesNotMatch(html, /Slide 2<\/span>/);
+});
+
 test("extractSlides returns every rendered slide svg", () => {
   assert.equal(extractSlides(renderedHtml).length, 2);
   assert.match(extractSlides(renderedHtml)[0], /<section id="1">Title<\/section>/);
