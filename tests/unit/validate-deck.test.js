@@ -147,6 +147,54 @@ key: value
   assert.match(slides[0].raw, /key: value/);
 });
 
+test("bullet-like lines inside fenced code blocks are not counted", () => {
+  const yamlBullets = Array.from(
+    { length: 9 },
+    (_, i) => `- item ${i + 1}`,
+  ).join("\n");
+  const numberedSteps = Array.from(
+    { length: 4 },
+    (_, i) => `${i + 1}. step`,
+  ).join("\n");
+  const fenced = `# Slide
+
+\`\`\`yaml
+${yamlBullets}
+\`\`\`
+
+~~~markdown
+${numberedSteps}
+~~~
+`;
+  const unfenced = `# Slide
+
+${yamlBullets}
+
+${numberedSteps}
+`;
+
+  const fencedResult = validateDeckMarkdown(fenced);
+  assert.equal(
+    fencedResult.findings.some((f) => f.ruleId === "dense-bullets"),
+    false,
+  );
+  assert.equal(
+    fencedResult.findings.some((f) => f.ruleId === "overflow-risk"),
+    false,
+  );
+
+  // The same content outside fences still trips the heuristics.
+  const unfencedResult = validateDeckMarkdown(unfenced);
+  assert.equal(
+    unfencedResult.findings.some((f) => f.ruleId === "dense-bullets"),
+    true,
+  );
+  assert.equal(
+    unfencedResult.findings.some((f) => f.ruleId === "overflow-risk"),
+    true,
+  );
+});
+
 test("formatSummary reports zero findings cleanly", () => {
   const result = { slideCount: 2, findings: [] };
   const summary = formatSummary(null, result);
@@ -317,6 +365,72 @@ test("measured edge crowding is a non-blocking edge-crowding warning", async () 
   }
 });
 
+test("measured text below the floor is one blocking text-too-small error per slide", async () => {
+  const { dir, deckPath } = writeTempDeck("# One\n\n---\n\n# Two\n");
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        {
+          slideNumber: 1,
+          clipped: [],
+          maxOverflowPx: 0,
+          smallText: [],
+          textFloorPx: { body: 12, secondary: 8 },
+        },
+        {
+          slideNumber: 2,
+          clipped: [],
+          maxOverflowPx: 0,
+          smallText: [
+            { label: '"[1] tiny note"', fontPx: 6.4, floorPx: 8, secondary: true },
+            { label: '"Scoped body text"', fontPx: 11, floorPx: 12, secondary: false },
+          ],
+          textFloorPx: { body: 12, secondary: 8 },
+        },
+      ]),
+    });
+
+    assert.equal(result.findings.length, 1);
+    const [finding] = result.findings;
+    assert.equal(finding.slide, 2);
+    assert.equal(finding.ruleId, "text-too-small");
+    assert.equal(finding.severity, "error");
+    assert.equal(finding.source, "render");
+    assert.match(finding.title, /12px body, 8px secondary/);
+    assert.match(finding.title, /"\[1\] tiny note" \(6\.4px secondary\)/);
+    assert.match(finding.title, /"Scoped body text" \(11px body\)/);
+    assert.equal(exitCodeFor(result), 1);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("typography-drift is superseded by a render and kept as a fallback warning", async () => {
+  const deckPath = fixture("tiny-text-slide.md");
+
+  const measured = await validateDeckWithVisualCheck(deckPath, {
+    measureRenderedSlides: measuredStub([
+      { slideNumber: 1, clipped: [], maxOverflowPx: 0, smallText: [] },
+    ]),
+  });
+  assert.equal(
+    measured.findings.some((f) => f.ruleId === "typography-drift"),
+    false,
+  );
+
+  const skipped = await validateDeckWithVisualCheck(deckPath, {
+    measureRenderedSlides: async () => ({
+      status: "skipped",
+      reason: "Playwright is not installed.",
+      slides: [],
+    }),
+  });
+  const drift = skipped.findings.find((f) => f.ruleId === "typography-drift");
+  assert.ok(drift);
+  assert.equal(drift.severity, "warning");
+});
+
 test("skipped visual check keeps heuristics as non-blocking warnings", async () => {
   const bullets = Array.from({ length: 10 }, (_, i) => `- item ${i + 1}`).join("\n");
   const { dir, deckPath } = writeTempDeck(`# Dense\n\n${bullets}\n`);
@@ -341,6 +455,148 @@ test("skipped visual check keeps heuristics as non-blocking warnings", async () 
       formatSummary(deckPath, result),
       /Visual check: skipped \(Playwright is not installed\.\)/,
     );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("missing assets are one blocking error per slide, deduplicated across checks", async () => {
+  const { dir, deckPath } = writeTempDeck(
+    "# One\n\n<img src=\"assets/img/missing.png\" />\n\n---\n\n# Two\n\n![bg](assets/img/bg.png)\n",
+  );
+  fs.mkdirSync(path.join(dir, "assets/img"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "assets/img/bg.png"), "not an image");
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        {
+          slideNumber: 1,
+          clipped: [],
+          maxOverflowPx: 0,
+          missingMedia: [
+            {
+              reference: "assets/img/missing.png",
+              reason: "not found",
+              path: path.join(dir, "assets/img/missing.png"),
+            },
+          ],
+        },
+        {
+          slideNumber: 2,
+          clipped: [],
+          maxOverflowPx: 0,
+          missingMedia: [
+            {
+              reference: "assets/img/bg.png",
+              reason: "failed to decode",
+              path: path.join(dir, "assets/img/bg.png"),
+            },
+          ],
+        },
+      ]),
+    });
+
+    const missing = result.findings.filter((f) => f.ruleId === "missing-asset");
+    assert.equal(missing.length, 2);
+    assert.equal(missing[0].slide, 1);
+    assert.equal(missing[0].severity, "error");
+    assert.equal(missing[0].source, "files");
+    assert.equal(
+      missing[0].title.match(/assets\/img\/missing\.png/g).length,
+      1,
+    );
+    assert.match(missing[0].title, /assets\/img\/missing\.png \(not found\)/);
+    assert.equal(missing[1].slide, 2);
+    assert.equal(missing[1].source, "render");
+    assert.match(missing[1].title, /assets\/img\/bg\.png \(failed to decode\)/);
+    assert.equal(exitCodeFor(result), 1);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("missing assets still fail validation when rendering is skipped", async () => {
+  const { dir, deckPath } = writeTempDeck(
+    "# One\n\n<video src=\"assets/video/missing.mp4\"></video>\n",
+  );
+  fs.mkdirSync(path.join(dir, "assets/img"), { recursive: true });
+
+  try {
+    const skipped = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: async () => ({
+        status: "skipped",
+        reason: "Playwright is not installed.",
+        slides: [],
+      }),
+    });
+    const fallback = validateDeckFile(deckPath);
+
+    for (const result of [skipped, fallback]) {
+      const missing = result.findings.filter((f) => f.ruleId === "missing-asset");
+      assert.equal(missing.length, 1);
+      assert.equal(missing[0].severity, "error");
+      assert.equal(missing[0].source, "files");
+      assert.match(missing[0].title, /assets\/video\/missing\.mp4 \(not found\)/);
+      assert.equal(exitCodeFor(result), 1);
+    }
+    assert.match(
+      formatSummary(deckPath, skipped),
+      /\[error\] slide 1 missing-asset:/,
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("missing-asset names the target of a broken symlink", async () => {
+  const { dir, deckPath } = writeTempDeck(
+    "# One\n\n<img src=\"assets/img/linked.png\" />\n",
+  );
+  fs.mkdirSync(path.join(dir, "assets/img"), { recursive: true });
+  fs.symlinkSync("../../../gone/figure.png", path.join(dir, "assets/img/linked.png"));
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        { slideNumber: 1, clipped: [], maxOverflowPx: 0 },
+      ]),
+    });
+
+    const [finding] = result.findings;
+    assert.equal(finding.ruleId, "missing-asset");
+    assert.match(
+      finding.title,
+      /assets\/img\/linked\.png \(broken symlink -> \.\.\/\.\.\/\.\.\/gone\/figure\.png\)/,
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("rendered and file checks report a missing image once", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const { dir, deckPath } = writeTempDeck(
+    "---\nmarp: true\ntheme: lab\n---\n\n# Broken\n\n<img src=\"assets/img/missing.png\" />\n<img src=\"assets/img/corrupt.png\" />\n",
+  );
+  fs.mkdirSync(path.join(dir, "assets/img"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "assets/img/corrupt.png"), "not an image");
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath);
+
+    assert.equal(result.visualCheck.status, "measured");
+    const missing = result.findings.filter((f) => f.ruleId === "missing-asset");
+    assert.equal(missing.length, 1);
+    assert.equal(missing[0].source, "files");
+    assert.equal(missing[0].title.match(/missing\.png/g).length, 1);
+    assert.match(missing[0].title, /assets\/img\/missing\.png \(not found\)/);
+    assert.match(missing[0].title, /assets\/img\/corrupt\.png \(failed to decode\)/);
+    assert.equal(exitCodeFor(result), 1);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

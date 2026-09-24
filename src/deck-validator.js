@@ -3,7 +3,11 @@ const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const { isASeriesCanvas } = require("./canvas-size");
-const { splitNonEmptySlides } = require("./markdown-slides");
+const { findMissingAssets } = require("./media-assets");
+const {
+  splitFenceSegments,
+  splitNonEmptySlides,
+} = require("./markdown-slides");
 
 function splitSlides(markdown) {
   return splitNonEmptySlides(markdown);
@@ -63,8 +67,11 @@ function countBullets(lines) {
 
 function countTopLevelBullets(raw) {
   let count = 0;
-  for (const line of stripNonContent(raw).split(/\r?\n/)) {
-    if (/^(?:[-*+]\s+|\d+\.\s+)/.test(line)) count++;
+  for (const segment of splitFenceSegments(stripNonContent(raw))) {
+    if (segment.fenced) continue;
+    for (const line of segment.text.split(/\r?\n/)) {
+      if (/^(?:[-*+]\s+|\d+\.\s+)/.test(line)) count++;
+    }
   }
   return count;
 }
@@ -163,8 +170,10 @@ function detectTableMetrics(lines) {
 }
 
 // Severity model (ADR-0001):
-// - "error": a visible defect measured on the rendered slide; fails the run.
-// - "warning": a source heuristic reported while rendering was unavailable.
+// - "error": a visible defect measured on the rendered slide, or a media file
+//   the deck references that is definitely missing; fails the run.
+// - "warning": a design risk measured on the render (edge crowding), or a
+//   source heuristic reported while rendering was unavailable.
 // - "info": a source heuristic reported alongside a successful render; a
 //   non-blocking hint that is hidden from the text summary by default.
 const HEURISTIC_SEVERITY = { fallback: "warning", measured: "info" };
@@ -650,6 +659,65 @@ function writeArtifacts(result, options = {}) {
   };
 }
 
+function describeMissingAsset(item) {
+  if (item.reason !== "broken symlink") {
+    return `${item.reference} (${item.reason})`;
+  }
+  const link = item.link ? ` ${item.link}` : "";
+  return `${item.reference} (broken symlink${link} -> ${item.target})`;
+}
+
+/**
+ * Merge the source-level file check with rendered media failures into one
+ * `missing-asset` error per slide (ISS-0024). A reference the file check
+ * already reports is not repeated from the render. The finding's source is
+ * "render" only when every item came from the render (for example an image
+ * that exists but cannot be decoded); otherwise it is "files".
+ */
+function buildMissingAssetFindings(fileResults, renderedSlides = []) {
+  const bySlide = new Map();
+  const itemsFor = (slideNumber) => {
+    if (!bySlide.has(slideNumber)) bySlide.set(slideNumber, []);
+    return bySlide.get(slideNumber);
+  };
+
+  for (const { slideNumber, missing } of fileResults) {
+    for (const item of missing) {
+      itemsFor(slideNumber).push({ ...item, source: "files" });
+    }
+  }
+  for (const slideAudit of renderedSlides) {
+    for (const item of slideAudit.missingMedia || []) {
+      const items = itemsFor(slideAudit.slideNumber);
+      const duplicate = items.some(
+        (existing) =>
+          (existing.path && item.path && existing.path === item.path) ||
+          existing.reference === item.reference,
+      );
+      if (!duplicate) items.push({ ...item, source: "render" });
+    }
+  }
+
+  const findings = [];
+  for (const [slideNumber, items] of bySlide) {
+    if (items.length === 0) continue;
+    const source = items.every((item) => item.source === "render")
+      ? "render"
+      : "files";
+    findings.push(
+      buildFinding(
+        { number: slideNumber },
+        "missing-asset",
+        "error",
+        `Media referenced by the slide did not load: ${items.map(describeMissingAsset).join(", ")}.`,
+        "Restore the file or fix the reference; repoint a broken symlink at an existing file inside the repository.",
+        source,
+      ),
+    );
+  }
+  return findings;
+}
+
 /**
  * Heuristic-only validation, used when rendering is unavailable. Findings are
  * warnings and the result records why the visual check did not run.
@@ -665,6 +733,11 @@ function validateDeckFile(deckPath, options = {}) {
       reason: "visual check was not attempted",
     },
   };
+  // The file check needs no browser, so missing media still fail the run.
+  result.findings.push(
+    ...buildMissingAssetFindings(findMissingAssets(deckPath, markdown)),
+  );
+  result.findings.sort((a, b) => a.slide - b.slide);
   const artifacts = writeArtifacts(result, {
     deckPath,
     reportDir: options.reportDir,
@@ -699,12 +772,33 @@ function formatCrowdedTitle(slideAudit) {
   return `Content sits within the ${slideAudit.safeMarginPx}px safe margin of the slide edge: ${parts.join(", ")}${more}.`;
 }
 
+function formatSmallTextTitle(slideAudit) {
+  const kind = (item) => (item.secondary ? "secondary" : "body");
+  const parts = slideAudit.smallText
+    .slice(0, 3)
+    .map((item) => `${item.label} (${item.fontPx}px ${kind(item)})`);
+  const more =
+    slideAudit.smallText.length > 3
+      ? ` and ${slideAudit.smallText.length - 3} more`
+      : "";
+  const floors = slideAudit.textFloorPx
+    ? ` (${slideAudit.textFloorPx.body}px body, ${slideAudit.textFloorPx.secondary}px secondary)`
+    : "";
+  return `Text renders below the readable size floor${floors}: ${parts.join(", ")}${more}.`;
+}
+
+// Source heuristics that a successful render answers directly, so they are
+// dropped instead of reported as hints: the clipping check replaces
+// `overflow-risk` and the rendered font size check replaces `typography-drift`
+// (ISS-0022).
+const SUPERSEDED_BY_RENDER = new Set(["overflow-risk", "typography-drift"]);
+
 /**
  * Validate a deck by rendering it and measuring visible defects (ADR-0001).
  * When the render succeeds, measured defects are errors and source heuristics
- * become hints; `overflow-risk` is dropped because the measurement answers it
- * directly. When rendering is unavailable, heuristics are reported as
- * warnings and `visualCheck.status` is "skipped".
+ * become hints; `overflow-risk` and `typography-drift` are dropped because the
+ * measurement answers them directly. When rendering is unavailable,
+ * heuristics are reported as warnings and `visualCheck.status` is "skipped".
  */
 async function validateDeckWithVisualCheck(deckPath, options = {}) {
   const {
@@ -731,7 +825,7 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
 
   if (measured) {
     result.findings = result.findings.filter(
-      (finding) => finding.ruleId !== "overflow-risk",
+      (finding) => !SUPERSEDED_BY_RENDER.has(finding.ruleId),
     );
     for (const slideAudit of measurement.slides) {
       if (slideAudit.clipped.length === 0) continue;
@@ -759,7 +853,29 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
         ),
       );
     }
+    for (const slideAudit of measurement.slides) {
+      if (!slideAudit.smallText || slideAudit.smallText.length === 0) continue;
+      result.findings.push(
+        buildFinding(
+          { number: slideAudit.slideNumber },
+          "text-too-small",
+          "error",
+          formatSmallTextTitle(slideAudit),
+          "Raise the listed text to at least the floor by removing the font-size override, transform, or tiny utility class; if the slide then overflows, split it or move detail to speaker notes instead of shrinking other text.",
+          "render",
+        ),
+      );
+    }
   }
+
+  // The file check runs whether or not the render succeeded; rendered media
+  // failures add what it cannot see, such as files that fail to decode.
+  result.findings.push(
+    ...buildMissingAssetFindings(
+      findMissingAssets(deckPath, markdown),
+      measured ? measurement.slides : [],
+    ),
+  );
 
   // Sort findings by slide number for consistent output
   result.findings.sort((a, b) => a.slide - b.slide);

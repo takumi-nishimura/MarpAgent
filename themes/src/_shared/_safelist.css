@@ -1,0 +1,51 @@
+/*
+ * Tailwind safelist: the utilities and theme variables that Tailwind
+ * contributes to every compiled theme.
+ *
+ * Theme entries import Tailwind with source(none) and register no file
+ * globs, so decks, fixtures, and skill prose do not add utilities or
+ * variables; the compiled CSS depends only on tracked theme sources.
+ *
+ * Utilities: these entries pair with the hand-written author-facing classes
+ * of the same name: text-* adds Tailwind's matching line-height to the
+ * theme's em-based font sizes, and self-* adds align-self to the theme's
+ * margin placement. Add a utility here, rebuild with `marpx --theme`, and
+ * document it in docs/theme-contract.md before recommending it to deck
+ * authors.
+ */
+@source inline("text-xs text-sm text-xl self-start self-center self-end");
+
+/*
+ * Variables: Tailwind emits a theme variable only when something uses it.
+ * Deck-local styles use the font-size scale, e.g. `font-size: var(--text-lg)`,
+ * so it is always emitted. The values restate Tailwind's defaults from
+ * tailwindcss/theme.css; tests/unit/theme-css.test.js catches drift.
+ */
+@theme static {
+  --text-xs: 0.75rem;
+  --text-xs--line-height: calc(1 / 0.75);
+  --text-sm: 0.875rem;
+  --text-sm--line-height: calc(1.25 / 0.875);
+  --text-base: 1rem;
+  --text-base--line-height: calc(1.5 / 1);
+  --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
+  --text-xl: 1.25rem;
+  --text-xl--line-height: calc(1.75 / 1.25);
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: calc(2 / 1.5);
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: calc(2.25 / 1.875);
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: calc(2.5 / 2.25);
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 1;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
+  --text-9xl: 8rem;
+  --text-9xl--line-height: 1;
+}

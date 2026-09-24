@@ -47,3 +47,59 @@ marp: true
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
 });
+
+test("lint-deck --autofix leaves fenced code and code spans byte-identical", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-lint-"));
+  const deckPath = path.join(tempDir, "slide.md");
+
+  try {
+    fs.writeFileSync(
+      deckPath,
+      `---
+marp: true
+---
+# Title
+
+<div class="text-xs3">detail</div>
+<small>footnote</small>
+
+The \`text-xs2\` class and \`<small>fine</small>\` span stay literal.
+
+\`\`\`html
+<div class="text-xs2">sample</div>
+<small>inside</small>
+\`\`\`
+`,
+    );
+
+    const result = spawnSync(
+      process.execPath,
+      ["scripts/lint-deck.js", deckPath, "--autofix", "--format", "json"],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          MARP_AGENT_REQUIRE_VISUAL: "0",
+        },
+      },
+    );
+
+    assert.equal(result.status, 0);
+    const updated = fs.readFileSync(deckPath, "utf8");
+    assert.equal(updated.includes('<div class="text-sm">detail</div>'), true);
+    assert.equal(updated.includes("\nfootnote\n"), true);
+    assert.equal(
+      updated.includes("The `text-xs2` class and `<small>fine</small>` span"),
+      true,
+    );
+    assert.equal(
+      updated.includes(
+        '```html\n<div class="text-xs2">sample</div>\n<small>inside</small>\n```',
+      ),
+      true,
+    );
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});

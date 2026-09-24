@@ -7,7 +7,6 @@
  * @size a4-landscape 297mm 210mm
  */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
-@layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
   :root, :host {
@@ -15,23 +14,53 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-gray-100: #f5f5f5;
+    --color-gray-200: #ebebec;
+    --color-gray-300: #d8d8d9;
+    --color-gray-400: #c4c4c6;
+    --color-gray-500: #9d9da0;
+    --color-gray-600: #76767b;
+    --color-gray-700: #6d6d72;
     --color-gray-800: #3c3c43;
     --spacing: 0.25rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5 / 1);
+    --text-lg: 1.125rem;
+    --text-lg--line-height: calc(1.75 / 1.125);
     --text-xl: 1.25rem;
     --text-xl--line-height: calc(1.75 / 1.25);
-    --default-transition-duration: 150ms;
-    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: calc(2 / 1.5);
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: calc(2.25 / 1.875);
+    --text-4xl: 2.25rem;
+    --text-4xl--line-height: calc(2.5 / 2.25);
+    --text-5xl: 3rem;
+    --text-5xl--line-height: 1;
+    --text-6xl: 3.75rem;
+    --text-6xl--line-height: 1;
+    --text-7xl: 4.5rem;
+    --text-7xl--line-height: 1;
+    --text-8xl: 6rem;
+    --text-8xl--line-height: 1;
+    --text-9xl: 8rem;
+    --text-9xl--line-height: 1;
+    --radius-sm: 4px;
+    --radius-md: 4px;
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
     --color-primary: #3c3c43;
     --color-secondary: #6d6d72;
     --color-tertiary: #7f0019;
     --color-neutral: #ffffff;
+    --color-surface: #ffffff;
     --color-surface-muted: #f5f5f5;
+    --color-on-primary: #ffffff;
+    --color-on-surface: #3c3c43;
     --color-accent-strong: #7f0019;
     --color-emphasis: #f4eede;
     --color-muted-invert: #c4c4c6;
@@ -39,6 +68,8 @@
     --color-table-border: #d8d8d9;
     --color-table-header: #f5f5f5;
     --color-table-stripe: #ffffff;
+    --color-cursor-orange: #7f0019;
+    --color-cursor-glow: #7f001959;
     --color-muji-red: #7f0019;
     --color-red: #dd0c14;
     --color-kinari: #f4eede;
@@ -46,6 +77,7 @@
     --color-text-primary: #3c3c43;
     --color-text-secondary: #6d6d72;
     --color-text-tertiary: #76767b;
+    --color-text-disabled: #9d9da0;
     --color-border: #d8d8d9;
     --color-border-light: #ebebec;
     --color-background: #ffffff;
@@ -126,8 +158,44 @@
     --color-code-dark-tag: #e0ceaa;
     --color-code-dark-builtin: #ffffff;
     --color-code-dark-meta: #c4c4c6;
+    --font-display: "Helvetica Neue";
+    --font-headline-lg: "Helvetica Neue";
+    --font-headline-md: "Helvetica Neue";
+    --font-body-md: "Helvetica Neue";
+    --font-body-sm: "Helvetica Neue";
+    --font-caption: "Helvetica Neue";
+    --font-label-md: "Helvetica Neue";
+    --text-display: 52px;
+    --text-headline-lg: 44px;
+    --text-headline-md: 32px;
     --text-body-md: 24px;
+    --text-body-sm: 18px;
+    --text-caption: 14px;
+    --text-label-md: 24px;
+    --tracking-display: 0em;
+    --tracking-headline-lg: 0em;
+    --tracking-headline-md: 0em;
+    --tracking-body-md: 0em;
+    --tracking-body-sm: 0em;
+    --tracking-caption: 0em;
+    --tracking-label-md: 0em;
+    --font-weight-display: 700;
+    --font-weight-headline-lg: 700;
+    --font-weight-headline-md: 700;
+    --font-weight-body-md: 400;
+    --font-weight-body-sm: 400;
+    --font-weight-caption: 400;
+    --font-weight-label-md: 700;
     --radius-none: 0px;
+    --radius-full: 9999px;
+    --spacing-xxxxs: 4px;
+    --spacing-xxxs: 8px;
+    --spacing-xxs: 12px;
+    --spacing-xs: 16px;
+    --spacing-sm: 20px;
+    --spacing-md: 32px;
+    --spacing-lg: 48px;
+    --spacing-xl: 64px;
     --spacing-slide-x: 56px;
     --spacing-header-height: 56px;
     --spacing-header-title-inset: 20px;
@@ -296,54 +364,6 @@
   }
 }
 @layer utilities {
-  .collapse {
-    visibility: collapse;
-  }
-  .visible {
-    visibility: visible;
-  }
-  .start {
-    inset-inline-start: var(--spacing);
-  }
-  .container {
-    width: 100%;
-    @media (width >= 40rem) {
-      max-width: 40rem;
-    }
-    @media (width >= 48rem) {
-      max-width: 48rem;
-    }
-    @media (width >= 64rem) {
-      max-width: 64rem;
-    }
-    @media (width >= 80rem) {
-      max-width: 80rem;
-    }
-    @media (width >= 96rem) {
-      max-width: 96rem;
-    }
-  }
-  .block {
-    display: block;
-  }
-  .flex {
-    display: flex;
-  }
-  .grid {
-    display: grid;
-  }
-  .inline {
-    display: inline;
-  }
-  .table {
-    display: table;
-  }
-  .shrink {
-    flex-shrink: 1;
-  }
-  .resize {
-    resize: both;
-  }
   .self-center {
     align-self: center;
   }
@@ -352,10 +372,6 @@
   }
   .self-start {
     align-self: flex-start;
-  }
-  .border {
-    border-style: var(--tw-border-style);
-    border-width: 1px;
   }
   .text-sm {
     font-size: var(--text-sm);
@@ -368,18 +384,6 @@
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
-  }
-  .uppercase {
-    text-transform: uppercase;
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
-  }
-  .transition {
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 }
 section {
@@ -1599,22 +1603,4 @@ section::after {
 .paper-section.highlight > h2 {
   background: var(--color-muji-red);
   color: var(--color-neutral);
-}
-@property --tw-border-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
-@property --tw-outline-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
-@layer properties {
-  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
-    *, ::before, ::after, ::backdrop {
-      --tw-border-style: solid;
-      --tw-outline-style: solid;
-    }
-  }
 }

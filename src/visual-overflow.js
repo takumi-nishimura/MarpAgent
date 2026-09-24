@@ -2,8 +2,11 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
-const { pathToFileURL } = require("node:url");
+const { fileURLToPath, pathToFileURL } = require("node:url");
+const { Marp } = require("@marp-team/marp-core");
+const marpHideSlidesPlugin = require("../scripts/hide-slides-plugin");
 const { splitSlideRawBlocks } = require("./markdown-slides");
+const { diagnoseMissingPath } = require("./media-assets");
 
 // Visible content may cross an edge by this much before it counts as clipped,
 // which absorbs sub-pixel rounding of line boxes and image edges.
@@ -18,6 +21,21 @@ const MEDIA_CLIP_TOLERANCE_RATIO = 0.02;
 // canvas height.
 const EDGE_SAFE_MARGIN_PX = 20;
 const EDGE_REFERENCE_HEIGHT_PX = 720;
+// Visible text whose rendered size is below these floors is reported as too
+// small to read (ADR-0001, ISS-0022). The values are in slide pixels on the
+// 1280x720 reference canvas. Body text must reach 12px (1/60 of the height);
+// secondary text (footnotes, citation markers, captions, header/footer) must
+// reach 8px. Other canvases scale the floors by the factor that fits the
+// reference canvas inside them, min(width / 1280, height / 720): a 16:9 slide
+// scales with its height, and an A4 page with its width, as if a slide were
+// printed across the page.
+const BODY_TEXT_FLOOR_PX = 12;
+const SECONDARY_TEXT_FLOOR_PX = 8;
+const TEXT_REFERENCE_WIDTH_PX = 1280;
+// Images and video/audio get this long to finish loading or fail before the
+// page is measured. Media still pending afterwards are not reported, because
+// they are not definitely broken (ISS-0024).
+const MEDIA_SETTLE_TIMEOUT_MS = 15000;
 
 function emitDiagnostic(onDiagnostic, payload) {
   if (typeof onDiagnostic === "function") {
@@ -87,16 +105,24 @@ function renderToHtml(deckPath) {
  * the slide canvas. Visible content is text line boxes and replaced elements,
  * each intersected with the clip rectangles of its overflow-clipping
  * ancestors inside the slide, so intentional crops and trailing margins do not
- * count. Runs inside the page via `page.evaluate`, so it must stay
- * self-contained.
+ * count. It also records the rendered font size of each visible text run and
+ * lists the runs below the readable floor. Runs inside the page via
+ * `page.evaluate`, so it must stay self-contained.
  */
 function auditSlidesInPage({
   tolerancePx,
   mediaToleranceRatio,
   safeMarginPx,
   referenceHeightPx,
+  bodyFloorPx,
+  secondaryFloorPx,
+  referenceWidthPx,
 }) {
   const REPLACED = "img,video,canvas,iframe,object,svg";
+  // Footnotes, citation markers, captions, and header/footer bands are
+  // secondary text, held to the lower floor. `mtight` marks KaTeX sub- and
+  // superscripts, and `rt` ruby annotations.
+  const SECONDARY_TAGS = new Set(["header", "footer", "figcaption", "caption", "sup", "sub", "rt"]);
 
   function snippet(text) {
     const clean = text.replace(/\u200b/g, "").replace(/\s+/g, " ").trim();
@@ -150,12 +176,47 @@ function auditSlidesInPage({
     return Boolean(svg && section.contains(svg) && svg !== node);
   }
 
+  function isSecondaryText(element, section) {
+    for (let node = element; node && node !== section; node = node.parentElement) {
+      if (SECONDARY_TAGS.has(node.tagName.toLowerCase())) return true;
+      if ([...node.classList].some((name) => /footnote|caption/.test(name) || name === "mtight")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Vertical scale that transforms, the `scale` property, and `zoom` apply to
+  // an element relative to its slide. The computed font size excludes them.
+  function scaleWithinSection(element, section) {
+    let factor = 1;
+    for (let node = element; node && node !== section; node = node.parentElement) {
+      const style = getComputedStyle(node);
+      if (style.transform && style.transform !== "none") {
+        const matrix = new DOMMatrixReadOnly(style.transform);
+        factor *= Math.hypot(matrix.c, matrix.d);
+      }
+      if (style.scale && style.scale !== "none") {
+        const values = style.scale.split(/\s+/).map(Number.parseFloat);
+        factor *= values.length > 1 ? values[1] : values[0];
+      }
+      const zoom = Number.parseFloat(style.zoom);
+      if (zoom > 0) factor *= zoom;
+    }
+    return factor;
+  }
+
+  function roundTenth(value) {
+    return Math.round(value * 10) / 10;
+  }
+
   return [...document.querySelectorAll("section[id]")].map((section, slideIndex) => {
     const canvas = section.getBoundingClientRect();
     const scale = canvas.width / section.offsetWidth || 1;
     const width = section.offsetWidth;
     const height = section.offsetHeight;
     const boxes = [];
+    const textRuns = [];
 
     const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT);
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
@@ -165,11 +226,24 @@ function auditSlidesInPage({
       if (!parent.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue;
       const range = document.createRange();
       range.selectNodeContents(node);
-      for (const rect of range.getClientRects()) {
-        if (rect.width > 0 && rect.height > 0) {
-          boxes.push({ rect, element: parent, media: false, label: `"${snippet(node.textContent)}"` });
-        }
+      const label = `"${snippet(node.textContent)}"`;
+      const rects = [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0);
+      for (const rect of rects) {
+        boxes.push({ rect, element: parent, media: false, label });
       }
+      // Only text that shows more than a pixel after clipping has a readable
+      // size; this skips visually hidden copies such as KaTeX's MathML.
+      const shown = rects.some((rect) => {
+        const visible = clipByAncestors(rect, parent, section);
+        return visible && visible.right - visible.left > scale && visible.bottom - visible.top > scale;
+      });
+      if (!shown) continue;
+      const fontSize = Number.parseFloat(getComputedStyle(parent).fontSize);
+      textRuns.push({
+        label,
+        fontPx: roundTenth(fontSize * scaleWithinSection(parent, section)),
+        secondary: isSecondaryText(parent, section),
+      });
     }
 
     for (const element of section.querySelectorAll(REPLACED)) {
@@ -224,6 +298,25 @@ function auditSlidesInPage({
     const crowded = [...crowdedByLabel.values()]
       .filter((item) => !byLabel.has(item.label))
       .sort((a, b) => a.gapPx - b.gapPx);
+
+    const fontScale = Math.min(width / referenceWidthPx, height / referenceHeightPx);
+    const textFloorPx = {
+      body: roundTenth(bodyFloorPx * fontScale),
+      secondary: roundTenth(secondaryFloorPx * fontScale),
+    };
+    const smallByLabel = new Map();
+    for (const run of textRuns) {
+      const floorPx = run.secondary ? textFloorPx.secondary : textFloorPx.body;
+      if (run.fontPx >= floorPx) continue;
+      const previous = smallByLabel.get(run.label);
+      if (!previous || previous.fontPx > run.fontPx) {
+        smallByLabel.set(run.label, { ...run, floorPx });
+      }
+    }
+    const smallText = [...smallByLabel.values()]
+      .sort((a, b) => a.fontPx - b.fontPx)
+      .map(({ label, fontPx, floorPx, secondary }) => ({ label, fontPx, floorPx, secondary }));
+
     return {
       slideIndex,
       width,
@@ -232,21 +325,130 @@ function auditSlidesInPage({
       maxOverflowPx: clipped.length > 0 ? clipped[0].overflowPx : 0,
       crowded,
       safeMarginPx: Math.round(margin),
+      textRuns,
+      smallText,
+      textFloorPx,
     };
   });
+}
+
+/**
+ * Browser-side media check: wait until every image has decoded or failed and
+ * every video/audio element has loaded metadata or failed, bounded by
+ * `timeoutMs`, then list per slide the media that definitely failed: an
+ * `img` that finished with `naturalWidth === 0`, or a video/audio element
+ * with a media error or no usable source. Waiting on these events instead of
+ * `networkidle` alone keeps slow media from being misreported and lets the
+ * layout audit measure loaded media. Runs inside the page via
+ * `page.evaluate`, so it must stay self-contained.
+ */
+async function auditMediaInPage({ timeoutMs }) {
+  const HAVE_METADATA = 1;
+  const NETWORK_NO_SOURCE = 3;
+  const sections = [...document.querySelectorAll("section[id]")];
+
+  function sourcesOf(element) {
+    if (element.getAttribute("src")) return [element.src];
+    return [...element.querySelectorAll("source[src]")].map((source) => source.src);
+  }
+
+  function hasFailed(element) {
+    return (
+      Boolean(element.error) ||
+      (element.networkState === NETWORK_NO_SOURCE && element.readyState < HAVE_METADATA)
+    );
+  }
+
+  function settle(element) {
+    if (element.tagName === "IMG") return element.decode().catch(() => {});
+    if (element.readyState >= HAVE_METADATA || hasFailed(element)) return Promise.resolve();
+    // `preload="none"` never loads on its own, so there is nothing to wait for.
+    if (element.preload === "none" && !element.autoplay) return Promise.resolve();
+    return new Promise((resolve) => {
+      element.addEventListener("loadedmetadata", resolve, { once: true });
+      element.addEventListener("error", resolve, { once: true });
+      // With <source> children the element itself fires no error; the last
+      // source does once every candidate has failed.
+      const sources = element.querySelectorAll("source");
+      sources[sources.length - 1]?.addEventListener("error", resolve, { once: true });
+    });
+  }
+
+  const media = sections
+    .flatMap((section) => [...section.querySelectorAll("img,video,audio")])
+    .filter((element) => sourcesOf(element).length > 0);
+  let timer;
+  await Promise.race([
+    Promise.all(media.map(settle)),
+    new Promise((resolve) => {
+      timer = setTimeout(resolve, timeoutMs);
+    }),
+  ]);
+  clearTimeout(timer);
+
+  return sections.map((section) => {
+    const failures = [];
+    for (const element of section.querySelectorAll("img,video,audio")) {
+      const sources = sourcesOf(element);
+      if (sources.length === 0) continue;
+      if (element.tagName === "IMG") {
+        if (element.complete && element.naturalWidth === 0) {
+          failures.push({ url: element.currentSrc || element.src, reason: "failed to decode" });
+        }
+        continue;
+      }
+      if (!hasFailed(element)) continue;
+      for (const url of sources) failures.push({ url, reason: "failed to load" });
+    }
+    return failures;
+  });
+}
+
+/**
+ * Map a failed media URL from the rendered copy back to the deck. Returns
+ * null for remote URLs (never reported) and for files outside the copied
+ * deck directory, which the source-level file check covers. A file that is
+ * missing in the deck is reported as not found or a broken symlink rather
+ * than with the browser's generic reason.
+ */
+function mapFailedMedia(failure, renderedDeckDir, deckDir) {
+  if (!/^file:/i.test(failure.url)) return null;
+  let renderedPath;
+  try {
+    renderedPath = fileURLToPath(failure.url);
+  } catch {
+    return null;
+  }
+  const relative = path.relative(renderedDeckDir, renderedPath);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) return null;
+
+  const deckPath = path.join(deckDir, relative);
+  const diagnosis = diagnoseMissingPath(deckPath, deckDir);
+  return {
+    reference: relative.split(path.sep).join("/"),
+    path: deckPath,
+    reason: failure.reason,
+    ...diagnosis,
+  };
 }
 
 /**
  * Launch Playwright Chromium and audit every rendered slide.
  * Returns one entry per rendered slide:
  * { slideIndex, width, height, clipped: [{ label, edge, overflowPx }],
- *   maxOverflowPx, crowded: [{ label, edge, gapPx }], safeMarginPx }.
+ *   maxOverflowPx, crowded: [{ label, edge, gapPx }], safeMarginPx,
+ *   textRuns: [{ label, fontPx, secondary }],
+ *   smallText: [{ label, fontPx, floorPx, secondary }],
+ *   textFloorPx: { body, secondary }, failedMedia: [{ url, reason }] }.
  */
 async function measureSlidesInBrowser(htmlPath, options = {}) {
   const {
     tolerancePx = CLIP_TOLERANCE_PX,
     mediaToleranceRatio = MEDIA_CLIP_TOLERANCE_RATIO,
     safeMarginPx = EDGE_SAFE_MARGIN_PX,
+    bodyFloorPx = BODY_TEXT_FLOOR_PX,
+    secondaryFloorPx = SECONDARY_TEXT_FLOOR_PX,
+    mediaTimeoutMs = MEDIA_SETTLE_TIMEOUT_MS,
   } = options;
   let playwright;
   try {
@@ -264,12 +466,22 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "networkidle" });
     await page.evaluate(() => document.fonts.ready);
-    return await page.evaluate(auditSlidesInPage, {
+    const failedMedia = await page.evaluate(auditMediaInPage, {
+      timeoutMs: mediaTimeoutMs,
+    });
+    const audits = await page.evaluate(auditSlidesInPage, {
       tolerancePx,
       mediaToleranceRatio,
       safeMarginPx,
       referenceHeightPx: EDGE_REFERENCE_HEIGHT_PX,
+      bodyFloorPx,
+      secondaryFloorPx,
+      referenceWidthPx: TEXT_REFERENCE_WIDTH_PX,
     });
+    return audits.map((audit) => ({
+      ...audit,
+      failedMedia: failedMedia[audit.slideIndex] || [],
+    }));
   } finally {
     await browser.close();
   }
@@ -277,14 +489,19 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
 
 /**
  * Detect hidden slides from markdown source.
+ * Each slide block is parsed by Marp with the same hide plugin the renderer
+ * uses, so `hide: true` and `_hide: true` are recognized exactly as they are
+ * rendered: a block is hidden when the plugin removes all of its slides.
  * Returns a Set of 1-based slide numbers that are hidden.
  */
 function detectHiddenSlides(markdown) {
   const hidden = new Set();
   const rawSlides = splitSlideRawBlocks(markdown);
+  const marp = new Marp({ html: true }).use(marpHideSlidesPlugin);
 
   for (const slide of rawSlides) {
-    if (/<!--\s*hide:\s*true\s*-->/.test(slide.raw)) {
+    const tokens = marp.markdown.parse(slide.raw, {});
+    if (!tokens.some((token) => token.type === "marpit_slide_open")) {
       hidden.add(slide.number);
     }
   }
@@ -310,9 +527,12 @@ function buildRenderedToMarkdownMap(markdown) {
 }
 
 /**
- * Render a deck and audit every slide for clipped visible content.
+ * Render a deck and audit every slide for clipped visible content, content
+ * crowding the edge, text below the readable size floor, and media that fail
+ * to load.
  * Returns { status: "measured", slides: [{ slideNumber, clipped, maxOverflowPx,
- * crowded, safeMarginPx }] }
+ * crowded, safeMarginPx, textRuns, smallText, textFloorPx,
+ * missingMedia: [{ reference, reason, path }] }] }
  * where slideNumber is the markdown slide number, or
  * { status: "skipped", reason, slides: [] } when rendering or the browser is
  * unavailable. In strict mode a failure throws instead of being skipped.
@@ -331,6 +551,8 @@ async function measureRenderedSlides(deckPath, options = {}) {
 
     const audits = await measureSlidesInBrowser(rendered.htmlPath);
     const renderedToMarkdown = buildRenderedToMarkdownMap(markdown);
+    const renderedDeckDir = path.dirname(rendered.htmlPath);
+    const deckDir = path.dirname(path.resolve(deckPath));
 
     return {
       status: "measured",
@@ -340,6 +562,12 @@ async function measureRenderedSlides(deckPath, options = {}) {
         maxOverflowPx: audit.maxOverflowPx,
         crowded: audit.crowded,
         safeMarginPx: audit.safeMarginPx,
+        textRuns: audit.textRuns,
+        smallText: audit.smallText,
+        textFloorPx: audit.textFloorPx,
+        missingMedia: audit.failedMedia
+          .map((failure) => mapFailedMedia(failure, renderedDeckDir, deckDir))
+          .filter(Boolean),
       })),
     };
   } catch (error) {
@@ -408,9 +636,13 @@ async function screenshotSlide(htmlPath, slideId) {
 }
 
 module.exports = {
+  BODY_TEXT_FLOOR_PX,
   CLIP_TOLERANCE_PX,
   EDGE_SAFE_MARGIN_PX,
   MEDIA_CLIP_TOLERANCE_RATIO,
+  MEDIA_SETTLE_TIMEOUT_MS,
+  SECONDARY_TEXT_FLOOR_PX,
+  auditMediaInPage,
   auditSlidesInPage,
   buildRenderedToMarkdownMap,
   detectHiddenSlides,

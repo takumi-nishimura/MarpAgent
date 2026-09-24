@@ -64,6 +64,7 @@ to keep it on one line. Applies to lab slide and paper layouts (see `marp-compon
 | `<!-- _paginate: skip -->` | Hide page number (title/close slides) |
 | `<!-- _class: title -->` | Apply title layout |
 | `<!-- _header: <text> -->` | Set slide header text |
+| `<!-- hide: true -->` or `<!-- _hide: true -->` | Omit only this slide from the rendered deck; later slides keep their inherited directives, and page numbers count only visible slides |
 
 ## Mermaid Sizing
 
