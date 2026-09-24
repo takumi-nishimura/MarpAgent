@@ -7,7 +7,6 @@
  * @size a4-landscape 297mm 210mm
  */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
-@layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
   :root, :host {
@@ -20,17 +19,37 @@
     --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5 / 1);
+    --text-lg: 1.125rem;
+    --text-lg--line-height: calc(1.75 / 1.125);
     --text-xl: 1.25rem;
     --text-xl--line-height: calc(1.75 / 1.25);
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: calc(2 / 1.5);
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: calc(2.25 / 1.875);
+    --text-4xl: 2.25rem;
+    --text-4xl--line-height: calc(2.5 / 2.25);
+    --text-5xl: 3rem;
+    --text-5xl--line-height: 1;
+    --text-6xl: 3.75rem;
+    --text-6xl--line-height: 1;
+    --text-7xl: 4.5rem;
+    --text-7xl--line-height: 1;
+    --text-8xl: 6rem;
+    --text-8xl--line-height: 1;
+    --text-9xl: 8rem;
+    --text-9xl--line-height: 1;
+    --radius-sm: 2px;
     --radius-md: 4px;
-    --default-transition-duration: 150ms;
-    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
     --color-primary: #000000;
     --color-secondary: #505054;
     --color-tertiary: #0064d2;
     --color-neutral: #ffffff;
+    --color-surface: #ffffff;
     --color-surface-muted: #f7f9fa;
     --color-on-primary: #ffffff;
     --color-on-surface: #000000;
@@ -41,6 +60,8 @@
     --color-table-border: #d8d8d8;
     --color-table-header: #f7f9fa;
     --color-table-stripe: #ffffff;
+    --color-cursor-orange: #e61e1e;
+    --color-cursor-glow: #e61e1e59;
     --color-note: #0064d2;
     --color-note-strong: #265c80;
     --color-tip: #347d39;
@@ -118,17 +139,41 @@
     --color-code-dark-tag: #e06c75;
     --color-code-dark-builtin: #e6c07b;
     --color-code-dark-meta: #56b6c2;
+    --font-display: "Noto Sans JP";
+    --font-headline-lg: "Noto Sans JP";
+    --font-headline-md: "Noto Sans JP";
     --font-body-md: "Noto Sans JP";
+    --font-body-sm: "Noto Sans JP";
+    --font-caption: "Noto Sans JP";
+    --font-label-md: "Noto Sans JP";
     --text-display: 72px;
+    --text-headline-lg: 56px;
+    --text-headline-md: 40px;
     --text-body-md: 26px;
+    --text-body-sm: 22.75px;
+    --text-caption: 19.5px;
     --text-label-md: 26px;
+    --tracking-display: 0em;
+    --tracking-headline-lg: 0em;
     --tracking-headline-md: 0em;
+    --tracking-body-md: 0em;
+    --tracking-body-sm: 0em;
+    --tracking-caption: 0em;
+    --tracking-label-md: 0em;
     --font-weight-display: 700;
+    --font-weight-headline-lg: 700;
     --font-weight-headline-md: 700;
+    --font-weight-body-md: 400;
+    --font-weight-body-sm: 400;
+    --font-weight-caption: 400;
     --font-weight-label-md: 700;
     --radius-none: 0px;
+    --radius-full: 9999px;
+    --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 40px;
     --spacing-slide-x: 56px;
     --spacing-header-height: 64px;
     --spacing-header-title-inset: 10px;
@@ -310,54 +355,6 @@
   }
 }
 @layer utilities {
-  .collapse {
-    visibility: collapse;
-  }
-  .visible {
-    visibility: visible;
-  }
-  .start {
-    inset-inline-start: var(--spacing);
-  }
-  .container {
-    width: 100%;
-    @media (width >= 40rem) {
-      max-width: 40rem;
-    }
-    @media (width >= 48rem) {
-      max-width: 48rem;
-    }
-    @media (width >= 64rem) {
-      max-width: 64rem;
-    }
-    @media (width >= 80rem) {
-      max-width: 80rem;
-    }
-    @media (width >= 96rem) {
-      max-width: 96rem;
-    }
-  }
-  .block {
-    display: block;
-  }
-  .flex {
-    display: flex;
-  }
-  .grid {
-    display: grid;
-  }
-  .inline {
-    display: inline;
-  }
-  .table {
-    display: table;
-  }
-  .shrink {
-    flex-shrink: 1;
-  }
-  .resize {
-    resize: both;
-  }
   .self-center {
     align-self: center;
   }
@@ -366,10 +363,6 @@
   }
   .self-start {
     align-self: flex-start;
-  }
-  .border {
-    border-style: var(--tw-border-style);
-    border-width: 1px;
   }
   .text-sm {
     font-size: var(--text-sm);
@@ -382,18 +375,6 @@
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
-  }
-  .uppercase {
-    text-transform: uppercase;
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
-  }
-  .transition {
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 }
 section {
@@ -1697,22 +1678,4 @@ section.invert::after {
 .paper-footer {
   background: var(--color-surface-muted);
   border-radius: var(--radius-none);
-}
-@property --tw-border-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
-@property --tw-outline-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
-@layer properties {
-  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
-    *, ::before, ::after, ::backdrop {
-      --tw-border-style: solid;
-      --tw-outline-style: solid;
-    }
-  }
 }
