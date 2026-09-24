@@ -2,9 +2,19 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const http = require("node:http");
+const os = require("node:os");
 const path = require("node:path");
+const { spawn } = require("node:child_process");
 
-const { createServer } = require("../../scripts/preview-overview");
+const {
+  createRenderQueue,
+  createServer,
+  renderDeck,
+} = require("../../scripts/preview-overview");
+
+const repoRoot = path.resolve(__dirname, "../..");
+const overviewScript = path.join(repoRoot, "scripts", "preview-overview.js");
+const configPath = path.join(repoRoot, "marp.config.js");
 
 function listenOnFreePort(server) {
   return new Promise((resolve) => {
@@ -177,5 +187,159 @@ test("removed WebSocket endpoint is not served", async () => {
   } finally {
     await closeServer(server);
     fs.rmSync(fixture.tmpDir, { recursive: true, force: true });
+  }
+});
+
+function writeDeck(deckPath, state) {
+  fs.writeFileSync(
+    deckPath,
+    ["---", "marp: true", "theme: lab", "---", "", `# ${state}`, ""].join("\n"),
+  );
+}
+
+function createDeferred() {
+  let resolve;
+  const promise = new Promise((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
+
+test("render queue coalesces requests made while a render is running", async () => {
+  const calls = [];
+  const inFlight = [];
+  const queue = createRenderQueue(async () => {
+    const deferred = createDeferred();
+    calls.push(calls.length + 1);
+    inFlight.push(deferred);
+    await deferred.promise;
+  });
+
+  const first = queue.request();
+  queue.request();
+  queue.request();
+  assert.equal(calls.length, 1);
+
+  inFlight[0].resolve();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(calls.length, 2);
+
+  inFlight[1].resolve();
+  await first;
+  await queue.idle();
+  assert.equal(calls.length, 2);
+});
+
+test("renderDeck publishes the rendered deck and keeps it when a later render fails", async () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "overview-render-test-"));
+  const deckPath = path.join(tmpDir, "slide.md");
+  const outputPath = path.join(tmpDir, ".slide.overview.html");
+
+  try {
+    writeDeck(deckPath, "Rendered once");
+    assert.equal(await renderDeck({ configPath, deckPath, outputPath }), true);
+    const rendered = fs.readFileSync(outputPath, "utf8");
+    assert.match(rendered, /Rendered once/);
+    assert.deepEqual(
+      fs.readdirSync(tmpDir).sort(),
+      [".slide.overview.html", "slide.md"],
+    );
+
+    fs.rmSync(deckPath);
+    assert.equal(await renderDeck({ configPath, deckPath, outputPath }), false);
+    assert.equal(fs.readFileSync(outputPath, "utf8"), rendered);
+    assert.deepEqual(fs.readdirSync(tmpDir), [".slide.overview.html"]);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+function startOverview(deckPath) {
+  const child = spawn(process.execPath, [overviewScript, deckPath], {
+    cwd: repoRoot,
+    env: { ...process.env, MARP_AGENT_NO_OPEN: "1" },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  let log = "";
+  child.stdout.on("data", (chunk) => {
+    log += chunk;
+  });
+  child.stderr.on("data", (chunk) => {
+    log += chunk;
+  });
+
+  const opened = new Promise((resolve, reject) => {
+    const timer = setInterval(() => {
+      const match = log.match(/\[preview:overview\] Opened (http:\/\/\S+)/);
+      if (match) {
+        clearInterval(timer);
+        resolve(new URL(match[1]));
+      } else if (child.exitCode !== null) {
+        clearInterval(timer);
+        reject(new Error(`Overview exited before opening:\n${log}`));
+      }
+    }, 25);
+  });
+
+  return { child, getLog: () => log, opened };
+}
+
+async function stopOverview({ child }) {
+  if (child.exitCode !== null || child.signalCode !== null) return;
+  const exited = new Promise((resolve) => child.once("exit", resolve));
+  child.kill("SIGTERM");
+  await exited;
+}
+
+async function waitForTokenChange(overview, url, previousToken) {
+  const deadline = Date.now() + 15000;
+  while (Date.now() < deadline) {
+    assert.equal(
+      overview.child.exitCode,
+      null,
+      `Overview exited while watching:\n${overview.getLog()}`,
+    );
+    const response = await requestPath(url.port, "/__marp_agent__/meta");
+    const { token } = JSON.parse(response.body);
+    if (token !== previousToken) return token;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  throw new Error(`Token did not change:\n${overview.getLog()}`);
+}
+
+test("concurrent overview servers keep serving and following saves", async () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "overview-concurrent-test-"));
+  const deckPaths = ["a", "b", "c"].map((name) => {
+    const deckDir = path.join(tmpDir, name);
+    fs.mkdirSync(deckDir);
+    const deckPath = path.join(deckDir, "slide.md");
+    writeDeck(deckPath, `Deck ${name} initial`);
+    return deckPath;
+  });
+  const overviews = deckPaths.map((deckPath) => startOverview(deckPath));
+
+  try {
+    const urls = await Promise.all(overviews.map(({ opened }) => opened));
+    const tokens = await Promise.all(
+      urls.map(async (url) => {
+        const response = await requestPath(url.port, "/__marp_agent__/meta");
+        return JSON.parse(response.body).token;
+      }),
+    );
+
+    deckPaths.forEach((deckPath, index) => writeDeck(deckPath, `Deck ${index} saved`));
+
+    await Promise.all(
+      overviews.map((overview, index) =>
+        waitForTokenChange(overview, urls[index], tokens[index]),
+      ),
+    );
+    for (const [index, url] of urls.entries()) {
+      const page = await requestPath(url.port, "/");
+      assert.match(page.body, new RegExp(`Deck ${index} saved`));
+    }
+  } finally {
+    await Promise.all(overviews.map((overview) => stopOverview(overview)));
+    fs.rmSync(tmpDir, { recursive: true, force: true });
   }
 });
