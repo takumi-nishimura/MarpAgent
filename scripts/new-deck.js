@@ -11,7 +11,7 @@ if (rawArgs.includes("--poster")) {
   process.exit(1);
 }
 
-const supportedFlags = new Set(["--paper"]);
+const supportedFlags = new Set(["--paper", "--force"]);
 const unsupportedFlag = rawArgs.find(
   (arg) => arg.startsWith("--") && !supportedFlags.has(arg),
 );
@@ -21,9 +21,10 @@ if (unsupportedFlag) {
 }
 
 const paperMode = rawArgs.includes("--paper");
+const force = rawArgs.includes("--force");
 const name = rawArgs.find((arg) => !arg.startsWith("--"));
 if (!name) {
-  console.error("Usage: marpx -n <path> [--paper]");
+  console.error("Usage: marpx -n <path> [--paper] [--force]");
   console.error("Path is relative to repository root.");
   console.error("Examples:");
   console.error("  marpx -n decks/2025/presentation");
@@ -81,6 +82,32 @@ for (const [templateName] of templateFiles) {
   }
 }
 
+// Refuse to overwrite authored scaffold files unless --force was given.
+// lstat also catches broken symlinks that existsSync would miss.
+const existingTargets = templateFiles
+  .map(([, outputName]) => path.join(deckDir, outputName))
+  .filter((targetPath) =>
+    fs.lstatSync(targetPath, { throwIfNoEntry: false }),
+  );
+if (!force && existingTargets.length > 0) {
+  console.error("Error: refusing to overwrite existing files:");
+  for (const targetPath of existingTargets) {
+    console.error(`  - ${path.relative(repoRoot, targetPath)}`);
+  }
+  console.error("Re-run with --force to overwrite them.");
+  process.exit(1);
+}
+
+// A non-symlink `shared` entry may hold authored content; never remove it.
+const sharedPath = path.join(deckDir, "shared");
+const sharedStat = fs.lstatSync(sharedPath, { throwIfNoEntry: false });
+if (sharedStat && !sharedStat.isSymbolicLink()) {
+  console.error(
+    `Error: ${path.relative(repoRoot, sharedPath)} exists and is not a symlink; leaving it untouched.`,
+  );
+  process.exit(1);
+}
+
 // Create directory
 fs.mkdirSync(deckDir, { recursive: true });
 
@@ -99,19 +126,11 @@ fs.writeFileSync(path.join(deckDir, "assets", "video", ".gitkeep"), "");
 
 // Create shared symlink to global assets
 const assetsDir = path.join(repoRoot, "assets");
-const sharedPath = path.join(deckDir, "shared");
 const relativePath = path.relative(deckDir, assetsDir);
 
-// Remove existing symlink if exists
-if (
-  fs.existsSync(sharedPath) ||
-  fs.lstatSync(sharedPath, { throwIfNoEntry: false })
-) {
-  try {
-    fs.unlinkSync(sharedPath);
-  } catch (err) {
-    // Ignore errors if file doesn't exist
-  }
+// Remove existing symlink if present; non-symlinks were rejected above.
+if (sharedStat) {
+  fs.unlinkSync(sharedPath);
 }
 
 // Create symlink with OS-specific handling

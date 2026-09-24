@@ -195,6 +195,93 @@ test("outline carries newer layout hints and strips their markers", () => {
   assert.match(outline, /- Title: Rollout sequence\n/);
 });
 
+test("generateOutlineFile refuses to overwrite an existing output", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-outline-"));
+  const briefPath = path.join(tempDir, "brief.md");
+  const outputPath = path.join(tempDir, "outline.md");
+
+  try {
+    fs.copyFileSync(fixturePath, briefPath);
+    fs.writeFileSync(outputPath, "hand-edited outline\n");
+
+    assert.throws(
+      () => generateOutlineFile(briefPath, outputPath),
+      (error) => {
+        assert.match(error.message, /refusing to overwrite/);
+        assert.match(error.message, /--force/);
+        assert.match(error.message, /--output <path>/);
+        return true;
+      },
+    );
+
+    // The existing file is left untouched.
+    assert.equal(
+      fs.readFileSync(outputPath, "utf8"),
+      "hand-edited outline\n",
+    );
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("generateOutlineFile overwrites an existing output with force", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-outline-"));
+  const briefPath = path.join(tempDir, "brief.md");
+  const outputPath = path.join(tempDir, "outline.md");
+
+  try {
+    fs.copyFileSync(fixturePath, briefPath);
+    fs.writeFileSync(outputPath, "hand-edited outline\n");
+
+    generateOutlineFile(briefPath, outputPath, { force: true });
+
+    const outline = fs.readFileSync(outputPath, "utf8");
+    assert.match(outline, /# Outline/);
+    assert.equal(outline.includes("hand-edited outline"), false);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("outline overflow risk counts only assets a section names", () => {
+  const brief = parseBrief(`## Audience
+- A
+## Duration
+- 10 min
+## Core Message
+- One-sentence takeaway: T
+## Audience Action
+- Act
+## Required Sections
+- Short title
+- Demo showing \`assets/img/big-diagram.png\`
+## Must-Use Assets
+- \`assets/img/big-diagram.png\` — a very long description of a complicated architecture diagram that must be embedded on the slide
+- tiny note
+`);
+  const outline = buildOutlineMarkdown(brief, {
+    generatedDate: "2026-09-24",
+    sourcePath: "brief.md",
+  });
+
+  const riskByTitle = new Map(
+    outline
+      .split("### Slide ")
+      .slice(1)
+      .map((block) => [
+        block.match(/^\d+: (.+)$/m)[1],
+        block.match(/- Overflow risk: (\w+)/)[1],
+      ]),
+  );
+  // The long first asset must not leak into an unrelated section's score.
+  assert.equal(riskByTitle.get("Short title"), "low");
+  // A section that names the asset still counts it.
+  assert.equal(
+    riskByTitle.get("Demo showing `assets/img/big-diagram.png`"),
+    "high",
+  );
+});
+
 test("generateOutlineFile rejects incomplete brief by default", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-outline-"));
   const briefPath = path.join(tempDir, "brief.md");

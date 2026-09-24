@@ -34,7 +34,7 @@ Options:
   --theme [name]           Build theme(s) (all if name omitted)
   --theme-new              Scaffold a new theme
   --source-url <url>       Source URL note for --theme-new
-  --force                  Overwrite existing scaffold files for --theme-new
+  --force                  Overwrite existing files (for --new, --theme-new, --outline)
   --no-build               Scaffold only; skip token/theme build for --theme-new
   -w, --watch              Watch mode (for --theme)
   --output <path>          Output path (for --outline)
@@ -170,8 +170,15 @@ if (values["source-url"] && mode !== "theme-new") {
   process.exit(1);
 }
 
-if (values.force && mode !== "theme-new") {
-  console.error("Error: --force can only be used with --theme-new");
+if (
+  values.force &&
+  mode !== "theme-new" &&
+  mode !== "new" &&
+  mode !== "outline"
+) {
+  console.error(
+    "Error: --force can only be used with --new, --theme-new, or --outline",
+  );
   process.exit(1);
 }
 
@@ -396,6 +403,9 @@ switch (mode) {
     if (values.paper) {
       args.push("--paper");
     }
+    if (values.force) {
+      args.push("--force");
+    }
     runScript("new-deck.js", args);
     break;
   }
@@ -407,6 +417,9 @@ switch (mode) {
     }
     if (values["no-strict-brief"]) {
       args.push("--no-strict-brief");
+    }
+    if (values.force) {
+      args.push("--force");
     }
     runScript("generate-outline.js", args);
     break;

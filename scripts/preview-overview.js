@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const http = require("node:http");
 const path = require("node:path");
-const { spawn } = require("node:child_process");
+const { marpCli } = require("@marp-team/marp-cli");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 
 const {
@@ -14,15 +14,13 @@ const {
   getOverviewOutputPath,
 } = require("../src/overview-preview");
 const {
-  forwardChildSignals,
-  forwardLines,
-  getMarpBin,
   openBrowser,
   resolveRequestedSlideId,
 } = require("../src/preview-runtime");
 
 const repoRoot = path.resolve(__dirname, "..");
 const configPath = path.join(repoRoot, "marp.config.js");
+const themesDir = path.join(repoRoot, "themes");
 
 enforceSupportedNodeRuntime();
 
@@ -44,6 +42,100 @@ function removeOutputFile(outputPath) {
     fs.rmSync(outputPath, { force: true });
   } catch {
     // Ignore cleanup failures for generated preview output.
+  }
+}
+
+function getRenderingPath(outputPath) {
+  // Keep the .html extension so Marp CLI still emits HTML.
+  return outputPath.replace(/\.html$/, `.rendering-${process.pid}.html`);
+}
+
+// Render the deck once in-process and publish the result with a rename, so
+// the server never reads a half-written overview and a failed render keeps
+// the previous output. Rendering in-process instead of `marp --watch` also
+// avoids Marp's watch-notifier WebSocket server, which the overview does not
+// use and which crashes with EADDRINUSE when another `marp --watch` process
+// picks the same port at the same time.
+async function renderDeck({ configPath, deckPath, outputPath }) {
+  const renderingPath = getRenderingPath(outputPath);
+  let exitCode;
+
+  try {
+    exitCode = await marpCli([
+      "--config",
+      configPath,
+      deckPath,
+      "-o",
+      renderingPath,
+    ]);
+  } catch (error) {
+    console.error(`[preview:overview] Render failed: ${error.message}`);
+    exitCode = 1;
+  }
+
+  if (exitCode === 0 && fs.existsSync(renderingPath)) {
+    try {
+      fs.renameSync(renderingPath, outputPath);
+      return true;
+    } catch (error) {
+      console.error(`[preview:overview] Cannot publish render: ${error.message}`);
+    }
+  }
+
+  removeOutputFile(renderingPath);
+  return false;
+}
+
+// Run `render` for every request, but never concurrently: requests made while
+// a render is running collapse into one follow-up render, so the last save
+// always wins.
+function createRenderQueue(render) {
+  let running;
+  let pending = false;
+
+  async function drain() {
+    do {
+      pending = false;
+      try {
+        await render();
+      } catch (error) {
+        console.error(`[preview:overview] Render failed: ${error.message}`);
+      }
+    } while (pending);
+  }
+
+  return {
+    request() {
+      if (running) {
+        pending = true;
+        return running;
+      }
+      running = drain().finally(() => {
+        running = undefined;
+      });
+      return running;
+    },
+    idle() {
+      return running ?? Promise.resolve();
+    },
+  };
+}
+
+// Watch directories rather than files so saves that replace the file (atomic
+// rename by editors) keep being observed.
+function watchDirectory(dirPath, isRelevant, onChange) {
+  try {
+    const watcher = fs.watch(dirPath, (_eventType, fileName) => {
+      if (!fileName || isRelevant(fileName.toString())) onChange();
+    });
+    watcher.on("error", (error) => {
+      console.error(`[preview:overview] Stopped watching ${dirPath}: ${error.message}`);
+      watcher.close();
+    });
+    return watcher;
+  } catch (error) {
+    console.error(`[preview:overview] Cannot watch ${dirPath}: ${error.message}`);
+    return undefined;
   }
 }
 
@@ -200,27 +292,26 @@ function main() {
   }
 
   const deckDir = path.dirname(deckPath);
+  const deckFileName = path.basename(deckPath);
   const outputPath = getOverviewOutputPath(deckPath);
-  const marpBin = getMarpBin(repoRoot);
-  const child = spawn(
-    marpBin,
-    ["--watch", "--config", configPath, deckPath, "-o", outputPath],
-    {
-      cwd: repoRoot,
-      stdio: ["inherit", "pipe", "pipe"],
-    },
-  );
-
-  forwardLines(child.stdout, process.stdout);
-  forwardLines(child.stderr, process.stderr);
-  forwardChildSignals(child);
-
   const server = createServer({
     deckDir,
     deckPath,
     outputPath,
     targetSlideId,
   });
+  const watchers = [];
+
+  function shutdown(exitCode) {
+    watchers.forEach((watcher) => watcher.close());
+    server.close();
+    removeOutputFile(outputPath);
+    removeOutputFile(getRenderingPath(outputPath));
+    process.exit(exitCode);
+  }
+
+  process.on("SIGINT", () => shutdown(130));
+  process.on("SIGTERM", () => shutdown(143));
 
   server.listen(0, "127.0.0.1", () => {
     const address = server.address();
@@ -233,31 +324,32 @@ function main() {
       `http://127.0.0.1:${address.port}`,
       targetSlideId,
     );
+    let opened = false;
 
-    // Wait for the first render before opening the browser so the user
-    // sees the overview immediately instead of a "Rendering…" splash.
-    function tryOpen() {
-      if (fs.existsSync(outputPath)) {
-        const browser = openBrowser(url);
-        browser?.unref();
-        process.stdout.write(`[preview:overview] Opened ${url}\n`);
-        return;
-      }
-      setTimeout(tryOpen, 50);
-    }
-    tryOpen();
-  });
+    // Open the browser only after the first successful render so the user
+    // sees the overview immediately instead of a "Rendering…" splash. The
+    // log line doubles as the readiness signal for scripts and tests.
+    const queue = createRenderQueue(async () => {
+      const rendered = await renderDeck({ configPath, deckPath, outputPath });
+      if (!rendered || opened) return;
+      opened = true;
+      const browser = openBrowser(url);
+      browser?.unref();
+      process.stdout.write(`[preview:overview] Opened ${url}\n`);
+    });
+    const requestRender = () => {
+      queue.request();
+    };
 
-  child.on("exit", (code, signal) => {
-    server.close();
-    removeOutputFile(outputPath);
-
-    if (signal) {
-      process.exit(signal === "SIGINT" ? 130 : 143);
-      return;
-    }
-
-    process.exit(code ?? 1);
+    // Start watching before the first render so a save made while it runs
+    // still triggers a follow-up render.
+    watchers.push(
+      ...[
+        watchDirectory(deckDir, (fileName) => fileName === deckFileName, requestRender),
+        watchDirectory(themesDir, (fileName) => fileName.endsWith(".css"), requestRender),
+      ].filter(Boolean),
+    );
+    requestRender();
   });
 }
 
@@ -266,5 +358,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  createRenderQueue,
   createServer,
+  renderDeck,
 };

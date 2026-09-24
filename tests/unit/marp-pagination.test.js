@@ -1,5 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 
 const {
@@ -36,4 +38,42 @@ test("findSlideIdByDisplayedPage accounts for paginate skip", () => {
       displayedPage: 1,
     },
   );
+});
+
+test("findSlideIdByDisplayedPage skips hidden slides", (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-hide-"));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+paginate: true
+---
+
+# Page 1
+
+---
+
+<!-- hide: true -->
+
+# Hidden
+
+---
+
+# Page 2
+
+---
+
+<!-- _hide: true -->
+
+# Hidden backup
+`,
+  );
+
+  assert.deepEqual(findSlideIdByDisplayedPage(deckPath, configPath, 2), {
+    slideId: "3",
+    displayedPage: 2,
+  });
+  assert.equal(findSlideIdByDisplayedPage(deckPath, configPath, 3), undefined);
 });

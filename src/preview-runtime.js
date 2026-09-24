@@ -68,10 +68,22 @@ function forwardChildSignals(child) {
   process.on("SIGTERM", () => forwardSignal("SIGTERM"));
 }
 
+// Marp CLI's watch notifier probes a free port from 37717 and binds it later
+// without error handling, so two watch/serve processes started together can
+// crash with an unhandled EADDRINUSE on the WebSocketServer. Marp's own listen
+// port failure is handled and reported as "Listen port ... is already used"
+// without printing EADDRINUSE, so the raw error text only appears when the
+// notifier crashed. Retrying is safe even when both appear: a retry that
+// still finds the listen port taken exits with the handled error anyway.
+function isNotifierPortConflict(output) {
+  return /EADDRINUSE/.test(output);
+}
+
 module.exports = {
   forwardChildSignals,
   forwardLines,
   getMarpBin,
+  isNotifierPortConflict,
   openBrowser,
   resolveRequestedSlideId,
 };
