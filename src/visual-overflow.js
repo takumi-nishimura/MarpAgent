@@ -6,7 +6,7 @@ const { fileURLToPath, pathToFileURL } = require("node:url");
 const { Marp } = require("@marp-team/marp-core");
 const marpHideSlidesPlugin = require("../scripts/hide-slides-plugin");
 const { splitSlideRawBlocks } = require("./markdown-slides");
-const { diagnoseMissingPath } = require("./media-assets");
+const { copyDeckForRender, diagnoseMissingPath } = require("./media-assets");
 
 // Visible content may cross an edge by this much before it counts as clipped,
 // which absorbs sub-pixel rounding of line boxes and image edges.
@@ -78,7 +78,7 @@ function renderToHtml(deckPath) {
   const copiedDeckPath = path.join(copiedDeckDir, path.basename(deckPath));
 
   fs.mkdirSync(tempDeckDir, { recursive: true });
-  fs.cpSync(path.dirname(deckPath), copiedDeckDir, { recursive: true });
+  copyDeckForRender(deckPath, copiedDeckDir);
 
   const outputName =
     path.basename(deckPath, path.extname(deckPath)) + ".html";

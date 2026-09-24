@@ -5,6 +5,7 @@ const os = require("node:os");
 const path = require("node:path");
 
 const {
+  copyDeckForRender,
   extractMediaReferences,
   findMissingAssets,
   resolveLocalReference,
@@ -290,5 +291,71 @@ test("findMissingAssets reports nothing when every asset exists", () => {
     assert.deepEqual(findMissingAssets(deckPath), []);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("copyDeckForRender skips export artifacts the render does not need", () => {
+  const dir = makeDeck({
+    "assets/img/a.png": "png",
+    "assets/video/clip.mp4": "mp4",
+    "report/out.pdf": "exported report",
+    "slide.pdf": "exported",
+    ".slide.overview.html": "<html></html>",
+    "brief.md": "brief",
+  });
+  const destination = `${dir}-copy`;
+
+  try {
+    const deckPath = writeSlide(
+      dir,
+      "# One\n\n![](assets/img/a.png)\n<video src=\"assets/video/clip.mp4\"></video>\n",
+    );
+    copyDeckForRender(deckPath, destination);
+
+    assert.deepEqual(fs.readdirSync(destination).sort(), [
+      "assets",
+      "brief.md",
+      "report",
+      "slide.md",
+    ]);
+    assert.deepEqual(fs.readdirSync(path.join(destination, "assets/img")), [
+      "a.png",
+    ]);
+    assert.deepEqual(
+      fs.readdirSync(path.join(destination, "assets/video")),
+      ["clip.mp4"],
+    );
+    assert.deepEqual(fs.readdirSync(path.join(destination, "report")), []);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.rmSync(destination, { recursive: true, force: true });
+  }
+});
+
+test("copyDeckForRender keeps a PDF the deck embeds", () => {
+  const dir = makeDeck({
+    "assets/doc.pdf": "pdf",
+    "assets/other.pdf": "pdf",
+  });
+  const destination = `${dir}-copy`;
+
+  try {
+    const deckPath = writeSlide(
+      dir,
+      "# One\n\n<object data=\"assets/doc.pdf\"></object>\n",
+    );
+    copyDeckForRender(deckPath, destination);
+
+    assert.equal(
+      fs.existsSync(path.join(destination, "assets/doc.pdf")),
+      true,
+    );
+    assert.equal(
+      fs.existsSync(path.join(destination, "assets/other.pdf")),
+      false,
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.rmSync(destination, { recursive: true, force: true });
   }
 });

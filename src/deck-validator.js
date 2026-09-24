@@ -3,7 +3,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const { isASeriesCanvas } = require("./canvas-size");
-const { findMissingAssets } = require("./media-assets");
+const { copyDeckForRender, findMissingAssets } = require("./media-assets");
 const {
   splitFenceSegments,
   splitNonEmptySlides,
@@ -522,45 +522,48 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers }) {
   const copiedDeckPath = path.join(copiedDeckDir, path.basename(deckPath));
 
   ensureDir(tempDeckDir);
-  fs.cpSync(path.dirname(deckPath), copiedDeckDir, { recursive: true });
+  try {
+    copyDeckForRender(deckPath, copiedDeckDir);
 
-  execFileSync(
-    marpBinary,
-    [
-      "--images",
-      "png",
-      "--allow-local-files",
-      "--config-file",
-      path.join(repoRoot, "marp.config.js"),
-      copiedDeckPath,
-    ],
-    {
-      cwd: copiedDeckDir,
-      encoding: "utf8",
-      stdio: "pipe",
-    },
-  );
+    execFileSync(
+      marpBinary,
+      [
+        "--images",
+        "png",
+        "--allow-local-files",
+        "--config-file",
+        path.join(repoRoot, "marp.config.js"),
+        copiedDeckPath,
+      ],
+      {
+        cwd: copiedDeckDir,
+        encoding: "utf8",
+        stdio: "pipe",
+      },
+    );
 
-  ensureDir(screenshotsDir);
-  const sourcePrefix = path.basename(deckPath, path.extname(deckPath));
-  const artifacts = [];
-  for (const slideNumber of slideNumbers) {
-    const sourceImage = path.join(
-      copiedDeckDir,
-      `${sourcePrefix}.${String(slideNumber).padStart(3, "0")}.png`,
-    );
-    const destination = path.join(
-      screenshotsDir,
-      `slide-${String(slideNumber).padStart(3, "0")}.png`,
-    );
-    if (fs.existsSync(sourceImage)) {
-      fs.copyFileSync(sourceImage, destination);
-      artifacts.push(destination);
+    ensureDir(screenshotsDir);
+    const sourcePrefix = path.basename(deckPath, path.extname(deckPath));
+    const artifacts = [];
+    for (const slideNumber of slideNumbers) {
+      const sourceImage = path.join(
+        copiedDeckDir,
+        `${sourcePrefix}.${String(slideNumber).padStart(3, "0")}.png`,
+      );
+      const destination = path.join(
+        screenshotsDir,
+        `slide-${String(slideNumber).padStart(3, "0")}.png`,
+      );
+      if (fs.existsSync(sourceImage)) {
+        fs.copyFileSync(sourceImage, destination);
+        artifacts.push(destination);
+      }
     }
-  }
 
-  fs.rmSync(tempRoot, { recursive: true, force: true });
-  return artifacts;
+    return artifacts;
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
 }
 
 function writeArtifacts(result, options = {}) {
