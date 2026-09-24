@@ -1,10 +1,30 @@
 ---
-title: "Validator error messages should name which budget tripped"
-status: open
-created: 2026-06-21
-updated: 2026-06-21
-labels: [refactor, dx]
+id: ISS-0003
+title: Validator error messages should name which budget tripped
+type: issue
+status: closed
+date: '2026-06-21'
+updated: '2026-09-23'
+authors:
+- takumi-nishimura
+scope:
+- src/deck-validator.js
+tags:
+- refactor
+- dx
+depends_on: []
+supersedes: []
+resolution: completed
+resolved: '2026-06-21'
+artifacts:
+  revisions:
+  - d55873a
+  manifests: []
+  results: []
+  commands: []
 ---
+
+# Validator error messages should name which budget tripped
 
 ## Problem
 
@@ -21,12 +41,12 @@ Each validator finding's message names the specific budget that tripped and — 
 
 ## Acceptance criteria
 
-- [ ] `dense-bullets` on a multi-column slide includes the per-column bullet breakdown, e.g. `"13 top-level bullets (4+4+5 across 3 columns)"`.
-- [ ] `overflow-risk` mentions which threshold dominated (chars / lines / bullets) instead of a generic heuristic phrase.
-- [ ] `long-heading` keeps current format (it already names the char count).
-- [ ] `typography-drift` names the offending class explicitly (it already does — leave as is).
-- [ ] When callout content contributes to the body-character or single-line cap, the message says so (e.g. `"single line 233 chars (callout body)"`).
-- [ ] No regression to existing validator unit tests; new tests cover the new message format.
+- [x] `dense-bullets` on a multi-column slide includes the per-column bullet breakdown, e.g. `"13 top-level bullets (4+4+5 across 3 columns)"`.
+- [x] `overflow-risk` mentions which threshold dominated (chars / lines / bullets) instead of a generic heuristic phrase.
+- [x] `long-heading` keeps current format (it already names the char count).
+- [x] `typography-drift` names the offending class explicitly (it already does — leave as is).
+- [x] When callout content contributes to the body-character or single-line cap, the message says so (e.g. `"single line 233 chars (callout body)"`).
+- [x] No regression to existing validator unit tests; new tests cover the new message format.
 
 ## Out of scope
 
@@ -49,3 +69,7 @@ Skill-side notes that interact with this change (post-implementation review):
 - `marp-components/SKILL.md` callout 140-char wrap rule — kept as pre-emptive guidance.
 
 The original "drop these notes" plan was over-aggressive: pre-emptive and reactive guidance are complementary, not redundant.
+
+## Resolution
+
+Closed 2026-09-23 as completed. Implemented in d55873a (`src/deck-validator.js` `findColumnContents`, `isLineFromCallout`, per-reason `overflow-risk` message), covered by `tests/unit/validate-deck.test.js`.

@@ -31,6 +31,7 @@ test("validate-deck emits structured warning logs on visual-check fallback", () 
   });
 
   assert.equal(result.status, 0);
+  assert.match(result.stdout, /Visual check: skipped \(Forced visual check failure/);
   assert.match(result.stderr, /"event":"visual-check-failed"/);
   assert.match(result.stderr, /"event":"heuristic-fallback"/);
   assert.equal(result.stderr.includes('"event":"visual-check-stack"'), false);
@@ -57,4 +58,19 @@ test("validate-deck fails fast in strict visual mode", () => {
   assert.equal(result.status, 2);
   assert.match(result.stderr, /"event":"strict-visual-failed"/);
   assert.match(result.stderr, /Visual check failed in strict mode/);
+});
+
+test("validate-deck reports a skipped visual check in JSON and SARIF output", () => {
+  for (const format of ["json", "sarif"]) {
+    const result = runValidate(["--format", format], {
+      MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE: "1",
+    });
+
+    assert.equal(result.status, 0);
+    const report = JSON.parse(result.stdout);
+    const visualCheck =
+      format === "json" ? report.visualCheck : report.runs[0].properties.visualCheck;
+    assert.equal(visualCheck.status, "skipped");
+    assert.match(visualCheck.reason, /Forced visual check failure/);
+  }
 });

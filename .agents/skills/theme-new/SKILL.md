@@ -23,7 +23,7 @@ Build and verify the result:
 npm run marpx -- --theme <name>
 npm run design:lint
 npm run design:tokens:check
-npm run marpx -- fixtures/<name>-slide.md -v --strict-visual
+npm run marpx -- fixtures/<name>-slide.md -v --strict
 ```
 
 Inspect the rendered fixture and any relevant paper layout, plus the generated token CSS and compiled theme. Keep smoke content focused on stable theme primitives. If shared CSS/runtime behavior changes, run the affected unit tests and `validate:fixtures`/Playwright checks; a theme-token edit does not require unrelated test cycles after its relevant checks pass. Report pre-existing failures separately from regressions.

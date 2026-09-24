@@ -16,6 +16,6 @@ Use `.paper-section.highlight` and `.paper-stat` only for a supported headline r
 
 Use [marp-components](../marp-components/SKILL.md) for selected figures, diagrams, or callouts. Keep source evidence, labels, and citations legible; do not invent authors, metrics, or contact details to fill a template.
 
-Validate with [marp-validator](../marp-validator/SKILL.md) and inspect the rendered full page. Paper mode skips slide-density heuristics, so successful visual validation is especially important. Rebalance or shorten content rather than silently creating multiple pages or shrinking type below readability.
+Validate with [marp-validator](../marp-validator/SKILL.md) and inspect the rendered full page. Paper mode skips the source hints, so a measured rendered check (`Visual check: measured`) is especially important. Rebalance or shorten content rather than silently creating multiple pages or shrinking type below readability.
 
 When exporting, report actual page size. A4 can be enlarged for printing (A4 to A0 is 400% linear scaling), but that does not make an A4 PDF natively A0 or improve the resolution of embedded raster images.

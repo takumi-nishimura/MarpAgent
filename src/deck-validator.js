@@ -162,17 +162,59 @@ function detectTableMetrics(lines) {
   return { columns, rows };
 }
 
-function buildFinding(slide, ruleId, severity, title, suggestion) {
+// Severity model (ADR-0001):
+// - "error": a visible defect measured on the rendered slide; fails the run.
+// - "warning": a source heuristic reported while rendering was unavailable.
+// - "info": a source heuristic reported alongside a successful render; a
+//   non-blocking hint that is hidden from the text summary by default.
+const HEURISTIC_SEVERITY = { fallback: "warning", measured: "info" };
+
+function buildFinding(
+  slide,
+  ruleId,
+  severity,
+  title,
+  suggestion,
+  source = "heuristic",
+) {
   return {
     slide: slide.number,
     ruleId,
     severity,
+    source,
     title,
     suggestion,
   };
 }
 
+function countFindings(findings) {
+  const counts = { errors: 0, warnings: 0, hints: 0 };
+  for (const finding of findings) {
+    if (finding.severity === "error") counts.errors += 1;
+    else if (finding.severity === "warning") counts.warnings += 1;
+    else counts.hints += 1;
+  }
+  return counts;
+}
+
+/**
+ * Exit code for a validation result: 1 only when a visible defect was
+ * measured. Heuristic warnings and hints never fail the run on their own.
+ */
+function exitCodeFor(result) {
+  return result.findings.some((finding) => finding.severity === "error")
+    ? 1
+    : 0;
+}
+
+function describeVisualCheck(visualCheck) {
+  if (!visualCheck) return "not run";
+  if (visualCheck.status === "measured") return "measured";
+  return `skipped (${visualCheck.reason || "unknown reason"})`;
+}
+
 function lintSlide(slide, options = {}) {
+  const severity = options.severity || HEURISTIC_SEVERITY.fallback;
   const lines = getVisibleLines(slide.raw);
   const heading = getHeading(lines);
 
@@ -205,7 +247,7 @@ function lintSlide(slide, options = {}) {
       buildFinding(
         slide,
         "long-heading",
-        "warning",
+        severity,
         `Heading is ${heading.length} characters long.`,
         "Shorten the slide title and move the detail into body content or a follow-up slide.",
       ),
@@ -228,7 +270,7 @@ function lintSlide(slide, options = {}) {
       buildFinding(
         slide,
         "dense-bullets",
-        "warning",
+        severity,
         denseBulletsTitle,
         "Split the list into multiple slides or group the bullets into a smaller number of takeaways.",
       ),
@@ -244,7 +286,7 @@ function lintSlide(slide, options = {}) {
       buildFinding(
         slide,
         "figure-text-density",
-        "warning",
+        severity,
         `Slide combines a visual with ${densityDetail} of supporting text.`,
         "Let the figure carry more of the explanation and move extra text to speaker notes or another slide.",
       ),
@@ -259,7 +301,7 @@ function lintSlide(slide, options = {}) {
       buildFinding(
         slide,
         "comparison-overpacked",
-        "warning",
+        severity,
         "Comparison content is likely too dense for one slide.",
         "Reduce the comparison dimensions or split the comparison into focused slides.",
       ),
@@ -275,7 +317,7 @@ function lintSlide(slide, options = {}) {
       buildFinding(
         slide,
         "typography-drift",
-        "warning",
+        severity,
         `Slide uses tiny text styling: ${triggerLabel}.`,
         "Prefer splitting content across slides instead of shrinking the typography further.",
       ),
@@ -308,7 +350,7 @@ function lintSlide(slide, options = {}) {
       buildFinding(
         slide,
         "overflow-risk",
-        "warning",
+        severity,
         `Slide has a high overflow risk: ${reasons.join("; ")}.`,
         "Shorten the slide, trim copy, or spread the material across more slides before adjusting font size.",
       ),
@@ -322,10 +364,12 @@ function lintSlide(slide, options = {}) {
   };
 }
 
-function validateDeckMarkdown(markdown) {
+function validateDeckMarkdown(markdown, options = {}) {
   const slides = splitSlides(markdown);
   const paper = isPaperDeck(markdown);
-  const results = slides.map((slide) => lintSlide(slide, { paper }));
+  const results = slides.map((slide) =>
+    lintSlide(slide, { paper, severity: options.heuristicSeverity }),
+  );
   const findings = results.flatMap((result) => result.findings);
   return {
     slideCount: slides.length,
@@ -335,23 +379,40 @@ function validateDeckMarkdown(markdown) {
   };
 }
 
-function formatSummary(deckPath, result) {
+function formatFindingLine(finding) {
+  const label = finding.severity === "info" ? "hint" : finding.severity;
+  return `[${label}] slide ${finding.slide} ${finding.ruleId}: ${finding.title} ${finding.suggestion}`;
+}
+
+function formatSummary(deckPath, result, options = {}) {
+  const { showHints = false } = options;
   const relativeDeckPath = deckPath
     ? path.relative(process.cwd(), deckPath)
     : "stdin";
+  const counts = countFindings(result.findings);
   const lines = [
     `Deck: ${relativeDeckPath}`,
     `Slides: ${result.slideCount}`,
-    `Findings: ${result.findings.length}`,
+    `Visual check: ${describeVisualCheck(result.visualCheck)}`,
+    `Findings: ${counts.errors + counts.warnings} (errors: ${counts.errors}, warnings: ${counts.warnings})`,
   ];
+  if (counts.hints > 0) {
+    lines.push(`Hints: ${counts.hints}`);
+  }
 
-  if (result.findings.length > 0) {
+  const shown = result.findings.filter(
+    (finding) => showHints || finding.severity !== "info",
+  );
+  if (shown.length > 0) {
     lines.push("");
-    for (const finding of result.findings) {
-      lines.push(
-        `[${finding.severity}] slide ${finding.slide} ${finding.ruleId}: ${finding.title} ${finding.suggestion}`,
-      );
-    }
+    for (const finding of shown) lines.push(formatFindingLine(finding));
+  }
+
+  if (!showHints && counts.hints > 0) {
+    lines.push("");
+    lines.push(
+      `${counts.hints} source-heuristic hint(s) hidden; hints never fail validation. Re-run with --hints to list them.`,
+    );
   }
 
   return `${lines.join("\n")}\n`;
@@ -391,6 +452,9 @@ function buildSarifReport(deckPath, result) {
             rules: [...rules.values()],
           },
         },
+        properties: {
+          visualCheck: result.visualCheck || { status: "not-run" },
+        },
         results: result.findings.map((finding) => ({
           ruleId: finding.ruleId,
           level: toSarifLevel(finding.severity),
@@ -414,6 +478,7 @@ function buildSarifReport(deckPath, result) {
           properties: {
             slide: finding.slide,
             severity: finding.severity,
+            source: finding.source,
             suggestion: finding.suggestion,
           },
         })),
@@ -497,7 +562,11 @@ function writeArtifacts(result, options = {}) {
   const summaryPath = path.join(reportDir, "report.md");
   const jsonPath = path.join(reportDir, "report.json");
   const slideNumbers = [
-    ...new Set(result.findings.map((finding) => finding.slide)),
+    ...new Set(
+      result.findings
+        .filter((finding) => finding.severity !== "info")
+        .map((finding) => finding.slide),
+    ),
   ];
 
   const screenshotFiles = imageExporter({
@@ -505,9 +574,12 @@ function writeArtifacts(result, options = {}) {
     reportDir,
     slideNumbers,
   });
+  const counts = countFindings(result.findings);
   const report = {
     deckPath,
     slideCount: result.slideCount,
+    visualCheck: result.visualCheck || { status: "not-run" },
+    counts,
     findings: result.findings,
     screenshots: screenshotFiles.map((filePath) =>
       path.relative(reportDir, filePath),
@@ -519,18 +591,41 @@ function writeArtifacts(result, options = {}) {
     "",
     `- Deck: ${deckPath}`,
     `- Slides: ${result.slideCount}`,
-    `- Findings: ${result.findings.length}`,
+    `- Visual check: ${describeVisualCheck(result.visualCheck)}`,
+    `- Findings: ${counts.errors + counts.warnings} (errors: ${counts.errors}, warnings: ${counts.warnings})`,
+    `- Hints: ${counts.hints}`,
     "",
     "## Findings",
     "",
   ];
 
-  if (result.findings.length === 0) {
+  const blocking = result.findings.filter(
+    (finding) => finding.severity !== "info",
+  );
+  const hints = result.findings.filter(
+    (finding) => finding.severity === "info",
+  );
+  if (blocking.length === 0) {
     markdownLines.push("No findings.");
   } else {
-    for (const finding of result.findings) {
+    for (const finding of blocking) {
       markdownLines.push(
-        `- Slide ${finding.slide} \`${finding.ruleId}\`: ${finding.title} ${finding.suggestion}`,
+        `- Slide ${finding.slide} \`${finding.ruleId}\` (${finding.severity}): ${finding.title} ${finding.suggestion}`,
+      );
+    }
+  }
+
+  if (hints.length > 0) {
+    markdownLines.push("");
+    markdownLines.push("## Hints");
+    markdownLines.push("");
+    markdownLines.push(
+      "Source heuristics that did not correspond to a measured defect. Judge them against the rendered slides.",
+    );
+    markdownLines.push("");
+    for (const finding of hints) {
+      markdownLines.push(
+        `- Slide ${finding.slide} \`${finding.ruleId}\`: ${finding.title}`,
       );
     }
   }
@@ -555,9 +650,21 @@ function writeArtifacts(result, options = {}) {
   };
 }
 
+/**
+ * Heuristic-only validation, used when rendering is unavailable. Findings are
+ * warnings and the result records why the visual check did not run.
+ */
 function validateDeckFile(deckPath, options = {}) {
   const markdown = fs.readFileSync(deckPath, "utf8");
-  const result = validateDeckMarkdown(markdown);
+  const result = {
+    ...validateDeckMarkdown(markdown, {
+      heuristicSeverity: HEURISTIC_SEVERITY.fallback,
+    }),
+    visualCheck: options.visualCheck || {
+      status: "skipped",
+      reason: "visual check was not attempted",
+    },
+  };
   const artifacts = writeArtifacts(result, {
     deckPath,
     reportDir: options.reportDir,
@@ -570,45 +677,88 @@ function validateDeckFile(deckPath, options = {}) {
   };
 }
 
+function formatClippedTitle(slideAudit) {
+  const parts = slideAudit.clipped
+    .slice(0, 3)
+    .map((item) => `${item.label} (${item.edge} ${item.overflowPx}px)`);
+  const more =
+    slideAudit.clipped.length > 3
+      ? ` and ${slideAudit.clipped.length - 3} more`
+      : "";
+  return `Visible content extends past the slide edge by up to ${slideAudit.maxOverflowPx}px: ${parts.join(", ")}${more}.`;
+}
+
+function formatCrowdedTitle(slideAudit) {
+  const parts = slideAudit.crowded
+    .slice(0, 3)
+    .map((item) => `${item.label} (${item.edge} ${item.gapPx}px)`);
+  const more =
+    slideAudit.crowded.length > 3
+      ? ` and ${slideAudit.crowded.length - 3} more`
+      : "";
+  return `Content sits within the ${slideAudit.safeMarginPx}px safe margin of the slide edge: ${parts.join(", ")}${more}.`;
+}
+
 /**
- * Validate a deck with both heuristic rules and pixel-accurate visual overflow detection.
- * Falls back to heuristic-only if Playwright is unavailable.
+ * Validate a deck by rendering it and measuring visible defects (ADR-0001).
+ * When the render succeeds, measured defects are errors and source heuristics
+ * become hints; `overflow-risk` is dropped because the measurement answers it
+ * directly. When rendering is unavailable, heuristics are reported as
+ * warnings and `visualCheck.status` is "skipped".
  */
 async function validateDeckWithVisualCheck(deckPath, options = {}) {
   const {
-    measureVisualOverflow: defaultMeasureVisualOverflow,
+    measureRenderedSlides: defaultMeasureRenderedSlides,
   } = require("./visual-overflow");
-  const measureVisualOverflow =
-    options.measureVisualOverflow || defaultMeasureVisualOverflow;
+  const measureRenderedSlides =
+    options.measureRenderedSlides || defaultMeasureRenderedSlides;
 
   const markdown = fs.readFileSync(deckPath, "utf8");
-  const result = validateDeckMarkdown(markdown);
-
-  const overflows = await measureVisualOverflow(deckPath, {
+  const measurement = await measureRenderedSlides(deckPath, {
     onDiagnostic: options.onDiagnostic,
     strictVisual: options.strictVisual,
   });
+  const measured = measurement.status === "measured";
 
-  const visualSlides = new Set(overflows.map((o) => o.slideNumber));
+  const result = validateDeckMarkdown(markdown, {
+    heuristicSeverity: measured
+      ? HEURISTIC_SEVERITY.measured
+      : HEURISTIC_SEVERITY.fallback,
+  });
+  result.visualCheck = measured
+    ? { status: "measured" }
+    : { status: "skipped", reason: measurement.reason };
 
-  // Remove heuristic overflow-risk findings for slides where visual measurement ran
-  if (overflows.length > 0) {
+  if (measured) {
     result.findings = result.findings.filter(
-      (f) => !(f.ruleId === "overflow-risk" && visualSlides.has(f.slide)),
+      (finding) => finding.ruleId !== "overflow-risk",
     );
-  }
-
-  // Add visual-overflow findings
-  for (const overflow of overflows) {
-    result.findings.push(
-      buildFinding(
-        { number: overflow.slideNumber },
-        "visual-overflow",
-        "warning",
-        `Slide content overflows by ${overflow.overflowPx}px (${overflow.scrollHeight}px content in ${overflow.clientHeight}px viewport).`,
-        "Reduce content, split into multiple slides, or adjust layout to fit within the slide area.",
-      ),
-    );
+    for (const slideAudit of measurement.slides) {
+      if (slideAudit.clipped.length === 0) continue;
+      result.findings.push(
+        buildFinding(
+          { number: slideAudit.slideNumber },
+          "content-clipped",
+          "error",
+          formatClippedTitle(slideAudit),
+          "Resize or move the listed elements, trim the slide, or split it so everything fits inside the canvas.",
+          "render",
+        ),
+      );
+    }
+    for (const slideAudit of measurement.slides) {
+      if (!slideAudit.crowded || slideAudit.crowded.length === 0) continue;
+      result.findings.push(
+        buildFinding(
+          { number: slideAudit.slideNumber },
+          "edge-crowding",
+          "warning",
+          formatCrowdedTitle(slideAudit),
+          "Leave breathing room at the edge: trim or rebalance the content, or move the element inward.",
+          "render",
+        ),
+      );
+    }
   }
 
   // Sort findings by slide number for consistent output
@@ -627,8 +777,11 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
 }
 
 module.exports = {
+  HEURISTIC_SEVERITY,
+  countFindings,
   defaultImageExporter,
   buildSarifReport,
+  exitCodeFor,
   formatSummary,
   isPaperDeck,
   splitSlides,

@@ -2,6 +2,7 @@ const path = require("node:path");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 const {
   buildSarifReport,
+  exitCodeFor,
   formatSummary,
   validateDeckFile,
   validateDeckWithVisualCheck,
@@ -23,8 +24,9 @@ function parseArgs(argv) {
   let reportDir = null;
   let strictVisual = process.env.MARP_AGENT_REQUIRE_VISUAL === "1";
   let format = "text";
+  let showHints = false;
   const usage =
-    "Usage: marpx <path/to/slide.md> -v [--report-dir <dir>] [--strict-visual] [--format text|json|sarif]";
+    "Usage: marpx <path/to/slide.md> -v [--report-dir <dir>] [--strict-visual] [--hints] [--format text|json|sarif]";
   const fail = (message) => {
     console.error(usage);
     console.error(message);
@@ -43,6 +45,10 @@ function parseArgs(argv) {
     }
     if (arg === "--strict-visual") {
       strictVisual = true;
+      continue;
+    }
+    if (arg === "--hints") {
+      showHints = true;
       continue;
     }
     if (arg === "--format") {
@@ -74,11 +80,14 @@ function parseArgs(argv) {
     reportDir: reportDir ? path.resolve(reportDir) : null,
     strictVisual,
     format,
+    showHints,
   };
 }
 
 async function main() {
-  const { deckPath, reportDir, strictVisual, format } = parseArgs(process.argv.slice(2));
+  const { deckPath, reportDir, strictVisual, format, showHints } = parseArgs(
+    process.argv.slice(2),
+  );
 
   try {
     let result;
@@ -129,11 +138,14 @@ async function main() {
         deckPath,
         stack: error.stack,
       });
-      result = validateDeckFile(deckPath, { reportDir });
+      result = validateDeckFile(deckPath, {
+        reportDir,
+        visualCheck: { status: "skipped", reason: error.message },
+      });
     }
 
     if (format === "text") {
-      process.stdout.write(formatSummary(deckPath, result));
+      process.stdout.write(formatSummary(deckPath, result, { showHints }));
 
       if (reportDir) {
         for (const filePath of result.artifacts.reportFiles) {
@@ -160,7 +172,7 @@ async function main() {
       );
     }
 
-    process.exit(result.findings.length > 0 ? 1 : 0);
+    process.exit(exitCodeFor(result));
   } catch (error) {
     console.error(error.message);
     process.exit(2);

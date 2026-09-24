@@ -1,10 +1,31 @@
 ---
-title: "marpx --outline: dedupe Title/Agenda and pass brief variant hints through"
-status: open
-created: 2026-06-21
-updated: 2026-06-21
-labels: [refactor, dx]
+id: ISS-0001
+title: 'marpx --outline: dedupe Title/Agenda and pass brief variant hints through'
+type: issue
+status: closed
+date: '2026-06-21'
+updated: '2026-09-23'
+authors:
+- takumi-nishimura
+scope:
+- src/outline.js
+tags:
+- refactor
+- dx
+depends_on: []
+supersedes: []
+resolution: completed
+resolved: '2026-06-21'
+artifacts:
+  revisions:
+  - '2098539'
+  - fed12cd
+  manifests: []
+  results: []
+  commands: []
 ---
+
+# marpx --outline: dedupe Title/Agenda and pass brief variant hints through
 
 ## Problem
 
@@ -21,11 +42,11 @@ The draft outline is faithful to the brief: no synthetic duplicates, and layout-
 
 ## Acceptance criteria
 
-- [ ] When `Required Sections` in the brief includes `Title`, the generator does NOT prepend a separate Title slide.
-- [ ] Same for `Agenda` — no duplicate when the brief already lists it.
-- [ ] When the brief names a recognized variant (`three-column`, `feature-grid`, `agenda variant`, `summary variant`, `closing variant`), the outline's layout-hint field carries the variant tag, not the base type.
+- [x] When `Required Sections` in the brief includes `Title`, the generator does NOT prepend a separate Title slide.
+- [x] Same for `Agenda` — no duplicate when the brief already lists it.
+- [x] When the brief names a recognized variant (`three-column`, `feature-grid`, `agenda variant`, `summary variant`, `closing variant`), the outline's layout-hint field carries the variant tag, not the base type.
 - [ ] Existing outline fixtures regenerate identically when their briefs don't reference these features (no spurious diff).
-- [ ] New fixtures cover the two new behaviors (dedupe + variant carry).
+- [x] New fixtures cover the two new behaviors (dedupe + variant carry).
 
 ## Out of scope
 
@@ -41,3 +62,7 @@ The draft outline is faithful to the brief: no synthetic duplicates, and layout-
 ## Notes
 
 Surfaced by empirical-prompt-tuning of `.agents/skills/slide-new` on 2026-06-21. After this landed, the "Treat the result as a draft, not a final outline" sweep paragraph in `slide-new/SKILL.md` step 4 was removed and replaced with a one-liner that simply states the generator now handles dedupe + variant passthrough.
+
+## Resolution
+
+Closed 2026-09-23 as completed. Implemented in 2098539 (`src/outline.js` `buildSlidePlan` / `KNOWN_LAYOUTS`), covered by `tests/unit/outline.test.js`. The `three-column` hint was later renamed to `multi-column` in fed12cd. The fixture-regeneration criterion is left unchecked: `decks/example/outline.md` is a hand-curated outline, not generator output, so it cannot regenerate identically.

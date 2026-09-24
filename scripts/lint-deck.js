@@ -3,6 +3,7 @@ const path = require("node:path");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 const {
   buildSarifReport,
+  exitCodeFor,
   formatSummary,
   validateDeckWithVisualCheck,
 } = require("../src/deck-validator");
@@ -15,8 +16,9 @@ function parseArgs(argv) {
   let autofix = false;
   let strictVisual = process.env.MARP_AGENT_REQUIRE_VISUAL === "1";
   let format = "text";
+  let showHints = false;
   const usage =
-    "Usage: marpx <path/to/slide.md> --lint [--autofix] [--strict-visual] [--format text|json|sarif]";
+    "Usage: marpx <path/to/slide.md> --lint [--autofix] [--strict-visual] [--hints] [--format text|json|sarif]";
 
   const fail = (message) => {
     console.error(usage);
@@ -32,6 +34,10 @@ function parseArgs(argv) {
     }
     if (arg === "--strict-visual") {
       strictVisual = true;
+      continue;
+    }
+    if (arg === "--hints") {
+      showHints = true;
       continue;
     }
     if (arg === "--format") {
@@ -63,6 +69,7 @@ function parseArgs(argv) {
     autofix,
     strictVisual,
     format,
+    showHints,
   };
 }
 
@@ -89,7 +96,9 @@ function applyAutoFixes(markdown) {
 }
 
 async function main() {
-  const { deckPath, autofix, strictVisual, format } = parseArgs(process.argv.slice(2));
+  const { deckPath, autofix, strictVisual, format, showHints } = parseArgs(
+    process.argv.slice(2),
+  );
 
   if (autofix) {
     const original = fs.readFileSync(deckPath, "utf8");
@@ -107,7 +116,7 @@ async function main() {
   });
 
   if (format === "text") {
-    process.stdout.write(formatSummary(deckPath, result));
+    process.stdout.write(formatSummary(deckPath, result, { showHints }));
   } else if (format === "json") {
     process.stdout.write(
       `${JSON.stringify(
@@ -125,7 +134,7 @@ async function main() {
     );
   }
 
-  process.exit(result.findings.length > 0 ? 1 : 0);
+  process.exit(exitCodeFor(result));
 }
 
 main().catch((error) => {

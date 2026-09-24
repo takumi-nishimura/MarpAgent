@@ -1,11 +1,13 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 
 const {
   buildRenderedToMarkdownMap,
   detectHiddenSlides,
-  measureVisualOverflow,
+  measureRenderedSlides,
 } = require("../../src/visual-overflow");
 const { supportsVisualChecks } = require("./helpers/visual-support");
 
@@ -119,30 +121,162 @@ marp: true
   assert.equal(map[0], 1);
 });
 
-test("measureVisualOverflow detects overflow on heavy slide", async (t) => {
+test("measureRenderedSlides reports clipped text on the heavy fixture", async (t) => {
   if (!(await supportsVisualChecks())) {
     t.skip("Visual overflow checks are unavailable in this environment.");
     return;
   }
 
-  const deckPath = fixture("overflow-heavy-slide.md");
-  const results = await measureVisualOverflow(deckPath);
+  const result = await measureRenderedSlides(
+    fixture("overflow-heavy-slide.md"),
+  );
 
-  assert.equal(results.length > 0, true, "Should detect at least one overflow");
-  assert.equal(results[0].slideNumber, 1);
-  assert.equal(results[0].overflowPx > 0, true);
-  assert.equal(typeof results[0].scrollHeight, "number");
-  assert.equal(typeof results[0].clientHeight, "number");
+  assert.equal(result.status, "measured");
+  assert.equal(result.slides.length, 1);
+  const [slide] = result.slides;
+  assert.equal(slide.slideNumber, 1);
+  assert.equal(slide.maxOverflowPx > 0, true);
+  assert.equal(slide.clipped[0].edge, "bottom");
+  assert.match(slide.clipped[0].label, /^"Point twenty/);
 });
 
-test("measureVisualOverflow returns empty for clean slide", async (t) => {
+test("measureRenderedSlides reports nothing for a clean slide", async (t) => {
   if (!(await supportsVisualChecks())) {
     t.skip("Visual overflow checks are unavailable in this environment.");
     return;
   }
 
-  const deckPath = fixture("clean-slide.md");
-  const results = await measureVisualOverflow(deckPath);
+  const result = await measureRenderedSlides(fixture("clean-slide.md"));
 
-  assert.equal(results.length, 0, "Clean slide should not overflow");
+  assert.equal(result.status, "measured");
+  assert.deepEqual(
+    result.slides.map((slide) => slide.clipped),
+    [[]],
+  );
+});
+
+test("measureRenderedSlides ignores trailing margins and intentional crops", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-audit-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+---
+
+# Trailing margin
+
+<div style="height: 460px"></div>
+
+<p style="margin: 0 0 200px">Last line fits; only its margin extends past the edge.</p>
+
+---
+
+# Cropped media
+
+<div style="height: 200px; width: 300px; overflow: hidden">
+<svg width="300" height="900" viewBox="0 0 300 900"><rect width="300" height="900" fill="#ccc"/></svg>
+</div>
+
+---
+
+# Clipped text
+
+<div style="height: 610px"></div>
+
+This sentence starts near the bottom edge and is cut off.
+`,
+  );
+
+  try {
+    const result = await measureRenderedSlides(deckPath);
+
+    assert.equal(result.status, "measured");
+    const bySlide = Object.fromEntries(
+      result.slides.map((slide) => [slide.slideNumber, slide.clipped]),
+    );
+    assert.deepEqual(bySlide[1], []);
+    assert.deepEqual(bySlide[2], []);
+    assert.equal(bySlide[3].length > 0, true);
+    assert.match(bySlide[3][0].label, /This sentence/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("measureRenderedSlides reports content crowding the slide edge", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-crowding-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+---
+
+# Crowded bottom
+
+<div style="height: 544px"></div>
+
+<p style="margin: 0">This last line sits right above the bottom edge.</p>
+
+---
+
+# Footnotes and wide media
+
+<div style="margin-right: -38px">
+<svg width="1238" height="120" viewBox="0 0 1238 120"><rect width="1238" height="120" fill="#ddd"/></svg>
+</div>
+
+<div class="footnote">[1] Theme footnote placed at the bottom edge.</div>
+
+---
+
+# Clean
+
+Plenty of room around this sentence.
+`,
+  );
+
+  try {
+    const result = await measureRenderedSlides(deckPath);
+
+    assert.equal(result.status, "measured");
+    const bySlide = Object.fromEntries(
+      result.slides.map((slide) => [slide.slideNumber, slide]),
+    );
+    assert.deepEqual(bySlide[1].clipped, []);
+    assert.equal(bySlide[1].safeMarginPx, 20);
+    assert.equal(bySlide[1].crowded.length, 1);
+    assert.equal(bySlide[1].crowded[0].edge, "bottom");
+    assert.match(bySlide[1].crowded[0].label, /This last line/);
+    assert.equal(bySlide[1].crowded[0].gapPx < 20, true);
+    assert.deepEqual(bySlide[2].crowded, []);
+    assert.deepEqual(bySlide[3].crowded, []);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("measureRenderedSlides reports a skipped check instead of throwing", async () => {
+  process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE = "1";
+  try {
+    const result = await measureRenderedSlides(fixture("clean-slide.md"));
+    assert.equal(result.status, "skipped");
+    assert.match(result.reason, /Forced visual check failure/);
+    assert.deepEqual(result.slides, []);
+  } finally {
+    delete process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE;
+  }
 });

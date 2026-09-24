@@ -90,3 +90,13 @@ resize. Scale the rendered SVG/container instead, e.g.
 | `npm run marpx -- --theme lab` | Build lab theme only |
 | `npm run marpx -- --theme-new <name> --source-url <url>` | Scaffold a new theme |
 | `npm run marpx -- --theme -w` | Watch-build themes |
+
+## Records
+
+`docs/records/README.md` is the canonical spec for issue (ISS), decision (ADR), and exploration (XR) records.
+
+- Create deferred work with `uv run .github/records.py new issue "<title>"`; it writes `docs/issues/ISS-NNNN-<slug>.md`. Never hand-assign IDs.
+- Close an issue in place: set `status: closed`, `resolution` (`completed|abandoned|duplicate|superseded`), and `resolved`. Do not move or delete issue files.
+- Record adoption decisions as ADRs (`new adr`) and trials or benchmarks as XRs (`new xr`). Reference issues from ADR/XR `issues:`, not the reverse.
+- Reference records from commits with `Fixes ISS-NNNN` or `Refs ISS-NNNN`.
+- Run `uv run .github/records.py validate` after changing any record or the record tooling.
