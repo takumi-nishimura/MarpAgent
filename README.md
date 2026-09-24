@@ -91,7 +91,14 @@ marpx decks/my-talk/slide.md --overview
 | `npm run test:e2e` | Run Playwright CLI smoke tests |
 
 All exports go through the repository Marp config (plugins, BudouX, theme
-set, browser path). Without `--output`, files land next to the slide deck:
+set). Browser-backed exports (`--pdf`, `--pptx`, `--images`, and the browser
+opened by `-p`) use `CHROME_PATH` or an installed Chrome/Edge when one is
+found, and fall back to Playwright's bundled Chromium otherwise — the
+`chromium-headless-shell` build is preferred over "Chrome for Testing",
+which can stall on some macOS machines. A conversion that does not finish
+within `MARP_AGENT_CONVERT_TIMEOUT_MS` (default 120000 ms) is aborted with an
+error; raise that variable for very large decks. Without `--output`,
+files land next to the slide deck:
 `slide.pdf`, `slide.pptx`, `slide.html`, or `slide.001.png`-style image
 sequences. For `--images`, `--output` is the file prefix —
 `--output out/slide.png` produces `out/slide.001.png`, `out/slide.002.png`, …
