@@ -32,6 +32,13 @@ const EDGE_REFERENCE_HEIGHT_PX = 720;
 const BODY_TEXT_FLOOR_PX = 12;
 const SECONDARY_TEXT_FLOOR_PX = 8;
 const TEXT_REFERENCE_WIDTH_PX = 1280;
+// Text whose glyphs intersect text from another block, or media, by more than
+// this much on both axes is reported as overlapping (ADR-0001, ISS-0021). The
+// glyph box is the line fragment narrowed to the ink of its characters, so
+// tight line-height alone never counts; the tolerance absorbs rounding and
+// the slack between that box and the actual glyph outlines. Media also allow
+// MEDIA_CLIP_TOLERANCE_RATIO of their size, as for clipping.
+const OVERLAP_TOLERANCE_PX = 2;
 // Images and video/audio get this long to finish loading or fail before the
 // page is measured. Media still pending afterwards are not reported, because
 // they are not definitely broken (ISS-0024).
@@ -106,11 +113,13 @@ function renderToHtml(deckPath) {
  * each intersected with the clip rectangles of its overflow-clipping
  * ancestors inside the slide, so intentional crops and trailing margins do not
  * count. It also records the rendered font size of each visible text run and
- * lists the runs below the readable floor. Runs inside the page via
- * `page.evaluate`, so it must stay self-contained.
+ * lists the runs below the readable floor, and it lists text whose glyphs
+ * collide with text from another block or with media. Runs inside the page
+ * via `page.evaluate`, so it must stay self-contained.
  */
 function auditSlidesInPage({
   tolerancePx,
+  overlapTolerancePx,
   mediaToleranceRatio,
   safeMarginPx,
   referenceHeightPx,
@@ -123,6 +132,11 @@ function auditSlidesInPage({
   // secondary text, held to the lower floor. `mtight` marks KaTeX sub- and
   // superscripts, and `rt` ruby annotations.
   const SECONDARY_TAGS = new Set(["header", "footer", "figcaption", "caption", "sup", "sub", "rt"]);
+  // Math renderers stack and pad glyph boxes internally (KaTeX struts,
+  // MathJax CHTML), so their boxes do not show where the ink is.
+  const MATH = "mjx-container,.katex,math";
+  const INLINE_DISPLAYS = new Set(["inline", "contents"]);
+  const measureContext = document.createElement("canvas").getContext("2d");
 
   function snippet(text) {
     const clean = text.replace(/\u200b/g, "").replace(/\s+/g, " ").trim();
@@ -206,6 +220,227 @@ function auditSlidesInPage({
     return factor;
   }
 
+  function intersect(a, b) {
+    const left = Math.max(a.left, b.left);
+    const top = Math.max(a.top, b.top);
+    const right = Math.min(a.right, b.right);
+    const bottom = Math.min(a.bottom, b.bottom);
+    return right > left && bottom > top ? { left, top, right, bottom } : null;
+  }
+
+  // The layout block that owns a piece of content: its nearest non-inline
+  // ancestor. A ruby group counts as one block so its annotation and base
+  // are never compared with each other.
+  function blockOf(element, section) {
+    const ruby = element.closest("ruby");
+    if (ruby && section.contains(ruby)) return ruby;
+    for (let node = element; node && node !== section; node = node.parentElement) {
+      const { display } = getComputedStyle(node);
+      if (!INLINE_DISPLAYS.has(display) && !display.startsWith("ruby")) return node;
+    }
+    return section;
+  }
+
+  // Glyph box of one line fragment of a text node. The fragment spans the
+  // font's ascent and descent, which reaches well past the glyphs (CJK fonts
+  // add about a fifth of the size above and below), so stacked lines with a
+  // tight line-height overlap as boxes while their ink stays apart. Narrow
+  // the fragment vertically to the ink of the characters on that line, using
+  // canvas text metrics for the same font.
+  function glyphBox(node, rect) {
+    const text = node.textContent;
+    const range = document.createRange();
+    let line = "";
+    for (let index = 0; index < text.length; ) {
+      const length = text.codePointAt(index) > 0xffff ? 2 : 1;
+      range.setStart(node, index);
+      range.setEnd(node, index + length);
+      const box = range.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
+      if (box.width > 0 && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        line += text.slice(index, index + length);
+      }
+      index += length;
+    }
+    line = line.replace(/[\s\u200b]/g, "");
+    if (!line) return null;
+    const style = getComputedStyle(node.parentElement);
+    measureContext.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const metrics = measureContext.measureText(line);
+    const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+    if (!(fontHeight > 0)) return rect;
+    // The fragment is the font box scaled by any transform on the way.
+    const ratio = rect.height / fontHeight;
+    const baseline = rect.top + metrics.fontBoundingBoxAscent * ratio;
+    return {
+      left: rect.left,
+      right: rect.right,
+      top: Math.max(rect.top, baseline - metrics.actualBoundingBoxAscent * ratio),
+      bottom: Math.min(rect.bottom, baseline + metrics.actualBoundingBoxDescent * ratio),
+    };
+  }
+
+  // Where a replaced element paints inside its box: `object-fit` and
+  // `object-position` letterbox images and video, and an SVG draws only its
+  // shapes, so the box alone would count empty bands as media.
+  function paintedBox(element) {
+    const rect = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    const inset = (value) => Number.parseFloat(value) || 0;
+    const box = {
+      left: rect.left + inset(style.borderLeftWidth) + inset(style.paddingLeft),
+      top: rect.top + inset(style.borderTopWidth) + inset(style.paddingTop),
+      right: rect.right - inset(style.borderRightWidth) - inset(style.paddingRight),
+      bottom: rect.bottom - inset(style.borderBottomWidth) - inset(style.paddingBottom),
+    };
+    const tag = element.tagName.toLowerCase();
+    if (tag === "svg") {
+      try {
+        const bounds = element.getBBox();
+        const matrix = element.getScreenCTM();
+        if (!matrix || !(bounds.width > 0 && bounds.height > 0)) return box;
+        const corners = [
+          [bounds.x, bounds.y],
+          [bounds.x + bounds.width, bounds.y],
+          [bounds.x, bounds.y + bounds.height],
+          [bounds.x + bounds.width, bounds.y + bounds.height],
+        ].map(([x, y]) => new DOMPoint(x, y).matrixTransform(matrix));
+        const drawn = {
+          left: Math.min(...corners.map((point) => point.x)),
+          top: Math.min(...corners.map((point) => point.y)),
+          right: Math.max(...corners.map((point) => point.x)),
+          bottom: Math.max(...corners.map((point) => point.y)),
+        };
+        return style.overflowX === "visible" && style.overflowY === "visible"
+          ? drawn
+          : intersect(drawn, box);
+      } catch {
+        return box;
+      }
+    }
+    const naturalWidth = tag === "img" ? element.naturalWidth : element.videoWidth;
+    const naturalHeight = tag === "img" ? element.naturalHeight : element.videoHeight;
+    const fit = style.objectFit;
+    if (!(naturalWidth > 0 && naturalHeight > 0) || fit === "fill" || fit === "cover") return box;
+    const width = box.right - box.left;
+    const height = box.bottom - box.top;
+    let factor = Math.min(width / naturalWidth, height / naturalHeight);
+    if (fit === "none") factor = 1;
+    if (fit === "scale-down") factor = Math.min(factor, 1);
+    const [positionX, positionY] = style.objectPosition.split(/\s+/);
+    const offset = (value, free) =>
+      value && value.endsWith("%") ? (free * Number.parseFloat(value)) / 100 : Number.parseFloat(value) || 0;
+    const left = box.left + offset(positionX, width - naturalWidth * factor);
+    const top = box.top + offset(positionY, height - naturalHeight * factor);
+    return intersect(box, {
+      left,
+      top,
+      right: left + naturalWidth * factor,
+      bottom: top + naturalHeight * factor,
+    });
+  }
+
+  function hasBackground(style) {
+    if (style.backgroundImage && style.backgroundImage !== "none") return true;
+    const color = style.backgroundColor;
+    if (color === "transparent") return false;
+    const alpha =
+      color.match(/\/\s*([\d.]+)%?\s*\)$/) ||
+      color.match(/^rgba\([^,]+,[^,]+,[^,]+,\s*([\d.]+)\s*\)$/);
+    return !alpha || Number.parseFloat(alpha[1]) > 0;
+  }
+
+  // Text may sit on media on purpose: a caption or overlay inside the same
+  // figure, an inline icon in the text's own block, a label drawn on its own
+  // background box (callout, card, badge), or media placed with absolute
+  // positioning as a decoration or deliberate overlay.
+  function isIntendedOverlay(text, media, section) {
+    const figure = text.element.closest("figure");
+    if (figure && section.contains(figure) && figure.contains(media.element)) return true;
+    if (text.block === media.block) return true;
+    for (let node = text.element; node && node !== section; node = node.parentElement) {
+      if (node.contains(media.element)) break;
+      const style = getComputedStyle(node);
+      if (INLINE_DISPLAYS.has(style.display) || !hasBackground(style)) continue;
+      const backdrop = node.getBoundingClientRect();
+      if (text.glyphs.top >= backdrop.top && text.glyphs.bottom <= backdrop.bottom &&
+        text.glyphs.left >= backdrop.left && text.glyphs.right <= backdrop.right) {
+        return true;
+      }
+    }
+    for (let node = media.element; node && node !== section; node = node.parentElement) {
+      if (node.contains(text.element)) break;
+      const { position } = getComputedStyle(node);
+      if (position === "absolute" || position === "fixed") return true;
+    }
+    return false;
+  }
+
+  // Text that collides with text from another block or with media, measured
+  // on glyph boxes. Header/footer bands, math, nested SVG text, aria-hidden
+  // decorations, and parts cropped by an `overflow` ancestor are left out.
+  function findOverlaps(boxes, section, scale) {
+    const items = [];
+    for (const box of boxes) {
+      const element = box.element;
+      if (element.closest("header,footer,[aria-hidden='true']")) continue;
+      if (!box.media && element.closest(MATH)) continue;
+      const shape = box.media ? paintedBox(element) : box.rect;
+      const visible = shape && clipByAncestors(shape, element, section);
+      if (!visible) continue;
+      items.push({
+        ...box,
+        visible,
+        block: blockOf(box.media ? element.parentElement : element, section),
+      });
+    }
+
+    const glyphsOf = (item) => {
+      if (item.glyphs === undefined) {
+        const glyphs = item.media ? item.visible : glyphBox(item.node, item.rect);
+        item.glyphs = glyphs && intersect(glyphs, item.visible);
+      }
+      return item.glyphs;
+    };
+
+    const byPair = new Map();
+    for (let i = 0; i < items.length; i += 1) {
+      for (let j = i + 1; j < items.length; j += 1) {
+        let first = items[i];
+        let second = items[j];
+        if (first.media && second.media) continue;
+        if (first.block === second.block) continue;
+        if (!intersect(first.visible, second.visible)) continue;
+        if (first.media) [first, second] = [second, first];
+        if (!glyphsOf(first) || !glyphsOf(second)) continue;
+        if (second.media && isIntendedOverlay(first, second, section)) continue;
+        const overlap = intersect(first.glyphs, second.glyphs);
+        if (!overlap) continue;
+        const widthPx = (overlap.right - overlap.left) / scale;
+        const heightPx = (overlap.bottom - overlap.top) / scale;
+        const allowed = (extent) =>
+          second.media ? Math.max(overlapTolerancePx, extent * mediaToleranceRatio) : overlapTolerancePx;
+        const extent = second.glyphs;
+        if (widthPx <= allowed((extent.right - extent.left) / scale)) continue;
+        if (heightPx <= allowed((extent.bottom - extent.top) / scale)) continue;
+        const overlapPx = Math.round(Math.min(widthPx, heightPx));
+        const key = `${first.label}\n${second.label}`;
+        const previous = byPair.get(key);
+        if (!previous || previous.overlapPx < overlapPx) {
+          byPair.set(key, {
+            first: first.label,
+            second: second.label,
+            widthPx: Math.round(widthPx),
+            heightPx: Math.round(heightPx),
+            overlapPx,
+          });
+        }
+      }
+    }
+    return [...byPair.values()].sort((a, b) => b.overlapPx - a.overlapPx);
+  }
+
   function roundTenth(value) {
     return Math.round(value * 10) / 10;
   }
@@ -229,7 +464,7 @@ function auditSlidesInPage({
       const label = `"${snippet(node.textContent)}"`;
       const rects = [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0);
       for (const rect of rects) {
-        boxes.push({ rect, element: parent, media: false, label });
+        boxes.push({ rect, element: parent, node, media: false, label });
       }
       // Only text that shows more than a pixel after clipping has a readable
       // size; this skips visually hidden copies such as KaTeX's MathML.
@@ -295,6 +530,7 @@ function auditSlidesInPage({
     }
 
     const clipped = [...byLabel.values()].sort((a, b) => b.overflowPx - a.overflowPx);
+    const overlaps = findOverlaps(boxes, section, scale);
     const crowded = [...crowdedByLabel.values()]
       .filter((item) => !byLabel.has(item.label))
       .sort((a, b) => a.gapPx - b.gapPx);
@@ -328,6 +564,8 @@ function auditSlidesInPage({
       textRuns,
       smallText,
       textFloorPx,
+      overlaps,
+      maxOverlapPx: overlaps.length > 0 ? overlaps[0].overlapPx : 0,
     };
   });
 }
@@ -439,11 +677,14 @@ function mapFailedMedia(failure, renderedDeckDir, deckDir) {
  *   maxOverflowPx, crowded: [{ label, edge, gapPx }], safeMarginPx,
  *   textRuns: [{ label, fontPx, secondary }],
  *   smallText: [{ label, fontPx, floorPx, secondary }],
- *   textFloorPx: { body, secondary }, failedMedia: [{ url, reason }] }.
+ *   textFloorPx: { body, secondary },
+ *   overlaps: [{ first, second, widthPx, heightPx, overlapPx }], maxOverlapPx,
+ *   failedMedia: [{ url, reason }] }.
  */
 async function measureSlidesInBrowser(htmlPath, options = {}) {
   const {
     tolerancePx = CLIP_TOLERANCE_PX,
+    overlapTolerancePx = OVERLAP_TOLERANCE_PX,
     mediaToleranceRatio = MEDIA_CLIP_TOLERANCE_RATIO,
     safeMarginPx = EDGE_SAFE_MARGIN_PX,
     bodyFloorPx = BODY_TEXT_FLOOR_PX,
@@ -471,6 +712,7 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
     });
     const audits = await page.evaluate(auditSlidesInPage, {
       tolerancePx,
+      overlapTolerancePx,
       mediaToleranceRatio,
       safeMarginPx,
       referenceHeightPx: EDGE_REFERENCE_HEIGHT_PX,
@@ -528,11 +770,11 @@ function buildRenderedToMarkdownMap(markdown) {
 
 /**
  * Render a deck and audit every slide for clipped visible content, content
- * crowding the edge, text below the readable size floor, and media that fail
- * to load.
+ * crowding the edge, text below the readable size floor, overlapping text,
+ * and media that fail to load.
  * Returns { status: "measured", slides: [{ slideNumber, clipped, maxOverflowPx,
- * crowded, safeMarginPx, textRuns, smallText, textFloorPx,
- * missingMedia: [{ reference, reason, path }] }] }
+ * crowded, safeMarginPx, textRuns, smallText, textFloorPx, overlaps,
+ * maxOverlapPx, missingMedia: [{ reference, reason, path }] }] }
  * where slideNumber is the markdown slide number, or
  * { status: "skipped", reason, slides: [] } when rendering or the browser is
  * unavailable. In strict mode a failure throws instead of being skipped.
@@ -565,6 +807,8 @@ async function measureRenderedSlides(deckPath, options = {}) {
         textRuns: audit.textRuns,
         smallText: audit.smallText,
         textFloorPx: audit.textFloorPx,
+        overlaps: audit.overlaps,
+        maxOverlapPx: audit.maxOverlapPx,
         missingMedia: audit.failedMedia
           .map((failure) => mapFailedMedia(failure, renderedDeckDir, deckDir))
           .filter(Boolean),
@@ -641,6 +885,7 @@ module.exports = {
   EDGE_SAFE_MARGIN_PX,
   MEDIA_CLIP_TOLERANCE_RATIO,
   MEDIA_SETTLE_TIMEOUT_MS,
+  OVERLAP_TOLERANCE_PX,
   SECONDARY_TEXT_FLOOR_PX,
   auditMediaInPage,
   auditSlidesInPage,

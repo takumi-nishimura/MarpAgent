@@ -761,6 +761,17 @@ function formatClippedTitle(slideAudit) {
   return `Visible content extends past the slide edge by up to ${slideAudit.maxOverflowPx}px: ${parts.join(", ")}${more}.`;
 }
 
+function formatOverlapTitle(slideAudit) {
+  const parts = slideAudit.overlaps
+    .slice(0, 3)
+    .map((item) => `${item.first} and ${item.second} (${item.overlapPx}px)`);
+  const more =
+    slideAudit.overlaps.length > 3
+      ? ` and ${slideAudit.overlaps.length - 3} more`
+      : "";
+  return `Text overlaps other content by up to ${slideAudit.maxOverlapPx}px: ${parts.join(", ")}${more}.`;
+}
+
 function formatCrowdedTitle(slideAudit) {
   const parts = slideAudit.crowded
     .slice(0, 3)
@@ -836,6 +847,19 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
           "error",
           formatClippedTitle(slideAudit),
           "Resize or move the listed elements, trim the slide, or split it so everything fits inside the canvas.",
+          "render",
+        ),
+      );
+    }
+    for (const slideAudit of measurement.slides) {
+      if (!slideAudit.overlaps || slideAudit.overlaps.length === 0) continue;
+      result.findings.push(
+        buildFinding(
+          { number: slideAudit.slideNumber },
+          "text-overlap",
+          "error",
+          formatOverlapTitle(slideAudit),
+          "Separate the colliding elements: trim or split the slide so the flow ends above the footnote or figure, or move the positioned element; do not shrink text or line spacing to make room.",
           "render",
         ),
       );
