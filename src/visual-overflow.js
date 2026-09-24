@@ -19,6 +19,17 @@ const MEDIA_CLIP_TOLERANCE_RATIO = 0.02;
 // canvas height.
 const EDGE_SAFE_MARGIN_PX = 20;
 const EDGE_REFERENCE_HEIGHT_PX = 720;
+// Visible text whose rendered size is below these floors is reported as too
+// small to read (ADR-0001, ISS-0022). The values are in slide pixels on the
+// 1280x720 reference canvas. Body text must reach 12px (1/60 of the height);
+// secondary text (footnotes, citation markers, captions, header/footer) must
+// reach 8px. Other canvases scale the floors by the factor that fits the
+// reference canvas inside them, min(width / 1280, height / 720): a 16:9 slide
+// scales with its height, and an A4 page with its width, as if a slide were
+// printed across the page.
+const BODY_TEXT_FLOOR_PX = 12;
+const SECONDARY_TEXT_FLOOR_PX = 8;
+const TEXT_REFERENCE_WIDTH_PX = 1280;
 // Images and video/audio get this long to finish loading or fail before the
 // page is measured. Media still pending afterwards are not reported, because
 // they are not definitely broken (ISS-0024).
@@ -92,16 +103,24 @@ function renderToHtml(deckPath) {
  * the slide canvas. Visible content is text line boxes and replaced elements,
  * each intersected with the clip rectangles of its overflow-clipping
  * ancestors inside the slide, so intentional crops and trailing margins do not
- * count. Runs inside the page via `page.evaluate`, so it must stay
- * self-contained.
+ * count. It also records the rendered font size of each visible text run and
+ * lists the runs below the readable floor. Runs inside the page via
+ * `page.evaluate`, so it must stay self-contained.
  */
 function auditSlidesInPage({
   tolerancePx,
   mediaToleranceRatio,
   safeMarginPx,
   referenceHeightPx,
+  bodyFloorPx,
+  secondaryFloorPx,
+  referenceWidthPx,
 }) {
   const REPLACED = "img,video,canvas,iframe,object,svg";
+  // Footnotes, citation markers, captions, and header/footer bands are
+  // secondary text, held to the lower floor. `mtight` marks KaTeX sub- and
+  // superscripts, and `rt` ruby annotations.
+  const SECONDARY_TAGS = new Set(["header", "footer", "figcaption", "caption", "sup", "sub", "rt"]);
 
   function snippet(text) {
     const clean = text.replace(/\u200b/g, "").replace(/\s+/g, " ").trim();
@@ -155,12 +174,47 @@ function auditSlidesInPage({
     return Boolean(svg && section.contains(svg) && svg !== node);
   }
 
+  function isSecondaryText(element, section) {
+    for (let node = element; node && node !== section; node = node.parentElement) {
+      if (SECONDARY_TAGS.has(node.tagName.toLowerCase())) return true;
+      if ([...node.classList].some((name) => /footnote|caption/.test(name) || name === "mtight")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Vertical scale that transforms, the `scale` property, and `zoom` apply to
+  // an element relative to its slide. The computed font size excludes them.
+  function scaleWithinSection(element, section) {
+    let factor = 1;
+    for (let node = element; node && node !== section; node = node.parentElement) {
+      const style = getComputedStyle(node);
+      if (style.transform && style.transform !== "none") {
+        const matrix = new DOMMatrixReadOnly(style.transform);
+        factor *= Math.hypot(matrix.c, matrix.d);
+      }
+      if (style.scale && style.scale !== "none") {
+        const values = style.scale.split(/\s+/).map(Number.parseFloat);
+        factor *= values.length > 1 ? values[1] : values[0];
+      }
+      const zoom = Number.parseFloat(style.zoom);
+      if (zoom > 0) factor *= zoom;
+    }
+    return factor;
+  }
+
+  function roundTenth(value) {
+    return Math.round(value * 10) / 10;
+  }
+
   return [...document.querySelectorAll("section[id]")].map((section, slideIndex) => {
     const canvas = section.getBoundingClientRect();
     const scale = canvas.width / section.offsetWidth || 1;
     const width = section.offsetWidth;
     const height = section.offsetHeight;
     const boxes = [];
+    const textRuns = [];
 
     const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT);
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
@@ -170,11 +224,24 @@ function auditSlidesInPage({
       if (!parent.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue;
       const range = document.createRange();
       range.selectNodeContents(node);
-      for (const rect of range.getClientRects()) {
-        if (rect.width > 0 && rect.height > 0) {
-          boxes.push({ rect, element: parent, media: false, label: `"${snippet(node.textContent)}"` });
-        }
+      const label = `"${snippet(node.textContent)}"`;
+      const rects = [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0);
+      for (const rect of rects) {
+        boxes.push({ rect, element: parent, media: false, label });
       }
+      // Only text that shows more than a pixel after clipping has a readable
+      // size; this skips visually hidden copies such as KaTeX's MathML.
+      const shown = rects.some((rect) => {
+        const visible = clipByAncestors(rect, parent, section);
+        return visible && visible.right - visible.left > scale && visible.bottom - visible.top > scale;
+      });
+      if (!shown) continue;
+      const fontSize = Number.parseFloat(getComputedStyle(parent).fontSize);
+      textRuns.push({
+        label,
+        fontPx: roundTenth(fontSize * scaleWithinSection(parent, section)),
+        secondary: isSecondaryText(parent, section),
+      });
     }
 
     for (const element of section.querySelectorAll(REPLACED)) {
@@ -229,6 +296,25 @@ function auditSlidesInPage({
     const crowded = [...crowdedByLabel.values()]
       .filter((item) => !byLabel.has(item.label))
       .sort((a, b) => a.gapPx - b.gapPx);
+
+    const fontScale = Math.min(width / referenceWidthPx, height / referenceHeightPx);
+    const textFloorPx = {
+      body: roundTenth(bodyFloorPx * fontScale),
+      secondary: roundTenth(secondaryFloorPx * fontScale),
+    };
+    const smallByLabel = new Map();
+    for (const run of textRuns) {
+      const floorPx = run.secondary ? textFloorPx.secondary : textFloorPx.body;
+      if (run.fontPx >= floorPx) continue;
+      const previous = smallByLabel.get(run.label);
+      if (!previous || previous.fontPx > run.fontPx) {
+        smallByLabel.set(run.label, { ...run, floorPx });
+      }
+    }
+    const smallText = [...smallByLabel.values()]
+      .sort((a, b) => a.fontPx - b.fontPx)
+      .map(({ label, fontPx, floorPx, secondary }) => ({ label, fontPx, floorPx, secondary }));
+
     return {
       slideIndex,
       width,
@@ -237,6 +323,9 @@ function auditSlidesInPage({
       maxOverflowPx: clipped.length > 0 ? clipped[0].overflowPx : 0,
       crowded,
       safeMarginPx: Math.round(margin),
+      textRuns,
+      smallText,
+      textFloorPx,
     };
   });
 }
@@ -346,13 +435,17 @@ function mapFailedMedia(failure, renderedDeckDir, deckDir) {
  * Returns one entry per rendered slide:
  * { slideIndex, width, height, clipped: [{ label, edge, overflowPx }],
  *   maxOverflowPx, crowded: [{ label, edge, gapPx }], safeMarginPx,
- *   failedMedia: [{ url, reason }] }.
+ *   textRuns: [{ label, fontPx, secondary }],
+ *   smallText: [{ label, fontPx, floorPx, secondary }],
+ *   textFloorPx: { body, secondary }, failedMedia: [{ url, reason }] }.
  */
 async function measureSlidesInBrowser(htmlPath, options = {}) {
   const {
     tolerancePx = CLIP_TOLERANCE_PX,
     mediaToleranceRatio = MEDIA_CLIP_TOLERANCE_RATIO,
     safeMarginPx = EDGE_SAFE_MARGIN_PX,
+    bodyFloorPx = BODY_TEXT_FLOOR_PX,
+    secondaryFloorPx = SECONDARY_TEXT_FLOOR_PX,
     mediaTimeoutMs = MEDIA_SETTLE_TIMEOUT_MS,
   } = options;
   let playwright;
@@ -379,6 +472,9 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
       mediaToleranceRatio,
       safeMarginPx,
       referenceHeightPx: EDGE_REFERENCE_HEIGHT_PX,
+      bodyFloorPx,
+      secondaryFloorPx,
+      referenceWidthPx: TEXT_REFERENCE_WIDTH_PX,
     });
     return audits.map((audit) => ({
       ...audit,
@@ -424,10 +520,12 @@ function buildRenderedToMarkdownMap(markdown) {
 }
 
 /**
- * Render a deck and audit every slide for clipped visible content and media
- * that fail to load.
+ * Render a deck and audit every slide for clipped visible content, content
+ * crowding the edge, text below the readable size floor, and media that fail
+ * to load.
  * Returns { status: "measured", slides: [{ slideNumber, clipped, maxOverflowPx,
- * crowded, safeMarginPx, missingMedia: [{ reference, reason, path }] }] }
+ * crowded, safeMarginPx, textRuns, smallText, textFloorPx,
+ * missingMedia: [{ reference, reason, path }] }] }
  * where slideNumber is the markdown slide number, or
  * { status: "skipped", reason, slides: [] } when rendering or the browser is
  * unavailable. In strict mode a failure throws instead of being skipped.
@@ -457,6 +555,9 @@ async function measureRenderedSlides(deckPath, options = {}) {
         maxOverflowPx: audit.maxOverflowPx,
         crowded: audit.crowded,
         safeMarginPx: audit.safeMarginPx,
+        textRuns: audit.textRuns,
+        smallText: audit.smallText,
+        textFloorPx: audit.textFloorPx,
         missingMedia: audit.failedMedia
           .map((failure) => mapFailedMedia(failure, renderedDeckDir, deckDir))
           .filter(Boolean),
@@ -528,10 +629,12 @@ async function screenshotSlide(htmlPath, slideId) {
 }
 
 module.exports = {
+  BODY_TEXT_FLOOR_PX,
   CLIP_TOLERANCE_PX,
   EDGE_SAFE_MARGIN_PX,
   MEDIA_CLIP_TOLERANCE_RATIO,
   MEDIA_SETTLE_TIMEOUT_MS,
+  SECONDARY_TEXT_FLOOR_PX,
   auditMediaInPage,
   auditSlidesInPage,
   buildRenderedToMarkdownMap,

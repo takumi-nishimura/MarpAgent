@@ -166,7 +166,8 @@ function detectTableMetrics(lines) {
 // Severity model (ADR-0001):
 // - "error": a visible defect measured on the rendered slide, or a media file
 //   the deck references that is definitely missing; fails the run.
-// - "warning": a source heuristic reported while rendering was unavailable.
+// - "warning": a design risk measured on the render (edge crowding), or a
+//   source heuristic reported while rendering was unavailable.
 // - "info": a source heuristic reported alongside a successful render; a
 //   non-blocking hint that is hidden from the text summary by default.
 const HEURISTIC_SEVERITY = { fallback: "warning", measured: "info" };
@@ -765,12 +766,33 @@ function formatCrowdedTitle(slideAudit) {
   return `Content sits within the ${slideAudit.safeMarginPx}px safe margin of the slide edge: ${parts.join(", ")}${more}.`;
 }
 
+function formatSmallTextTitle(slideAudit) {
+  const kind = (item) => (item.secondary ? "secondary" : "body");
+  const parts = slideAudit.smallText
+    .slice(0, 3)
+    .map((item) => `${item.label} (${item.fontPx}px ${kind(item)})`);
+  const more =
+    slideAudit.smallText.length > 3
+      ? ` and ${slideAudit.smallText.length - 3} more`
+      : "";
+  const floors = slideAudit.textFloorPx
+    ? ` (${slideAudit.textFloorPx.body}px body, ${slideAudit.textFloorPx.secondary}px secondary)`
+    : "";
+  return `Text renders below the readable size floor${floors}: ${parts.join(", ")}${more}.`;
+}
+
+// Source heuristics that a successful render answers directly, so they are
+// dropped instead of reported as hints: the clipping check replaces
+// `overflow-risk` and the rendered font size check replaces `typography-drift`
+// (ISS-0022).
+const SUPERSEDED_BY_RENDER = new Set(["overflow-risk", "typography-drift"]);
+
 /**
  * Validate a deck by rendering it and measuring visible defects (ADR-0001).
  * When the render succeeds, measured defects are errors and source heuristics
- * become hints; `overflow-risk` is dropped because the measurement answers it
- * directly. When rendering is unavailable, heuristics are reported as
- * warnings and `visualCheck.status` is "skipped".
+ * become hints; `overflow-risk` and `typography-drift` are dropped because the
+ * measurement answers them directly. When rendering is unavailable,
+ * heuristics are reported as warnings and `visualCheck.status` is "skipped".
  */
 async function validateDeckWithVisualCheck(deckPath, options = {}) {
   const {
@@ -797,7 +819,7 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
 
   if (measured) {
     result.findings = result.findings.filter(
-      (finding) => finding.ruleId !== "overflow-risk",
+      (finding) => !SUPERSEDED_BY_RENDER.has(finding.ruleId),
     );
     for (const slideAudit of measurement.slides) {
       if (slideAudit.clipped.length === 0) continue;
@@ -821,6 +843,19 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
           "warning",
           formatCrowdedTitle(slideAudit),
           "Leave breathing room at the edge: trim or rebalance the content, or move the element inward.",
+          "render",
+        ),
+      );
+    }
+    for (const slideAudit of measurement.slides) {
+      if (!slideAudit.smallText || slideAudit.smallText.length === 0) continue;
+      result.findings.push(
+        buildFinding(
+          { number: slideAudit.slideNumber },
+          "text-too-small",
+          "error",
+          formatSmallTextTitle(slideAudit),
+          "Raise the listed text to at least the floor by removing the font-size override, transform, or tiny utility class; if the slide then overflows, split it or move detail to speaker notes instead of shrinking other text.",
           "render",
         ),
       );

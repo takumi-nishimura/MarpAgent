@@ -8,7 +8,10 @@ const validateScript = path.join(repoRoot, "scripts", "validate-deck.js");
 // - errors: rule IDs of measured, blocking findings (render only);
 // - warnings: rule IDs of measured, non-blocking findings (render only);
 // - hints: rule IDs of source heuristics, reported as hints after a render
-//   or as warnings when rendering is unavailable.
+//   or as warnings when rendering is unavailable;
+// - fallbackHints: rule IDs of source heuristics reported only when rendering
+//   is unavailable, because a render supersedes them (`overflow-risk`,
+//   `typography-drift`).
 const expectations = [
   { fixture: "fixtures/clean-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/paginate-skip-slide.md", errors: [], hints: [] },
@@ -33,17 +36,29 @@ const expectations = [
     fixture: "fixtures/long-japanese-slide.md",
     errors: [],
     hints: ["long-heading"],
+    fallbackHints: ["overflow-risk"],
   },
   {
+    // `<small>` renders at 20.8px, well above the body floor, so only the
+    // source fallback mentions it.
     fixture: "fixtures/tiny-text-slide.md",
     errors: [],
-    hints: ["typography-drift"],
+    hints: [],
+    fallbackHints: ["typography-drift"],
+  },
+  {
+    // A scoped <style> shrinks the body below the floor; the source
+    // heuristic cannot see it.
+    fixture: "fixtures/scoped-small-text-slide.md",
+    errors: ["text-too-small"],
+    hints: [],
   },
   {
     fixture: "fixtures/overflow-heavy-slide.md",
     errors: ["content-clipped"],
     warnings: ["edge-crowding"],
     hints: ["dense-bullets"],
+    fallbackHints: ["overflow-risk"],
   },
 ];
 const strictVisual = process.env.MARP_AGENT_REQUIRE_VISUAL === "1";
@@ -78,9 +93,18 @@ if (strictVisual) {
 
 let failures = 0;
 
-for (const { fixture, errors, warnings = [], hints } of expectations) {
+for (const {
+  fixture,
+  errors,
+  warnings = [],
+  hints,
+  fallbackHints = [],
+} of expectations) {
   const { status, report } = runValidation(fixture);
   const measured = report.visualCheck?.status === "measured";
+  const expectedHints = sortedUnique(
+    measured ? hints : [...hints, ...fallbackHints],
+  );
   const actualErrors = sortedUnique(
     report.findings.filter((f) => f.severity === "error").map((f) => f.ruleId),
   );
@@ -96,9 +120,9 @@ for (const { fixture, errors, warnings = [], hints } of expectations) {
   );
   const problems = [];
 
-  if (JSON.stringify(actualHints) !== JSON.stringify(sortedUnique(hints))) {
+  if (JSON.stringify(actualHints) !== JSON.stringify(expectedHints)) {
     problems.push(
-      `heuristics ${JSON.stringify(actualHints)} != ${JSON.stringify(sortedUnique(hints))}`,
+      `heuristics ${JSON.stringify(actualHints)} != ${JSON.stringify(expectedHints)}`,
     );
   }
   if (measured) {

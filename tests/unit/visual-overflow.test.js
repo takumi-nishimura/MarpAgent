@@ -269,6 +269,133 @@ Plenty of room around this sentence.
   }
 });
 
+test("measureRenderedSlides records rendered font sizes and flags text below the floor", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-font-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+---
+
+<style scoped>
+section { font-size: 11px; }
+</style>
+
+Scoped body text
+
+---
+
+# Utilities
+
+<p class="text-xs">Extra small utility</p>
+<p class="text-xs3">Smallest utility</p>
+
+---
+
+# Footnotes and captions
+
+Claim with a citation<sup>[1]</sup>
+
+<figure><svg width="200" height="40"><text x="0" y="20" font-size="6">diagram label</text></svg><figcaption>Figure caption</figcaption></figure>
+
+<div class="footnote">[1] Default footnote.</div>
+
+---
+
+<style scoped>
+section { font-size: 16px; }
+</style>
+
+Body text on a smaller base
+
+<div class="footnote">[1] Shrunk footnote.</div>
+
+---
+
+# Transformed
+
+<div style="transform: scale(0.4); transform-origin: left top">Scaled down text</div>
+`,
+  );
+
+  try {
+    const result = await measureRenderedSlides(deckPath);
+
+    assert.equal(result.status, "measured");
+    const bySlide = Object.fromEntries(
+      result.slides.map((slide) => [slide.slideNumber, slide]),
+    );
+    const sizeOf = (slide, text) =>
+      bySlide[slide].textRuns.find((run) => run.label === `"${text}"`);
+
+    for (const slide of result.slides) {
+      assert.deepEqual(slide.textFloorPx, { body: 12, secondary: 8 });
+    }
+
+    // A scoped <style> override is measured as rendered.
+    assert.equal(sizeOf(1, "Scoped body text").fontPx, 11);
+    assert.deepEqual(bySlide[1].smallText, [
+      { label: '"Scoped body text"', fontPx: 11, floorPx: 12, secondary: false },
+    ]);
+
+    // The theme's small utilities stay above the body floor.
+    assert.equal(sizeOf(2, "Extra small utility").fontPx, 19.5);
+    assert.equal(sizeOf(2, "Smallest utility").fontPx, 13);
+    assert.deepEqual(bySlide[2].smallText, []);
+
+    // Footnotes, citation markers, and captions use the lower floor, and
+    // text inside a nested SVG is not measured.
+    assert.equal(sizeOf(3, "[1] Default footnote.").fontPx, 10.4);
+    assert.equal(sizeOf(3, "[1] Default footnote.").secondary, true);
+    assert.equal(sizeOf(3, "[1]").secondary, true);
+    assert.equal(sizeOf(3, "Figure caption").secondary, true);
+    assert.equal(sizeOf(3, "diagram label"), undefined);
+    assert.deepEqual(bySlide[3].smallText, []);
+
+    // A footnote below the lower floor is still reported.
+    assert.deepEqual(bySlide[4].smallText, [
+      {
+        label: '"[1] Shrunk footnote."',
+        fontPx: 6.4,
+        floorPx: 8,
+        secondary: true,
+      },
+    ]);
+
+    // Transforms count toward the rendered size.
+    assert.deepEqual(bySlide[5].smallText, [
+      { label: '"Scaled down text"', fontPx: 10.4, floorPx: 12, secondary: false },
+    ]);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("measureRenderedSlides scales the font floor to a paper canvas", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const result = await measureRenderedSlides(
+    path.join(__dirname, "../..", "decks", "example-paper", "paper.md"),
+  );
+
+  assert.equal(result.status, "measured");
+  const [page] = result.slides;
+  // An A4 portrait canvas (794x1123) fits a 16:9 reference slide at 62% of
+  // its width, so the floors shrink in proportion.
+  assert.deepEqual(page.textFloorPx, { body: 7.4, secondary: 5 });
+  assert.deepEqual(page.smallText, []);
+});
+
 test("measureRenderedSlides reports media that fail to load", async (t) => {
   if (!(await supportsVisualChecks())) {
     t.skip("Visual overflow checks are unavailable in this environment.");
