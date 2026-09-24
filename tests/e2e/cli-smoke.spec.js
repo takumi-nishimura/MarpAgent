@@ -53,6 +53,37 @@ async function terminateChild(child) {
   ]);
 }
 
+// Children spawned with `detached: true` lead their own process group, so
+// every descendant of marpx (the mode script and its `marp --watch` child)
+// shares the group id and can be listed and cleaned up precisely.
+function listProcessGroupMembers(pgid) {
+  const result = spawnSync("ps", ["-eo", "pid=,pgid="], { encoding: "utf8" });
+  if (result.status !== 0) return [];
+  return result.stdout
+    .split("\n")
+    .map((line) => line.trim().split(/\s+/).map(Number))
+    .filter(([pid, group]) => Number.isInteger(pid) && group === pgid)
+    .map(([pid]) => pid);
+}
+
+async function waitForProcessGroupExit(pgid, timeoutMs = 10000) {
+  const deadline = Date.now() + timeoutMs;
+  let members = listProcessGroupMembers(pgid);
+  while (members.length > 0 && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    members = listProcessGroupMembers(pgid);
+  }
+  return members;
+}
+
+function killProcessGroup(pgid) {
+  try {
+    process.kill(-pgid, "SIGKILL");
+  } catch {
+    // The process group is already gone.
+  }
+}
+
 test("outline generation smoke", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-e2e-outline-"));
   const outputPath = path.join(tempDir, "outline.md");
@@ -197,8 +228,10 @@ test("overview smoke", async ({ browserName }, testInfo) => {
       MARP_AGENT_NO_OPEN: "1",
     },
     stdio: ["ignore", "pipe", "pipe"],
+    detached: true,
   });
 
+  let leftovers = [];
   try {
     const match = await waitForPattern(
       child.stdout,
@@ -231,5 +264,48 @@ test("overview smoke", async ({ browserName }, testInfo) => {
     await browser.close();
   } finally {
     await terminateChild(child);
+    leftovers = await waitForProcessGroupExit(child.pid);
+    killProcessGroup(child.pid);
   }
+  expect(leftovers).toEqual([]);
+});
+
+test("SIGTERM to marpx stops the overview child processes", async () => {
+  test.setTimeout(60000);
+
+  const child = spawn(
+    process.execPath,
+    [marpxBin, "fixtures/clean-slide.md", "--overview"],
+    {
+      cwd: repoRoot,
+      env: {
+        ...process.env,
+        MARP_AGENT_NO_OPEN: "1",
+      },
+      stdio: ["ignore", "pipe", "pipe"],
+      detached: true,
+    },
+  );
+
+  let leftovers = [];
+  try {
+    await waitForPattern(
+      child.stdout,
+      /\[preview:overview\] Opened http:\/\/127\.0\.0\.1:\d+/,
+    );
+
+    // Killing marpx alone must take the whole tree down: marpx forwards the
+    // signal to preview-overview.js, which forwards it to `marp --watch`.
+    child.kill("SIGTERM");
+    await Promise.race([
+      new Promise((resolve) => child.once("exit", resolve)),
+      new Promise((resolve) => setTimeout(resolve, 10000)),
+    ]);
+    expect(child.exitCode).not.toBeNull();
+  } finally {
+    await terminateChild(child);
+    leftovers = await waitForProcessGroupExit(child.pid);
+    killProcessGroup(child.pid);
+  }
+  expect(leftovers).toEqual([]);
 });
