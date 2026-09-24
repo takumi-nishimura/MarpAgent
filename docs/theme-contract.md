@@ -7,7 +7,9 @@ tokens and rationale live in `designs/<name>/DESIGN.md`.
 ## Source Of Truth
 
 Theme source lives in `themes/src/`. Compiled CSS in `themes/*.css` is generated
-from that source and should be regenerated after theme source changes.
+from that source and must be regenerated with `marpx --theme` after theme source
+changes. `npm test` rebuilds every theme to a temporary path and fails when the
+result differs from the tracked `themes/<name>.css`.
 
 | File | Role |
 | :--- | :--- |
@@ -15,6 +17,7 @@ from that source and should be regenerated after theme source changes.
 | `designs/<name>/DESIGN.md` | visual identity, design tokens, and design rationale |
 | `themes/src/_generated/<name>-design-tokens.css` | generated Tailwind v4 `@theme` tokens from `designs/<name>/DESIGN.md` |
 | `themes/src/<name>.css` | Marp theme entry point for a design |
+| `themes/src/_shared/_safelist.css` | the complete list of Tailwind-generated utilities and always-emitted Tailwind variables |
 | `themes/src/_shared/_base.css` | slide canvas, title/header layout, tables, footnotes |
 | `themes/src/_shared/_paper.css` | A-series paper layout components using the lab design tokens |
 | `themes/src/_shared/_layouts.css` | reusable author-facing layout components |
@@ -67,21 +70,71 @@ only after the design rationale and tokens have been adapted from the source.
 
 ## Tailwind Boundary
 
-Tailwind compiles `themes/src/*.css` into `themes/*.css`. Automatic class
-detection is disabled with `source(none)` so prose documents do not mutate
-compiled theme output by mentioning class names.
+Tailwind compiles `themes/src/*.css` into `themes/*.css`. Each theme entry
+imports Tailwind with `source(none)` and registers no file globs, so no Markdown
+file (deck, fixture, template, skill, or README) contributes utility
+candidates. The compiled CSS depends only on tracked theme sources and is the
+same in this repository and in any downstream repository that merges it,
+whatever decks exist there.
+
+The complete set of Tailwind-generated utilities is the `@source inline(...)`
+safelist in `themes/src/_shared/_safelist.css`:
+
+| Utility | Why it is safelisted |
+| :------ | :------------------- |
+| `text-xs`, `text-sm`, `text-xl` | adds Tailwind's paired line-height to the theme's em-based `.text-*` sizes |
+| `self-start`, `self-center`, `self-end` | adds `align-self` to the theme's margin-based `.self-*` placement |
+
+All other author-facing classes (layout components, callouts, typography,
+colors, placement) are hand-written in `themes/src/_shared/` and do not depend
+on Tailwind candidate detection.
+
+### Guaranteed CSS variables
+
+Tailwind emits a theme variable only when a utility or theme rule uses it, so
+variable availability is also made explicit. Every compiled theme defines these
+variables, and deck-local styles (`style:`, `<style>`, inline `style="..."`) may
+reference them:
+
+- every design token in `designs/<name>/DESIGN.md`, such as `--color-tertiary`
+  or `--spacing-md`. Each entry imports its generated token CSS with
+  `theme(static)`. The paper template uses
+  `--paper-accent: var(--color-tertiary)`.
+- Tailwind's font-size scale `--text-xs`, `--text-sm`, `--text-base`,
+  `--text-lg`, `--text-xl`, and `--text-2xl` through `--text-9xl`, with their
+  `--text-*--line-height` companions. An `@theme static` block in
+  `_safelist.css` declares them with Tailwind's default values, for example
+  `font-size: var(--text-lg)`.
+- the compatibility and component variables listed under Token Boundary and in
+  `.agents/skills/marp-components/references/theme-variables.md`. The
+  hand-written theme CSS defines them.
+
+Other Tailwind default theme variables, such as its color palette, font
+families, or `--spacing`, are emitted only when a theme rule uses them. Deck
+styles should not depend on them.
+
+### Deck author policy
+
+Decks may use only classes that the compiled theme defines (the components and
+utilities documented in this contract and in `.agents/skills/`) and classes the
+deck defines itself in a `style:` directive or `<style>` block. Other Tailwind
+utilities, such as `flex`, `mt-4`, or `grid-cols-2`, are not available: there is
+no per-deck Tailwind build, and serve, preview, validation, and PDF export use
+the tracked compiled CSS. To make a utility available, add it to the safelist,
+run `marpx --theme`, document it here, and commit the rebuilt `themes/*.css`.
+
+`tests/unit/theme-css.test.js` checks that the compiled themes are fresh, that
+no prose-derived utilities are present, that every design token and the full
+text scale are defined, and that every class and every `var(--...)` used in
+fixtures, example decks, templates, skills, and the README exists in every
+compiled theme. The validator does not yet warn when a deck uses a class that
+the compiled theme does not define.
 
 Before Tailwind runs, `marpx --theme <name>` regenerates
 `themes/src/_generated/<name>-design-tokens.css` from
 `designs/<name>/DESIGN.md` with `@google/design.md`. In watch mode, the matching
 `DESIGN.md` files are watched and the generated CSS is refreshed when the design
 tokens change.
-
-Registered Tailwind sources:
-
-- `decks/**/*.md`
-- `fixtures/**/*.md`
-- `.agents/skills/**/*.md`
 
 Design documents are not class-scanning sources. They are token sources. Each
 theme entry imports only its matching generated token CSS.

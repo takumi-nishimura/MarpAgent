@@ -65,9 +65,14 @@ marpx decks/my-talk/slide.md --overview
 | `marpx <slide.md>` | Serve with live reload |
 | `marpx <slide.md> <page>` | Serve and open at displayed page |
 | `marpx <slide.md> --screenshot <page>` | Screenshot a slide to `/tmp` |
+| `marpx <slide.md> --screenshot <page> --output <path>` | Screenshot a slide to a chosen path |
 | `marpx <slide.md> -p` | Single-shot preview |
 | `marpx <slide.md> --overview` | Thumbnail overview |
 | `marpx <slide.md> --pdf` | Export to PDF |
+| `marpx <slide.md> --pptx` | Export to PPTX |
+| `marpx <slide.md> --html` | Export to standalone HTML |
+| `marpx <slide.md> --images [png\|jpeg]` | Export each slide as an image (default: png) |
+| `marpx <slide.md> --pdf --output <path>` | Export to a chosen path (also `--pptx`, `--html`, `--images`) |
 | `marpx <slide.md> --lint` | Lint with deck validator rules |
 | `marpx <slide.md> --lint --autofix` | Apply safe autofixes, then lint again |
 | `marpx <slide.md> -v` | Validate |
@@ -84,6 +89,18 @@ marpx decks/my-talk/slide.md --overview
 | `npm run quality:gate` | Run unit tests + fixture validation gate |
 | `npm run quality:gate:strict` | Enforce visual checks + strict e2e policy |
 | `npm run test:e2e` | Run Playwright CLI smoke tests |
+
+All exports go through the repository Marp config (plugins, BudouX, theme
+set, browser path). Without `--output`, files land next to the slide deck:
+`slide.pdf`, `slide.pptx`, `slide.html`, or `slide.001.png`-style image
+sequences. For `--images`, `--output` is the file prefix —
+`--output out/slide.png` produces `out/slide.001.png`, `out/slide.002.png`, …
+
+HTML export keeps relative references to deck media instead of embedding
+them. Open the HTML from the deck directory (the default output location)
+so `assets/` and `shared/` paths resolve; an `--output` path outside the
+deck breaks those references. PDF, PPTX, and image exports embed media and
+are not affected.
 
 For interactive authoring, use `marpx ...`. `.mise.toml` adds the repository
 root to `PATH` when mise is active, and the repo-local wrapper runs the npm
@@ -150,7 +167,10 @@ shared by CSS, templates, skills, Tailwind, and the validator.
 `designs/<name>/DESIGN.md` is the source of truth for each design's tokens.
 `marpx --theme` regenerates the matching
 `themes/src/_generated/<name>-design-tokens.css` files before compiling the
-tracked theme CSS files.
+tracked theme CSS files. Tailwind scans no deck or documentation files: decks
+may use the theme's documented classes and their own deck-local styles, but not
+arbitrary Tailwind utilities. `npm test` fails when a tracked theme differs from
+a fresh build.
 
 To create another visual identity, start from the scaffold command and then
 edit the generated `DESIGN.md` as the token source of truth:

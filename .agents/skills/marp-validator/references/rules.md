@@ -39,6 +39,8 @@ These count Markdown source, not the rendered result. They ignore theme font siz
 | `typography-drift` | Fallback only: `.text-xs2`, `.text-xs3`, `<small>`, or a matched tiny inline font-size. It cannot see `<style>` blocks. |
 | `overflow-risk` | Fallback only: ≥ 12 bullets, ≥ 10 prose lines, ≥ 600 counted characters, heading ≥ 70, or a prose line ≥ 140 characters |
 
+Bullet-like lines inside fenced code blocks (`` ``` `` or `~~~`) are not counted, and `--lint --autofix` leaves fenced code and inline code spans byte-identical.
+
 Do not alter formatting or move meaningful content into excluded blocks to silence a hint. When a hint points at a slide, judge the rendered slide; leave the content alone if it reads well.
 
 ## Paper and fallback coverage

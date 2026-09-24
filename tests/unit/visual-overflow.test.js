@@ -39,6 +39,61 @@ marp: true
   assert.equal(hidden.has(3), false);
 });
 
+test("detectHiddenSlides treats hide and _hide as hiding only their own slide", () => {
+  for (const directive of ["<!-- hide: true -->", "<!-- _hide: true -->"]) {
+    const markdown = `---
+marp: true
+---
+
+# Slide 1
+
+---
+
+${directive}
+# Hidden Slide
+
+---
+
+# Slide 3
+
+---
+
+# Slide 4
+`;
+
+    assert.deepEqual([...detectHiddenSlides(markdown)], [2], directive);
+  }
+});
+
+test("detectHiddenSlides reads hide from multi-key directive comments", () => {
+  const markdown = `# Slide 1
+
+---
+
+<!--
+_class: lead
+_hide: true
+-->
+# Hidden Slide
+`;
+
+  assert.deepEqual([...detectHiddenSlides(markdown)], [2]);
+});
+
+test("detectHiddenSlides ignores hide false and hide comments in code blocks", () => {
+  const markdown = `<!-- hide: false -->
+# Slide 1
+
+---
+
+\`\`\`md
+<!-- hide: true -->
+\`\`\`
+`;
+
+  assert.equal(detectHiddenSlides(markdown).size, 0);
+});
+
 test("detectHiddenSlides returns empty set when no hidden slides", () => {
   const markdown = `---
 marp: true
@@ -82,6 +137,22 @@ marp: true
   assert.equal(map[1], 3);
   assert.equal(map[2], 4);
   assert.equal(map.length, 3);
+});
+
+test("buildRenderedToMarkdownMap skips a slide hidden with _hide", () => {
+  const markdown = `# Slide 1
+
+---
+
+<!-- _hide: true -->
+# Hidden
+
+---
+
+# Slide 3
+`;
+
+  assert.deepEqual(buildRenderedToMarkdownMap(markdown), [1, 3]);
 });
 
 test("buildRenderedToMarkdownMap skips empty slides", () => {
