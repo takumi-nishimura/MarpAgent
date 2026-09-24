@@ -340,6 +340,83 @@ Plenty of room around this sentence.
   }
 });
 
+test("measureRenderedSlides reports media that fail to load", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-media-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.mkdirSync(path.join(dir, "assets/img"), { recursive: true });
+  // A real 1x1 PNG, an undecodable file, and a symlink whose target is gone.
+  fs.writeFileSync(
+    path.join(dir, "assets/img/ok.png"),
+    Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "base64",
+    ),
+  );
+  fs.writeFileSync(path.join(dir, "assets/img/corrupt.png"), "not an image");
+  fs.symlinkSync("../../gone/figure.png", path.join(dir, "assets/img/linked.png"));
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+---
+
+# Loads
+
+<img src="assets/img/ok.png" />
+
+---
+
+# Broken
+
+<img src="assets/img/missing.png" />
+<img src="assets/img/corrupt.png" />
+<img src="assets/img/linked.png" />
+
+---
+
+# Video
+
+<video src="assets/video/missing.mp4" muted></video>
+
+---
+
+# Remote
+
+<img src="https://example.invalid/figure.png" />
+`,
+  );
+
+  try {
+    const result = await measureRenderedSlides(deckPath);
+
+    assert.equal(result.status, "measured");
+    const bySlide = Object.fromEntries(
+      result.slides.map((slide) => [
+        slide.slideNumber,
+        slide.missingMedia.map((item) => [item.reference, item.reason]),
+      ]),
+    );
+    assert.deepEqual(bySlide[1], []);
+    assert.deepEqual(bySlide[2], [
+      ["assets/img/missing.png", "not found"],
+      ["assets/img/corrupt.png", "failed to decode"],
+      ["assets/img/linked.png", "broken symlink"],
+    ]);
+    assert.deepEqual(bySlide[3], [["assets/video/missing.mp4", "not found"]]);
+    assert.deepEqual(bySlide[4], []);
+    const [missing] = result.slides[1].missingMedia;
+    assert.equal(missing.path, path.join(dir, "assets/img/missing.png"));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("measureRenderedSlides reports a skipped check instead of throwing", async () => {
   process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE = "1";
   try {

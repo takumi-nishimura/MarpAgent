@@ -8,7 +8,7 @@ source-heuristic hints for each fixture.
 
 - `overflow-heavy-slide.md`: 20 bullets → rendered `content-clipped` error and `edge-crowding` warning (hint: `dense-bullets`)
 - `dense-bullets-slide.md`: 9 top-level bullets → hint `dense-bullets`
-- `figure-heavy-slide.md`: Image + 6 bullets → hint `figure-text-density`
+- `figure-heavy-slide.md`: Image (`fig.png`, a placeholder that must stay present so the fixture has no `missing-asset` error) + 6 bullets → hint `figure-text-density`
 - `long-japanese-slide.md`: Long heading + body → hint `long-heading` (`overflow-risk` only when rendering is unavailable)
 - `comparison-slide.md`: 5-column table → hint `comparison-overpacked`
 - `tiny-text-slide.md`: `<small>` tag → hint `typography-drift`
