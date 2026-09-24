@@ -2,7 +2,7 @@
 id: ISS-0026
 title: "Forward termination signals from marpx to its child scripts"
 type: issue
-status: open
+status: closed
 date: "2026-09-24"
 authors:
   - claude-code
@@ -14,6 +14,8 @@ tags:
   - dx
 depends_on: []
 supersedes: []
+resolution: completed
+resolved: "2026-09-24"
 artifacts:
   revisions: []
   manifests: []
@@ -34,9 +36,9 @@ Terminating `marpx` terminates the script it started, and the test suite leaves 
 
 ## Acceptance criteria
 
-- [ ] `runScript` (and `runMarp`) forward `SIGINT` and `SIGTERM` to the child and exit with the child's status afterwards.
-- [ ] A unit or e2e test starts `marpx <deck> --overview`, sends `SIGTERM` to `marpx`, and asserts the overview process is gone.
-- [ ] The `overview smoke` test leaves no process behind, checked by listing processes after the test or by killing the process group.
+- [x] `runScript` (and `runMarp`) forward `SIGINT` and `SIGTERM` to the child and exit with the child's status afterwards.
+- [x] A unit or e2e test starts `marpx <deck> --overview`, sends `SIGTERM` to `marpx`, and asserts the overview process is gone.
+- [x] The `overview smoke` test leaves no process behind, checked by listing processes after the test or by killing the process group.
 
 ## Out of scope
 
@@ -45,3 +47,16 @@ Terminating `marpx` terminates the script it started, and the test suite leaves 
 ## Notes
 
 Found by the ISS-0025 worker; the leftovers were cleaned up manually on 2026-09-24.
+
+Implemented 2026-09-24: `bin/marpx.js` gained a `forwardChildSignals` helper
+(same shape as `src/preview-runtime.js`) used by both `runScript` and `runMarp`.
+Registering the signal handlers keeps `marpx` alive until the child exits, so
+the existing `exit` handler still reports the child's status. The theme watch
+mode already forwarded to its children and is unchanged. In
+`tests/e2e/cli-smoke.spec.js`, `marpx` is now spawned with `detached: true` so
+its whole tree shares a process group; a new test sends `SIGTERM` to `marpx`
+and asserts the group empties (covering `preview-overview.js` and its
+`marp --watch` grandchild), and `overview smoke` asserts no group members are
+left behind after teardown. A `SIGKILL` process-group backstop in `finally`
+guarantees cleanup even if forwarding regresses. SIGINT verified manually
+(`marpx` exited 130, no leftovers).

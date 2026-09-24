@@ -231,6 +231,17 @@ if (values.format && !["text", "json", "sarif"].includes(values.format)) {
   process.exit(1);
 }
 
+// Forward termination signals so killing marpx also stops the mode script it
+// spawned (and that script's own children). marpx stays alive until the child
+// exits, then reports the child's status via the exit handler.
+function forwardChildSignals(child) {
+  for (const signal of ["SIGINT", "SIGTERM"]) {
+    process.on(signal, () => {
+      if (!child.killed) child.kill(signal);
+    });
+  }
+}
+
 // Dispatch to existing scripts
 function runScript(scriptName, args) {
   const scriptPath = path.join(scriptsDir, scriptName);
@@ -238,6 +249,8 @@ function runScript(scriptName, args) {
     cwd: repoRoot,
     stdio: "inherit",
   });
+
+  forwardChildSignals(child);
 
   child.on("exit", (code, signal) => {
     if (signal) {
@@ -325,6 +338,7 @@ function runMarp(extraArgs) {
     ],
     { cwd: repoRoot, stdio: "inherit" },
   );
+  forwardChildSignals(child);
   child.on("exit", (code, signal) => {
     if (signal) process.exit(signal === "SIGINT" ? 130 : 143);
     process.exit(code ?? 1);
