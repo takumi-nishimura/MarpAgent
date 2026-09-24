@@ -2,9 +2,9 @@
 id: ISS-0011
 title: Bullet counting and --autofix operate inside code fences
 type: issue
-status: open
+status: closed
 date: '2026-09-23'
-updated: '2026-09-23'
+updated: '2026-09-24'
 authors:
 - claude-code
 scope:
@@ -14,6 +14,8 @@ tags:
 - bug
 depends_on: []
 supersedes: []
+resolution: completed
+resolved: "2026-09-24"
 artifacts:
   revisions: []
   manifests: []
@@ -34,9 +36,9 @@ Rules and autofixes ignore fenced code content, and autofix never changes code e
 
 ## Acceptance criteria
 
-- [ ] Bullet-like lines inside fenced code blocks (``` and ~~~) are not counted.
-- [ ] `--autofix` leaves fenced code blocks and inline code spans byte-identical.
-- [ ] Unit tests cover both cases.
+- [x] Bullet-like lines inside fenced code blocks (``` and ~~~) are not counted.
+- [x] `--autofix` leaves fenced code blocks and inline code spans byte-identical.
+- [x] Unit tests cover both cases.
 
 ## Out of scope
 
@@ -47,3 +49,16 @@ Rules and autofixes ignore fenced code content, and autofix never changes code e
 - `src/deck-validator.js`
 - `scripts/lint-deck.js`
 - `tests/unit/validate-deck.test.js`, `tests/unit/lint-deck.test.js`
+
+## Notes
+
+Resolved on 2026-09-24. `src/markdown-slides.js` now owns the shared fence
+state machine: `nextFenceState` tracks ``` / ~~~ markers (same character and
+at least the opening run length to close) and `splitFenceSegments` groups a
+document into fenced and regular segments that rejoin byte-for-byte.
+`countTopLevelBullets` counts only non-fenced segments, and `applyAutoFixes`
+rewrites only editable text, skipping fenced segments and inline code spans
+matched by `` (`+)[\s\S]*?\1 ``. A `<small>` wrapper spanning a code span or
+fence boundary is now left alone rather than partially unwrapped, which keeps
+autofix conservative. `splitSlideRawBlocks` was refactored onto the same
+helper; slide splitting behavior is unchanged.

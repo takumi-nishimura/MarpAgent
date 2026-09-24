@@ -39,6 +39,61 @@ marp: true
   assert.equal(hidden.has(3), false);
 });
 
+test("detectHiddenSlides treats hide and _hide as hiding only their own slide", () => {
+  for (const directive of ["<!-- hide: true -->", "<!-- _hide: true -->"]) {
+    const markdown = `---
+marp: true
+---
+
+# Slide 1
+
+---
+
+${directive}
+# Hidden Slide
+
+---
+
+# Slide 3
+
+---
+
+# Slide 4
+`;
+
+    assert.deepEqual([...detectHiddenSlides(markdown)], [2], directive);
+  }
+});
+
+test("detectHiddenSlides reads hide from multi-key directive comments", () => {
+  const markdown = `# Slide 1
+
+---
+
+<!--
+_class: lead
+_hide: true
+-->
+# Hidden Slide
+`;
+
+  assert.deepEqual([...detectHiddenSlides(markdown)], [2]);
+});
+
+test("detectHiddenSlides ignores hide false and hide comments in code blocks", () => {
+  const markdown = `<!-- hide: false -->
+# Slide 1
+
+---
+
+\`\`\`md
+<!-- hide: true -->
+\`\`\`
+`;
+
+  assert.equal(detectHiddenSlides(markdown).size, 0);
+});
+
 test("detectHiddenSlides returns empty set when no hidden slides", () => {
   const markdown = `---
 marp: true
@@ -82,6 +137,22 @@ marp: true
   assert.equal(map[1], 3);
   assert.equal(map[2], 4);
   assert.equal(map.length, 3);
+});
+
+test("buildRenderedToMarkdownMap skips a slide hidden with _hide", () => {
+  const markdown = `# Slide 1
+
+---
+
+<!-- _hide: true -->
+# Hidden
+
+---
+
+# Slide 3
+`;
+
+  assert.deepEqual(buildRenderedToMarkdownMap(markdown), [1, 3]);
 });
 
 test("buildRenderedToMarkdownMap skips empty slides", () => {
@@ -264,6 +335,83 @@ Plenty of room around this sentence.
     assert.equal(bySlide[1].crowded[0].gapPx < 20, true);
     assert.deepEqual(bySlide[2].crowded, []);
     assert.deepEqual(bySlide[3].crowded, []);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("measureRenderedSlides reports media that fail to load", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-media-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.mkdirSync(path.join(dir, "assets/img"), { recursive: true });
+  // A real 1x1 PNG, an undecodable file, and a symlink whose target is gone.
+  fs.writeFileSync(
+    path.join(dir, "assets/img/ok.png"),
+    Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "base64",
+    ),
+  );
+  fs.writeFileSync(path.join(dir, "assets/img/corrupt.png"), "not an image");
+  fs.symlinkSync("../../gone/figure.png", path.join(dir, "assets/img/linked.png"));
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+---
+
+# Loads
+
+<img src="assets/img/ok.png" />
+
+---
+
+# Broken
+
+<img src="assets/img/missing.png" />
+<img src="assets/img/corrupt.png" />
+<img src="assets/img/linked.png" />
+
+---
+
+# Video
+
+<video src="assets/video/missing.mp4" muted></video>
+
+---
+
+# Remote
+
+<img src="https://example.invalid/figure.png" />
+`,
+  );
+
+  try {
+    const result = await measureRenderedSlides(deckPath);
+
+    assert.equal(result.status, "measured");
+    const bySlide = Object.fromEntries(
+      result.slides.map((slide) => [
+        slide.slideNumber,
+        slide.missingMedia.map((item) => [item.reference, item.reason]),
+      ]),
+    );
+    assert.deepEqual(bySlide[1], []);
+    assert.deepEqual(bySlide[2], [
+      ["assets/img/missing.png", "not found"],
+      ["assets/img/corrupt.png", "failed to decode"],
+      ["assets/img/linked.png", "broken symlink"],
+    ]);
+    assert.deepEqual(bySlide[3], [["assets/video/missing.mp4", "not found"]]);
+    assert.deepEqual(bySlide[4], []);
+    const [missing] = result.slides[1].missingMedia;
+    assert.equal(missing.path, path.join(dir, "assets/img/missing.png"));
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

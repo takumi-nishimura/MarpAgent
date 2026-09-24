@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 const { Marp } = require("@marp-team/marp-core");
@@ -23,8 +24,89 @@ function collectCssFiles(dirPath) {
   return files.sort();
 }
 
+function collectMarkdownFiles(targetPath) {
+  if (!fs.statSync(targetPath).isDirectory()) return [targetPath];
+
+  const files = [];
+  for (const entry of fs.readdirSync(targetPath, { withFileTypes: true })) {
+    const entryPath = path.join(targetPath, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...collectMarkdownFiles(entryPath));
+      continue;
+    }
+    if (entry.isFile() && entry.name.endsWith(".md")) files.push(entryPath);
+  }
+
+  return files.sort();
+}
+
+// Compiled themes are the ones Marp loads (see marp.config.js). Theme sources
+// are not listed directly because cli-args.test.js scaffolds a temporary
+// source into themes/src/ while tests run concurrently.
+function discoverThemeNames() {
+  return fs
+    .readdirSync(path.join(repoRoot, "themes"))
+    .filter((name) => name.endsWith(".css"))
+    .map((name) => name.replace(/\.css$/, ""))
+    .sort();
+}
+
+function readFileIfPresent(filePath) {
+  try {
+    return fs.readFileSync(filePath, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+// Markdown that shows authors how to write decks. Example decks are named
+// explicitly: downstream repositories add their own decks under decks/, and
+// those must not change what the coverage tests check.
+function readAuthorFacingMarkdown() {
+  return [
+    "fixtures",
+    "decks/example",
+    "decks/example-paper",
+    "template",
+    ".agents/skills",
+    "README.md",
+  ]
+    .flatMap((relativePath) =>
+      collectMarkdownFiles(path.join(repoRoot, relativePath)),
+    )
+    .map((filePath) => ({
+      filePath: path.relative(repoRoot, filePath),
+      // A concurrently scaffolded temporary fixture may vanish mid-scan.
+      markdown: readFileIfPresent(filePath),
+    }))
+    .filter(({ markdown }) => markdown !== null);
+}
+
+function readTailwindTextScale() {
+  const css = fs.readFileSync(
+    require.resolve("tailwindcss/theme.css", { paths: [repoRoot] }),
+    "utf8",
+  );
+  return [...css.matchAll(/^\s*(--text-[a-z0-9]+(?:--line-height)?):\s*([^;]+);/gm)]
+    .map((match) => [match[1], match[2].trim()]);
+}
+
+function readSafelistedUtilities(css) {
+  return [...css.matchAll(/@source\s+inline\("([^"]*)"\);/g)]
+    .flatMap((match) => match[1].split(/\s+/))
+    .filter(Boolean)
+    .sort();
+}
+
 function getDesignmdBin() {
   const binName = process.platform === "win32" ? "designmd.cmd" : "designmd";
+  return path.join(repoRoot, "node_modules", ".bin", binName);
+}
+
+function getTailwindBin() {
+  const binName =
+    process.platform === "win32" ? "tailwindcss.cmd" : "tailwindcss";
   return path.join(repoRoot, "node_modules", ".bin", binName);
 }
 
@@ -219,20 +301,149 @@ test("title and normal slide rules share the same accent treatment", () => {
   }
 });
 
-test("theme sources explicitly bound Tailwind class detection", () => {
-  for (const themeName of ["lab", "muji", "toshiba"]) {
+test("theme sources take Tailwind utilities only from the explicit safelist", () => {
+  const themeNames = discoverThemeNames();
+  assert.deepEqual(themeNames, ["lab", "muji", "toshiba"]);
+
+  for (const themeName of themeNames) {
     const css = fs.readFileSync(
       path.join(repoRoot, "themes/src", `${themeName}.css`),
       "utf8",
     );
     assert.match(css, /@import "tailwindcss" source\(none\);/);
-    assert.match(css, /@source "\.\.\/\.\.\/decks\/\*\*\/\*\.md";/);
-    assert.match(css, /@source "\.\.\/\.\.\/fixtures\/\*\*\/\*\.md";/);
-    assert.match(css, /@source "\.\.\/\.\.\/\.agents\/skills\/\*\*\/\*\.md";/);
+    // No file globs: decks, fixtures, and skill prose must not add utilities.
+    assert.doesNotMatch(css, /@source\s+"/);
+    assert.match(css, /@import "\.\/_shared\/_safelist\.css";/);
     assert.match(
       css,
-      new RegExp(`@import "\\./_generated/${themeName}-design-tokens\\.css";`),
+      new RegExp(
+        `@import "\\./_generated/${themeName}-design-tokens\\.css" theme\\(static\\);`,
+      ),
     );
+  }
+
+  const safelist = fs.readFileSync(
+    path.join(repoRoot, "themes/src/_shared/_safelist.css"),
+    "utf8",
+  );
+  assert.doesNotMatch(safelist, /@source\s+"/);
+  assert.deepEqual(readSafelistedUtilities(safelist), [
+    "self-center",
+    "self-end",
+    "self-start",
+    "text-sm",
+    "text-xl",
+    "text-xs",
+  ]);
+});
+
+test("compiled themes contain no utilities generated from prose words", () => {
+  for (const themeName of discoverThemeNames()) {
+    const css = fs.readFileSync(
+      path.join(repoRoot, "themes", `${themeName}.css`),
+      "utf8",
+    );
+    for (const word of [
+      "fixed",
+      "static",
+      "lowercase",
+      "hidden",
+      "container",
+      "transition",
+    ]) {
+      assert.doesNotMatch(
+        css,
+        new RegExp(`^\\s*\\.${word}\\s*\\{`, "m"),
+        `themes/${themeName}.css should not define .${word}`,
+      );
+    }
+  }
+});
+
+test("compiled themes define every design token for deck-local styles", () => {
+  for (const themeName of discoverThemeNames()) {
+    const tokens = fs.readFileSync(
+      path.join(repoRoot, "themes/src/_generated", `${themeName}-design-tokens.css`),
+      "utf8",
+    );
+    const tokenNames = [...tokens.matchAll(/^\s*(--[\w-]+):/gm)].map(
+      (match) => match[1],
+    );
+    assert.ok(tokenNames.includes("--color-tertiary"));
+
+    const css = fs.readFileSync(
+      path.join(repoRoot, "themes", `${themeName}.css`),
+      "utf8",
+    );
+    for (const tokenName of tokenNames) {
+      assert.ok(
+        css.includes(`${tokenName}:`),
+        `themes/${themeName}.css should define ${tokenName}`,
+      );
+    }
+  }
+});
+
+test("compiled theme CSS matches a fresh Tailwind build", () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "marp-theme-build-"));
+  try {
+    for (const themeName of discoverThemeNames()) {
+      const outputPath = path.join(tempRoot, `${themeName}.css`);
+      const result = spawnSync(
+        getTailwindBin(),
+        [
+          "-i",
+          path.join(repoRoot, "themes/src", `${themeName}.css`),
+          "-o",
+          outputPath,
+        ],
+        { cwd: repoRoot, encoding: "utf8" },
+      );
+      assert.equal(result.status, 0, result.stderr || result.stdout);
+
+      const fresh = fs.readFileSync(outputPath, "utf8");
+      const committed = fs.readFileSync(
+        path.join(repoRoot, "themes", `${themeName}.css`),
+        "utf8",
+      );
+      assert.ok(
+        fresh === committed,
+        `themes/${themeName}.css is stale; rebuild it with "npm run marpx -- --theme ${themeName}"`,
+      );
+    }
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("classes used by examples, fixtures, templates, and skills exist in every compiled theme", () => {
+  const usedClasses = new Map();
+  for (const { filePath, markdown } of readAuthorFacingMarkdown()) {
+    for (const match of markdown.matchAll(/\bclass="([^"]*)"/g)) {
+      for (const className of match[1].split(/\s+/)) {
+        if (!/^[a-z][a-z0-9-]*$/.test(className)) continue;
+        if (!usedClasses.has(className)) {
+          usedClasses.set(className, filePath);
+        }
+      }
+    }
+  }
+  assert.ok(usedClasses.size > 0);
+
+  for (const themeName of discoverThemeNames()) {
+    const css = fs.readFileSync(
+      path.join(repoRoot, "themes", `${themeName}.css`),
+      "utf8",
+    );
+    const definedClasses = new Set(
+      [...css.matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)].map((match) => match[1]),
+    );
+    for (const [className, filePath] of usedClasses) {
+      assert.ok(
+        definedClasses.has(className),
+        `${filePath} uses class "${className}", which themes/${themeName}.css does not define`,
+      );
+    }
   }
 });
 
@@ -405,4 +616,68 @@ test("muji header title inset comes from design tokens", () => {
     css,
     /padding-left:\s*calc\(var\(--padding-x\) \+ var\(--header-title-inset\)\)/,
   );
+});
+
+test("CSS variables referenced by examples, fixtures, templates, and skills resolve in every compiled theme", () => {
+  const referencedVariables = new Map();
+  for (const { filePath, markdown } of readAuthorFacingMarkdown()) {
+    const localVariables = new Set(
+      [...markdown.matchAll(/(--[\w-]+)\s*:/g)].map((match) => match[1]),
+    );
+    for (const match of markdown.matchAll(/var\(\s*(--[\w-]+)/g)) {
+      const variableName = match[1];
+      if (localVariables.has(variableName)) continue;
+      if (!referencedVariables.has(variableName)) {
+        referencedVariables.set(variableName, filePath);
+      }
+    }
+  }
+  assert.ok(referencedVariables.has("--color-tertiary"));
+
+  for (const themeName of discoverThemeNames()) {
+    const css = fs.readFileSync(
+      path.join(repoRoot, "themes", `${themeName}.css`),
+      "utf8",
+    );
+    for (const [variableName, filePath] of referencedVariables) {
+      assert.ok(
+        css.includes(`${variableName}:`),
+        `${filePath} references var(${variableName}), which themes/${themeName}.css does not define`,
+      );
+    }
+  }
+});
+
+test("compiled themes define the full Tailwind text scale for deck-local styles", () => {
+  const textScale = readTailwindTextScale();
+  assert.equal(textScale.length, 26);
+
+  const safelist = fs.readFileSync(
+    path.join(repoRoot, "themes/src/_shared/_safelist.css"),
+    "utf8",
+  );
+  const staticBlock = safelist.match(/@theme static \{([^}]*)\}/);
+  assert.ok(staticBlock, "_safelist.css should declare an @theme static block");
+  for (const [variableName, value] of textScale) {
+    // The static block restates Tailwind's defaults; catch drift on upgrades.
+    assert.ok(
+      staticBlock[1].includes(`${variableName}: ${value};`),
+      `_safelist.css should restate ${variableName}: ${value};`,
+    );
+  }
+
+  for (const themeName of discoverThemeNames()) {
+    const css = fs.readFileSync(
+      path.join(repoRoot, "themes", `${themeName}.css`),
+      "utf8",
+    );
+    // Downstream decks use var(--text-lg) in inline styles.
+    assert.match(css, /--text-lg:\s*1\.125rem;/);
+    for (const [variableName, value] of textScale) {
+      assert.ok(
+        css.includes(`${variableName}: ${value};`),
+        `themes/${themeName}.css should define ${variableName}`,
+      );
+    }
+  }
 });

@@ -2,9 +2,9 @@
 id: ISS-0015
 title: Outline overflow risk adds the first asset's length to every slide
 type: issue
-status: open
+status: closed
 date: '2026-09-23'
-updated: '2026-09-23'
+updated: '2026-09-24'
 authors:
 - claude-code
 scope:
@@ -13,6 +13,8 @@ tags:
 - bug
 depends_on: []
 supersedes: []
+resolution: completed
+resolved: "2026-09-24"
 artifacts:
   revisions: []
   manifests: []
@@ -32,8 +34,8 @@ The outline's overflow-risk hint depends only on information about that slide.
 
 ## Acceptance criteria
 
-- [ ] The overflow-risk hint no longer includes an unrelated asset's text; it uses the section text plus only assets explicitly tied to that section, if such a link exists.
-- [ ] A test with a long first asset shows unrelated sections unaffected.
+- [x] The overflow-risk hint no longer includes an unrelated asset's text; it uses the section text plus only assets explicitly tied to that section, if such a link exists.
+- [x] A test with a long first asset shows unrelated sections unaffected.
 
 ## Out of scope
 
@@ -43,3 +45,7 @@ The outline's overflow-risk hint depends only on information about that slide.
 
 - `src/outline.js`
 - `tests/unit/outline.test.js`
+
+## Notes
+
+- 2026-09-24: `buildSlidePlan` no longer scores every section against `brief.mustUseAssets[0]`. A new `linkedAssetContext` helper counts a must-use asset toward a slide's overflow risk only when the section text explicitly names it — by its backticked path, or by the asset label before a ` — `/` - ` separator (the whole line when there is no separator). A regression test confirms a long first asset leaves unrelated sections at `low` while a section naming the asset still scores `high`.

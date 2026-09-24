@@ -137,6 +137,23 @@ function validateBriefSchema(brief) {
   };
 }
 
+// An asset counts toward a slide's overflow risk only when the section
+// text names it: its backticked path, or its label before a dash.
+function assetReferenceName(line) {
+  const quoted = line.match(/`([^`]+)`/);
+  if (quoted) return quoted[1].trim();
+  return line.split(/\s+[—–-]\s+/)[0].trim();
+}
+
+function linkedAssetContext(section, mustUseAssets) {
+  return mustUseAssets
+    .filter((line) => {
+      const name = assetReferenceName(line);
+      return name !== "" && section.includes(name);
+    })
+    .join(" ");
+}
+
 function estimateOverflowRisk(title, context = "") {
   const score = title.length + context.length;
   if (score >= 90) return "high";
@@ -332,7 +349,7 @@ function buildSlidePlan(brief) {
   }
 
   for (const section of brief.requiredSections) {
-    const assetContext = brief.mustUseAssets[0] || "";
+    const assetContext = linkedAssetContext(section, brief.mustUseAssets);
     const explicitHint = parseLayoutHintFromText(section);
     let layoutHint;
     if (explicitHint) {
