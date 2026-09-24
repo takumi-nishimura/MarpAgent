@@ -152,11 +152,9 @@ function themeCssTemplate(name) {
  */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
 @import "tailwindcss" source(none);
-@source "../../decks/**/*.md";
-@source "../../fixtures/**/*.md";
-@source "../../.agents/skills/**/*.md";
+@import "./_shared/_safelist.css";
 
-@import "./_generated/${name}-design-tokens.css";
+@import "./_generated/${name}-design-tokens.css" theme(static);
 @import "./_shared/_base.css";
 @import "./_shared/_colors.css";
 @import "./_shared/_typography.css";
