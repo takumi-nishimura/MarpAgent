@@ -430,6 +430,14 @@ function buildOutlineMarkdown(brief, options = {}) {
 }
 
 function generateOutlineFile(briefPath, outputPath, options = {}) {
+  // lstat also catches broken symlinks that existsSync would miss.
+  const outputStat = fs.lstatSync(outputPath, { throwIfNoEntry: false });
+  if (outputStat && !options.force) {
+    throw new Error(
+      `refusing to overwrite existing file: ${outputPath}. ` +
+        "Re-run with --force to overwrite it, or pass --output <path> to write elsewhere.",
+    );
+  }
   const markdown = fs.readFileSync(briefPath, "utf8");
   const brief = parseBrief(markdown);
   const strictBrief = options.strictBrief !== false;

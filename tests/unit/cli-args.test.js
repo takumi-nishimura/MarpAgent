@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 
@@ -66,11 +67,52 @@ test("marpx theme scaffold options require --theme-new", () => {
   }
 });
 
-test("marpx --force requires --new or --theme-new", () => {
+test("marpx --force requires --new, --theme-new, or --outline", () => {
   const result = runNodeScript("bin/marpx.js", ["--force"]);
 
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /--force can only be used with --new or --theme-new/);
+  assert.match(
+    result.stderr,
+    /--force can only be used with --new, --theme-new, or --outline/,
+  );
+});
+
+test("marpx --outline refuses to overwrite an existing outline without --force", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-outline-"));
+  const briefPath = path.join(tempDir, "brief.md");
+  const outlinePath = path.join(tempDir, "outline.md");
+
+  try {
+    fs.copyFileSync(
+      path.join(repoRoot, "fixtures", "good-brief.md"),
+      briefPath,
+    );
+    fs.writeFileSync(outlinePath, "hand-edited outline\n");
+
+    const refused = runNodeScript("bin/marpx.js", [briefPath, "--outline"]);
+
+    assert.equal(refused.status, 1);
+    assert.match(refused.stderr, /refusing to overwrite/);
+    assert.match(refused.stderr, /--force/);
+    assert.match(refused.stderr, /--output/);
+    assert.equal(
+      fs.readFileSync(outlinePath, "utf8"),
+      "hand-edited outline\n",
+    );
+
+    const forced = runNodeScript("bin/marpx.js", [
+      briefPath,
+      "--outline",
+      "--force",
+    ]);
+
+    assert.equal(forced.status, 0, forced.stderr);
+    const outline = fs.readFileSync(outlinePath, "utf8");
+    assert.match(outline, /# Outline/);
+    assert.equal(outline.includes("hand-edited outline"), false);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
 });
 
 test("marpx --theme-new forwards scaffold options", () => {
