@@ -11,12 +11,16 @@ const {
   forwardChildSignals,
   forwardLines,
   getMarpBin,
+  isNotifierPortConflict,
   openBrowser,
   resolveRequestedSlideId,
 } = require("../src/preview-runtime");
 
 const repoRoot = path.resolve(__dirname, "..");
 const configPath = path.join(repoRoot, "marp.config.js");
+
+const MAX_NOTIFIER_RETRIES = 5;
+const NOTIFIER_RETRY_DELAY_MS = 250;
 
 enforceSupportedNodeRuntime();
 
@@ -59,17 +63,13 @@ function main() {
   }
 
   const deckDir = path.dirname(deckPath);
-  const marpBin = getMarpBin(repoRoot);
-  const child = spawn(
-    marpBin,
-    ["--server", "--watch", "--config", configPath, deckDir],
-    {
-      cwd: repoRoot,
-      stdio: ["inherit", "pipe", "pipe"],
-    },
-  );
+  const marpBin = process.env.MARP_AGENT_MARP_BIN || getMarpBin(repoRoot);
+  const marpArgs = ["--server", "--watch", "--config", configPath, deckDir];
 
+  let child;
   let opened = false;
+  let notifierRetries = 0;
+  let outputTail = "";
 
   const tryOpen = (line) => {
     if (opened) return;
@@ -83,18 +83,71 @@ function main() {
     process.stdout.write(`[preview] Opened ${url}\n`);
   };
 
-  forwardLines(child.stdout, process.stdout, tryOpen);
-  forwardLines(child.stderr, process.stderr, tryOpen);
-  forwardChildSignals(child);
+  const observeLine = (line) => {
+    outputTail = `${outputTail}${line}\n`.slice(-8192);
+    tryOpen(line);
+  };
 
-  child.on("exit", (code, signal) => {
-    if (signal) {
-      process.exit(signal === "SIGINT" ? 130 : 143);
-      return;
-    }
+  const start = () => {
+    outputTail = "";
+    child = spawn(marpBin, marpArgs, {
+      cwd: repoRoot,
+      stdio: ["inherit", "pipe", "pipe"],
+    });
 
-    process.exit(code ?? 1);
+    forwardLines(child.stdout, process.stdout, observeLine);
+    forwardLines(child.stderr, process.stderr, observeLine);
+
+    child.on("exit", (code, signal) => {
+      if (signal) {
+        process.exit(signal === "SIGINT" ? 130 : 143);
+        return;
+      }
+
+      // The watch notifier picks a free port and binds it later without an
+      // error handler, so concurrent starts can lose the race and crash with
+      // EADDRINUSE. Respawning re-probes the port and converges on a free
+      // one; if the serve listen port is genuinely taken, the retry exits
+      // with Marp's handled "Listen port" error instead.
+      if (
+        code !== 0 &&
+        isNotifierPortConflict(outputTail) &&
+        notifierRetries < MAX_NOTIFIER_RETRIES
+      ) {
+        notifierRetries += 1;
+        opened = false;
+        process.stderr.write(
+          `[preview] Marp watch notifier hit a port conflict; restarting (${notifierRetries}/${MAX_NOTIFIER_RETRIES})\n`,
+        );
+        setTimeout(start, NOTIFIER_RETRY_DELAY_MS);
+        return;
+      }
+
+      process.exit(code ?? 1);
+    });
+  };
+
+  // Signals must reach the current child across respawns; when no child is
+  // alive (retry delay), stop the parent instead of swallowing the signal.
+  forwardChildSignals({
+    get killed() {
+      return child === undefined;
+    },
+    kill(signal) {
+      if (
+        child === undefined ||
+        child.exitCode !== null ||
+        child.signalCode !== null
+      ) {
+        process.exit(signal === "SIGINT" ? 130 : 143);
+        return;
+      }
+
+      child.kill(signal);
+    },
   });
+
+  start();
 }
 
 main();
