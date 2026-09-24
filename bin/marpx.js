@@ -5,6 +5,7 @@ const path = require("node:path");
 const os = require("node:os");
 const { execFileSync, spawn } = require("node:child_process");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
+const { marpBrowserArgs } = require("../src/marp-browser");
 
 enforceSupportedNodeRuntime();
 
@@ -271,17 +272,6 @@ function getMarpBin() {
   return path.join(repoRoot, "node_modules", ".bin", "marp");
 }
 
-function getChromePath() {
-  return execFileSync(
-    process.execPath,
-    [
-      "-e",
-      'const {chromium} = require("playwright"); process.stdout.write(chromium.executablePath())',
-    ],
-    { cwd: repoRoot, encoding: "utf8" },
-  );
-}
-
 function discoverThemes() {
   const srcDir = path.join(repoRoot, "themes", "src");
   return fs
@@ -332,13 +322,25 @@ function watchDesignTokens(names) {
   }
 }
 
-function runMarp(extraArgs) {
-  const chromePath = getChromePath();
+// Upper bound for one-shot conversions so a stalled browser fails with a
+// clear error instead of hanging (ISS-0029). The interactive --preview is not
+// bounded. Override with MARP_AGENT_CONVERT_TIMEOUT_MS.
+const CONVERT_TIMEOUT_MS =
+  Number(process.env.MARP_AGENT_CONVERT_TIMEOUT_MS) || 120000;
+
+function runMarp(extraArgs, { timeoutMs } = {}) {
+  let browserArgs;
+  try {
+    browserArgs = marpBrowserArgs({ repoRoot });
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
+  }
+
   const child = spawn(
     getMarpBin(),
     [
-      "--browser-path",
-      chromePath,
+      ...browserArgs,
       "--config",
       configPath,
       ...extraArgs,
@@ -346,7 +348,32 @@ function runMarp(extraArgs) {
     { cwd: repoRoot, stdio: "inherit" },
   );
   forwardChildSignals(child);
+
+  let timedOut = false;
+  let killTimer;
+  const timer =
+    timeoutMs > 0
+      ? setTimeout(() => {
+          timedOut = true;
+          // SIGTERM lets marp-cli/puppeteer close its browser; escalate to
+          // SIGKILL if the process still has not exited.
+          child.kill("SIGTERM");
+          killTimer = setTimeout(() => {
+            if (child.exitCode === null) child.kill("SIGKILL");
+          }, 5000);
+        }, timeoutMs)
+      : null;
+
   child.on("exit", (code, signal) => {
+    if (timer) clearTimeout(timer);
+    if (killTimer) clearTimeout(killTimer);
+    if (timedOut) {
+      console.error(
+        `Error: marp did not finish within ${Math.round(timeoutMs / 1000)}s; the browser may have stalled. ` +
+          "Set CHROME_PATH to a working Chrome or Edge executable, or raise MARP_AGENT_CONVERT_TIMEOUT_MS.",
+      );
+      process.exit(1);
+    }
     if (signal) process.exit(signal === "SIGINT" ? 130 : 143);
     process.exit(code ?? 1);
   });
@@ -433,7 +460,7 @@ switch (mode) {
     args.push("--allow-local-files");
     if (values.output) args.push("-o", path.resolve(values.output));
     args.push(...positionals);
-    runMarp(args);
+    runMarp(args, { timeoutMs: CONVERT_TIMEOUT_MS });
     break;
   }
 
