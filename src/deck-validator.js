@@ -4,7 +4,10 @@ const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const { isASeriesCanvas } = require("./canvas-size");
 const { copyDeckForRender, findMissingAssets } = require("./media-assets");
-const { splitNonEmptySlides } = require("./markdown-slides");
+const {
+  splitFenceSegments,
+  splitNonEmptySlides,
+} = require("./markdown-slides");
 
 function splitSlides(markdown) {
   return splitNonEmptySlides(markdown);
@@ -64,8 +67,11 @@ function countBullets(lines) {
 
 function countTopLevelBullets(raw) {
   let count = 0;
-  for (const line of stripNonContent(raw).split(/\r?\n/)) {
-    if (/^(?:[-*+]\s+|\d+\.\s+)/.test(line)) count++;
+  for (const segment of splitFenceSegments(stripNonContent(raw))) {
+    if (segment.fenced) continue;
+    for (const line of segment.text.split(/\r?\n/)) {
+      if (/^(?:[-*+]\s+|\d+\.\s+)/.test(line)) count++;
+    }
   }
   return count;
 }

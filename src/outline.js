@@ -137,6 +137,23 @@ function validateBriefSchema(brief) {
   };
 }
 
+// An asset counts toward a slide's overflow risk only when the section
+// text names it: its backticked path, or its label before a dash.
+function assetReferenceName(line) {
+  const quoted = line.match(/`([^`]+)`/);
+  if (quoted) return quoted[1].trim();
+  return line.split(/\s+[—–-]\s+/)[0].trim();
+}
+
+function linkedAssetContext(section, mustUseAssets) {
+  return mustUseAssets
+    .filter((line) => {
+      const name = assetReferenceName(line);
+      return name !== "" && section.includes(name);
+    })
+    .join(" ");
+}
+
 function estimateOverflowRisk(title, context = "") {
   const score = title.length + context.length;
   if (score >= 90) return "high";
@@ -332,7 +349,7 @@ function buildSlidePlan(brief) {
   }
 
   for (const section of brief.requiredSections) {
-    const assetContext = brief.mustUseAssets[0] || "";
+    const assetContext = linkedAssetContext(section, brief.mustUseAssets);
     const explicitHint = parseLayoutHintFromText(section);
     let layoutHint;
     if (explicitHint) {
@@ -413,6 +430,14 @@ function buildOutlineMarkdown(brief, options = {}) {
 }
 
 function generateOutlineFile(briefPath, outputPath, options = {}) {
+  // lstat also catches broken symlinks that existsSync would miss.
+  const outputStat = fs.lstatSync(outputPath, { throwIfNoEntry: false });
+  if (outputStat && !options.force) {
+    throw new Error(
+      `refusing to overwrite existing file: ${outputPath}. ` +
+        "Re-run with --force to overwrite it, or pass --output <path> to write elsewhere.",
+    );
+  }
   const markdown = fs.readFileSync(briefPath, "utf8");
   const brief = parseBrief(markdown);
   const strictBrief = options.strictBrief !== false;
