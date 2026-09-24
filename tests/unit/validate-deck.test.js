@@ -908,3 +908,144 @@ test("validator writes report artifacts and uses injected screenshot exporter", 
     fs.rmSync(reportDir, { recursive: true, force: true });
   }
 });
+
+// A deck whose Markdown index, rendered position, and displayed page all
+// differ: a cover with `_paginate: skip`, an empty slide, a hidden slide, and
+// a setext heading whose underline is not a separator (ISS-0006).
+const MIXED_IDENTITY_DECK = `---
+marp: true
+paginate: true
+---
+
+<!-- _paginate: skip -->
+
+# Cover
+
+---
+
+---
+
+<!-- _hide: true -->
+
+# Hidden
+${Array.from({ length: 10 }, (_, i) => `- hidden ${i + 1}`).join("\n")}
+
+---
+
+Target heading
+---
+
+Body
+`;
+
+test("findings carry the slide identity from the Marp render", async () => {
+  const { dir, deckPath } = writeTempDeck(MIXED_IDENTITY_DECK);
+
+  try {
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      measureRenderedSlides: measuredStub([
+        {
+          slideNumber: 4,
+          clipped: [{ label: "p", edge: "bottom", overflowPx: 12 }],
+          maxOverflowPx: 12,
+        },
+      ]),
+    });
+
+    const clipped = result.findings.find((f) => f.ruleId === "content-clipped");
+    assert.deepEqual(
+      {
+        slide: clipped.slide,
+        renderedSlide: clipped.renderedSlide,
+        sectionId: clipped.sectionId,
+        page: clipped.page,
+        line: clipped.line,
+      },
+      { slide: 4, renderedSlide: 3, sectionId: "4", page: 2, line: 29 },
+    );
+    const hidden = result.findings.find((f) => f.ruleId === "dense-bullets");
+    assert.equal(hidden.slide, 3);
+    assert.equal(hidden.renderedSlide, null);
+    assert.equal(hidden.page, null);
+    assert.equal(hidden.line, 13);
+
+    const text = formatSummary(deckPath, result, { showHints: true });
+    assert.match(text, /\[error\] slide 4 \(page 2\) content-clipped:/);
+    assert.match(text, /\[hint\] slide 3 \(hidden\) dense-bullets:/);
+
+    const sarif = buildSarifReport(deckPath, result).runs[0].results.find(
+      (item) => item.ruleId === "content-clipped",
+    );
+    assert.equal(sarif.locations[0].physicalLocation.region.startLine, 29);
+    assert.match(sarif.message.text, /^Slide 4 \(page 2\):/);
+    assert.equal(sarif.properties.page, 2);
+    assert.equal(sarif.properties.renderedSlide, 3);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("report.md and report.json carry the slide identity", async () => {
+  const { dir, deckPath } = writeTempDeck(MIXED_IDENTITY_DECK);
+  const reportDir = path.join(dir, "report");
+  let exported;
+
+  try {
+    await validateDeckWithVisualCheck(deckPath, {
+      reportDir,
+      measureRenderedSlides: measuredStub([
+        {
+          slideNumber: 4,
+          clipped: [{ label: "p", edge: "bottom", overflowPx: 12 }],
+          maxOverflowPx: 12,
+        },
+      ]),
+      imageExporter: ({ slideNumbers, slideMap }) => {
+        exported = slideNumbers.map((slide) =>
+          slideMap.find((entry) => entry.slide === slide),
+        );
+        return [];
+      },
+    });
+
+    const report = JSON.parse(
+      fs.readFileSync(path.join(reportDir, "report.json"), "utf8"),
+    );
+    const markdown = fs.readFileSync(path.join(reportDir, "report.md"), "utf8");
+    const clipped = report.findings.find(
+      (finding) => finding.ruleId === "content-clipped",
+    );
+    assert.equal(clipped.slide, 4);
+    assert.equal(clipped.page, 2);
+    assert.equal(clipped.renderedSlide, 3);
+    assert.equal(clipped.line, 29);
+    assert.match(markdown, /- Slide 4 \(page 2\) `content-clipped`/);
+    assert.deepEqual(
+      exported.map((entry) => [entry.slide, entry.renderedSlide]),
+      [[4, 3]],
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("defaultImageExporter selects screenshots by rendered position", () => {
+  const { dir, deckPath } = writeTempDeck(MIXED_IDENTITY_DECK);
+  const reportDir = path.join(dir, "report");
+
+  try {
+    // Four Markdown slides render three images; Markdown slide 4 is
+    // slide.003.png and hidden slide 3 has none.
+    const files = defaultImageExporter({
+      deckPath,
+      reportDir,
+      slideNumbers: [2, 3, 4],
+    });
+    assert.deepEqual(
+      files.map((file) => path.basename(file)),
+      ["slide-002.png", "slide-004.png"],
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

@@ -29,7 +29,7 @@ Options:
   --doctor                 Run environment diagnostics
   --strict                 Require the rendered check (fail if it cannot run)
   --hints                  List source-heuristic hints (for -v, --lint)
-  --screenshot <page>      Screenshot a slide (1-based displayed page)
+  --screenshot <page>      Screenshot a slide by displayed page number
   -v, --validate           Validate deck
   -n, --new                Create new deck
   --paper                  Scaffold an A-series paper deck (with --new)
@@ -48,9 +48,13 @@ Options:
 
 Without options, starts a live-reload server (serve + watch).
 
+Page arguments (serve [page], --overview [page], --screenshot <page>) take the
+page number shown on the slide. Decks that show no page numbers take the
+position among rendered slides instead. Hidden slides cannot be addressed.
+
 Examples:
   marpx decks/2025/talk/slide.md            Serve with live reload (default)
-  marpx decks/2025/talk/slide.md 5          Serve, open at page 5
+  marpx decks/2025/talk/slide.md 5          Serve, open at displayed page 5
   marpx decks/2025/talk/slide.md -p         Single-shot preview
   marpx decks/2025/talk/slide.md --overview Overview mode
   marpx decks/2025/talk/slide.md --pdf      Export PDF
@@ -58,7 +62,7 @@ Examples:
   marpx decks/2025/talk/slide.md --html     Export standalone HTML
   marpx decks/2025/talk/slide.md --images jpeg --output out/slide.jpg  Export slide images
   marpx decks/2025/talk/slide.md --pdf --output out/talk.pdf  Export PDF to a chosen path
-  marpx decks/2025/talk/slide.md --screenshot 5  Screenshot slide 5
+  marpx decks/2025/talk/slide.md --screenshot 5  Screenshot the slide showing page 5
   marpx decks/2025/talk/slide.md --screenshot 5 --output out/slide5.png  Screenshot to a chosen path
   marpx decks/2025/talk/slide.md -v         Validate
   marpx decks/2025/talk/slide.md -v --autofix  Validate with safe autofix
@@ -414,10 +418,17 @@ switch (mode) {
     const { findSlideIdByDisplayedPage } = require("../src/marp-pagination");
     const { renderToHtml, screenshotSlide } = require("../src/visual-overflow");
 
+    // Resolve through the slide map: the displayed page number, or the
+    // rendered position when the deck shows no page numbers. Hidden slides
+    // cannot be addressed.
     const entry = findSlideIdByDisplayedPage(ssDeckPath, configPath, displayedPage);
-    // Marp assigns id="1", id="2", … to sections, so fall back to the
-    // slide number when pagination metadata is absent.
-    const slideId = entry ? entry.slideId : String(displayedPage);
+    if (!entry) {
+      console.error(
+        `Error: displayed page ${displayedPage} was not found in ${path.relative(process.cwd(), ssDeckPath)}`,
+      );
+      process.exit(1);
+    }
+    const slideId = entry.slideId;
 
     const { htmlPath, tempRoot } = renderToHtml(ssDeckPath);
 

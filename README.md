@@ -64,10 +64,10 @@ marpx decks/my-talk/slide.md --overview
 | `marpx <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
 | `marpx <slide.md>` | Serve with live reload |
 | `marpx <slide.md> <page>` | Serve and open at displayed page |
-| `marpx <slide.md> --screenshot <page>` | Screenshot a slide to `/tmp` |
-| `marpx <slide.md> --screenshot <page> --output <path>` | Screenshot a slide to a chosen path |
+| `marpx <slide.md> --screenshot <page>` | Screenshot the slide at a displayed page to `/tmp` |
+| `marpx <slide.md> --screenshot <page> --output <path>` | Screenshot the slide at a displayed page to a chosen path |
 | `marpx <slide.md> -p` | Single-shot preview |
-| `marpx <slide.md> --overview` | Thumbnail overview |
+| `marpx <slide.md> [page] --overview` | Thumbnail overview (optionally focused on a displayed page) |
 | `marpx <slide.md> --pdf` | Export to PDF |
 | `marpx <slide.md> --pptx` | Export to PPTX |
 | `marpx <slide.md> --html` | Export to standalone HTML |
@@ -108,6 +108,16 @@ them. Open the HTML from the deck directory (the default output location)
 so `assets/` and `shared/` paths resolve; an `--output` path outside the
 deck breaks those references. PDF, PPTX, and image exports embed media and
 are not affected.
+
+Slide numbers come from one slide map computed with the configured Marp
+engine (`src/slide-map.js`), so hidden slides, empty slides, setext headings,
+and `headingDivider` count the way Marp renders them. Page arguments for
+serve, `--overview`, and `--screenshot` take the page number shown on the
+slide; decks that show no page numbers take the position among rendered
+slides, and hidden slides cannot be addressed. The validator reports the
+Markdown slide index and adds the displayed page when it differs, for example
+`slide 11 (page 10)`; JSON and SARIF findings also carry `renderedSlide`,
+`sectionId`, `page`, and the slide's first source `line`.
 
 For interactive authoring, use `marpx ...`. `.mise.toml` adds the repository
 root to `PATH` when mise is active, and the repo-local wrapper runs the npm

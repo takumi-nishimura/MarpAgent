@@ -8,6 +8,7 @@ const {
   forwardLines,
   getMarpBin,
   openBrowser,
+  resolveRequestedSlide,
   resolveRequestedSlideId,
 } = require("../../src/preview-runtime");
 
@@ -83,6 +84,13 @@ test("resolveRequestedSlideId returns slide id for valid page", () => {
     repoRoot,
   );
   assert.equal(slideId, "2");
+});
+
+test("resolveRequestedSlide returns the section id and rendered position", () => {
+  assert.deepEqual(
+    resolveRequestedSlide(paginationFixtureDeckPath, configPath, 2, repoRoot),
+    { slideId: "3", displayedPage: 2, slide: 3, renderedSlide: 3 },
+  );
 });
 
 test("forwardChildSignals forwards SIGINT to child", () => {

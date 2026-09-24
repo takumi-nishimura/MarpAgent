@@ -4,13 +4,44 @@ const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const { isASeriesCanvas } = require("./canvas-size");
 const { copyDeckForRender, findMissingAssets } = require("./media-assets");
+const { splitFenceSegments } = require("./markdown-slides");
 const {
-  splitFenceSegments,
-  splitNonEmptySlides,
-} = require("./markdown-slides");
+  buildSlideMap,
+  findSlide,
+  formatSlideLabel,
+} = require("./slide-map");
 
-function splitSlides(markdown) {
-  return splitNonEmptySlides(markdown);
+/**
+ * Non-empty slides with their raw source, numbered by Markdown slide index.
+ * Boundaries come from the configured Marp engine (src/slide-map.js); hidden
+ * slides are included so their source is still checked.
+ */
+function splitSlides(markdown, options = {}) {
+  const slideMap = options.slideMap || buildSlideMap(markdown);
+  return slideMap
+    .filter((entry) => entry.raw.trim() !== "")
+    .map((entry) => ({ number: entry.slide, raw: entry.raw }));
+}
+
+/**
+ * Add the slide identity fields to each finding: `renderedSlide` (1-based
+ * rendered position, null when hidden), `sectionId`, `page` (displayed page
+ * number, null when none is shown), and `line` (first source line of the
+ * slide). `slide` stays the Markdown slide index.
+ */
+function attachSlideIdentity(findings, slideMap) {
+  return findings.map((finding) => {
+    const entry = findSlide(slideMap, finding.slide);
+    const { slide, ...rest } = finding;
+    return {
+      slide,
+      renderedSlide: entry ? entry.renderedSlide : null,
+      sectionId: entry ? entry.sectionId : null,
+      page: entry ? entry.page : null,
+      line: entry ? entry.line : 1,
+      ...rest,
+    };
+  });
 }
 
 /**
@@ -374,12 +405,16 @@ function lintSlide(slide, options = {}) {
 }
 
 function validateDeckMarkdown(markdown, options = {}) {
-  const slides = splitSlides(markdown);
+  const slideMap = options.slideMap || buildSlideMap(markdown);
+  const slides = splitSlides(markdown, { slideMap });
   const paper = isPaperDeck(markdown);
   const results = slides.map((slide) =>
     lintSlide(slide, { paper, severity: options.heuristicSeverity }),
   );
-  const findings = results.flatMap((result) => result.findings);
+  const findings = attachSlideIdentity(
+    results.flatMap((result) => result.findings),
+    slideMap,
+  );
   return {
     slideCount: slides.length,
     paper,
@@ -390,7 +425,7 @@ function validateDeckMarkdown(markdown, options = {}) {
 
 function formatFindingLine(finding) {
   const label = finding.severity === "info" ? "hint" : finding.severity;
-  return `[${label}] slide ${finding.slide} ${finding.ruleId}: ${finding.title} ${finding.suggestion}`;
+  return `[${label}] ${formatSlideLabel(finding)} ${finding.ruleId}: ${finding.title} ${finding.suggestion}`;
 }
 
 function formatSummary(deckPath, result, options = {}) {
@@ -468,13 +503,13 @@ function buildSarifReport(deckPath, result) {
           ruleId: finding.ruleId,
           level: toSarifLevel(finding.severity),
           message: {
-            text: `Slide ${finding.slide}: ${finding.title} ${finding.suggestion}`,
+            text: `${formatSlideLabel(finding, "Slide")}: ${finding.title} ${finding.suggestion}`,
           },
           locations: [
             {
               physicalLocation: {
                 artifactLocation: { uri: artifactUri },
-                region: { startLine: 1 },
+                region: { startLine: finding.line || 1 },
               },
               logicalLocations: [
                 {
@@ -486,6 +521,10 @@ function buildSarifReport(deckPath, result) {
           ],
           properties: {
             slide: finding.slide,
+            renderedSlide: finding.renderedSlide ?? null,
+            sectionId: finding.sectionId ?? null,
+            page: finding.page ?? null,
+            line: finding.line ?? null,
             severity: finding.severity,
             source: finding.source,
             suggestion: finding.suggestion,
@@ -500,8 +539,16 @@ function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
-function defaultImageExporter({ deckPath, reportDir, slideNumbers }) {
+/**
+ * Export report screenshots with `marp --images`. Marp numbers the images by
+ * rendered position, so each requested Markdown slide index is resolved
+ * through the slide map; hidden slides have no image and are skipped. The
+ * copied screenshot is named after the Markdown slide index the findings use.
+ */
+function defaultImageExporter({ deckPath, reportDir, slideNumbers, slideMap }) {
   if (slideNumbers.length === 0) return [];
+  const map =
+    slideMap || buildSlideMap(fs.readFileSync(deckPath, "utf8"));
 
   const repoRoot = path.resolve(__dirname, "..");
   const marpBinary = path.join(
@@ -546,9 +593,11 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers }) {
     const sourcePrefix = path.basename(deckPath, path.extname(deckPath));
     const artifacts = [];
     for (const slideNumber of slideNumbers) {
+      const renderedSlide = findSlide(map, slideNumber)?.renderedSlide;
+      if (!renderedSlide) continue;
       const sourceImage = path.join(
         copiedDeckDir,
-        `${sourcePrefix}.${String(slideNumber).padStart(3, "0")}.png`,
+        `${sourcePrefix}.${String(renderedSlide).padStart(3, "0")}.png`,
       );
       const destination = path.join(
         screenshotsDir,
@@ -567,7 +616,12 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers }) {
 }
 
 function writeArtifacts(result, options = {}) {
-  const { deckPath, reportDir, imageExporter = defaultImageExporter } = options;
+  const {
+    deckPath,
+    reportDir,
+    imageExporter = defaultImageExporter,
+    slideMap,
+  } = options;
   if (!reportDir) return { reportFiles: [], screenshotFiles: [] };
 
   ensureDir(reportDir);
@@ -585,6 +639,7 @@ function writeArtifacts(result, options = {}) {
     deckPath,
     reportDir,
     slideNumbers,
+    slideMap,
   });
   const counts = countFindings(result.findings);
   const report = {
@@ -622,7 +677,7 @@ function writeArtifacts(result, options = {}) {
   } else {
     for (const finding of blocking) {
       markdownLines.push(
-        `- Slide ${finding.slide} \`${finding.ruleId}\` (${finding.severity}): ${finding.title} ${finding.suggestion}`,
+        `- ${formatSlideLabel(finding, "Slide")} \`${finding.ruleId}\` (${finding.severity}): ${finding.title} ${finding.suggestion}`,
       );
     }
   }
@@ -637,7 +692,7 @@ function writeArtifacts(result, options = {}) {
     markdownLines.push("");
     for (const finding of hints) {
       markdownLines.push(
-        `- Slide ${finding.slide} \`${finding.ruleId}\`: ${finding.title}`,
+        `- ${formatSlideLabel(finding, "Slide")} \`${finding.ruleId}\`: ${finding.title}`,
       );
     }
   }
@@ -727,9 +782,11 @@ function buildMissingAssetFindings(fileResults, renderedSlides = []) {
  */
 function validateDeckFile(deckPath, options = {}) {
   const markdown = fs.readFileSync(deckPath, "utf8");
+  const slideMap = buildSlideMap(markdown);
   const result = {
     ...validateDeckMarkdown(markdown, {
       heuristicSeverity: HEURISTIC_SEVERITY.fallback,
+      slideMap,
     }),
     visualCheck: options.visualCheck || {
       status: "skipped",
@@ -738,13 +795,17 @@ function validateDeckFile(deckPath, options = {}) {
   };
   // The file check needs no browser, so missing media still fail the run.
   result.findings.push(
-    ...buildMissingAssetFindings(findMissingAssets(deckPath, markdown)),
+    ...buildMissingAssetFindings(
+      findMissingAssets(deckPath, markdown, { slideMap }),
+    ),
   );
+  result.findings = attachSlideIdentity(result.findings, slideMap);
   result.findings.sort((a, b) => a.slide - b.slide);
   const artifacts = writeArtifacts(result, {
     deckPath,
     reportDir: options.reportDir,
     imageExporter: options.imageExporter,
+    slideMap,
   });
 
   return {
@@ -822,9 +883,12 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
     options.measureRenderedSlides || defaultMeasureRenderedSlides;
 
   const markdown = fs.readFileSync(deckPath, "utf8");
+  // One slide map numbers heuristic, rendered, and file-check findings alike.
+  const slideMap = buildSlideMap(markdown);
   const measurement = await measureRenderedSlides(deckPath, {
     onDiagnostic: options.onDiagnostic,
     strictVisual: options.strictVisual,
+    slideMap,
   });
   const measured = measurement.status === "measured";
 
@@ -832,6 +896,7 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
     heuristicSeverity: measured
       ? HEURISTIC_SEVERITY.measured
       : HEURISTIC_SEVERITY.fallback,
+    slideMap,
   });
   result.visualCheck = measured
     ? { status: "measured" }
@@ -899,10 +964,11 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
   // failures add what it cannot see, such as files that fail to decode.
   result.findings.push(
     ...buildMissingAssetFindings(
-      findMissingAssets(deckPath, markdown),
+      findMissingAssets(deckPath, markdown, { slideMap }),
       measured ? measurement.slides : [],
     ),
   );
+  result.findings = attachSlideIdentity(result.findings, slideMap);
 
   // Sort findings by slide number for consistent output
   result.findings.sort((a, b) => a.slide - b.slide);
@@ -911,6 +977,7 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
     deckPath,
     reportDir: options.reportDir,
     imageExporter: options.imageExporter,
+    slideMap,
   });
 
   return {
@@ -921,6 +988,7 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
 
 module.exports = {
   HEURISTIC_SEVERITY,
+  attachSlideIdentity,
   countFindings,
   defaultImageExporter,
   buildSarifReport,

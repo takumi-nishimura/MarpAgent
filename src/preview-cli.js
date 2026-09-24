@@ -31,9 +31,11 @@ function parseDeckAndPageArgs(args, { repoRoot }) {
   return { deckPath, displayedPage };
 }
 
-function buildDeckUrl(baseUrl, deckPath, slideId) {
+// `slidePosition` is the 1-based position among rendered slides, which is
+// what the bespoke template's numeric hash selects.
+function buildDeckUrl(baseUrl, deckPath, slidePosition) {
   const route = encodeURIComponent(path.basename(deckPath));
-  const hash = slideId ? `#${slideId}` : "";
+  const hash = slidePosition ? `#${slidePosition}` : "";
   return `${baseUrl}/${route}${hash}`;
 }
 

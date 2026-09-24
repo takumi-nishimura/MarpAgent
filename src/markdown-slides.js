@@ -1,22 +1,5 @@
-function stripFrontmatter(markdown) {
-  const text = String(markdown || "");
-  const lines = text.split(/\r?\n/);
-
-  if (lines[0]?.trim() !== "---") {
-    return text;
-  }
-
-  let closingIndex = 1;
-  while (closingIndex < lines.length && lines[closingIndex].trim() !== "---") {
-    closingIndex += 1;
-  }
-
-  if (closingIndex >= lines.length) {
-    return text;
-  }
-
-  return lines.slice(closingIndex + 1).join("\n");
-}
+// Fenced-code helpers for source heuristics. Slide boundaries are not split
+// here: src/slide-map.js derives them from the configured Marp engine.
 
 const FENCE_MARKER_RE = /^(```+|~~~+)/;
 
@@ -58,48 +41,7 @@ function splitFenceSegments(markdown) {
   return segments;
 }
 
-function splitSlideRawBlocks(markdown) {
-  const lines = stripFrontmatter(markdown).split(/\r?\n/);
-  const slides = [];
-  let currentLines = [];
-  let slideNumber = 1;
-  let fence = null;
-
-  const pushCurrent = () => {
-    slides.push({
-      number: slideNumber,
-      raw: currentLines.join("\n"),
-    });
-    slideNumber += 1;
-    currentLines = [];
-  };
-
-  for (const line of lines) {
-    const inCode = fence !== null || FENCE_MARKER_RE.test(line.trim());
-    fence = nextFenceState(fence, line);
-
-    if (!inCode && line.trim() === "---") {
-      pushCurrent();
-      continue;
-    }
-
-    currentLines.push(line);
-  }
-
-  pushCurrent();
-  return slides;
-}
-
-function splitNonEmptySlides(markdown) {
-  return splitSlideRawBlocks(markdown).filter(
-    (slide) => slide.raw.trim() !== "",
-  );
-}
-
 module.exports = {
   nextFenceState,
   splitFenceSegments,
-  splitNonEmptySlides,
-  splitSlideRawBlocks,
-  stripFrontmatter,
 };

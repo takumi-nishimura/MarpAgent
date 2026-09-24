@@ -2,7 +2,7 @@
 id: ISS-0009
 title: Ground design and text-density validation in the rendered slide
 type: issue
-status: open
+status: closed
 date: '2026-09-23'
 updated: '2026-09-23'
 authors:
@@ -20,6 +20,8 @@ depends_on:
   - ISS-0023
   - ISS-0024
 supersedes: []
+resolution: completed
+resolved: "2026-09-24"
 artifacts:
   revisions: []
   manifests: []
@@ -47,11 +49,11 @@ Findings about density and typography come from measurements of the rendered sli
 ## Acceptance criteria
 
 - [ ] The rendered check reports per slide: minimum computed body font size, horizontal overflow, overflow clipped inside descendants, and a rendered text-fill metric (text line count or text-box area ratio).
-- [ ] `typography-drift` is decided from the computed font size against a theme-relative minimum and catches scoped `<style>` overrides.
+- [x] `typography-drift` is decided from the computed font size against a theme-relative minimum and catches scoped `<style>` overrides.
 - [ ] Density findings use rendered metrics when available; when they fall back to the source heuristic, the finding says so. The fallback counts CJK characters by display width.
-- [ ] Paper decks get the rendered checks that apply to a single canvas (clipping, minimum font size, horizontal overflow).
-- [ ] Thresholds live in one documented place, and `marp-validator/references/rules.md` explains each rule in terms of what is visible on the slide.
-- [ ] Fixtures in `fixtures/` gain expected results for the new checks, and `scripts/ci-validate-fixtures.js` enforces them.
+- [x] Paper decks get the rendered checks that apply to a single canvas (clipping, minimum font size, horizontal overflow).
+- [x] Thresholds live in one documented place, and `marp-validator/references/rules.md` explains each rule in terms of what is visible on the slide.
+- [x] Fixtures in `fixtures/` gain expected results for the new checks, and `scripts/ci-validate-fixtures.js` enforces them.
 
 ## Out of scope
 
@@ -69,3 +71,10 @@ This is an umbrella issue. On 2026-09-23 the author confirmed the main complaint
 - ISS-0024: report media that fail to load.
 
 The remaining criteria here (horizontal and ancestor clipping, paper coverage, CJK-width fallback, documented thresholds) are covered by ISS-0019 or will be closed with the follow-ups.
+
+Closed on 2026-09-24 after its implementation issues landed: ISS-0019 (clipping), ISS-0021 (overlap), ISS-0022 (rendered minimum font size, which replaces `typography-drift` after a render), ISS-0023 (edge crowding), and ISS-0024 (missing assets). Paper decks get the same rendered checks scaled to their canvas. Thresholds and exemptions are documented in `.agents/skills/marp-validator/references/rules.md`, and `scripts/ci-validate-fixtures.js` checks the expected errors, warnings, and hints for each fixture.
+
+Two criteria are left unticked on purpose, following ADR-0001, which the author accepted:
+
+- Rendered density: no text-fill metric is reported. Density is not a visible defect under ADR-0001, so density findings stay non-blocking source hints. Overflow clipped inside descendants is excluded as an intentional crop.
+- Fallback CJK width: the source hints were not recalibrated. ADR-0001 lists "retuning heuristic thresholds" as a non-goal, and after a render the hints never fail validation.

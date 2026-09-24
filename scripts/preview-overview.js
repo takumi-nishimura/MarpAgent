@@ -26,6 +26,9 @@ enforceSupportedNodeRuntime();
 
 function printUsage() {
   console.error("Usage: marpx <deck.md> [displayed-page] --overview");
+  console.error(
+    "The page is the number shown on the slide; decks without page numbers use the position among rendered slides.",
+  );
 }
 
 function getReloadToken(outputPath) {

@@ -1,8 +1,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { fileURLToPath } = require("node:url");
-const { detectHiddenSlides } = require("./hidden-slides");
-const { splitSlideRawBlocks, splitFenceSegments } = require("./markdown-slides");
+const { splitFenceSegments } = require("./markdown-slides");
+const { buildSlideMap } = require("./slide-map");
 
 // Markdown image: `![alt](url)`, `![alt](<url with spaces>)`, optionally
 // followed by a quoted or parenthesized title. Marp keywords such as `bg` or
@@ -227,18 +227,21 @@ function extractFrontmatter(markdown) {
  * never fetched. CSS `url(...)` in the front matter applies to every slide
  * and is reported on the first rendered slide. Hidden slides are skipped
  * because they are not rendered.
+ * Slides are numbered by their Markdown slide index (src/slide-map.js); pass
+ * `options.slideMap` to reuse a map the caller already built.
  * Returns [{ slideNumber, missing: [{ reference, reason, path, link?,
  * target? }] }] for slides with at least one missing reference.
  */
 function findMissingAssets(
   deckPath,
   markdown = fs.readFileSync(deckPath, "utf8"),
+  options = {},
 ) {
   const deckDir = path.dirname(path.resolve(deckPath));
-  const hidden = detectHiddenSlides(markdown);
-  const slides = splitSlideRawBlocks(markdown).filter(
-    (slide) => slide.raw.trim() !== "" && !hidden.has(slide.number),
-  );
+  const slideMap = options.slideMap || buildSlideMap(markdown);
+  const slides = slideMap
+    .filter((entry) => !entry.hidden && entry.raw.trim() !== "")
+    .map((entry) => ({ number: entry.slide, raw: entry.raw }));
   if (slides.length === 0) return [];
 
   const frontmatterReferences = [];

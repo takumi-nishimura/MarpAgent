@@ -4,7 +4,7 @@ const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const { fileURLToPath, pathToFileURL } = require("node:url");
 const { detectHiddenSlides } = require("./hidden-slides");
-const { splitSlideRawBlocks } = require("./markdown-slides");
+const { buildSlideMap, renderedSlides } = require("./slide-map");
 const { copyDeckForRender, diagnoseMissingPath } = require("./media-assets");
 
 // Visible content may cross an edge by this much before it counts as clipped,
@@ -729,21 +729,13 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
 }
 
 /**
- * Build a mapping from rendered section index (0-based) to markdown slide number (1-based).
- * Hidden slides are skipped in the rendered output.
+ * Build a mapping from rendered section index (0-based) to Markdown slide
+ * index (1-based) from the slide map (src/slide-map.js). Hidden slides are
+ * absent from the render; empty slides are rendered and keep their index.
  */
-function buildRenderedToMarkdownMap(markdown) {
-  const rawSlides = splitSlideRawBlocks(markdown);
-  const hidden = detectHiddenSlides(markdown);
-  const map = [];
-
-  for (const slide of rawSlides) {
-    if (!hidden.has(slide.number) && slide.raw.trim() !== "") {
-      map.push(slide.number);
-    }
-  }
-
-  return map;
+function buildRenderedToMarkdownMap(markdown, options = {}) {
+  const slideMap = options.slideMap || buildSlideMap(markdown, options);
+  return renderedSlides(slideMap).map((entry) => entry.slide);
 }
 
 /**
@@ -752,8 +744,10 @@ function buildRenderedToMarkdownMap(markdown) {
  * and media that fail to load.
  * Returns { status: "measured", slides: [{ slideNumber, clipped, maxOverflowPx,
  * crowded, safeMarginPx, textRuns, smallText, textFloorPx, overlaps,
- * maxOverlapPx, missingMedia: [{ reference, reason, path }] }] }
- * where slideNumber is the markdown slide number, or
+ * maxOverlapPx, missingMedia: [{ reference, reason, path }], renderedSlide }] }
+ * where slideNumber is the Markdown slide index and renderedSlide the 1-based
+ * rendered position, both taken from the slide map (`options.slideMap`, or
+ * built from the deck), or
  * { status: "skipped", reason, slides: [] } when rendering or the browser is
  * unavailable. In strict mode a failure throws instead of being skipped.
  */
@@ -770,7 +764,9 @@ async function measureRenderedSlides(deckPath, options = {}) {
     tempRoot = rendered.tempRoot;
 
     const audits = await measureSlidesInBrowser(rendered.htmlPath);
-    const renderedToMarkdown = buildRenderedToMarkdownMap(markdown);
+    const renderedToMarkdown = buildRenderedToMarkdownMap(markdown, {
+      slideMap: options.slideMap,
+    });
     const renderedDeckDir = path.dirname(rendered.htmlPath);
     const deckDir = path.dirname(path.resolve(deckPath));
 
@@ -778,6 +774,7 @@ async function measureRenderedSlides(deckPath, options = {}) {
       status: "measured",
       slides: audits.map((audit) => ({
         slideNumber: renderedToMarkdown[audit.slideIndex] ?? audit.slideIndex + 1,
+        renderedSlide: audit.slideIndex + 1,
         clipped: audit.clipped,
         maxOverflowPx: audit.maxOverflowPx,
         crowded: audit.crowded,

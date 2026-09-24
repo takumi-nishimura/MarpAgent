@@ -13,7 +13,7 @@ const {
   getMarpBin,
   isNotifierPortConflict,
   openBrowser,
-  resolveRequestedSlideId,
+  resolveRequestedSlide,
 } = require("../src/preview-runtime");
 
 const repoRoot = path.resolve(__dirname, "..");
@@ -26,6 +26,9 @@ enforceSupportedNodeRuntime();
 
 function printUsage() {
   console.error("Usage: marpx <deck.md> [displayed-page]");
+  console.error(
+    "The page is the number shown on the slide; decks without page numbers use the position among rendered slides.",
+  );
 }
 
 function main() {
@@ -48,15 +51,18 @@ function main() {
     process.exit(1);
   }
 
-  let slideId;
+  // Marp's bespoke template reads a numeric URL hash as the 1-based position
+  // among rendered slides, which differs from the section id once a hidden
+  // slide precedes the target.
+  let slidePosition;
 
   try {
-    slideId = resolveRequestedSlideId(
+    slidePosition = resolveRequestedSlide(
       deckPath,
       configPath,
       displayedPage,
       repoRoot,
-    );
+    )?.renderedSlide;
   } catch (error) {
     console.error(error.message);
     process.exit(1);
@@ -76,7 +82,7 @@ function main() {
     const match = line.match(/http:\/\/localhost:\d+/);
     if (!match) return;
 
-    const url = buildDeckUrl(match[0], deckPath, slideId);
+    const url = buildDeckUrl(match[0], deckPath, slidePosition);
     const browser = openBrowser(url);
     browser?.unref();
     opened = true;
