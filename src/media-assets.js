@@ -186,6 +186,43 @@ function diagnoseMissingPath(filePath, deckDir) {
   return { reason: "not found" };
 }
 
+// Export artifacts a render never loads: PDF exports, typically the largest
+// file in a deck directory, and the hidden `.*.overview.html` pages the
+// preview server writes next to the deck. Everything else is copied, because
+// any other file might back a media reference.
+function isRenderArtifact(fileName) {
+  return (
+    fileName.toLowerCase().endsWith(".pdf") ||
+    (fileName.startsWith(".") && fileName.endsWith(".overview.html"))
+  );
+}
+
+/**
+ * Copy the deck's directory into `destinationDir` for a render. Export
+ * artifacts (PDFs, generated `.*.overview.html`) are skipped unless the deck
+ * references them — a PDF embedded via <embed>/<object> still has to load.
+ * `fs.cp` resolves symlink targets to absolute paths, so links such as
+ * `shared -> ../../assets` keep working inside the temp copy.
+ */
+function copyDeckForRender(deckPath, destinationDir) {
+  const deckDir = path.dirname(path.resolve(deckPath));
+  const markdown = fs.readFileSync(deckPath, "utf8");
+  const references = extractMediaReferences(markdown);
+  collectCssUrls(extractFrontmatter(markdown), 0, references);
+  const referenced = new Set(
+    references
+      .map(({ reference }) => resolveLocalReference(reference, deckDir))
+      .filter(Boolean),
+  );
+
+  fs.cpSync(deckDir, destinationDir, {
+    recursive: true,
+    filter: (source) =>
+      !isRenderArtifact(path.basename(source)) ||
+      referenced.has(path.resolve(source)),
+  });
+}
+
 function isHiddenSlide(raw) {
   return /<!--\s*hide:\s*true\s*-->/.test(raw);
 }
@@ -245,6 +282,7 @@ function findMissingAssets(
 }
 
 module.exports = {
+  copyDeckForRender,
   diagnoseMissingPath,
   extractMediaReferences,
   findMissingAssets,

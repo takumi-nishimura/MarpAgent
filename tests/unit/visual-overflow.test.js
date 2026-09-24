@@ -473,6 +473,42 @@ theme: lab
   }
 });
 
+test("measureRenderedSlides renders a deck whose directory name contains # and %", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-#%-dir-"));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+---
+
+# Encoded path
+
+This slide lives in a directory that needs URL encoding.
+`,
+  );
+
+  try {
+    assert.match(dir, /#/);
+    assert.match(dir, /%/);
+    const result = await measureRenderedSlides(deckPath);
+
+    assert.equal(result.status, "measured");
+    assert.deepEqual(
+      result.slides.map((slide) => slide.clipped),
+      [[]],
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("measureRenderedSlides reports a skipped check instead of throwing", async () => {
   process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE = "1";
   try {

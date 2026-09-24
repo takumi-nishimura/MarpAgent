@@ -2,9 +2,9 @@
 id: ISS-0012
 title: 'Visual render pipeline: unencoded file URLs and leaked temp directories'
 type: issue
-status: open
+status: closed
 date: '2026-09-23'
-updated: '2026-09-23'
+updated: '2026-09-24'
 authors:
 - claude-code
 scope:
@@ -14,6 +14,8 @@ tags:
 - bug
 depends_on: []
 supersedes: []
+resolution: completed
+resolved: "2026-09-24"
 artifacts:
   revisions: []
   manifests: []
@@ -35,9 +37,9 @@ The visual pipeline works for any valid directory name and never leaves temp dir
 ## Acceptance criteria
 
 - [x] Both call sites build the URL with `url.pathToFileURL(htmlPath).href`.
-- [ ] A test renders a deck whose directory name contains `#` and `%`.
-- [ ] `defaultImageExporter` cleans up in `finally`.
-- [ ] Copying the deck to temp skips media that rendering does not need (e.g. `*.pdf`, generated `.*.overview.html`), or the design comment explains why a full copy is required.
+- [x] A test renders a deck whose directory name contains `#` and `%`.
+- [x] `defaultImageExporter` cleans up in `finally`.
+- [x] Copying the deck to temp skips media that rendering does not need (e.g. `*.pdf`, generated `.*.overview.html`), or the design comment explains why a full copy is required.
 
 ## Files
 
@@ -48,3 +50,5 @@ The visual pipeline works for any valid directory name and never leaves temp dir
 ## Notes
 
 The file-URL fix landed with ISS-0019 on 2026-09-24. The directory-name test, temp cleanup in `defaultImageExporter`, and the copy scope remain open.
+
+2026-09-24: Implemented the remaining criteria. `defaultImageExporter` now removes its temp root in `finally`, so a `marp --images` failure no longer leaks `marp-agent-validator-*` directories. Both render paths copy the deck via the new `copyDeckForRender` (`src/media-assets.js`), which skips `*.pdf` exports and generated `.*.overview.html` files unless the deck references them — a PDF embedded via `<embed>`/`<object>` still has to load, so the skip checks the deck's media references instead of being a blind denylist. The test for `#`/`%` directory names renders a `mktemp` deck and exercises `pathToFileURL` end to end.

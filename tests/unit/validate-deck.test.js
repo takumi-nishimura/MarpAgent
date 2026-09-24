@@ -6,6 +6,7 @@ const path = require("node:path");
 
 const {
   buildSarifReport,
+  defaultImageExporter,
   exitCodeFor,
   formatSummary,
   isPaperDeck,
@@ -409,6 +410,33 @@ test("skipped visual check keeps heuristics as non-blocking warnings", async () 
     );
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("defaultImageExporter removes its temp directory when the export fails", () => {
+  const validatorTemps = () =>
+    fs
+      .readdirSync(os.tmpdir())
+      .filter((name) => name.startsWith("marp-agent-validator-"));
+  const { dir, deckPath } = writeTempDeck("# One\n");
+  const reportDir = fs.mkdtempSync(
+    path.join(os.tmpdir(), "marp-agent-report-"),
+  );
+  // A directory where marp must write slide.001.png makes the export fail.
+  fs.mkdirSync(path.join(dir, "slide.001.png"));
+  const before = new Set(validatorTemps());
+
+  try {
+    assert.throws(() =>
+      defaultImageExporter({ deckPath, reportDir, slideNumbers: [1] }),
+    );
+    assert.deepEqual(
+      validatorTemps().filter((name) => !before.has(name)),
+      [],
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.rmSync(reportDir, { recursive: true, force: true });
   }
 });
 
