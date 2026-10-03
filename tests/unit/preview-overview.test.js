@@ -291,6 +291,28 @@ async function stopOverview({ child }) {
   await exited;
 }
 
+test(
+  "overview sessions for the same deck own independent output files",
+  { timeout: 30000 },
+  async () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "overview-shared-deck-"),
+    );
+    const deckPath = path.join(tmpDir, "資料.md");
+    writeDeck(deckPath, "Shared deck");
+    const overviews = [startOverview(deckPath), startOverview(deckPath)];
+    try {
+      const urls = await Promise.all(overviews.map(({ opened }) => opened));
+      await stopOverview(overviews[0]);
+      assert.match((await requestPath(urls[1].port, "/")).body, /Shared deck/);
+    } finally {
+      await Promise.all(overviews.map(stopOverview));
+      assert.deepEqual(fs.readdirSync(tmpDir), ["資料.md"]);
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  },
+);
+
 async function waitForTokenChange(overview, url, previousToken) {
   const deadline = Date.now() + 15000;
   while (Date.now() < deadline) {

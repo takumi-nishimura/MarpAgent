@@ -33,8 +33,8 @@ Options:
   -v, --validate           Validate deck
   -n, --new                Create new deck
   --paper                  Scaffold an A-series paper deck (with --new)
-  --outline                Generate outline from brief
-  --no-strict-brief        Allow incomplete brief schema for --outline
+  --outline                Deprecated: generate outline from a legacy brief
+  --no-strict-brief        Allow incomplete legacy brief schema for --outline
   --format <fmt>           Output format: text, json, sarif
   --theme [name]           Build theme(s) (all if name omitted)
   --theme-new              Scaffold a new theme
@@ -69,7 +69,6 @@ Examples:
   marpx decks/2025/talk/slide.md -v --autofix --dry-run  Preview autofix changes as a diff
   marpx -n decks/2025/talk                  New deck
   marpx -n decks/2025/paper --paper         New A-series paper deck
-  marpx decks/2025/talk/brief.md --outline  Generate outline
   marpx --doctor                             Environment diagnostics
   marpx --theme                             Build all themes
   marpx --theme lab                         Build lab theme only
@@ -307,7 +306,10 @@ function watchDesignTokens(names) {
   for (const name of names) {
     if (!designExists(name)) continue;
     const designPath = path.join(repoRoot, "designs", name, "DESIGN.md");
-    fs.watch(designPath, () => {
+    // Editors commonly replace DESIGN.md with a new inode on save. Watch
+    // its parent so subsequent saves keep reaching the same watcher.
+    fs.watch(path.dirname(designPath), (_event, fileName) => {
+      if (fileName && fileName.toString() !== path.basename(designPath)) return;
       const currentTimer = timers.get(name);
       if (currentTimer) clearTimeout(currentTimer);
       timers.set(
@@ -446,7 +448,7 @@ switch (mode) {
       })
       .catch((err) => {
         console.error(`Error: ${err.message}`);
-        process.exit(1);
+        process.exitCode = 1;
       })
       .finally(() => {
         fs.rmSync(tempRoot, { recursive: true, force: true });

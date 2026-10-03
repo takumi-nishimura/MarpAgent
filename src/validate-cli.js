@@ -1,11 +1,10 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { splitFenceSegments } = require("./markdown-slides");
+const { HTML_PART_RE, parseSource } = require("./markdown-source");
 const {
   buildSarifReport,
   exitCodeFor,
   formatSummary,
-  validateDeckFile,
   validateDeckWithVisualCheck,
 } = require("./deck-validator");
 
@@ -100,44 +99,47 @@ function parseArgs(argv) {
   };
 }
 
-// Backtick runs open and close inline code spans; the closing run must match
-// the opening run's length.
-const INLINE_CODE_RE = /(`+)[\s\S]*?\1/g;
-
-function fixTypographyMarkers(text) {
-  return (
-    text
-      // Safe typography fix: lift tiny utility classes to a readable baseline.
-      .replace(/\btext-xs2\b/g, "text-sm")
-      .replace(/\btext-xs3\b/g, "text-sm")
-      // Remove <small> wrappers and keep the text content.
-      .replace(/<small>([\s\S]*?)<\/small>/gi, "$1")
-  );
-}
-
-/**
- * Rewrite only editable text so autofixes never alter code examples: fenced
- * blocks stay untouched via splitFenceSegments, and inline code spans inside
- * the remaining text are skipped as well. Protected text is re-emitted
- * verbatim, so it stays byte-identical.
- */
+/** Apply edits only to parsed HTML, preserving all other source bytes. */
 function applyAutoFixes(markdown) {
-  let updated = "";
-
-  for (const segment of splitFenceSegments(markdown)) {
-    if (segment.fenced) {
-      updated += segment.text;
-      continue;
+  const edits = [];
+  const literalTags = [];
+  for (const fragment of parseSource(markdown)) {
+    if (fragment.type !== "html") continue;
+    for (const match of fragment.content.matchAll(HTML_PART_RE)) {
+      const tag = match[0];
+      if (tag.startsWith("<!--") || match[1]) continue;
+      const literal = tag.match(/^<(\/?)(script|style|textarea|pre|code)\b/i);
+      if (literal) {
+        if (!literal[1]) literalTags.push(literal[2].toLowerCase());
+        else if (literalTags.at(-1) === literal[2].toLowerCase()) literalTags.pop();
+        continue;
+      }
+      if (literalTags.length) continue;
+      const start = fragment.position(match.index);
+      const end = fragment.position(match.index + tag.length);
+      if (start === null || end === null) continue;
+      const original = markdown.slice(start, end);
+      let replacement = original;
+      if (/^<\/?small\s*>$/i.test(tag)) {
+        replacement = "";
+      } else {
+        // Tokenize every attribute so 'class' inside a title is not edited.
+        replacement = original.replace(/(\s+)([^\s=<>]+)(\s*=\s*)("[^"]*"|'[^']*'|[^\s>]+)/g,
+          (attribute, space, name, equals, value) => {
+            if (name.toLowerCase() !== "class") return attribute;
+            const quote = /^["']/.test(value) ? value[0] : "";
+            const body = quote ? value.slice(1, -1) : value;
+            const fixed = body.replace(/(^|\s)text-xs[23](?=\s|$)/g, "$1text-sm");
+            return space + name + equals + quote + fixed + quote;
+          });
+      }
+      if (replacement !== original) edits.push({ start, end, replacement });
     }
-    let offset = 0;
-    for (const match of segment.text.matchAll(INLINE_CODE_RE)) {
-      updated += fixTypographyMarkers(segment.text.slice(offset, match.index));
-      updated += match[0];
-      offset = match.index + match[0].length;
-    }
-    updated += fixTypographyMarkers(segment.text.slice(offset));
   }
-
+  let updated = markdown;
+  for (const edit of edits.sort((a, b) => b.start - a.start)) {
+    updated = updated.slice(0, edit.start) + edit.replacement + updated.slice(edit.end);
+  }
   return { markdown: updated, changed: updated !== markdown };
 }
 
@@ -284,33 +286,18 @@ async function runValidationCli(argv) {
           errorCode: error.code,
           errorMessage: error.message,
         });
-        throw error;
       }
+      // Browser unavailability is handled by measureRenderedSlides. An
+      // unrelated validation failure must never replace measured findings.
+      throw error;
+    }
+    for (const error of result.artifacts?.errors || []) {
       emitValidationLog({
         component: "deck-validator",
-        level: "warning",
-        event: "visual-validation-threw",
+        level: "error",
+        event: "artifact-output-failed",
         deckPath,
-        errorName: error.name,
-        errorMessage: error.message,
-      });
-      emitValidationLog({
-        component: "deck-validator",
-        level: "warning",
-        event: "heuristic-fallback",
-        deckPath,
-        reason: "validateDeckWithVisualCheck-threw",
-      });
-      emitValidationLog({
-        component: "deck-validator",
-        level: "debug",
-        event: "visual-validation-stack",
-        deckPath,
-        stack: error.stack,
-      });
-      result = validateDeckFile(deckPath, {
-        reportDir,
-        visualCheck: { status: "skipped", reason: error.message },
+        ...error,
       });
     }
 

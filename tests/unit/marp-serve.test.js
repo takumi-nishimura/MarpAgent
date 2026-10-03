@@ -4,17 +4,18 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const net = require("node:net");
+const { once } = require("node:events");
 
 const { isNotifierPortConflict } = require("../../src/preview-runtime");
 
 const repoRoot = path.join(__dirname, "../..");
 const serveScript = path.join(repoRoot, "scripts", "marp-serve.js");
 
-// Stub marp binary: like marp-cli's watch notifier it probes a free port and
-// binds it later, so processes started together race and the loser exits with
-// the same unhandled EADDRINUSE crash. The probe is a connect check (no bind),
-// so concurrent stubs always pick the same candidate port, and a marker-file
-// barrier makes both probe before either binds: the collision is certain.
+// Both first attempts bind the same free port after a marker-file barrier,
+// reproducing Marp's notifier race. A restarted stub asks the OS for a free
+// port. Avoid connect-based probes: firewalls may silently drop connections
+// to unused ports instead of rejecting them, leaving the test stuck.
 const STUB_MARP_SOURCE = `#!/usr/bin/env node
 "use strict";
 const fs = require("node:fs");
@@ -25,16 +26,9 @@ const basePort = Number(process.env.STUB_BASE_PORT);
 const syncDir = process.env.STUB_SYNC_DIR;
 const expected = Number(process.env.STUB_EXPECTED || "2");
 
-function probe(port, cb) {
-  const s = net.connect({ port, host: "127.0.0.1" });
-  s.once("connect", () => {
-    s.destroy();
-    probe(port + 1, cb);
-  });
-  s.once("error", () => cb(port));
-}
-
-probe(basePort, (port) => {
+{
+  const initial = fs.readdirSync(syncDir).length < expected;
+  const port = initial ? basePort : 0;
   fs.writeFileSync(path.join(syncDir, "probe-" + process.pid), "");
   const started = Date.now();
   const wait = setInterval(() => {
@@ -66,7 +60,7 @@ probe(basePort, (port) => {
     });
     srv.listen(port);
   }, 5);
-});
+}
 
 setInterval(() => {}, 60000);
 `;
@@ -127,7 +121,11 @@ test(
     fs.writeFileSync(stubPath, STUB_MARP_SOURCE);
     fs.chmodSync(stubPath, 0o755);
 
-    const stubBasePort = 24000 + (process.pid % 2000) * 4;
+    const reservation = net.createServer();
+    reservation.listen(0);
+    await once(reservation, "listening");
+    const stubBasePort = reservation.address().port;
+    await new Promise((resolve) => reservation.close(resolve));
 
     const procs = [0, 1].map((i) => {
       const deckDir = path.join(tmp, `deck-${i}`);
@@ -165,12 +163,17 @@ test(
       return proc;
     });
 
-    t.after(() => {
-      for (const { child } of procs) {
-        if (child.exitCode === null && child.signalCode === null) {
-          child.kill("SIGTERM");
-        }
-      }
+    t.after(async () => {
+      await Promise.all(
+        procs.map(async ({ child }) => {
+          if (child.exitCode === null && child.signalCode === null) {
+            const exited = once(child, "exit");
+            child.kill("SIGTERM");
+            await exited;
+          }
+        }),
+      );
+      fs.rmSync(tmp, { recursive: true, force: true });
     });
 
     const deadline = Date.now() + 20000;

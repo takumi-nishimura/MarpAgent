@@ -150,6 +150,18 @@ try {
     console.log(`  marpx ${relativeToRepo}/paper.md       # live preview`);
     console.log(`  marpx ${relativeToRepo}/paper.md -v    # validate`);
     console.log(`  marpx ${relativeToRepo}/paper.md --pdf # export PDF`);
+  } else {
+    console.log(
+      `\nRecord purpose and constraints in ${relativeToRepo}/brief.md.`,
+    );
+    console.log(
+      `Draft and revise directly in ${relativeToRepo}/slide.md, then:`,
+    );
+    console.log(`  marpx ${relativeToRepo}/slide.md            # live preview`);
+    console.log(
+      `  marpx ${relativeToRepo}/slide.md --overview # inspect the sequence`,
+    );
+    console.log(`  marpx ${relativeToRepo}/slide.md -v         # validate`);
   }
 } catch (err) {
   console.error(`Error creating symlink: ${err.message}`);

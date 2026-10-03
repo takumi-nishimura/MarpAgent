@@ -28,6 +28,7 @@ test("new-deck scaffolds brief and slide templates", () => {
 
     assert.equal(fs.existsSync(briefPath), true);
     assert.equal(fs.existsSync(slidePath), true);
+    assert.equal(fs.existsSync(path.join(deckDir, "outline.md")), false);
     assert.equal(fs.existsSync(path.join(deckDir, "assets", "img")), true);
     assert.equal(
       fs.existsSync(path.join(deckDir, "assets", "video", ".gitkeep")),
@@ -38,7 +39,6 @@ test("new-deck scaffolds brief and slide templates", () => {
     const slide = fs.readFileSync(slidePath, "utf8");
 
     assert.match(brief, /## Audience/);
-    assert.match(brief, /## Must-Use Assets/);
     assert.match(brief, new RegExp(`Generated: ${today}`));
     assert.match(slide, new RegExp(`_header: ${today}`));
 

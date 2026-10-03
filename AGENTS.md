@@ -10,6 +10,7 @@ Detailed authoring reference is in `.agents/skills/`:
 | `marp-validator` | validator rules, hard limits, remediation |
 | `theme-new` | create or adapt a theme from a URL, brand guide, or DESIGN.md |
 | `/slide-new <name>` | create a new deck end-to-end |
+| `/slide-edit <slide.md>` | revise content, structure, or visuals in an existing deck |
 | `/slide-add <slide.md>` | add slides to an existing deck |
 | `/slide-review <name>` | validate and remediate a deck |
 | `/paper-new <name>` | create a new A-series paper deck end-to-end |
@@ -18,13 +19,30 @@ Detailed authoring reference is in `.agents/skills/`:
 
 ```
 decks/<name>/
-├── brief.md        # Presentation design doc (8 sections)
-├── outline.md      # Auto-generated slide outline
-├── slide.md        # Slide content (Marp Markdown)
+├── brief.md        # Purpose, audience, constraints, sources
+├── slide.md        # Working draft and finished slides (Marp Markdown)
 ├── assets/img/     # Deck-local images
 ├── assets/video/   # Deck-local videos
 └── shared -> ../../assets  # Shared assets (logos, fonts, etc.)
 ```
+
+## Authoring Workflow
+
+Keep purpose, audience, constraints, and sources in a short `brief.md`. Draft the
+sequence directly in `slide.md`, try important or uncertain slides with actual
+assets early, then develop and revise that same file while inspecting renders.
+Use `--overview` to review the sequence. Update the brief when requirements
+change; page edits and reordering do not need a separate plan to synchronize.
+
+Choose the visual structure from the point and supporting material. Do not
+fill every slide with the same number of bullets, cards, or summary boxes, or
+force layout variety. Follow the user's references and preserve evidence,
+qualifications, and intentional human edits.
+
+Do not create or synchronize `outline.md` by default. If a legacy outline has
+unique requirements, read them before editing; preserve the file unless its
+removal is requested. Honor an explicitly requested outline deliverable. The
+deprecated `--outline` command remains available for legacy eight-section briefs.
 
 ## Shared Media
 
@@ -79,7 +97,6 @@ resize. Scale the rendered SVG/container instead, e.g.
 | :------ | :---------- |
 | `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
 | `npm run marpx -- -n decks/<path> --paper` | Scaffold a new A-series paper deck |
-| `npm run marpx -- decks/<name>/brief.md --outline` | Generate outline from brief.md |
 | `npm run marpx -- decks/<name>/slide.md -v` | Validate slide.md (`--lint` is a deprecated alias) |
 | `npm run marpx -- decks/<name>/slide.md -v --autofix` | Apply safe autofixes, then validate |
 | `npm run marpx -- decks/<name>/slide.md -v --autofix --dry-run` | Show the autofix diff without writing |

@@ -24,6 +24,6 @@ affiliation
 
 ---
 
-<!-- _header: Header -->
+<!-- _header: Working section -->
 
-## Chapter
+## Working heading

@@ -1,10 +1,11 @@
 const path = require("node:path");
+const { randomUUID } = require("node:crypto");
 
 function getOverviewOutputPath(deckPath) {
   const deckDir = path.dirname(deckPath);
   const baseName = path.basename(deckPath, path.extname(deckPath));
   const safeBaseName = baseName.replace(/[^a-zA-Z0-9._-]/g, "-");
-  return path.join(deckDir, `.${safeBaseName}.overview.html`);
+  return path.join(deckDir, `.${safeBaseName}.${randomUUID()}.overview.html`);
 }
 
 function readAttribute(tag, attributeName) {
@@ -251,8 +252,6 @@ function buildOverviewDocument(renderedHtml, { reloadToken, targetSlideId }) {
       .marp-agent-overview__viewport {
         position: relative;
         width: 100%;
-        min-height: 180px;
-        aspect-ratio: 16 / 9;
         overflow: hidden;
         background: #111;
       }
@@ -317,7 +316,11 @@ function buildOverviewDocument(renderedHtml, { reloadToken, targetSlideId }) {
           if (!slide) return;
 
           const width = viewport.clientWidth;
-          viewport.style.height = \`\${Math.max(1, width * 9 / 16)}px\`;
+          const viewBox = slide.viewBox.baseVal;
+          const ratio = viewBox.width > 0 && viewBox.height > 0
+            ? viewBox.height / viewBox.width
+            : 9 / 16;
+          viewport.style.height = \`\${Math.max(1, width * ratio)}px\`;
         }
 
         function fitAllViewports() {

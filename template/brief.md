@@ -2,50 +2,23 @@
 
 - Generated: {{DATE}}
 
+Record the context needed to make authoring decisions. Omit unused fields and mark consequential unknowns; a complete form is not required to start. Develop slide order, headings, and content directly in `slide.md`.
+
 ## Audience
 
-- Primary audience:
-- Existing knowledge:
-- What they care about:
+- Who will see this, what they already know, and what matters to them:
 
-## Duration
+## Purpose
 
-- Total talk length:
-- Target slide count:
+- What the audience should understand, decide, or do:
 
-## Core Message
+## Constraints
 
-- One-sentence takeaway:
-- Supporting points:
-    -
-    -
-    -
+- Delivery format and available time (spoken presentation or reading material):
+- Required coverage, fixed slide count, theme, or style preferences, if any:
+- Claims, topics, or treatments to avoid, if any:
 
-## Audience Action
+## Sources and Assets
 
-- What the audience should think, decide, or do after the talk:
-
-## Required Sections
-
-1.
-2.
-3.
-
-## Must-Use Assets
-
-- Files, charts, logos, demos, or quotes that must appear:
-
-## Forbidden Patterns
-
-- Topics, claims, tones, layouts, or visuals to avoid:
-
-## References
-
-- Source 1:
-- Source 2:
-
-## Notes for Authoring
-
-- State uncertain facts explicitly.
-- Prefer one idea per slide.
-- Split dense material instead of shrinking text.
+- Source files or URLs, and the claims they support:
+- Figures, data, demos, or other material to use:

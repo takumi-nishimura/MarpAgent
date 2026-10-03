@@ -15,6 +15,27 @@ function fixture(name) {
   return path.join(__dirname, "../..", "fixtures", name);
 }
 
+test("nested HTML sections do not shift slide or media identities", async (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-nested-section-"));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const deckPath = path.join(dir, "slide.md");
+  fs.writeFileSync(
+    deckPath,
+    '---\nmarp: true\n---\n# First\n\n<section id="note" style="width:300px;height:150px"><p>Nested content</p><img src="missing.svg"></section>\n\n---\n\n# Second\n\n<p style="font-size:6px">Small text on the second slide</p>\n',
+  );
+  const result = await measureRenderedSlides(deckPath, { strictVisual: true });
+  assert.equal(result.slides.length, 2);
+  assert.deepEqual(
+    result.slides.map((slide) => slide.slideNumber),
+    [1, 2],
+  );
+  assert.equal(result.slides[0].missingMedia.length, 1);
+  assert.equal(result.slides[1].missingMedia.length, 0);
+  assert.ok(
+    result.slides[1].smallText.some((run) => run.label.includes("Small text")),
+  );
+});
+
 test("detectHiddenSlides finds slides with hide directive", () => {
   const markdown = `---
 marp: true

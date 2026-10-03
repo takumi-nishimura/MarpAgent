@@ -19,6 +19,15 @@ function renderMermaid(input) {
   })
 }
 
+test('Mermaid math decodes XML entities before rendering inequalities', () => {
+  for (const formula of ['x<y', 'x>y']) {
+    const svg = renderMermaid('flowchart LR\nA["left & right $' + formula + '$"] --> B[Done]')
+    assert.doesNotMatch(svg, /data-mjx-error|Misplaced/)
+    assert.match(svg, /data-mml-node="math"/)
+    assert.match(svg, /left &amp; right/)
+  }
+})
+
 function firstNodeRect(svg) {
   const rects = [...svg.matchAll(/<rect\b([^>]*)\/>/g)].map((match) => {
     const attrs = match[1]

@@ -5,6 +5,8 @@ description: Create or adapt a reusable MarpAgent theme from a visual reference,
 
 # New theme
 
+Use this workflow for visual identity changes. For template, Tailwind composition, or information-layout changes, use [marp-slide-types](../marp-slide-types/SKILL.md) and the [composition recipes](../marp-slide-types/references/composition.md); those can improve structure within the existing identity.
+
 Inspect the supplied reference: browse a provided URL or read the brand guide/DESIGN.md, then identify the colors, typography, spacing, shapes, and visual tone needed for this theme. Distinguish observed choices from adaptations; do not copy long source prose or silently redesign an unrelated deck.
 
 Inspect existing target files before scaffolding. Use `--force` only for an intended, reviewed overwrite that preserves unrelated work.

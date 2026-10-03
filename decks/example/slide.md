@@ -18,7 +18,7 @@ style: |
 
 <div class="author">
 
-Markdown で作る, 構造化プレゼンテーション
+Markdownで書いて，見て，直す
 
 </div>
 
@@ -29,7 +29,7 @@ Markdown で作る, 構造化プレゼンテーション
 <div class="centered">
 
 1. MarpAgent とは
-2. 構造化ワークフロー
+2. ラフから完成までの進め方
 3. Lab テーマとレイアウト
 4. プレゼンモード & バリデーション
 5. AI アシスト & 始め方
@@ -45,7 +45,7 @@ Markdown で作る, 構造化プレゼンテーション
 Markdown だけでスライドを作成・検証できるプラットフォーム
 
 - **Marp** ベースの Markdown → スライド変換エンジン
-- **構造化ワークフロー**で構成の破綻を防止
+- **同じ原稿**で構成の検討から改稿まで進める
 - **自動バリデーション**で表示崩れを本番前に検出
 - HTML / PDF / PPTX へのエクスポートに対応
 
@@ -59,23 +59,24 @@ VS Code 拡張やCLIで使える OSS ツール
 
 <!-- _header: ワークフロー -->
 
-## 構造化ワークフロー
+## ラフから完成まで，同じ原稿を育てる
 
-brief → outline → slide の3段階でスライドを作成する
+重要な図を早めに置き，描画結果を見ながら構成を見直す
 
 <div style="width: 90%">
 
 ```mermaid
 graph LR
-    A["📝 brief.md"] --> B["📋 outline.md"] --> C["🖥 slide.md"]
+    A["brief.md"] --> B["slide.md"]
+    B --> C["Preview"]
+    C --> B
     C --> D["HTML / PDF / PPTX"]
 ```
 
 </div>
 
-- **brief.md** — 対象者, 時間, 核心メッセージ, 禁止パターンを定義
-- **outline.md** — brief からスライド構成を自動生成
-- **slide.md** — Markdown でスライドを執筆, バリデーション
+- **brief.md** — 目的・対象者・制約・資料を記録する
+- **slide.md** — ページ順・本文・図を直接編集する
 
 ---
 
@@ -217,15 +218,15 @@ title / content / multi-column / visual col / metric-grid / timeline / placement
 ## Timeline
 
 <ol class="timeline">
-<li><strong>Brief</strong> 対象者と目的を固定する</li>
-<li><strong>Outline</strong> 構成と layout hint を生成する</li>
-<li><strong>Slide</strong> Markdown で本文と図を入れる</li>
-<li><strong>Validate</strong> 表示崩れを検出して直す</li>
+<li><strong>ラフ</strong> 見出しと材料を並べる</li>
+<li><strong>試作</strong> 重要な図を実際に置く</li>
+<li><strong>改稿</strong> 描画を見て内容を整える</li>
+<li><strong>検証</strong> 流れと表示を確かめる</li>
 </ol>
 
 <div class="tip">
 
-プロセス説明は箇条書きより，順序を持った横並びのほうが読みやすい
+各段階で同じ slide.md を編集する．必要なら前の段階に戻る
 
 </div>
 
@@ -266,12 +267,11 @@ title / content / multi-column / visual col / metric-grid / timeline / placement
 
 **Headless ブラウザで検出**
 
-- オーバーフロー (はみ出し) 検出
-- 密集バレット (5個超) の警告
-- 長すぎる見出しの検出
-- フォント縮小の防止
+- はみ出し・文字の重なりを検出
+- 小さすぎる文字や欠落画像を検出
+- 箇条書き数などは任意の補助ヒント
 
-CI/CD 統合で品質ゲートとして利用可能
+根拠と話の流れは読み直して確認する
 
 </div>
 <div>
@@ -290,17 +290,12 @@ CI/CD 統合で品質ゲートとして利用可能
 
 ## AI アシスト
 
-Claude Code スキルで brief 作成からバリデーション修正まで自動化
+エージェントも slide.md を直接編集する
 
-- **`/slide-new`** — デッキの新規作成 (brief → outline → slide を一気通貫)
+- **`/slide-new`** — ラフから完成まで作成
+- **`/slide-edit`** — 構成・本文・図を改稿
 - **`/slide-add`** — 既存デッキへのスライド追加
-- **`/slide-review`** — バリデーション実行と自動修正
-
-<div class="important">
-
-AIがワークフロー全体をアシストするため, Markdown の記法を覚えるだけで始められる
-
-</div>
+- **`/slide-review`** — 内容と描画を点検し，依頼に応じて修正
 
 ---
 
@@ -308,23 +303,22 @@ AIがワークフロー全体をアシストするため, Markdown の記法を�
 
 ## 始め方
 
-3つのコマンドで今すぐ始められる
+短いbriefを書き，slide.mdに見出しと材料を置く
 
 ```bash
-# 1. デッキを作成
+# 1. Create the deck
 marpx -n decks/my-talk
 
-# 2. brief を埋めてアウトラインを生成
-marpx decks/my-talk/brief.md --outline
+# 2. Edit brief.md and slide.md with live preview
+marpx decks/my-talk/slide.md
 
-# 3. スライドを書いてバリデーション
+# 3. Validate the rendered deck
 marpx decks/my-talk/slide.md -v
 ```
 
 <div class="tip">
 
-ライブプレビューは `marpx <slide.md>` で起動
-単発 preview は `-p`, overview は `--overview` を付ける
+全体の流れを見るときは `--overview` を付ける
 
 </div>
 
@@ -335,8 +329,8 @@ marpx decks/my-talk/slide.md -v
 
 <div class="centered">
 
-1. **Markdown だけ**で高品質なスライドを作成
-2. **brief → outline → slide** で構成の破綻を防止
+1. **Markdown**で本文と図を編集
+2. **slide.mdのラフ**を描画しながら育てる
 3. **自動バリデーション**で表示崩れを事前に検出
 4. **AI アシスト**でワークフロー全体を効率化
 

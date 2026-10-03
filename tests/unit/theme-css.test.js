@@ -327,14 +327,31 @@ test("theme sources take Tailwind utilities only from the explicit safelist", ()
     "utf8",
   );
   assert.doesNotMatch(safelist, /@source\s+"/);
-  assert.deepEqual(readSafelistedUtilities(safelist), [
-    "self-center",
-    "self-end",
-    "self-start",
-    "text-sm",
-    "text-xl",
-    "text-xs",
-  ]);
+  const utilities = readSafelistedUtilities(safelist);
+  assert.equal(
+    utilities.length,
+    new Set(utilities).size,
+    "utility entries should be unique",
+  );
+  assert.ok(utilities.includes("grid-cols-12"));
+  assert.ok(utilities.includes("flex"));
+  for (const themeName of themeNames) {
+    const compiled = fs.readFileSync(
+      path.join(repoRoot, "themes", `${themeName}.css`),
+      "utf8",
+    );
+    for (const utility of utilities) {
+      assert.match(
+        utility,
+        /^[a-z][a-z0-9-]*$/,
+        "use explicit, unambiguous utility names",
+      );
+      assert.ok(
+        compiled.includes(`.${utility} {`),
+        `${themeName} is missing .${utility}`,
+      );
+    }
+  }
 });
 
 test("compiled themes contain no utilities generated from prose words", () => {

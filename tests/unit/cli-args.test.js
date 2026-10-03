@@ -181,6 +181,9 @@ test("marpx --outline refuses to overwrite an existing outline without --force",
     ]);
 
     assert.equal(forced.status, 0, forced.stderr);
+    assert.match(forced.stderr, /deprecated/i);
+    assert.match(forced.stderr, /slide\.md/);
+    assert.doesNotMatch(forced.stdout, /deprecated/i);
     const outline = fs.readFileSync(outlinePath, "utf8");
     assert.match(outline, /# Outline/);
     assert.equal(outline.includes("hand-edited outline"), false);

@@ -2,6 +2,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
+const { marpBrowserArgs } = require("./marp-browser");
 const { isASeriesCanvas } = require("./canvas-size");
 const { copyDeckForRender, findMissingAssets } = require("./media-assets");
 const { splitFenceSegments } = require("./markdown-slides");
@@ -239,9 +240,11 @@ function countFindings(findings) {
 
 /**
  * Exit code for a validation result: 1 only when a visible defect was
- * measured. Heuristic warnings and hints never fail the run on their own.
+ * measured, or 2 when requested artifacts could not be written. Heuristic
+ * warnings and hints never fail the run on their own.
  */
 function exitCodeFor(result) {
+  if (result.artifacts?.errors?.length) return 2;
   return result.findings.some((finding) => finding.severity === "error")
     ? 1
     : 0;
@@ -443,6 +446,9 @@ function formatSummary(deckPath, result, options = {}) {
   if (counts.hints > 0) {
     lines.push(`Hints: ${counts.hints}`);
   }
+  for (const error of result.artifacts?.errors || []) {
+    lines.push(`Artifact error (${error.stage}): ${error.message}`);
+  }
 
   const shown = result.findings.filter(
     (finding) => showHints || finding.severity !== "info",
@@ -498,6 +504,7 @@ function buildSarifReport(deckPath, result) {
         },
         properties: {
           visualCheck: result.visualCheck || { status: "not-run" },
+          artifactErrors: result.artifacts?.errors || [],
         },
         results: result.findings.map((finding) => ({
           ruleId: finding.ruleId,
@@ -568,8 +575,8 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers, slideMap }) {
   );
   const copiedDeckPath = path.join(copiedDeckDir, path.basename(deckPath));
 
-  ensureDir(tempDeckDir);
   try {
+    ensureDir(tempDeckDir);
     copyDeckForRender(deckPath, copiedDeckDir);
 
     execFileSync(
@@ -580,12 +587,15 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers, slideMap }) {
         "--allow-local-files",
         "--config-file",
         path.join(repoRoot, "marp.config.js"),
+        ...marpBrowserArgs({ repoRoot }),
         copiedDeckPath,
       ],
       {
         cwd: copiedDeckDir,
         encoding: "utf8",
         stdio: "pipe",
+        timeout: Number(process.env.MARP_AGENT_CONVERT_TIMEOUT_MS) || 120000,
+        killSignal: "SIGKILL",
       },
     );
 
@@ -624,7 +634,13 @@ function writeArtifacts(result, options = {}) {
   } = options;
   if (!reportDir) return { reportFiles: [], screenshotFiles: [] };
 
-  ensureDir(reportDir);
+  const artifacts = { reportFiles: [], screenshotFiles: [], errors: [] };
+  try {
+    ensureDir(reportDir);
+  } catch (error) {
+    artifacts.errors.push({ stage: "report", message: error.message });
+    return artifacts;
+  }
   const summaryPath = path.join(reportDir, "report.md");
   const jsonPath = path.join(reportDir, "report.json");
   const slideNumbers = [
@@ -635,12 +651,17 @@ function writeArtifacts(result, options = {}) {
     ),
   ];
 
-  const screenshotFiles = imageExporter({
-    deckPath,
-    reportDir,
-    slideNumbers,
-    slideMap,
-  });
+  try {
+    artifacts.screenshotFiles = imageExporter({
+      deckPath,
+      reportDir,
+      slideNumbers,
+      slideMap,
+    });
+  } catch (error) {
+    artifacts.errors.push({ stage: "screenshots", message: error.message });
+  }
+  const { screenshotFiles } = artifacts;
   const counts = countFindings(result.findings);
   const report = {
     deckPath,
@@ -648,6 +669,7 @@ function writeArtifacts(result, options = {}) {
     visualCheck: result.visualCheck || { status: "not-run" },
     counts,
     findings: result.findings,
+    artifactErrors: artifacts.errors,
     screenshots: screenshotFiles.map((filePath) =>
       path.relative(reportDir, filePath),
     ),
@@ -708,13 +730,21 @@ function writeArtifacts(result, options = {}) {
 
   markdownLines.push("");
 
-  fs.writeFileSync(summaryPath, `${markdownLines.join("\n").trimEnd()}\n`);
-  fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
-
-  return {
-    reportFiles: [summaryPath, jsonPath],
-    screenshotFiles,
-  };
+  for (const error of artifacts.errors) {
+    markdownLines.push(`Artifact error (${error.stage}): ${error.message}`);
+  }
+  for (const [filePath, content] of [
+    [summaryPath, () => `${markdownLines.join("\n").trimEnd()}\n`],
+    [jsonPath, () => `${JSON.stringify(report, null, 2)}\n`],
+  ]) {
+    try {
+      fs.writeFileSync(filePath, content());
+      artifacts.reportFiles.push(filePath);
+    } catch (error) {
+      artifacts.errors.push({ stage: "report", message: error.message });
+    }
+  }
+  return artifacts;
 }
 
 function describeMissingAsset(item) {

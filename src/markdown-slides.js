@@ -6,13 +6,17 @@ const FENCE_MARKER_RE = /^(```+|~~~+)/;
 /**
  * Advance fenced-code tracking over one source line. `fence` is null outside
  * a code fence or { char, length } inside one; a fence closes only on the
- * same marker character with at least the opening run length.
+ * same marker character with at least the opening run length and no info
+ * string after it.
  */
 function nextFenceState(fence, line) {
-  const marker = line.trim().match(FENCE_MARKER_RE)?.[1];
+  const trimmed = line.trim();
+  const marker = trimmed.match(FENCE_MARKER_RE)?.[1];
   if (!marker) return fence;
   if (!fence) return { char: marker[0], length: marker.length };
-  return marker[0] === fence.char && marker.length >= fence.length
+  return marker[0] === fence.char &&
+    marker.length >= fence.length &&
+    trimmed.slice(marker.length).trim() === ""
     ? null
     : fence;
 }

@@ -36,6 +36,41 @@ function missingBySlide(result) {
   );
 }
 
+test("media extraction follows Markdown destinations, references, entities, and code rules", () => {
+  const source = [
+    "![figure](fig(1).svg)",
+    "![escaped](fig\\(2\\).svg)",
+    '<img title="a > b" src="a&amp;b.svg">',
+    '<img title=" src=\'not-an-attribute.svg\'" src="real.svg">',
+    "![ref][image]",
+    '[image]: missing.svg "Title"',
+    "",
+    "    ![sample](code.png)",
+    "",
+    "```md\n```html\n![sample](fenced.png)\n```",
+    "",
+    "``literal ` ![sample](inline.png)``",
+    "",
+    "<script>const sample = '<img src=\"script.png\">';</script>",
+  ].join("\n\n");
+  assert.deepEqual(
+    extractMediaReferences(source).map((item) => item.reference),
+    ["fig(1).svg", "fig(2).svg", "a&b.svg", "real.svg", "missing.svg"],
+  );
+});
+
+test("reference definitions on later or hidden slides resolve at the image's slide", (t) => {
+  const dir = makeDeck({ "fig(1).svg": "svg", "a&b.svg": "svg" });
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const deckPath = writeSlide(
+    dir,
+    '# One\n\n![ok](fig(1).svg)\n<img src="a&amp;b.svg">\n\n---\n\n# Two\n\n![missing][ref]\n\n---\n\n<!-- _hide: true -->\n\n[ref]: absent.svg\n',
+  );
+  assert.deepEqual(missingBySlide(findMissingAssets(deckPath)), {
+    2: [["absent.svg", "not found"]],
+  });
+});
+
 test("extractMediaReferences reads Markdown, HTML, and CSS media references", () => {
   const raw = `
 ![bg left:40% w:300](assets/img/bg.png)
@@ -116,6 +151,7 @@ marp: true
 # Two
 
 <img src="assets/img/missing.png" />
+
 ![Missing too](assets/img/also-missing.png "Title")
 `,
     );

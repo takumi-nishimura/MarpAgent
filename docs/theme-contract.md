@@ -24,7 +24,7 @@ result differs from the tracked `themes/<name>.css`.
 | `themes/src/_shared/_callouts.css` | GFM alert / HTML callout classes |
 | `themes/src/_shared/_typography.css` | typography utilities and emphasis |
 | `.agents/skills/` | authoring patterns for agents |
-| `src/deck-validator.js` | density and typography enforcement |
+| `src/deck-validator.js` | rendered readability checks and source hints |
 
 ## Design And Surface Boundary
 
@@ -82,12 +82,36 @@ safelist in `themes/src/_shared/_safelist.css`:
 
 | Utility | Why it is safelisted |
 | :------ | :------------------- |
+| `grid`, `grid-cols-2`, `grid-cols-3`, `grid-cols-12` | plain equal-column or twelve-track grids |
+| `col-span-3`, `col-span-4`, `col-span-5`, `col-span-6`, `col-span-7`, `col-span-8`, `col-span-9`, `col-span-12` | unequal widths within a twelve-track grid |
+| `flex`, `flex-row`, `flex-col`, `flex-wrap`, `flex-1`, `shrink-0` | plain rows, stacks, and flexible sizing |
+| `gap-2`, `gap-4`, `gap-6`, `gap-8`; the same sizes for `gap-x-*` and `gap-y-*` | shared spacing between items; Tailwind's quarter-rem spacing scale |
+| `items-start`, `items-center`, `items-end`, `items-stretch` | alignment on the cross axis |
+| `justify-start`, `justify-center`, `justify-end`, `justify-between`, `content-start` | alignment within available space |
+| `min-w-0`, `min-h-0`, `w-full`, `h-full`, `max-w-full`, `max-h-full` | container sizing and intrinsic-size guards |
+| `table-fixed`, `tabular-nums` | explicit HTML table layout and numeric typography |
 | `text-xs`, `text-sm`, `text-xl` | adds Tailwind's paired line-height to the theme's em-based `.text-*` sizes |
 | `self-start`, `self-center`, `self-end` | adds `align-self` to the theme's margin-based `.self-*` placement |
 
 All other author-facing classes (layout components, callouts, typography,
 colors, placement) are hand-written in `themes/src/_shared/` and do not depend
 on Tailwind candidate detection.
+
+Layout utilities do not choose a color, surface, border, or font size. Use them
+on plain wrapper elements to compose the existing content components. Do not
+mix `grid` or `flex` on a container already controlled by `.col`, `.box`, or
+another layout component. Unlayered element styles (for example a figure's
+width or a heading's margin) retain precedence over layered Tailwind utilities;
+put sizing on a plain wrapper rather than assuming it overrides the component.
+`h-full` needs a parent with a definite height; `.fill` on a body-level wrapper
+is the existing way to use the remaining slide height.
+
+[`template/layouts.md`](../template/layouts.md) is the executable recipe source
+for comparison tables, evidence with context, and process rows.
+[`template/README.md`](../template/README.md) explains how to adapt it. Skills
+reference these recipes instead of maintaining another copy of their markup.
+Choose the structure from the content relationship; a recipe is not a quota
+for columns, cards, or slides.
 
 ### Guaranteed CSS variables
 
@@ -105,12 +129,14 @@ reference them:
   `--text-*--line-height` companions. An `@theme static` block in
   `_safelist.css` declares them with Tailwind's default values, for example
   `font-size: var(--text-lg)`.
+- Tailwind's `--spacing` scale, emitted by the shared gap and sizing utilities.
+  It is `0.25rem`; gap values therefore scale with the rendered root text size.
 - the compatibility and component variables listed under Token Boundary and in
   `.agents/skills/marp-components/references/theme-variables.md`. The
   hand-written theme CSS defines them.
 
-Other Tailwind default theme variables, such as its color palette, font
-families, or `--spacing`, are emitted only when a theme rule uses them. Deck
+Other Tailwind default theme variables, such as its color palette or font
+families, are emitted only when a theme rule uses them. Deck
 styles should not depend on them.
 
 ### Deck author policy
@@ -118,7 +144,7 @@ styles should not depend on them.
 Decks may use only classes that the compiled theme defines (the components and
 utilities documented in this contract and in `.agents/skills/`) and classes the
 deck defines itself in a `style:` directive or `<style>` block. Other Tailwind
-utilities, such as `flex`, `mt-4`, or `grid-cols-2`, are not available: there is
+utilities, arbitrary values, and responsive variants are not available: there is
 no per-deck Tailwind build, and serve, preview, validation, and PDF export use
 the tracked compiled CSS. To make a utility available, add it to the safelist,
 run `marpx --theme`, document it here, and commit the rebuilt `themes/*.css`.
@@ -149,8 +175,9 @@ Useful commands:
 ## Component Boundary
 
 Agents should not require authors to paste reusable CSS into `slide.md`.
-Reusable layout patterns belong in the theme and are referenced by class name
-from templates.
+Compose plain wrappers with the supported Tailwind utilities, then add content
+components as needed. Reusable components belong in the theme and are referenced
+by class name from templates; a deck-specific exception may use scoped CSS.
 
 Built-in layout primitives:
 
@@ -218,11 +245,12 @@ escapes only when rendering is unavailable.
 
 ## Validation Contract
 
-The validator owns density limits. Component templates should help authors stay
-inside those limits without shrinking text:
+The validator checks rendered clipping, collisions, and readable type sizes.
+Source density rules are hints, not quotas for bullet or card counts. Preserve
+the information needed to understand a comparison; revise or split when the
+render shows an actual readability problem, respecting fixed slide constraints.
+Do not shrink body text or compress Markdown to evade a finding.
 
-- split dense content before reducing type size;
-- count top-level bullets across columns;
-- count callout body text as body text;
-- keep multi-column and `feature-grid` slides to roughly two top-level bullets
-  per column/card.
+The fixture gate renders `template/layouts.md` along with the regression decks.
+Browser tests measure unequal columns, gaps, and alignment in every shipped
+theme; class-availability tests ensure the documented templates use emitted CSS.
