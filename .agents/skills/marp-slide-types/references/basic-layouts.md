@@ -2,6 +2,8 @@
 
 Read only the relevant example. These demonstrate syntax, not required slide sequences, wording, or point counts. Replace illustrative text and media paths with the requested content. Preserve the deck's theme, headers, and pagination conventions.
 
+For shared comparison criteria, evidence with an interpretation, or aligned process rows, start with the [composition recipes](composition.md). The plain grid utilities let the material determine column widths without choosing a card style.
+
 ## title
 
 Use for an opening cover. A recap usually uses a normal content slide so its actual conclusion has room.

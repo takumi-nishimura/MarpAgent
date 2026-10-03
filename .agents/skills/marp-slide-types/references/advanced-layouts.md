@@ -2,6 +2,8 @@
 
 Use when the content benefits from a grid, multiple peer columns, a visual interpretation, metrics, or a sequence. Examples show syntax, not required card counts or factual results.
 
+These components combine layout with theme styling. Use the [plain composition recipes](composition.md) when only alignment or unequal widths are needed; choose feature or metric cards when their grouping adds meaning.
+
 ### multi-column variant
 
 Use when there are several genuine peers to compare or explain. Let the material determine the number of columns and their density; do not invent another item to fill a row. The validator's source hint sums top-level bullets across columns, but rendered readability determines whether the page works.
@@ -117,7 +119,7 @@ bracketed values below are placeholders to replace with verified quantities.
 
 ## Slide Heading
 
-<div class="metric-grid">
+<div class="metric-grid two">
 <div><strong>[value + unit]</strong><span>Measure, condition, and source.</span></div>
 <div><strong>[value + unit]</strong><span>Measure, condition, and source.</span></div>
 </div>

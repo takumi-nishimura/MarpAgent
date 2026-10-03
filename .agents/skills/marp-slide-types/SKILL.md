@@ -6,7 +6,7 @@ user-invocable: false
 
 # Slide layouts
 
-Decide what the audience needs to understand on this page and which material supports it, then choose the visual structure and read only its example. Preserve the user's design and active theme; these patterns use lab/shared components, so verify support before applying them to another theme.
+Decide what the audience needs to understand on this page and which material supports it, then choose the visual structure and read only its example. Separate composition (reading order, proportions, alignment) from visual identity (colors, fonts, surfaces). Preserve the user's design and active theme; these patterns use shared components, so verify support before applying them to another theme.
 
 ## Content before layout
 
@@ -20,16 +20,19 @@ Decide what the audience needs to understand on this page and which material sup
 
 | Content | Template label | Reference |
 |---|---|---|
+| Shared comparison criteria, evidence with context, or process rows | Table / plain Tailwind composition | [Composition recipes](references/composition.md) |
 | Opening cover | `title` | [Basic layouts](references/basic-layouts.md) |
 | Explanation, agenda, recap, closing | `content` with the appropriate variant | [Basic layouts](references/basic-layouts.md) |
-| Comparison or figure and text | `two-column` using `.col` | [Basic layouts](references/basic-layouts.md) |
+| Independent parallel content | Columns using `.col` | [Basic layouts](references/basic-layouts.md) |
 | Several peer columns or cards | `two-column` + `multi-column` / `feature-grid` | [Advanced layouts](references/advanced-layouts.md) |
 | Media and interpretation | `two-column` + `visual` | [Advanced layouts](references/advanced-layouts.md) |
 | Metrics or chronology | `content` + `metric-grid` / `timeline` | [Advanced layouts](references/advanced-layouts.md) |
 | Alignment and placement | Existing theme utilities | [Placement](references/placement.md) |
 
-The three base types are descriptive template labels, not interchangeable CSS classes. `two-column` uses `.col`; `content (summary variant)` remains a content slide. The title layout is intended for an opening cover; a recap usually needs a normal content slide.
+The labels describe examples, not a fixed taxonomy every page must fit. `two-column` uses `.col`; `content (summary variant)` remains a content slide. The title layout is intended for an opening cover; a recap usually needs a normal content slide.
 
-Choose a denser variant when the content relationship and readable result justify it, even if the user has not named its CSS class; preserve an explicitly fixed layout. Prefer existing components to copied scoped CSS. Respect slide count and content constraints when deciding to split.
+For business explanation decks, begin with the table or plain composition recipes when readers need to compare details. Preserve shared criteria, units, conditions, and necessary context. A wider evidence column and a short interpretation often work better than equal cards; use a card surface only when it helps group or distinguish content. The recipes are rendered in CI and are the canonical markup to copy and adapt.
+
+Choose a denser composition when the content relationship and readable result justify it, even if the user has not named its CSS class; preserve an explicitly fixed layout. Compose with supported utilities and components before adding scoped CSS for a genuine local need. Respect slide count and content constraints when deciding to split.
 
 Evaluate rendered information density, not just Markdown line counts. Do not collapse source lines, hide content in excluded blocks, or shrink body text to evade a heuristic. See [marp-validator](../marp-validator/SKILL.md) when an actual finding needs interpretation.

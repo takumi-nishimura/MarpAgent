@@ -4,6 +4,8 @@ Read the section needed for the component being authored. Preserve existing text
 
 ## Callouts
 
+Use a callout for a distinct note, exception, or warning that benefits from a visual boundary. Ordinary explanation can remain plain text beside a table or figure; a colored container is not required for every point or takeaway.
+
 The built-in GFM alert labels are `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]`, mapped to the corresponding lowercase theme class. Use an uppercase tag on the first blockquote line:
 
 ```markdown

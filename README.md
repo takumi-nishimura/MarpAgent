@@ -202,8 +202,9 @@ token sources. Available themes:
 Common capabilities:
 
 - Five color schemes: Dracula, One Dark Pro, Nord, Neogaia, GitHub Light
-- Slide layouts: title, content, multi-column, visual col,
-  metric grid, timeline, placement utilities
+- Slide composition: shared Tailwind grid/flex utilities, unequal columns,
+  comparison tables, evidence with context, and process rows
+- Optional components: visual col, metric grid, timeline, placement utilities
 - Callouts: `.note`, `.tip`, `.important`, `.warning`, `.caution`
 - Typography scale: `.text-xs` through `.text-xl5`
 - Laser pointer effect during presentation
@@ -220,6 +221,13 @@ tracked theme CSS files. Tailwind scans no deck or documentation files: decks
 may use the theme's documented classes and their own deck-local styles, but not
 arbitrary Tailwind utilities. `npm test` fails when a tracked theme differs from
 a fresh build.
+
+Start from the [composition recipes](template/README.md) when choosing a layout.
+Their [renderable source](template/layouts.md) is checked by the fixture gate.
+The shared utility set handles structure and spacing without choosing card
+surfaces or changing the theme's colors and type. Use a table for shared
+comparison criteria and unequal columns for evidence plus interpretation;
+choose card components only when the content calls for them.
 
 To create another visual identity, start from the scaffold command and then
 edit the generated `DESIGN.md` as the token source of truth:

@@ -6,13 +6,19 @@
  * globs, so decks, fixtures, and skill prose do not add utilities or
  * variables; the compiled CSS depends only on tracked theme sources.
  *
- * Utilities: these entries pair with the hand-written author-facing classes
- * of the same name: text-* adds Tailwind's matching line-height to the
- * theme's em-based font sizes, and self-* adds align-self to the theme's
- * margin placement. Add a utility here, rebuild with `marpx --theme`, and
- * document it in docs/theme-contract.md before recommending it to deck
- * authors.
+ * Utilities: keep a bounded vocabulary for composing plain containers.
+ * Layout does not imply a background, border, font size, or card count.
+ * Add a utility here, rebuild with `marpx --theme`, and document it in
+ * docs/theme-contract.md before recommending it to deck authors.
  */
+@source inline("grid grid-cols-2 grid-cols-3 grid-cols-12 col-span-3 col-span-4 col-span-5 col-span-6 col-span-7 col-span-8 col-span-9 col-span-12");
+@source inline("flex flex-row flex-col flex-wrap flex-1 shrink-0");
+@source inline("gap-2 gap-4 gap-6 gap-8 gap-x-2 gap-x-4 gap-x-6 gap-x-8 gap-y-2 gap-y-4 gap-y-6 gap-y-8");
+@source inline("items-start items-center items-end items-stretch justify-start justify-center justify-end justify-between content-start");
+@source inline("min-w-0 min-h-0 w-full h-full max-w-full max-h-full");
+@source inline("table-fixed tabular-nums");
+
+/* These pair with existing em-based sizes and margin-based placement. */
 @source inline("text-xs text-sm text-xl self-start self-center self-end");
 
 /*
