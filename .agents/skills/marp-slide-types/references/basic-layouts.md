@@ -1,10 +1,10 @@
 # Basic slide layouts
 
-Read only the relevant example. Replace illustrative text and media paths with the requested content. Preserve the deck's theme, headers, and pagination conventions.
+Read only the relevant example. These demonstrate syntax, not required slide sequences, wording, or point counts. Replace illustrative text and media paths with the requested content. Preserve the deck's theme, headers, and pagination conventions.
 
 ## title
 
-When to use: opening slide. Do NOT use for summary or recap slides — use the content summary variant instead.
+Use for an opening cover. A recap usually uses a normal content slide so its actual conclusion has room.
 
 ```markdown
 ---
@@ -24,23 +24,22 @@ Subtitle or author info here
 
 ## content
 
-When to use: single-column slides — bullet lists, prose, code, diagrams, tables.
+Use for a point best shown in a single area: a statement, figure, code sample, diagram, table, or a list when the items are a real set. Start with the material the audience needs, not empty bullet slots.
 
 ```markdown
 ---
 
-<!-- _header: Section Name -->
+<!-- _header: Drafting -->
 
-## Slide Heading
+## Try the actual figure before filling the page
 
-- Bullet point one
-- Bullet point two
-- Bullet point three
+Place it at a readable size first. Then add the observation the audience
+should notice and the context needed to interpret it.
 ```
 
 ### agenda variant
 
-Uses `.centered` to vertically and horizontally center the list below the heading.
+Use when a roadmap helps the audience navigate a longer talk; omit it when the opening already makes the sequence clear. `.centered` centers the list below the heading. List the actual sections, without padding to a target count.
 
 ```markdown
 ---
@@ -51,97 +50,74 @@ Uses `.centered` to vertically and horizontally center the list below the headin
 
 <div class="centered">
 
-1. Section One
-2. Section Two
-3. Section Three
+1. The question and the evidence
+2. What to try next
 
 </div>
 ```
 
 ### summary variant
 
+Use to consolidate an argument that needs a recap. State the conclusion and its important boundary rather than repeating every earlier bullet.
+
 ```markdown
 ---
 
 <!-- _header: Summary -->
 
-## Summary
+## Keep the figure and its explanation together
 
-1. Key point one
-2. Key point two
-3. Key point three
+Revise the page with the actual material in place.
+Keep conditions and source attribution when shortening the explanation.
 ```
 
 ### closing variant
 
-When to use: final slide of a deck — summarizes key takeaways and optionally includes a call to action (recap, next steps, conclusions).
+End with the conclusion, open question, or next action that fits this talk. A second recap and a callout are optional, not required closing elements.
 
 ```markdown
 ---
 
 <!-- _paginate: skip -->
-<!-- _header: Summary -->
+<!-- _header: Next step -->
 
-## Key Takeaways
+## Try the central page first
 
 <div class="centered">
 
-1. **First point** — brief description
-2. **Second point** — brief description
-3. **Third point** — brief description
-
-</div>
-```
-
-With call to action:
-
-```markdown
----
-
-<!-- _paginate: skip -->
-<!-- _header: Summary -->
-
-## Key Takeaways
-
-1. **First point** — brief description
-2. **Second point** — brief description
-3. **Third point** — brief description
-
-<div class="summary-box">
-
-Next step or call to action here.
+Bring one figure and the question it should answer to the next review.
 
 </div>
 ```
 
 ## two-column template
 
-When to use: comparisons, figure + text, before/after, feature lists. This is
-an outline/template label; the authored slide uses `.col`, not a
-`.two-column` class.
+Use for a meaningful pair: comparison, figure and interpretation, or before/after.
+Use a table when several shared comparison dimensions need aligned rows. This
+template uses `.col`, not a `.two-column` class. The two sides need not have the
+same number of sentences or bullets.
 
 ```markdown
 ---
 
-<!-- _header: Section Name -->
+<!-- _header: Revision -->
 
-## Slide Heading
+## The same file carries the rough and finished page
 
 <div class="col">
 <div>
 
-**Left column heading**
+**Rough page**
 
-- Left bullet one
-- Left bullet two
+Put the working heading and source figure in `slide.md`.
+Note the unresolved question beside them while drafting.
 
 </div>
 <div>
 
-**Right column heading**
+**Revised page**
 
-- Right bullet one
-- Right bullet two
+Refine the heading and annotation after inspecting the render.
 
 </div>
 </div>

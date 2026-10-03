@@ -1,16 +1,19 @@
 # MarpAgent
 
-Structured slide authoring with Marp + automated validation. Write a brief, generate an outline, author slides in Markdown, and catch overflow before it reaches the audience.
+Slide authoring with Marp + automated validation. Keep a short brief, develop your presentation directly in Markdown, and catch overflow before it reaches the audience.
 
 ## Overview
 
 ```
-brief.md → outline.md → slide.md → HTML / PDF / PPTX
+brief.md (purpose, audience, constraints, sources)
+    ↓
+slide.md: rough structure → prototype → complete draft ⇄ render / revise
+    ↓
+HTML / PDF / PPTX
 ```
 
-- **brief.md** — define audience, duration, core message, and required sections
-- **outline.md** — auto-generated slide plan with layout hints
-- **slide.md** — Marp Markdown using the `lab` theme
+- **brief.md** — keep the context and requirements that guide editing
+- **slide.md** — develop the structure, content, and visuals in one Marp Markdown file
 - **Validator** — renders every slide, fails on visible content clipped at the slide edge, and warns when content crowds the edge; source-count heuristics are optional hints
 
 ## Prerequisites
@@ -34,25 +37,47 @@ npm install
 # 1. Create a deck
 marpx -n decks/my-talk
 
-# 2. Fill in decks/my-talk/brief.md (8 sections)
+# 2. Record audience, purpose, constraints, and sources in brief.md
 
-# 3. Generate outline
-marpx decks/my-talk/brief.md --outline
+# 3. Draft the sequence in slide.md and try key slides with actual assets
 
-# 4. Author decks/my-talk/slide.md
-
-# 5. Live preview while editing
+# 4. Grow and revise the same slide.md with live preview
 marpx decks/my-talk/slide.md
 
-# 6. Validate
-marpx decks/my-talk/slide.md -v
-
-# 7. Single-shot preview (optional)
-marpx decks/my-talk/slide.md -p
-
-# 8. Open thumbnail overview (optional)
+# 5. Review the sequence in the thumbnail overview
 marpx decks/my-talk/slide.md --overview
+
+# 6. Validate the rendered deck
+marpx decks/my-talk/slide.md -v
 ```
+
+## Authoring and Revising
+
+Start with enough context to make useful choices; the brief is not a mandatory
+form or a second copy of the slide plan. Put rough headings and supporting
+material directly in `slide.md`. Try the important or uncertain pages with
+actual figures, data, or examples early, while changing the sequence is still
+easy. Develop that same file into the finished presentation.
+
+Choose the layout after deciding what the audience needs to see. A comparison
+may need a table, a result may need an annotated figure, and a decision may need
+one concise sentence. Match the user's voice and reference decks. Equal-sized
+cards, repeated three-bullet pages, summary boxes on every slide, and arbitrary
+layout changes are not authoring requirements. Preserve qualifications and
+sources when shortening a claim.
+
+Review both the rendered pages and their sequence. Ordinary Markdown comments
+can become presenter notes: remove temporary drafting notes before delivery,
+or turn them into intentional speaker notes. Revise `brief.md` when the purpose,
+audience, or constraints change; ordinary page edits stay in `slide.md`.
+
+New decks do not need `outline.md`. Existing outlines are left intact, and any
+unique requirements in them should be considered when editing a legacy deck.
+An outline can still be supplied when explicitly requested, but is not a second
+document to maintain by default. For compatibility, `marpx <brief.md> --outline`
+(including `--output`, `--force`, and `--no-strict-brief`) still works with the
+former eight-section brief format and prints a deprecation warning to stderr.
+The shorter new brief is not an input contract for that legacy generator.
 
 ## Commands
 
@@ -60,8 +85,6 @@ marpx decks/my-talk/slide.md --overview
 | :------ | :---------- |
 | `marpx -n decks/<path>` | Scaffold a new deck |
 | `marpx -n decks/<path> --paper` | Scaffold a new A-series paper deck |
-| `marpx <brief.md> --outline` | Generate outline |
-| `marpx <brief.md> --outline --output <outline.md>` | Generate outline to an explicit path |
 | `marpx <slide.md>` | Serve with live reload |
 | `marpx <slide.md> <page>` | Serve and open at displayed page |
 | `marpx <slide.md> --screenshot <page>` | Screenshot the slide at a displayed page to `/tmp` |
@@ -143,13 +166,12 @@ MarpAgent/
 ├── decks/              # Your slide decks
 │   └── <name>/
 │       ├── brief.md
-│       ├── outline.md
 │       ├── slide.md
 │       ├── assets/
 │       └── shared -> ../../assets
 ├── assets/             # Shared assets (logos, fonts)
 ├── themes/             # Marp entries and surfaces built with Tailwind CSS v4
-├── src/                # CLI tools (outline generator, validator)
+├── src/                # Rendering, previews, validation, and CLI support
 ├── scripts/            # Test runner
 └── .agents/skills/     # AI agent authoring skills
 ```
@@ -304,20 +326,21 @@ The validator skips the per-slide source hints for A-series paper outputs
 `decks/example-paper/paper.md` for a worked example and the `marp-paper` skill
 for authoring details.
 
-## AI Agent Usage (Claude Code)
+## AI Agent Usage
 
 Skills in `.agents/skills/` provide authoring guidance to AI coding agents:
 
 | Skill | Type | Description |
 | :---- | :--- | :---------- |
-| `marp-slide-types` | reference (auto) | Slide type templates |
+| `marp-slide-types` | reference (auto) | Choose layouts from content and evidence |
 | `marp-components` | reference (auto) | Callouts, figures, Mermaid, footnotes |
 | `marp-paper` | reference (auto) | A-series paper authoring |
 | `marp-validator` | reference (auto) | Validator rules and hard limits |
 | `theme-new` | task | Create or adapt a theme from a URL, brand guide, or DESIGN.md |
-| `/slide-new <name>` | task | Create a new deck end-to-end |
+| `/slide-new <name>` | task | Develop a rough slide.md into a finished deck |
+| `/slide-edit <slide.md>` | task | Revise content, structure, or visuals in place |
 | `/slide-add <slide.md>` | task | Add slides to an existing deck |
-| `/slide-review <name>` | task | Validate and remediate a deck |
+| `/slide-review <name>` | task | Review narrative and renders; fix when requested |
 | `/paper-new <name>` | task | Create a new A-series paper deck end-to-end |
 
 See `AGENTS.md` for a quick command and directive reference.

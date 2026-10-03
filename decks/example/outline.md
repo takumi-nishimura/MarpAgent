@@ -1,5 +1,9 @@
 # Outline
 
+> Historical plan retained for reference. This predates the current authoring
+> workflow and is no longer synchronized. Read `brief.md` for current intent and
+> edit the presentation directly in `slide.md`.
+
 - Source brief: brief.md
 - Generated: 2026-04-07
 - Target slide count: 10

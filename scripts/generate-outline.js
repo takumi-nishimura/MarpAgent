@@ -61,6 +61,9 @@ function main() {
   const { briefPath, outputPath, strictBrief, force } = parseArgs(
     process.argv.slice(2),
   );
+  console.error(
+    "Warning: --outline is deprecated. Keep purpose and constraints in brief.md; draft and revise directly in slide.md. This legacy command expects the former eight-section brief format.",
+  );
   const resolvedOutputPath =
     outputPath || path.join(path.dirname(briefPath), "outline.md");
   try {
