@@ -5,6 +5,7 @@ const {
   buildOverviewDocument,
   buildWaitingDocument,
   extractSlides,
+  getOverviewOutputPath,
 } = require("../../src/overview-preview");
 
 const renderedHtml = `<!doctype html>
@@ -22,6 +23,16 @@ const renderedHtml = `<!doctype html>
     <script>console.log("tail");</script>
   </body>
 </html>`;
+
+test("overview output names cannot collide across decks or sessions", () => {
+  const names = [
+    getOverviewOutputPath("/decks/資料.md"),
+    getOverviewOutputPath("/decks/発表.md"),
+    getOverviewOutputPath("/decks/資料.md"),
+  ];
+  assert.equal(new Set(names).size, names.length);
+  for (const name of names) assert.match(name, /^\/decks\/\..+\.overview\.html$/);
+});
 
 test("buildOverviewDocument labels cards with the Markdown slide index", () => {
   const html = buildOverviewDocument(

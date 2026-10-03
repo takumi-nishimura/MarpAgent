@@ -119,6 +119,16 @@ Markdown slide index and adds the displayed page when it differs, for example
 `slide 11 (page 10)`; JSON and SARIF findings also carry `renderedSlide`,
 `sectionId`, `page`, and the slide's first source `line`.
 
+Validation exits with 1 for blocking findings and 2 for execution or report
+output failures. A failed screenshot or report write preserves the measured
+findings; JSON lists output failures in `artifacts.errors`, while `report.json`
+and SARIF run properties use `artifactErrors`. Report screenshots use the same
+browser selection and conversion timeout as image exports.
+
+Autofix changes tiny typography classes in HTML `class` attributes and removes
+plain `<small>` wrappers. It preserves image URLs, prose, code examples, and
+the original line endings. Use `--autofix --dry-run` to inspect the edits.
+
 For interactive authoring, use `marpx ...`. `.mise.toml` adds the repository
 root to `PATH` when mise is active, and the repo-local wrapper runs the npm
 script through `mise exec`, so it keeps the Node.js 25 runtime pinned by this

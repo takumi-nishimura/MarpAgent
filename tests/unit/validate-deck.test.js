@@ -33,6 +33,19 @@ test("validator flags dense bullets", () => {
   );
 });
 
+test("a fence marker followed by an info string does not end a code example", () => {
+  const markdown =
+    "```md\n```html\n" +
+    Array.from({ length: 15 }, (_, index) => `- sample ${index}\n`).join("") +
+    "```\n";
+  assert.equal(
+    validateDeckMarkdown(markdown).findings.some(
+      (finding) => finding.ruleId === "dense-bullets",
+    ),
+    false,
+  );
+});
+
 test("validator flags figure-plus-text density", () => {
   const markdown = fs.readFileSync(fixture("figure-heavy-slide.md"), "utf8");
   const result = validateDeckMarkdown(markdown);

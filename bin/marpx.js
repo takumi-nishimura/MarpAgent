@@ -307,7 +307,10 @@ function watchDesignTokens(names) {
   for (const name of names) {
     if (!designExists(name)) continue;
     const designPath = path.join(repoRoot, "designs", name, "DESIGN.md");
-    fs.watch(designPath, () => {
+    // Editors commonly replace DESIGN.md with a new inode on save. Watch
+    // its parent so subsequent saves keep reaching the same watcher.
+    fs.watch(path.dirname(designPath), (_event, fileName) => {
+      if (fileName && fileName.toString() !== path.basename(designPath)) return;
       const currentTimer = timers.get(name);
       if (currentTimer) clearTimeout(currentTimer);
       timers.set(
@@ -446,7 +449,7 @@ switch (mode) {
       })
       .catch((err) => {
         console.error(`Error: ${err.message}`);
-        process.exit(1);
+        process.exitCode = 1;
       })
       .finally(() => {
         fs.rmSync(tempRoot, { recursive: true, force: true });

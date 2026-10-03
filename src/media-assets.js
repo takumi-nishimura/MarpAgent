@@ -1,54 +1,20 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { fileURLToPath } = require("node:url");
-const { splitFenceSegments } = require("./markdown-slides");
+const { decodeHTMLAttribute } = require("entities");
+const { HTML_PART_RE, parseSource, sourceLines } = require("./markdown-source");
 const { buildSlideMap } = require("./slide-map");
 
-// Markdown image: `![alt](url)`, `![alt](<url with spaces>)`, optionally
-// followed by a quoted or parenthesized title. Marp keywords such as `bg` or
-// `w:300` live in the alt text and do not affect the URL.
-const MARKDOWN_IMAGE_RE =
-  /!\[[^\]]*\]\(\s*(?:<([^>\n]*)>|([^\s)]+))(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?\s*\)/g;
-// HTML elements whose attributes load media into the slide.
-const MEDIA_TAG_RE = /<(img|video|audio|source|object|embed)\b([^>]*)>/gi;
-// Only these attributes load media; `data-src` and other `data-*` attributes
-// must not match, hence the leading whitespace instead of a word boundary.
-const MEDIA_ATTRIBUTE_RE =
-  /(?:^|\s)(src|poster|data)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/gi;
+// Consume every attribute so strings inside quoted values cannot become
+// attributes themselves (for example title="src='example.png'").
+const HTML_ATTRIBUTE_RE =
+  /\s+([^\s=<>]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/gi;
 const CSS_URL_RE = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]*))\s*\)/gi;
-const STYLE_BLOCK_RE = /<style\b[^>]*>([\s\S]*?)<\/style>/gi;
-const STYLE_ATTRIBUTE_RE = /(?:^|\s)style\s*=\s*(?:"([^"]*)"|'([^']*)')/gi;
-const HTML_COMMENT_RE = /<!--([\s\S]*?)-->/g;
 // Marp directives that carry CSS, such as `_backgroundImage: url(...)`.
 const CSS_DIRECTIVE_RE = /(?:^|\n)\s*_?(?:backgroundImage|style)\s*:/;
 // Any URL scheme (http:, https:, data:, blob:, mailto:, ...). Requiring two
 // characters keeps Windows drive letters out.
 const URL_SCHEME_RE = /^[a-z][a-z0-9+.-]+:/i;
-
-/**
- * Blank out a match while keeping every character offset, so references found
- * in the remaining text still sort in source order.
- */
-function blank(text) {
-  return text.replace(/[^\n]/g, " ");
-}
-
-/**
- * Remove content that Marp does not render as media: fenced code, inline code,
- * and HTML comments other than CSS-bearing directives (speaker notes can quote
- * old image references).
- */
-function maskNonRendered(raw) {
-  const text = splitFenceSegments(raw)
-    .map((segment) => (segment.fenced ? blank(segment.text) : segment.text))
-    .join("");
-
-  return text
-    .replace(/(`+)(?:(?!\1).)+?\1/g, (match) => blank(match))
-    .replace(HTML_COMMENT_RE, (match, body) =>
-      CSS_DIRECTIVE_RE.test(body) ? match : blank(match),
-    );
-}
 
 function collectCssUrls(css, offset, references) {
   for (const match of css.matchAll(CSS_URL_RE)) {
@@ -62,43 +28,59 @@ function collectCssUrls(css, offset, references) {
  * Markdown images (including `![bg ...]` and size keywords), `src`, `poster`,
  * and `data` attributes of media elements, and CSS `url(...)` in `<style>`
  * blocks, `style` attributes, and directive comments.
- * Returns [{ reference, index }] with the reference exactly as written.
+ * Returns [{ reference, index }] with escapes and character references decoded.
  */
 function extractMediaReferences(raw) {
-  const text = maskNonRendered(String(raw || ""));
   const references = [];
-
-  for (const match of text.matchAll(MARKDOWN_IMAGE_RE)) {
-    references.push({
-      reference: match[1] ?? match[2],
-      index: match.index,
-    });
-  }
-
-  for (const tag of text.matchAll(MEDIA_TAG_RE)) {
-    const attributesOffset = tag.index + 1 + tag[1].length;
-    for (const attribute of tag[2].matchAll(MEDIA_ATTRIBUTE_RE)) {
-      const name = attribute[1].toLowerCase();
-      const tagName = tag[1].toLowerCase();
-      if (name === "data" && tagName !== "object") continue;
-      if (name === "poster" && tagName !== "video") continue;
-      references.push({
-        reference: attribute[2] ?? attribute[3] ?? attribute[4],
-        index: attributesOffset + attribute.index,
-      });
+  for (const fragment of parseSource(raw)) {
+    if (fragment.type === "image") {
+      references.push({ reference: fragment.reference, index: fragment.index });
+      continue;
+    }
+    for (const part of fragment.content.matchAll(HTML_PART_RE)) {
+      const text = part[0];
+      const index = fragment.position(part.index);
+      if (index === null) continue;
+      if (text.startsWith("<!--")) {
+        const body = text.slice(4, -3);
+        if (CSS_DIRECTIVE_RE.test(body))
+          collectCssUrls(body, index, references);
+        continue;
+      }
+      if (part[1]) {
+        if (part[1].toLowerCase() === "style") {
+          collectCssUrls(
+            text.replace(/^<style\b[^>]*>|<\/style\s*>$/gi, ""),
+            index,
+            references,
+          );
+        }
+        continue;
+      }
+      const tagName = text.match(/^<([a-z]+)/i)?.[1].toLowerCase();
+      for (const attribute of text.matchAll(HTML_ATTRIBUTE_RE)) {
+        const name = attribute[1].toLowerCase();
+        const reference = decodeHTMLAttribute(
+          attribute[2] ?? attribute[3] ?? attribute[4],
+        );
+        if (name === "style") {
+          collectCssUrls(reference, index + attribute.index, references);
+        } else if (
+          ["img", "video", "audio", "source", "object", "embed"].includes(
+            tagName,
+          )
+        ) {
+          if (!["src", "poster", "data"].includes(name)) continue;
+          if (name === "data" && tagName !== "object") continue;
+          if (name === "poster" && tagName !== "video") continue;
+          references.push({
+            reference,
+            index: index + attribute.index,
+          });
+        }
+      }
     }
   }
-
-  for (const block of text.matchAll(STYLE_BLOCK_RE)) {
-    collectCssUrls(block[1], block.index, references);
-  }
-  for (const attribute of text.matchAll(STYLE_ATTRIBUTE_RE)) {
-    collectCssUrls(attribute[1] ?? attribute[2], attribute.index, references);
-  }
-  for (const comment of text.matchAll(HTML_COMMENT_RE)) {
-    collectCssUrls(comment[1], comment.index, references);
-  }
-
   return references
     .filter((item) => item.reference && item.reference.trim() !== "")
     .map((item) => ({ ...item, reference: item.reference.trim() }))
@@ -241,17 +223,27 @@ function findMissingAssets(
   const slideMap = options.slideMap || buildSlideMap(markdown);
   const slides = slideMap
     .filter((entry) => !entry.hidden && entry.raw.trim() !== "")
-    .map((entry) => ({ number: entry.slide, raw: entry.raw }));
+    .map((entry) => ({
+      number: entry.slide,
+      line: entry.line,
+      endLine: entry.endLine,
+    }));
   if (slides.length === 0) return [];
 
   const frontmatterReferences = [];
   collectCssUrls(extractFrontmatter(markdown), 0, frontmatterReferences);
 
+  const referencesBySource = extractMediaReferences(markdown);
+  const lines = sourceLines(markdown);
   const results = [];
   slides.forEach((slide, position) => {
     const references = [
       ...(position === 0 ? frontmatterReferences : []),
-      ...extractMediaReferences(slide.raw),
+      ...referencesBySource.filter(
+        ({ index }) =>
+          index >= (lines[slide.line - 1]?.offset ?? 0) &&
+          index < (lines[slide.endLine]?.offset ?? markdown.length),
+      ),
     ];
     const missing = [];
     const seen = new Set();

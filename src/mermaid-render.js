@@ -2,6 +2,7 @@
 // post-processes $...$ / $$...$$ math via MathJax, outputs final SVG.
 
 const fs = require('node:fs')
+const { decodeXML, escapeText } = require('entities')
 const Module = require('node:module')
 const path = require('node:path')
 const {
@@ -181,7 +182,7 @@ async function postProcessMath(svg) {
 
   for (const hit of hits) {
     // Strip optional &quot; wrappers added by Mermaid for ["..."] labels
-    let content = stripQuoteWrapper(hit.rawContent)
+    const content = decodeXML(stripQuoteWrapper(hit.rawContent))
 
     // Parse attributes.
     // dy may carry a unit (e.g. "0.35em"); preserve the raw string for <text>
@@ -284,7 +285,7 @@ async function postProcessMath(svg) {
     let curX = x + anchorOff
     for (const seg of rendered) {
       if (seg.type === 'text') {
-        parts += `<text x="${curX}"${commonAttrs} text-anchor="start">${seg.value}</text>`
+        parts += `<text x="${curX}"${commonAttrs} text-anchor="start">${escapeText(seg.value)}</text>`
       } else {
         // Align math baseline (MathJax y=0) with text baseline (y + dyPx).
         // The inner scale(1,-1) flips the y-axis but leaves y=0 at the origin,

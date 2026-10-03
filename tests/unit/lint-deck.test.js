@@ -6,6 +6,41 @@ const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 
 const repoRoot = path.join(__dirname, "../..");
+const { applyAutoFixes } = require("../../src/validate-cli");
+
+test("autofix edits rendered HTML classes and wrappers without changing other source", () => {
+  const protectedText =
+    [
+      "The text-xs2 and text-xs3 class names are documented here.",
+      "![icon](assets/text-xs3.png)",
+      '[link](text-xs2 "<small>title</small>")',
+      '    <small><span class="text-xs3">indented code</span></small>',
+      "```md\n```html\n<small>code sample</small>\n```",
+      "``literal ` <small>code</small>``",
+      "<!-- <small>comment</small> -->",
+      '<script>const sample = "<small>text-xs2</small>";</script>',
+      "<pre><small>HTML code sample</small></pre>",
+      "Inline <code><small>text-xs3</small></code> example.",
+      '<span data-class="text-xs2" title="<small>title</small>">title</span>',
+    ].join("\n\n") + "\n\n";
+  const editable =
+    '<div class="text-xs2 text-xs3 text-xs30 hover:text-xs3" data-src="text-xs2.png"><small>body</small></div>';
+  const input = (protectedText + editable + "\n").replaceAll("\n", "\r\n");
+  const expected = (
+    protectedText +
+    '<div class="text-sm text-sm text-xs30 hover:text-xs3" data-src="text-xs2.png">body</div>\n'
+  ).replaceAll("\n", "\r\n");
+  assert.equal(applyAutoFixes(input).markdown, expected);
+});
+
+test("autofix preserves quote and list prefixes while fixing rendered HTML", () => {
+  const source =
+    '> <small>quoted</small>\r\n\r\n- <span class="text-xs3">listed</span>\r\n';
+  assert.equal(
+    applyAutoFixes(source).markdown,
+    '> quoted\r\n\r\n- <span class="text-sm">listed</span>\r\n',
+  );
+});
 
 test("lint-deck --autofix normalizes tiny typography markers", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-lint-"));

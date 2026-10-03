@@ -76,34 +76,39 @@ function renderToHtml(deckPath) {
   );
   const copiedDeckPath = path.join(copiedDeckDir, path.basename(deckPath));
 
-  fs.mkdirSync(tempDeckDir, { recursive: true });
-  copyDeckForRender(deckPath, copiedDeckDir);
+  try {
+    fs.mkdirSync(tempDeckDir, { recursive: true });
+    copyDeckForRender(deckPath, copiedDeckDir);
 
-  const outputName =
-    path.basename(deckPath, path.extname(deckPath)) + ".html";
-  const outputPath = path.join(copiedDeckDir, outputName);
+    const outputName =
+      path.basename(deckPath, path.extname(deckPath)) + ".html";
+    const outputPath = path.join(copiedDeckDir, outputName);
 
-  execFileSync(
-    marpBinary,
-    [
-      "--html",
-      "--template",
-      "bare",
-      "--allow-local-files",
-      "--config-file",
-      configPath,
-      copiedDeckPath,
-      "-o",
-      outputPath,
-    ],
-    {
-      cwd: copiedDeckDir,
-      encoding: "utf8",
-      stdio: "pipe",
-    },
-  );
+    execFileSync(
+      marpBinary,
+      [
+        "--html",
+        "--template",
+        "bare",
+        "--allow-local-files",
+        "--config-file",
+        configPath,
+        copiedDeckPath,
+        "-o",
+        outputPath,
+      ],
+      {
+        cwd: copiedDeckDir,
+        encoding: "utf8",
+        stdio: "pipe",
+      },
+    );
 
-  return { htmlPath: outputPath, tempRoot };
+    return { htmlPath: outputPath, tempRoot };
+  } catch (error) {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+    throw error;
+  }
 }
 
 /**
@@ -444,7 +449,7 @@ function auditSlidesInPage({
     return Math.round(value * 10) / 10;
   }
 
-  return [...document.querySelectorAll("section[id]")].map((section, slideIndex) => {
+  return [...document.querySelectorAll("svg[data-marpit-svg] > foreignObject > section[id]")].map((section, slideIndex) => {
     const canvas = section.getBoundingClientRect();
     const scale = canvas.width / section.offsetWidth || 1;
     const width = section.offsetWidth;
@@ -582,7 +587,7 @@ function auditSlidesInPage({
 async function auditMediaInPage({ timeoutMs }) {
   const HAVE_METADATA = 1;
   const NETWORK_NO_SOURCE = 3;
-  const sections = [...document.querySelectorAll("section[id]")];
+  const sections = [...document.querySelectorAll("svg[data-marpit-svg] > foreignObject > section[id]")];
 
   function sourcesOf(element) {
     if (element.getAttribute("src")) return [element.src];
