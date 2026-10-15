@@ -67,3 +67,9 @@ mark {
   color: var(--color-deck-black);
   padding: 0 0.2em;
 }
+
+/* MathJax 4 leaves SVG display to the theme. Override Tailwind's block reset
+   for inline equations while keeping display equations on their own line. */
+mjx-container[jax="SVG"]:not([display]) > svg {
+  display: inline-block;
+}
