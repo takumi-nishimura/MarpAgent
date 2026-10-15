@@ -14,6 +14,7 @@ const validateScript = path.join(repoRoot, "scripts", "validate-deck.js");
 //   `typography-drift`).
 const expectations = [
   { fixture: "fixtures/clean-slide.md", errors: [], hints: [] },
+  { fixture: "fixtures/core5-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/paginate-skip-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/muji-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/toshiba-slide.md", errors: [], hints: [] },

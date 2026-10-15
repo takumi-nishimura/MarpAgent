@@ -31,6 +31,20 @@ HTML / PDF / PPTX
 npm install
 ```
 
+Marp CLI is pinned to 4.5.1 and Marp Core to 5.0.2 (currently the upstream
+release candidate). The repository config explicitly constructs the Core 5
+`@marp-team/marp-core/full` engine, so exports and in-process slide parsing use
+the same features even when launched outside this directory. CLI also installs
+its own Core 4 fallback dependency; that copy is not the configured renderer.
+All optional Core 5 rendering dependencies are declared in `package.json`.
+
+Code highlighting uses Shiki. Shared themes map `--marp-shiki-*` variables to
+their existing light/dark design tokens; custom `.hljs-*` overrides need to be
+migrated to these variables. Plain Mermaid fences retain the repository's
+cached renderer with diagram math, while attributes such as `mermaid interactive`
+use the upstream renderer. See the [Core 5 migration guide](https://github.com/marp-team/marp-core/blob/v5.0.2/docs/migration-v5.md)
+and [ADR-0004](docs/decisions/ADR-0004-adopt-marp-core-5-with-explicit-full-engine.md).
+
 ## Quick Start
 
 ```bash
