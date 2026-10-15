@@ -45,6 +45,9 @@ cached renderer with diagram math, while attributes such as `mermaid interactive
 use the upstream renderer. See the [Core 5 migration guide](https://github.com/marp-team/marp-core/blob/v5.0.2/docs/migration-v5.md)
 and [ADR-0004](docs/decisions/ADR-0004-adopt-marp-core-5-with-explicit-full-engine.md).
 
+For runnable examples of code line highlighting (`js {2,4-5}`), diagram math,
+and native Mermaid, see [template/core5-components.md](template/core5-components.md).
+
 ## Quick Start
 
 ```bash
@@ -140,6 +143,11 @@ files land next to the slide deck:
 sequences. For `--images`, `--output` is the file prefix —
 `--output out/slide.png` produces `out/slide.001.png`, `out/slide.002.png`, …
 
+`marpx --doctor` reports the CLI and configured Core versions and renders
+small Shiki, line-highlight, KaTeX, MathJax, diagram-math, and native-Mermaid
+probes through the same engine used for exports. A missing rendering feature
+fails the diagnostic; the browser availability check is reported separately.
+
 HTML export keeps relative references to deck media instead of embedding
 them. Open the HTML from the deck directory (the default output location)
 so `assets/` and `shared/` paths resolve; an `--output` path outside the
@@ -161,6 +169,13 @@ output failures. A failed screenshot or report write preserves the measured
 findings; JSON lists output failures in `artifacts.errors`, while `report.json`
 and SARIF run properties use `artifactErrors`. Report screenshots use the same
 browser selection and conversion timeout as image exports.
+
+Rendered Mermaid source fallbacks are blocking `diagram-render-error`
+findings. Visible KaTeX and MathJax errors, including errors inside diagrams,
+are `math-render-error` findings. They carry the same slide identity as other
+rendered findings; hidden slides and literal code examples are ignored. A
+successful native fallback does not count as a diagram error. These checks
+require the rendered validation pass. See [ADR-0005](docs/decisions/ADR-0005-report-rendered-diagram-and-math-failures.md).
 
 Autofix changes tiny typography classes in HTML `class` attributes and removes
 plain `<small>` wrappers. It preserves image URLs, prose, code examples, and
@@ -288,6 +303,11 @@ flowchart TD
 Use `--mermaid-width`, `--mermaid-max-width`, `--mermaid-max-height`, and
 `--mermaid-overflow` on a wrapper when the default diagram size does not fit.
 Do not rely on post-render text font-size changes for node sizing.
+
+These sizing controls apply to both plain and attribute-bearing Mermaid
+fences. Both use the active theme's Shiki palette. Override
+`--marp-mermaid-foreground`, `--marp-mermaid-line`, or `--marp-mermaid-accent`
+on the wrapper for a local color change; cached SVGs follow the CSS variables.
 
 For node label line breaks, use `<br/>` or `\n` inside a quoted Mermaid label.
 Explicit line breaks are measured before layout, so the node box height grows

@@ -647,6 +647,208 @@ async function auditMediaInPage({ timeoutMs }) {
 }
 
 /**
+ * Browser-side render error check: list per slide the math and diagrams that
+ * rendered as an error instead of their content. It finds KaTeX errors
+ * (`.katex-error`), MathJax errors (`[data-mjx-error]`, also inside Mermaid
+ * SVGs), and Mermaid fences that scripts/mermaid-plugin.js left as source
+ * (`[data-marpagent-render-error="mermaid"]`). Only painted errors count:
+ * copies hidden by CSS, accessibility copies, SVG definitions, and errors
+ * outside the canvas are left out, as are math errors inside code examples.
+ * Errors with the same kind, message, and source are merged with a count.
+ * Runs inside the page via `page.evaluate`, so it must stay self-contained.
+ */
+function auditRenderErrorsInPage() {
+  const SOURCES = [
+    { kind: "math", engine: "katex", selector: ".katex-error" },
+    { kind: "math", engine: "mathjax", selector: "[data-mjx-error]" },
+    {
+      kind: "diagram",
+      engine: "mermaid",
+      selector: "[data-marpagent-render-error='mermaid']",
+    },
+  ];
+  // SVG containers whose content is referenced, not painted in place, and
+  // the hidden copies math renderers keep for assistive technology.
+  const NOT_PAINTED =
+    "defs,symbol,clipPath,mask,pattern,marker,mjx-assistive-mml,.katex-mathml";
+  const MESSAGE_MAX_LENGTH = 200;
+  const SOURCE_MAX_LENGTH = 48;
+
+  function normalize(text, maxLength) {
+    const clean = String(text || "")
+      .replace(/​/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return clean.length > maxLength
+      ? `${clean.slice(0, maxLength - 1)}…`
+      : clean;
+  }
+
+  function clipByAncestors(rect, element, section) {
+    let { left, top, right, bottom } = rect;
+    for (
+      let node = element.parentElement;
+      node && node !== section;
+      node = node.parentElement
+    ) {
+      const style = getComputedStyle(node);
+      if (style.overflowX === "visible" && style.overflowY === "visible")
+        continue;
+      const clip = node.getBoundingClientRect();
+      if (style.overflowX !== "visible") {
+        left = Math.max(left, clip.left);
+        right = Math.min(right, clip.right);
+      }
+      if (style.overflowY !== "visible") {
+        top = Math.max(top, clip.top);
+        bottom = Math.min(bottom, clip.bottom);
+      }
+      if (right <= left || bottom <= top) return null;
+    }
+    return { left, top, right, bottom };
+  }
+
+  function intersect(a, b) {
+    const left = Math.max(a.left, b.left);
+    const top = Math.max(a.top, b.top);
+    const right = Math.min(a.right, b.right);
+    const bottom = Math.min(a.bottom, b.bottom);
+    return right > left && bottom > top ? { left, top, right, bottom } : null;
+  }
+
+  // SVG content such as a MathJax `<g>` has no CSS box of its own, so
+  // `checkVisibility()` cannot be trusted for it. Check the computed style of
+  // each SVG ancestor up to the nearest CSS box, then that box itself.
+  function isVisible(element, section) {
+    if (element.closest(NOT_PAINTED)) return false;
+    let host = element;
+    if (element instanceof SVGElement) {
+      if (getComputedStyle(element).visibility !== "visible") return false;
+      for (
+        ;
+        host instanceof SVGElement && host !== section;
+        host = host.parentElement
+      ) {
+        const style = getComputedStyle(host);
+        if (style.display === "none" || Number.parseFloat(style.opacity) === 0)
+          return false;
+      }
+      if (!host || host === section) return true;
+      if (!host.checkVisibility({ opacityProperty: true })) return false;
+    } else if (
+      !host.checkVisibility({ opacityProperty: true, visibilityProperty: true })
+    ) {
+      return false;
+    }
+    // The legacy `clip` property is used almost only to hide text visually.
+    for (let node = host; node && node !== section; node = node.parentElement) {
+      if (getComputedStyle(node).clip.startsWith("rect")) return false;
+    }
+    return true;
+  }
+
+  function isPainted(element, section, canvas, scale) {
+    const rects =
+      element instanceof SVGElement
+        ? [element.getBoundingClientRect()]
+        : [...element.getClientRects()];
+    return rects.some((rect) => {
+      if (!(rect.width > 0 && rect.height > 0)) return false;
+      const clipped = clipByAncestors(rect, element, section);
+      const shown = clipped && intersect(clipped, canvas);
+      return Boolean(
+        shown &&
+        shown.right - shown.left > scale &&
+        shown.bottom - shown.top > scale,
+      );
+    });
+  }
+
+  function describeError(source, element) {
+    if (source.engine === "katex") {
+      return {
+        message: normalize(
+          (element.getAttribute("title") || "").replace(/^ParseError:\s*/, ""),
+          MESSAGE_MAX_LENGTH,
+        ),
+        source: normalize(element.textContent, SOURCE_MAX_LENGTH),
+      };
+    }
+    if (source.engine === "mathjax") {
+      // Prefer the TeX that MathJax records on the math node; the error's
+      // own text also contains its tooltip `<title>`.
+      const math = element.closest("[data-latex]");
+      let text = math ? math.getAttribute("data-latex") : "";
+      if (!text) {
+        const copy = element.cloneNode(true);
+        for (const label of copy.querySelectorAll("title,desc")) label.remove();
+        text = copy.textContent;
+      }
+      return {
+        message: normalize(
+          element.getAttribute("data-mjx-error"),
+          MESSAGE_MAX_LENGTH,
+        ),
+        source: normalize(text, SOURCE_MAX_LENGTH),
+      };
+    }
+    return {
+      message: normalize(
+        element.getAttribute("data-marpagent-render-message"),
+        MESSAGE_MAX_LENGTH,
+      ),
+      source: "",
+    };
+  }
+
+  return [
+    ...document.querySelectorAll(
+      "svg[data-marpit-svg] > foreignObject > section[id]",
+    ),
+  ].map((section) => {
+    const canvasRect = section.getBoundingClientRect();
+    const canvas = {
+      left: canvasRect.left,
+      top: canvasRect.top,
+      right: canvasRect.right,
+      bottom: canvasRect.bottom,
+    };
+    const scale = canvasRect.width / section.offsetWidth || 1;
+    const byKey = new Map();
+    for (const source of SOURCES) {
+      for (const element of section.querySelectorAll(source.selector)) {
+        // One error may nest another copy of the same marker; count the outer one.
+        const outer =
+          element.parentElement &&
+          element.parentElement.closest(source.selector);
+        if (outer && section.contains(outer)) continue;
+        if (source.kind === "math" && element.closest("pre,code")) continue;
+        if (
+          !isVisible(element, section) ||
+          !isPainted(element, section, canvas, scale)
+        )
+          continue;
+        const { message, source: text } = describeError(source, element);
+        const key = [source.kind, source.engine, message, text].join("\n");
+        const previous = byKey.get(key);
+        if (previous) {
+          previous.count += 1;
+        } else {
+          byKey.set(key, {
+            kind: source.kind,
+            engine: source.engine,
+            message,
+            source: text,
+            count: 1,
+          });
+        }
+      }
+    }
+    return [...byKey.values()];
+  });
+}
+
+/**
  * Map a failed media URL from the rendered copy back to the deck. Returns
  * null for remote URLs (never reported) and for files outside the copied
  * deck directory, which the source-level file check covers. A file that is
@@ -683,7 +885,8 @@ function mapFailedMedia(failure, renderedDeckDir, deckDir) {
  *   smallText: [{ label, fontPx, floorPx, secondary }],
  *   textFloorPx: { body, secondary },
  *   overlaps: [{ first, second, widthPx, heightPx, overlapPx }], maxOverlapPx,
- *   failedMedia: [{ url, reason }] }.
+ *   failedMedia: [{ url, reason }],
+ *   renderErrors: [{ kind, engine, message, source, count }] }.
  */
 async function measureSlidesInBrowser(htmlPath, options = {}) {
   const {
@@ -724,9 +927,11 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
       secondaryFloorPx,
       referenceWidthPx: TEXT_REFERENCE_WIDTH_PX,
     });
+    const renderErrors = await page.evaluate(auditRenderErrorsInPage);
     return audits.map((audit) => ({
       ...audit,
       failedMedia: failedMedia[audit.slideIndex] || [],
+      renderErrors: renderErrors[audit.slideIndex] || [],
     }));
   } finally {
     await browser.close();
@@ -746,10 +951,11 @@ function buildRenderedToMarkdownMap(markdown, options = {}) {
 /**
  * Render a deck and audit every slide for clipped visible content, content
  * crowding the edge, text below the readable size floor, overlapping text,
- * and media that fail to load.
+ * media that fail to load, and math or diagrams that rendered as an error.
  * Returns { status: "measured", slides: [{ slideNumber, clipped, maxOverflowPx,
  * crowded, safeMarginPx, textRuns, smallText, textFloorPx, overlaps,
- * maxOverlapPx, missingMedia: [{ reference, reason, path }], renderedSlide }] }
+ * maxOverlapPx, missingMedia: [{ reference, reason, path }],
+ * renderErrors: [{ kind, engine, message, source, count }], renderedSlide }] }
  * where slideNumber is the Markdown slide index and renderedSlide the 1-based
  * rendered position, both taken from the slide map (`options.slideMap`, or
  * built from the deck), or
@@ -792,6 +998,7 @@ async function measureRenderedSlides(deckPath, options = {}) {
         missingMedia: audit.failedMedia
           .map((failure) => mapFailedMedia(failure, renderedDeckDir, deckDir))
           .filter(Boolean),
+        renderErrors: audit.renderErrors || [],
       })),
     };
   } catch (error) {
@@ -868,6 +1075,7 @@ module.exports = {
   OVERLAP_TOLERANCE_PX,
   SECONDARY_TEXT_FLOOR_PX,
   auditMediaInPage,
+  auditRenderErrorsInPage,
   auditSlidesInPage,
   buildRenderedToMarkdownMap,
   detectHiddenSlides,

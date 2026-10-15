@@ -100,7 +100,7 @@ Node.jsのバージョン方針変更，独自のoverviewの置換，無関係�
 * `tests/unit/mermaid-render.test.js`で日本語幅，明示的な改行，数式とキャッシュを確認する．
 * `tests/e2e/core5-rendering.spec.js`でlab・muji・toshibaの明暗配色をブラウザ上で確認する．
 * `fixtures/core5-slide.md`を実描画validatorとPDF・PPTX・HTML・画像の出力テストで使用する．
-* 2026-10-15の検証結果：単体テスト275件，実描画fixture 15件，E2E 28件が成功した．検証用ブラウザは`PLAYWRIGHT_BROWSERS_PATH=/tmp/marpagent-playwright`へ導入し，ブラウザを使うコマンドにはこの変数と`CHROME_NO_SANDBOX=1`を指定した．
+* 2026-10-15の検証結果：単体テスト275件，実描画fixture 14件，E2E 28件が成功した．検証用ブラウザは`PLAYWRIGHT_BROWSERS_PATH=/tmp/marpagent-playwright`へ導入し，ブラウザを使うコマンドにはこの変数と`CHROME_NO_SANDBOX=1`を指定した．
 
 ## Related Records
 

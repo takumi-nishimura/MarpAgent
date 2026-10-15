@@ -19,6 +19,12 @@ const expectations = [
   { fixture: "fixtures/muji-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/toshiba-slide.md", errors: [], hints: [] },
   { fixture: "template/layouts.md", errors: [], hints: [] },
+  { fixture: "template/core5-components.md", errors: [], hints: [] },
+  {
+    fixture: "fixtures/render-errors-slide.md",
+    errors: ["diagram-render-error", "math-render-error"],
+    hints: [],
+  },
   {
     fixture: "fixtures/comparison-slide.md",
     errors: [],
