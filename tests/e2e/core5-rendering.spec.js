@@ -43,6 +43,69 @@ Before $x^2$ after.
         ["invert", palette.dark],
         ["neogaia invert", palette.light],
     ]) {
+        test(`${theme} ${className}: both Mermaid renderers follow theme colors and sizing`, async ({
+            page,
+        }) => {
+            const marp = createConfiguredMarp();
+            marp.themeSet.add(
+                fs.readFileSync(
+                    path.join(__dirname, `../../themes/${theme}.css`),
+                    "utf8",
+                ),
+            );
+            const diagrams = ["mermaid", "mermaid interactive"]
+                .map(
+                    (info) => `
+<div style="--mermaid-width: 240px; --mermaid-max-width: none; --mermaid-max-height: 180px">
+
+\`\`\`${info}
+flowchart LR
+A[Input] --> B[Output]
+\`\`\`
+
+</div>`,
+                )
+                .join("\n\n");
+            const { html, css } = marp.render(
+                `---\ntheme: ${theme}\nclass: ${className}\n---\n${diagrams}`,
+            );
+            await page.route("https://fonts.googleapis.com/**", (route) =>
+                route.abort(),
+            );
+            await page.setContent(`<style>${css}</style>${html}`);
+            const svgs = page.locator(".mermaid-diagram > svg");
+            await expect(svgs).toHaveCount(2);
+            const foreground = await page
+                .locator("section")
+                .evaluate((element) => getComputedStyle(element).color);
+            for (const svg of await svgs.all()) {
+                await expect(svg.locator("text").first()).toHaveCSS(
+                    "fill",
+                    foreground,
+                );
+                await expect(svg).toHaveCSS("width", "240px");
+                await expect(svg).toHaveCSS("max-height", "180px");
+            }
+            // A cached SVG must pick up theme overrides without being rendered again.
+            await page.locator("section").evaluate((element) => {
+                element.style.setProperty(
+                    "--marp-mermaid-foreground",
+                    "#123456",
+                );
+                element.style.setProperty("--marp-mermaid-line", "#654321");
+            });
+            for (const svg of await svgs.all()) {
+                await expect(svg.locator("text").first()).toHaveCSS(
+                    "fill",
+                    "rgb(18, 52, 86)",
+                );
+                await expect(svg.locator(".edge").first()).toHaveCSS(
+                    "stroke",
+                    "rgb(101, 67, 33)",
+                );
+            }
+        });
+
         test(`${theme} ${className}: Shiki retains the theme's code palette`, async ({
             page,
         }) => {

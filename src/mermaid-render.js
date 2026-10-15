@@ -262,13 +262,21 @@ async function postProcessMath(svg) {
 
 async function main() {
   // Version 1 provides CJK metrics and multiline layout without source patches.
-  const { renderMermaidSVG, THEMES } = await import('beautiful-mermaid')
+  const { renderMermaidSVG } = await import('beautiful-mermaid')
 
   let input = ''
   for await (const chunk of process.stdin) input += chunk
   const svg = renderMermaidSVG(input, {
-    ...THEMES['github-light'],
     transparent: true,
+    // Match Core 5's public theme variables. Cached SVGs then adapt to the
+    // active slide palette and local overrides without another subprocess.
+    bg: 'var(--marp-mermaid-background, var(--marp-shiki-background))',
+    fg: 'var(--marp-mermaid-foreground, var(--marp-shiki-foreground))',
+    line: 'var(--marp-mermaid-line)',
+    accent: 'var(--marp-mermaid-accent, var(--marp-shiki-token-keyword))',
+    muted: 'var(--marp-mermaid-muted, var(--marp-shiki-token-comment))',
+    surface: 'var(--marp-mermaid-surface, var(--marp-shiki-background))',
+    border: 'var(--marp-mermaid-border)',
   })
   const result = postProcessLineBreaks(await postProcessMath(svg))
   process.stdout.write(result)
