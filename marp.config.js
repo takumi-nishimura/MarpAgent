@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { Marp } = require("@marp-team/marp-core/full");
 const { ensureCustomSizesForMarkdown } = require("./src/canvas-size");
 const { loadDefaultJapaneseParser } = require("budoux");
 const marpGithubAlertsPlugin = require("./scripts/github-alerts-plugin");
@@ -46,7 +47,19 @@ function expandSelfClosingNonVoidTags(html) {
 }
 
 function applyBudoux(html) {
-    const translated = budouxJa.translateHTMLString(html);
+    // Core 5 embeds browser helpers inside the SVG foreignObject. BudouX's
+    // parser otherwise escapes JS/CSS as XML text, breaking these helpers.
+    let prefix = "marpagent-raw";
+    while (html.includes(prefix)) prefix += "_";
+    const rawElements = [];
+    const protectedHtml = html.replace(
+        /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi,
+        (element) => {
+            rawElements.push(element);
+            return `<!--${prefix}-${rawElements.length - 1}-->`;
+        },
+    );
+    const translated = budouxJa.translateHTMLString(protectedHtml);
     const cleaned = translated
         .replace(/overflow-wrap:anywhere;?/g, "")
         .replace(
@@ -54,7 +67,10 @@ function applyBudoux(html) {
             (_, open, inner, close) =>
                 open + inner.replaceAll(ZWSP, "") + close,
         );
-    return expandSelfClosingNonVoidTags(cleaned);
+    return expandSelfClosingNonVoidTags(cleaned).replace(
+        new RegExp(`<!--${prefix}-(\\d+)-->`, "g"),
+        (_, index) => rawElements[Number(index)],
+    );
 }
 
 // Collect only the compiled theme CSS files at themes/*.css (not subdirectories).
@@ -67,8 +83,10 @@ module.exports = {
     allowLocalFiles: true,
     themeSet,
     html: true,
-    engine: ({ marp }) => {
-        const base = marp
+    // Always use the installed full Core 5 engine, including when CLI's
+    // default engine resolves its bundled Core 4 from another working dir.
+    engine: ({ marp: _defaultEngine, ...options }) => {
+        const base = new Marp({ html: true, ...options })
             .use(marpHideSlidesPlugin)
             .use(marpMermaidPlugin)
             .use(marpGithubAlertsPlugin);

@@ -1,5 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { findPackageJSON } = require("node:module");
+const { pathToFileURL } = require("node:url");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 
 enforceSupportedNodeRuntime();
@@ -99,30 +101,15 @@ async function checkPlaywrightLaunch() {
 }
 
 async function checkBeautifulMermaidVersion() {
-  const fs = require("node:fs");
-  const path = require("node:path");
-  const { assertSupportedBeautifulMermaidVersion } = require("../src/mermaid-patch");
-
-  let dir = path.dirname(require.resolve("beautiful-mermaid"));
-  const root = path.parse(dir).root;
-
-  while (dir !== root) {
-    const candidate = path.join(dir, "package.json");
-    if (fs.existsSync(candidate)) {
-      const pkg = JSON.parse(fs.readFileSync(candidate, "utf8"));
-      if (pkg.name === "beautiful-mermaid") {
-        assertSupportedBeautifulMermaidVersion(pkg.version);
-        return {
-          name: "beautiful-mermaid",
-          status: "pass",
-          detail: `Version ${pkg.version} is supported by patch canary.`,
-        };
-      }
-    }
-    dir = path.dirname(dir);
-  }
-
-  throw new Error("Could not resolve beautiful-mermaid package.json.");
+  const file = findPackageJSON("beautiful-mermaid", pathToFileURL(__filename));
+  const { version } = JSON.parse(fs.readFileSync(file, "utf8"));
+  const { renderMermaidSVG } = await import("beautiful-mermaid");
+  renderMermaidSVG("flowchart LR\nA --> B");
+  return {
+    name: "beautiful-mermaid",
+    status: "pass",
+    detail: `Version ${version} renders SVG successfully.`,
+  };
 }
 
 function printTextReport(checks) {

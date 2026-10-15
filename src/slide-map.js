@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { Marp } = require("@marp-team/marp-core");
+const { Marp } = require("@marp-team/marp-core/full");
 
 const DEFAULT_CONFIG_PATH = path.join(__dirname, "..", "marp.config.js");
 

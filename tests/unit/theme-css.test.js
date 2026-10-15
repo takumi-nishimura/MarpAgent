@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
-const { Marp } = require("@marp-team/marp-core");
+const { Marp } = require("@marp-team/marp-core/full");
 
 const repoRoot = path.join(__dirname, "../..");
 

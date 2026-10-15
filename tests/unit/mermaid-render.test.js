@@ -96,8 +96,14 @@ test('mermaid render emits multiline labels as tspans', () => {
 
   assert.doesNotMatch(svg, /&lt;br/)
   assert.doesNotMatch(svg, /&quot;/)
-  assert.match(svg, /<tspan x="[^"]+" dy="-0\.25em">foo<\/tspan>/)
-  assert.match(svg, /<tspan x="[^"]+" dy="1\.2em">bar<\/tspan>/)
+  assert.match(svg, /<tspan x="[^"]+" dy="-[^"]+">foo<\/tspan>/)
+  assert.match(svg, /<tspan x="[^"]+" dy="[\d.]+">bar<\/tspan>/)
+})
+
+test('mermaid render measures fullwidth Japanese labels before layout', () => {
+  const japanese = renderMermaid('flowchart TD\nA["日本語文字"] --> B[Output]')
+  const latin = renderMermaid('flowchart TD\nA["abcde"] --> B[Output]')
+  assert.ok(firstNodeRect(japanese).width > firstNodeRect(latin).width)
 })
 
 test('mermaid render sizes explicit multiline node labels before layout', () => {
@@ -237,9 +243,8 @@ test('MARP_AGENT_MERMAID_CACHE=0 disables the mermaid cache', (t) => {
 test('mermaid cache key covers source, renderer files, and package versions', () => {
   const fingerprint = {
     render: 'render-hash',
-    patch: 'patch-hash',
-    beautifulMermaid: '0.1.3',
-    mathjax: '4.1.1',
+    beautifulMermaid: '1.1.3',
+    mathjax: '4.1.3',
   }
   const code = 'flowchart TD\n  A --> B\n'
   const key = marpMermaidPlugin.buildCacheKey(code, fingerprint)
@@ -258,7 +263,6 @@ test('mermaid cache fingerprint resolves renderer hashes and dependency versions
   const mathjax = require('../../node_modules/mathjax/package.json')
 
   assert.match(fingerprint.render, /^[0-9a-f]{64}$/)
-  assert.match(fingerprint.patch, /^[0-9a-f]{64}$/)
   assert.equal(fingerprint.beautifulMermaid, beautifulMermaid.version)
   assert.equal(fingerprint.mathjax, mathjax.version)
 })

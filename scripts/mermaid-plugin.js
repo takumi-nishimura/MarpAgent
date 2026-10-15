@@ -5,16 +5,17 @@
 // Rendered SVGs are cached on disk under node_modules/.cache/marpagent-mermaid/
 // so unchanged diagrams skip the render subprocess, within one process and
 // across processes. The cache key covers the diagram source, a hash of
-// src/mermaid-render.js and src/mermaid-patch.js, and the beautiful-mermaid
+// src/mermaid-render.js, and the beautiful-mermaid
 // and mathjax versions. MARP_AGENT_MERMAID_CACHE=0 disables the cache;
 // MARP_AGENT_MERMAID_CACHE_DIR overrides the cache directory (used by tests).
 const childProcess = require('child_process')
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
+const { findPackageJSON } = require('node:module')
+const { pathToFileURL } = require('node:url')
 
 const RENDER_SCRIPT = path.join(__dirname, '..', 'src', 'mermaid-render.js')
-const PATCH_SCRIPT = path.join(__dirname, '..', 'src', 'mermaid-patch.js')
 const DEFAULT_CACHE_DIR = path.join(
   __dirname,
   '..',
@@ -33,24 +34,10 @@ function mermaidCacheDir() {
   return process.env.MARP_AGENT_MERMAID_CACHE_DIR || DEFAULT_CACHE_DIR
 }
 
-// Resolve a dependency version without relying on package.json being listed in
-// the package's exports map (beautiful-mermaid does not export it).
+// Resolve ESM-only dependencies without requiring a CJS export condition.
 function resolvePackageVersion(packageName) {
-  let dir = path.dirname(require.resolve(packageName))
-  const root = path.parse(dir).root
-
-  while (dir !== root) {
-    const candidate = path.join(dir, 'package.json')
-    if (fs.existsSync(candidate)) {
-      const parsed = JSON.parse(fs.readFileSync(candidate, 'utf8'))
-      if (parsed.name === packageName) {
-        return parsed.version
-      }
-    }
-    dir = path.dirname(dir)
-  }
-
-  return 'unresolved'
+  const file = findPackageJSON(packageName, pathToFileURL(__filename))
+  return JSON.parse(fs.readFileSync(file, 'utf8')).version
 }
 
 function fileSha256(filePath) {
@@ -63,7 +50,6 @@ function fileSha256(filePath) {
 function cacheFingerprint() {
   return {
     render: fileSha256(RENDER_SCRIPT),
-    patch: fileSha256(PATCH_SCRIPT),
     beautifulMermaid: resolvePackageVersion('beautiful-mermaid'),
     mathjax: resolvePackageVersion('mathjax'),
   }
@@ -181,9 +167,7 @@ function renderMermaidSync(code) {
 }
 
 const marpMermaidPlugin = (md) => {
-  const defaultFence = md.renderer.rules.fence.bind(md.renderer.rules)
-
-  md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+  const extendRenderer = (fallback) => (tokens, idx, options, env, self) => {
     const token = tokens[idx]
     if (token.info.trim() === 'mermaid') {
       const code = token.content.trim()
@@ -192,10 +176,17 @@ const marpMermaidPlugin = (md) => {
         return `<div class="mermaid-diagram">${svg}</div>`
       } catch (err) {
         console.warn(`[mermaid] render-failed: ${err.message}`)
-        return defaultFence(tokens, idx, options, env, self)
+        return fallback(tokens, idx, options, env, self)
       }
     }
-    return defaultFence(tokens, idx, options, env, self)
+    return fallback(tokens, idx, options, env, self)
+  }
+
+  md.renderer.rules.fence = extendRenderer(md.renderer.rules.fence)
+  // Core 5 rewrites Mermaid fences before rendering. Extend that renderer too;
+  // attribute-bearing fences (e.g. interactive) retain upstream behavior.
+  if (md.renderer.rules.marp_mermaid) {
+    md.renderer.rules.marp_mermaid = extendRenderer(md.renderer.rules.marp_mermaid)
   }
 }
 
