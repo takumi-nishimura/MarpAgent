@@ -114,7 +114,7 @@ test("export smoke: Core 5 features in pdf, pptx, html, and images", () => {
   try {
     const pptxPath = path.join(tempDir, "deck.pptx");
     const pptx = runMarpx([
-      "fixtures/core5-slide.md",
+      "template/core5-components.md",
       "--pptx",
       "--output",
       pptxPath,
@@ -133,14 +133,14 @@ test("export smoke: Core 5 features in pdf, pptx, html, and images", () => {
 
     const pdfPath = path.join(tempDir, "deck.pdf");
     const pdf = runMarpx([
-      "fixtures/core5-slide.md", "--pdf", "--output", pdfPath,
+      "template/core5-components.md", "--pdf", "--output", pdfPath,
     ]);
     expect(pdf.status, pdf.stderr).toBe(0);
     expect(fs.readFileSync(pdfPath).subarray(0, 5).toString()).toBe("%PDF-");
 
     const htmlPath = path.join(tempDir, "deck.html");
     const html = runMarpx([
-      "fixtures/core5-slide.md",
+      "template/core5-components.md",
       "--html",
       "--output",
       htmlPath,
@@ -152,10 +152,11 @@ test("export smoke: Core 5 features in pdf, pptx, html, and images", () => {
     expect(htmlContent).toContain('class="shiki marp-shiki"');
     expect(htmlContent).toContain('class="mermaid-diagram"');
     expect(htmlContent).toContain("<mjx-container");
+    expect(htmlContent).toContain("data-marp-mermaid");
 
     const imagesPrefix = path.join(tempDir, "slide.png");
     const images = runMarpx([
-      "fixtures/core5-slide.md",
+      "template/core5-components.md",
       "--images",
       "png",
       "--output",

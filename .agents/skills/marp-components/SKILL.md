@@ -9,7 +9,7 @@ user-invocable: false
 Use the component needed for the requested content. These examples target lab/shared theme components; preserve the active theme and check compatibility before introducing an override.
 
 - For figures, video, or Mermaid sizing, read [media](references/media.md).
-- For callouts, citations, notes, or text wrapping, read [text components](references/text.md).
+- For code and line highlighting, callouts, citations, notes, or text wrapping, read [text components](references/text.md).
 - For logo and theme-variable overrides, read [theme variables](references/theme-variables.md).
 - For columns and placement, use [marp-slide-types](../marp-slide-types/SKILL.md); for the one-page canvas, use [marp-paper](../marp-paper/SKILL.md).
 
