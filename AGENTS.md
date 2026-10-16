@@ -82,7 +82,12 @@ to keep it on one line. Applies to lab slide and paper layouts (see `marp-compon
 | `<!-- _paginate: skip -->` | Hide page number (title/close slides) |
 | `<!-- _class: title -->` | Apply title layout |
 | `<!-- _header: <text> -->` | Set slide header text |
+| `<!-- _scroll: true -->` | Scroll this slide's body vertically in HTML presentation; keep header, first heading, footer, and pagination fixed, and synchronize with its presenter window |
 | `<!-- hide: true -->` or `<!-- _hide: true -->` | Omit only this slide from the rendered deck; later slides keep their inherited directives, and page numbers count only visible slides |
+
+Use `_scroll` for an intentionally long appendix/table, not as a default layout.
+Static exports show the initial viewport; validation reports
+`scroll-export-overflow` and checks the full scrollable body for other defects.
 
 ## Mermaid Sizing
 

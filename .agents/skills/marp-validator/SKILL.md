@@ -26,6 +26,8 @@ Only `error` findings fail validation. They are defects measured on the rendered
 
 Source-heuristic hints (`--hints`) are counts of bullets, characters, and classes in the Markdown source. They are not failures and often do not match the rendered result. Use them only as prompts to look at the rendered slide; do not cut or restructure content just to silence a hint.
 
+For an explicitly scrollable slide (`<!-- _scroll: true -->`), the rendered check visits the full body. `scroll-export-overflow` warns that PDF/PPTX/images and printing omit content below the initial viewport; it does not fail an interactive presentation. Report it and split the page if complete static output is required. The report screenshot shows only the initial viewport, so inspect the interactive page to review lower content. Do not introduce scrolling automatically as an overflow repair.
+
 Findings name the Markdown slide index and add the displayed page when it differs (`slide 11 (page 10)`, or `(hidden)` for a hidden slide); `--screenshot <page>` takes the displayed page. Compare findings by rule, slide identity/content, and severity, accounting for slide renumbering. A stable count can hide a new issue. Recheck after relevant edits and inspect the rendered result; the rendered check does not assess media overlapping media or text against non-text boxes, remote media, narrative, or scientific correctness. Its size floor catches only text that cannot be read, so still judge whether text is comfortably readable.
 
 Report the errors, whether the rendered check actually ran, the relevant artifacts, and unresolved limits. Do not delete an existing report directory to make completion look clean.

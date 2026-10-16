@@ -7,7 +7,7 @@ The current implementation is `src/deck-validator.js`, with rendered measurement
 | Severity | Meaning | Exit code |
 |---|---|---|
 | `error` | A visible defect measured on the rendered slide (`content-clipped`, `text-overlap`, `text-too-small`, `diagram-render-error`, `math-render-error`), or a referenced media file that is definitely missing (`missing-asset`) | 1 |
-| `warning` | A design risk measured on the render (`edge-crowding`), or a source heuristic reported because rendering was unavailable | 0 (use `--strict` to fail when rendering is unavailable) |
+| `warning` | A design or static-export risk measured on the render (`edge-crowding`, `scroll-export-overflow`), or a source heuristic reported because rendering was unavailable | 0 (use `--strict` to fail when rendering is unavailable) |
 | `info` (hint) | A source heuristic reported alongside a successful render; hidden unless `--hints` is passed | 0 |
 
 The CLI exits 2 for an execution failure, including a strict run whose render failed.
@@ -20,6 +20,7 @@ Every finding is located through one slide map built from the configured Marp en
 
 | Rule | What is measured | Likely response |
 |---|---|---|
+| `scroll-export-overflow` (warning) | An opted-in slide body's scroll range exceeds 2px. Interactive HTML can reach it; static PDF/PPTX/images and printing show only the initial viewport. | Report the static-output limit. Split the slide for a complete handout; keep intentional scrolling for an interactive presentation. |
 | `diagram-render-error` (error) | A Mermaid renderer failed and the rendered slide shows the source fallback. The marker applies to both plain cached diagrams and attribute-bearing native diagrams. A successful native SVG fallback is not an error. | Repair the listed Mermaid source and rerender. The failure alone does not justify replacing or deleting the intended diagram. |
 | `math-render-error` (error) | Visible KaTeX error output or MathJax error nodes, including MathJax errors inside Mermaid SVGs. Literal examples, hidden slides, and non-painted copies are ignored. | Repair the listed TeX or use a supported command/package for the selected math renderer; rerender the formula and inspect its meaning. |
 | `content-clipped` (error) | Visible text lines or media (`img`, `svg`, `video`, `canvas`, `iframe`, `object`) extend past the slide canvas. Trailing margins, empty boxes, and parts already cropped by an `overflow` container do not count. Text is allowed 2px of rounding; media also up to 2% of its size on one edge. | Resize or move the listed element; for text, trim, rebalance, or split. The message names each element, the edge, and the overflow in slide pixels. |
@@ -30,7 +31,7 @@ Every finding is located through one slide map built from the configured Marp en
 
 Remote media (`http(s)://` and protocol-relative `//` URLs) are not checked: the file check never fetches them, and a remote image or video that fails in the render is ignored, so the result does not depend on the network. `data:` URLs are skipped too. Check remote media yourself if the deck relies on them.
 
-The rendered check uses Marp's bare template, so every slide is laid out and measured. `text-overlap` covers text against text and media; it does not compare media with media or text with non-text boxes (borders, backgrounds), so inspect screenshots for those. The size floors mark text that cannot be read, not a recommended size: text above them can still be too small for the room, so judge the rendered slide.
+The rendered check uses Marp's bare template, so every slide is laid out and measured. Opted-in scrollable bodies are audited at successive positions through the full vertical range, including the middle; a repeated exposure is not counted as another render error. Horizontal overflow in these bodies still fails as `content-clipped`. Static report screenshots show only the initial viewport. `text-overlap` covers text against text and media; it does not compare media with media or text with non-text boxes (borders, backgrounds), so inspect screenshots for those. The size floors mark text that cannot be read, not a recommended size: text above them can still be too small for the room, so judge the rendered slide.
 
 ## Source-heuristic hints
 

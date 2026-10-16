@@ -10,6 +10,7 @@ Use the component needed for the requested content. These examples target lab/sh
 
 - For figures, video, or Mermaid sizing, read [media](references/media.md).
 - For code and line highlighting, callouts, citations, notes, or text wrapping, read [text components](references/text.md).
+- For an intentionally long table or appendix in HTML presentation, read [scrollable bodies](references/scroll.md).
 - For logo and theme-variable overrides, read [theme variables](references/theme-variables.md).
 - For columns and placement, use [marp-slide-types](../marp-slide-types/SKILL.md); for the one-page canvas, use [marp-paper](../marp-paper/SKILL.md).
 
