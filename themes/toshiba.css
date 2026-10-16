@@ -1620,6 +1620,39 @@ section.github-light, section.title.github-light {
   --color-em: var(--color-github-light-emphasis);
   --color-strong: var(--color-github-light-strong);
 }
+section[data-marpagent-scroll="true"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+section[data-marpagent-scroll="true"] > :is(header, h1, h2, h3, h4, h5, h6, footer) {
+  flex: 0 0 auto;
+}
+section[data-marpagent-scroll="true"] > .marpagent-scroll-body {
+  position: relative;
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  margin-bottom: 48px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+}
+section[data-marpagent-scroll="true"]:not(:has(> header)) > :first-child {
+  margin-top: 0.5em;
+}
+section[data-marpagent-scroll="true"] > .marpagent-scroll-body > :first-child {
+  margin-top: 0;
+}
+section[data-marpagent-scroll="true"] > .marpagent-scroll-body > :last-child {
+  margin-bottom: 0;
+}
+section[data-marpagent-scroll="true"] > .marpagent-scroll-body:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: -2px;
+}
 section {
   --fg: var(--color-on-surface);
   --bg: var(--color-neutral);

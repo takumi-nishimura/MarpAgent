@@ -6,9 +6,14 @@ const { loadDefaultJapaneseParser } = require("budoux");
 const marpGithubAlertsPlugin = require("./scripts/github-alerts-plugin");
 const marpHideSlidesPlugin = require("./scripts/hide-slides-plugin");
 const marpMermaidPlugin = require("./scripts/mermaid-plugin");
+const marpScrollSlidesPlugin = require("./scripts/scroll-slides-plugin");
 
 const cursorScript = fs.readFileSync(
     path.join(__dirname, "scripts/presenter-cursor.js"),
+    "utf8",
+);
+const scrollScript = fs.readFileSync(
+    path.join(__dirname, "scripts/presenter-scroll.js"),
     "utf8",
 );
 
@@ -89,13 +94,15 @@ module.exports = {
         const base = new Marp({ html: true, ...options })
             .use(marpHideSlidesPlugin)
             .use(marpMermaidPlugin)
-            .use(marpGithubAlertsPlugin);
+            .use(marpGithubAlertsPlugin)
+            .use(marpScrollSlidesPlugin);
         const _render = base.render.bind(base);
         base.render = (markdown, env) => {
             ensureCustomSizesForMarkdown(base, markdown);
             const result = _render(markdown, env);
             const html =
-                applyBudoux(result.html) + `\n<script>${cursorScript}</script>`;
+                applyBudoux(result.html) +
+                `\n<script>${cursorScript}</script>\n<script>${scrollScript}</script>`;
             return { ...result, html };
         };
         return base;
