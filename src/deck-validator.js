@@ -1008,6 +1008,18 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
       (finding) => !SUPERSEDED_BY_RENDER.has(finding.ruleId),
     );
     for (const slideAudit of measurement.slides) {
+      if (slideAudit.scrollable?.maxScrollTop > 2) {
+        result.findings.push(
+          buildFinding(
+            { number: slideAudit.slideNumber },
+            "scroll-export-overflow",
+            "warning",
+            "The scrollable body extends beyond its initial viewport; PDF, PPTX, image exports and printing show only the initial viewport.",
+            "Use the interactive HTML presentation to reach the full body, or split this slide before making a complete static handout.",
+            "render",
+          ),
+        );
+      }
       if (slideAudit.clipped.length === 0) continue;
       result.findings.push(
         buildFinding(

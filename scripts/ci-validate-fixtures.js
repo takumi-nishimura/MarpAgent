@@ -15,6 +15,13 @@ const validateScript = path.join(repoRoot, "scripts", "validate-deck.js");
 const expectations = [
   { fixture: "fixtures/clean-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/core5-slide.md", errors: [], hints: [] },
+  {
+    fixture: "fixtures/scroll-slide.md",
+    errors: [],
+    warnings: ["scroll-export-overflow"],
+    hints: [],
+    fallbackHints: ["overflow-risk"],
+  },
   { fixture: "fixtures/paginate-skip-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/muji-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/toshiba-slide.md", errors: [], hints: [] },
