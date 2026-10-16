@@ -245,6 +245,19 @@ escapes only when rendering is unavailable.
 
 ## Validation Contract
 
+An opted-in `<!-- _scroll: true -->` slide keeps its original canvas size and
+fixed header, first top-level heading, footer, and pagination. The plugin adds
+`data-marpagent-scroll="true"` to the slide and one direct
+`.marpagent-scroll-body` child. Shared scroll styles provide a focusable
+vertical viewport without reducing font sizes. The scroll controller
+synchronizes the current body's normalized position within the native
+Bespoke presentation session, including presenter windows.
+
+Rendered validation visits successive body positions. Vertical content beyond
+the initial viewport yields a non-blocking `scroll-export-overflow` warning
+because PDF/PPTX/images and printing show that viewport. Horizontal overflow
+still fails as `content-clipped`. Regular slides retain their existing layout.
+
 The validator checks rendered clipping, collisions, and readable type sizes.
 Source density rules are hints, not quotas for bullet or card counts. Preserve
 the information needed to understand a comparison; revise or split when the

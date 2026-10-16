@@ -2,6 +2,23 @@
 
 Read the section needed for the component being authored. Preserve existing text and citations when making a layout-only change.
 
+## Code and line highlighting
+
+Use a language-tagged fence for source code. Core 5 uses Shiki; specify the lines that support the explanation with a comma-separated list or ranges, counted from the first line inside the fence:
+
+````markdown
+```js {2,4-5}
+function average(values) {
+  if (values.length === 0) return 0;
+  const total = values.reduce((sum, value) => sum + value, 0);
+  const count = values.length;
+  return total / count;
+}
+```
+````
+
+Highlight only the relevant lines and update the indices after editing the code. Let the active theme supply colors through `--marp-shiki-*`; `.hljs-*` overrides no longer apply. Keep the code short enough to read without shrinking its font. See [the runnable Core 5 examples](../../../../template/core5-components.md) for code, math, and both Mermaid rendering paths.
+
 ## Callouts
 
 Use a callout for a distinct note, exception, or warning that benefits from a visual boundary. Ordinary explanation can remain plain text beside a table or figure; a colored container is not required for every point or takeaway.

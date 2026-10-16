@@ -21,7 +21,7 @@ module.exports = {
     },
     {
       name: 'firefox-overview',
-      testMatch: /overview-(live-reload|canvas)\.spec\.js/,
+      testMatch: /(?:overview-(?:live-reload|canvas)|scroll-slides)\.spec\.js/,
       use: { browserName: 'firefox' },
     },
   ],

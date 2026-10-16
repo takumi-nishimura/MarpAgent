@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 
-const { Marp } = require("@marp-team/marp-core");
+const { Marp } = require("@marp-team/marp-core/full");
 
 const configPath = path.join(__dirname, "../..", "marp.config.js");
 

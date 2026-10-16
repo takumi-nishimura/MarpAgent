@@ -892,6 +892,77 @@ function formatSmallTextTitle(slideAudit) {
   return `Text renders below the readable size floor${floors}: ${parts.join(", ")}${more}.`;
 }
 
+const RENDER_ERROR_RULES = {
+  math: {
+    ruleId: "math-render-error",
+    noun: "Math",
+    namesEngine: true,
+    suggestion:
+      "Fix the TeX of the listed formula (balance braces, close environments, use commands the configured math engine supports); in a Mermaid label, fix the $...$ math inside the label.",
+  },
+  diagram: {
+    ruleId: "diagram-render-error",
+    noun: "A Mermaid diagram",
+    suggestion:
+      "Fix the Mermaid source so it parses (start with a supported header such as `flowchart LR` and check the node and edge syntax); the slide currently shows the diagram source instead of the diagram.",
+  },
+};
+
+const RENDER_ENGINE_NAMES = {
+  katex: "KaTeX",
+  mathjax: "MathJax",
+  mermaid: "Mermaid",
+};
+
+function formatRenderErrorTitle(rule, errors) {
+  const total = errors.reduce((sum, item) => sum + (item.count || 1), 0);
+  const parts = errors.slice(0, 3).map((item) => {
+    const engine = RENDER_ENGINE_NAMES[item.engine] || item.engine;
+    const message = (item.message || "render failed").replace(/\.$/, "");
+    // Math may come from two engines on one slide (body KaTeX, MathJax in a
+    // Mermaid label); a diagram's engine is already in the rule's noun.
+    const detail =
+      !rule.namesEngine ||
+      message.toLowerCase().startsWith(engine.toLowerCase())
+        ? message
+        : `${engine}: ${message}`;
+    const times = item.count > 1 ? ` x${item.count}` : "";
+    return item.source
+      ? `"${item.source}" (${detail})${times}`
+      : `${detail}${times}`;
+  });
+  const more = errors.length > 3 ? `; and ${errors.length - 3} more` : "";
+  const where = total > 1 ? ` in ${total} places` : "";
+  return `${rule.noun} failed to render${where}: ${parts.join("; ")}${more}.`;
+}
+
+/**
+ * One `math-render-error` or `diagram-render-error` per slide and kind for
+ * math and diagrams the browser rendered as an error (src/visual-overflow.js).
+ */
+function buildRenderErrorFindings(renderedSlides) {
+  const findings = [];
+  for (const slideAudit of renderedSlides) {
+    for (const [kind, rule] of Object.entries(RENDER_ERROR_RULES)) {
+      const errors = (slideAudit.renderErrors || []).filter(
+        (item) => item.kind === kind,
+      );
+      if (errors.length === 0) continue;
+      findings.push(
+        buildFinding(
+          { number: slideAudit.slideNumber },
+          rule.ruleId,
+          "error",
+          formatRenderErrorTitle(rule, errors),
+          rule.suggestion,
+          "render",
+        ),
+      );
+    }
+  }
+  return findings;
+}
+
 // Source heuristics that a successful render answers directly, so they are
 // dropped instead of reported as hints: the clipping check replaces
 // `overflow-risk` and the rendered font size check replaces `typography-drift`
@@ -937,6 +1008,18 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
       (finding) => !SUPERSEDED_BY_RENDER.has(finding.ruleId),
     );
     for (const slideAudit of measurement.slides) {
+      if (slideAudit.scrollable?.maxScrollTop > 2) {
+        result.findings.push(
+          buildFinding(
+            { number: slideAudit.slideNumber },
+            "scroll-export-overflow",
+            "warning",
+            "The scrollable body extends beyond its initial viewport; PDF, PPTX, image exports and printing show only the initial viewport.",
+            "Use the interactive HTML presentation to reach the full body, or split this slide before making a complete static handout.",
+            "render",
+          ),
+        );
+      }
       if (slideAudit.clipped.length === 0) continue;
       result.findings.push(
         buildFinding(
@@ -988,6 +1071,7 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
         ),
       );
     }
+    result.findings.push(...buildRenderErrorFindings(measurement.slides));
   }
 
   // The file check runs whether or not the render succeeded; rendered media

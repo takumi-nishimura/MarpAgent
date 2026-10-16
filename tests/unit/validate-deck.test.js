@@ -287,6 +287,121 @@ function writeTempDeck(markdown) {
   return { dir, deckPath };
 }
 
+for (const math of ["katex", "mathjax"]) {
+  test(`rendered ${math} and Mermaid failures retain slide identity and fail validation`, async (t) => {
+    if (!(await supportsVisualChecks())) {
+      t.skip("Chromium is unavailable in this environment.");
+      return;
+    }
+    const markdown = fs
+      .readFileSync(fixture("render-errors-slide.md"), "utf8")
+      .replace("math: katex", `math: ${math}`);
+    const { dir, deckPath } = writeTempDeck(markdown);
+    t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+    const result = await validateDeckWithVisualCheck(deckPath, {
+      strictVisual: true,
+    });
+    assert.equal(result.visualCheck.status, "measured");
+    const errors = result.findings.filter((finding) =>
+      /^(math|diagram)-render-error$/.test(finding.ruleId),
+    );
+    assert.deepEqual(
+      errors.map((finding) => [
+        finding.slide,
+        finding.renderedSlide,
+        finding.page,
+        finding.ruleId,
+      ]),
+      [
+        [3, 2, 1, "math-render-error"],
+        [4, 3, 2, "diagram-render-error"],
+        [5, 4, 3, "diagram-render-error"],
+        [6, 5, 4, "math-render-error"],
+      ],
+    );
+    assert.ok(
+      errors.every(
+        (finding) =>
+          finding.severity === "error" && finding.source === "render",
+      ),
+    );
+    assert.match(errors[0].title, /brace|end of input/i);
+    assert.equal(exitCodeFor(result), 1);
+    const sarif = buildSarifReport(deckPath, result).runs[0].results.filter(
+      (item) => /^(math|diagram)-render-error$/.test(item.ruleId),
+    );
+    assert.equal(sarif.length, 4);
+    assert.ok(
+      sarif.every(
+        (item) => item.locations[0].physicalLocation.region.startLine > 1,
+      ),
+    );
+  });
+}
+
+test("rendered math and diagram errors become one error finding per slide and kind", async (t) => {
+  const { dir, deckPath } = writeTempDeck("# Math\n\n---\n\n# Clean\n");
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const result = await validateDeckWithVisualCheck(deckPath, {
+    measureRenderedSlides: measuredStub([
+      {
+        slideNumber: 1,
+        clipped: [],
+        renderErrors: [
+          {
+            kind: "math",
+            engine: "katex",
+            message: "KaTeX parse error: Expected '}'",
+            source: "\\frac{",
+            count: 2,
+          },
+          {
+            kind: "math",
+            engine: "mathjax",
+            message: "Missing close brace",
+            source: "x^{",
+            count: 1,
+          },
+          {
+            kind: "diagram",
+            engine: "mermaid",
+            message: "Invalid mermaid header.",
+            source: "",
+            count: 1,
+          },
+        ],
+      },
+      { slideNumber: 2, clipped: [], renderErrors: [] },
+    ]),
+  });
+  const errors = result.findings.filter(
+    (finding) => finding.source === "render",
+  );
+  assert.deepEqual(
+    errors.map((finding) => [
+      finding.slide,
+      finding.ruleId,
+      finding.severity,
+      finding.title,
+    ]),
+    [
+      [
+        1,
+        "math-render-error",
+        "error",
+        'Math failed to render in 3 places: "\\frac{" (KaTeX parse error: Expected \'}\') x2; "x^{" (MathJax: Missing close brace).',
+      ],
+      [
+        1,
+        "diagram-render-error",
+        "error",
+        "A Mermaid diagram failed to render: Invalid mermaid header.",
+      ],
+    ],
+  );
+  assert.equal(exitCodeFor(result), 1);
+});
+
 test("measured decks turn heuristics into hints and drop overflow-risk", async () => {
   // A long single line trips overflow-risk; many bullets trip dense-bullets.
   const bullets = Array.from({ length: 10 }, (_, i) => `- item ${i + 1}`).join("\n");

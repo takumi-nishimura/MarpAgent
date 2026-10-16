@@ -5,16 +5,17 @@
 // Rendered SVGs are cached on disk under node_modules/.cache/marpagent-mermaid/
 // so unchanged diagrams skip the render subprocess, within one process and
 // across processes. The cache key covers the diagram source, a hash of
-// src/mermaid-render.js and src/mermaid-patch.js, and the beautiful-mermaid
+// src/mermaid-render.js, and the beautiful-mermaid
 // and mathjax versions. MARP_AGENT_MERMAID_CACHE=0 disables the cache;
 // MARP_AGENT_MERMAID_CACHE_DIR overrides the cache directory (used by tests).
 const childProcess = require('child_process')
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
+const { findPackageJSON } = require('node:module')
+const { pathToFileURL } = require('node:url')
 
 const RENDER_SCRIPT = path.join(__dirname, '..', 'src', 'mermaid-render.js')
-const PATCH_SCRIPT = path.join(__dirname, '..', 'src', 'mermaid-patch.js')
 const DEFAULT_CACHE_DIR = path.join(
   __dirname,
   '..',
@@ -24,6 +25,21 @@ const DEFAULT_CACHE_DIR = path.join(
 )
 const CACHE_MAX_ENTRIES = 256
 const CACHE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000
+// A Mermaid fence that rendered as its source instead of a diagram carries
+// these attributes so the browser audit (src/visual-overflow.js) can report it.
+const RENDER_ERROR_ATTRIBUTE = 'data-marpagent-render-error'
+const RENDER_MESSAGE_ATTRIBUTE = 'data-marpagent-render-message'
+const RENDER_MESSAGE_MAX_LENGTH = 200
+const DEFAULT_RENDER_MESSAGE = 'Mermaid could not parse or lay out this diagram.'
+// Token meta key carrying the subprocess error to the native fallback.
+const FAILURE_META_KEY = 'marpagentMermaidError'
+const HTML_ESCAPES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+}
 
 function mermaidCacheEnabled() {
   return process.env.MARP_AGENT_MERMAID_CACHE !== '0'
@@ -33,24 +49,10 @@ function mermaidCacheDir() {
   return process.env.MARP_AGENT_MERMAID_CACHE_DIR || DEFAULT_CACHE_DIR
 }
 
-// Resolve a dependency version without relying on package.json being listed in
-// the package's exports map (beautiful-mermaid does not export it).
+// Resolve ESM-only dependencies without requiring a CJS export condition.
 function resolvePackageVersion(packageName) {
-  let dir = path.dirname(require.resolve(packageName))
-  const root = path.parse(dir).root
-
-  while (dir !== root) {
-    const candidate = path.join(dir, 'package.json')
-    if (fs.existsSync(candidate)) {
-      const parsed = JSON.parse(fs.readFileSync(candidate, 'utf8'))
-      if (parsed.name === packageName) {
-        return parsed.version
-      }
-    }
-    dir = path.dirname(dir)
-  }
-
-  return 'unresolved'
+  const file = findPackageJSON(packageName, pathToFileURL(__filename))
+  return JSON.parse(fs.readFileSync(file, 'utf8')).version
 }
 
 function fileSha256(filePath) {
@@ -63,7 +65,6 @@ function fileSha256(filePath) {
 function cacheFingerprint() {
   return {
     render: fileSha256(RENDER_SCRIPT),
-    patch: fileSha256(PATCH_SCRIPT),
     beautifulMermaid: resolvePackageVersion('beautiful-mermaid'),
     mathjax: resolvePackageVersion('mathjax'),
   }
@@ -180,22 +181,92 @@ function renderMermaidSync(code) {
   return svg
 }
 
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (char) => HTML_ESCAPES[char])
+}
+
+// First non-empty line of an error message, whitespace-collapsed and capped.
+function summarizeRenderError(message) {
+  const line = String(message || '')
+    .replace(/^Mermaid subprocess failed:\s*/, '')
+    .split(/\r?\n/)
+    .map((part) => part.replace(/\s+/g, ' ').trim())
+    .find(Boolean)
+  if (!line) return DEFAULT_RENDER_MESSAGE
+  return line.length > RENDER_MESSAGE_MAX_LENGTH
+    ? `${line.slice(0, RENDER_MESSAGE_MAX_LENGTH - 1)}…`
+    : line
+}
+
+// Keep the visible source fallback and attach one escaped diagnostic to it.
+function markRenderFailure(html, message) {
+  const attributes =
+    `${RENDER_ERROR_ATTRIBUTE}="mermaid" ` +
+    `${RENDER_MESSAGE_ATTRIBUTE}="${escapeHtml(summarizeRenderError(message))}"`
+  if (/^<pre\b/.test(html)) {
+    return html.replace(/^<pre\b/, () => `<pre ${attributes}`)
+  }
+  return `<div ${attributes}>${html}</div>`
+}
+
 const marpMermaidPlugin = (md) => {
-  const defaultFence = md.renderer.rules.fence.bind(md.renderer.rules)
+  const fence = md.renderer.rules.fence
+  const nativeMermaid = md.renderer.rules.marp_mermaid
+
+  const renderNative = (tokens, idx, options, env, self) => {
+    const html = nativeMermaid(tokens, idx, options, env, self)
+    // Apply the shared slide/paper sizing contract to Core 5's native SVGs.
+    return html.replace(
+      /^<p>(<svg\b[\s\S]*<\/svg>)<\/p>\s*$/,
+      '<div class="mermaid-diagram">$1</div>',
+    )
+  }
+  const renderFailedSource = (message, tokens, idx, options, env, self) =>
+    markRenderFailure(fence(tokens, idx, options, env, self), message)
+  // Throws when the subprocess fails; the caller chooses the fallback.
+  const renderSubprocess = (token) => {
+    try {
+      const svg = renderMermaidSync(token.content.trim())
+      return `<div class="mermaid-diagram">${svg}</div>`
+    } catch (err) {
+      console.warn(`[mermaid] render-failed: ${err.message}`)
+      throw err
+    }
+  }
 
   md.renderer.rules.fence = (tokens, idx, options, env, self) => {
     const token = tokens[idx]
+    // Core 5's native renderer falls back to the fence renderer once it has
+    // failed. Show the source with a diagnostic instead of retrying.
+    if (token.type === 'marp_mermaid') {
+      const message = token.meta && token.meta[FAILURE_META_KEY]
+      return renderFailedSource(message, tokens, idx, options, env, self)
+    }
     if (token.info.trim() === 'mermaid') {
-      const code = token.content.trim()
       try {
-        const svg = renderMermaidSync(code)
-        return `<div class="mermaid-diagram">${svg}</div>`
+        return renderSubprocess(token)
       } catch (err) {
-        console.warn(`[mermaid] render-failed: ${err.message}`)
-        return defaultFence(tokens, idx, options, env, self)
+        return renderFailedSource(err.message, tokens, idx, options, env, self)
       }
     }
-    return defaultFence(tokens, idx, options, env, self)
+    return fence(tokens, idx, options, env, self)
+  }
+
+  // Core 5 rewrites Mermaid fences before rendering. Plain fences try the
+  // subprocess first and fall back to the native renderer; attribute-bearing
+  // fences (e.g. interactive) retain upstream behavior.
+  if (nativeMermaid) {
+    md.renderer.rules.marp_mermaid = (tokens, idx, options, env, self) => {
+      const token = tokens[idx]
+      if (token.info.trim() === 'mermaid') {
+        try {
+          return renderSubprocess(token)
+        } catch (err) {
+          token.meta = { ...token.meta, [FAILURE_META_KEY]: err.message }
+        }
+      }
+      return renderNative(tokens, idx, options, env, self)
+    }
   }
 }
 

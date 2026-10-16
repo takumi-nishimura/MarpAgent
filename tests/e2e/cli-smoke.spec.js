@@ -106,15 +106,15 @@ test("outline generation smoke", () => {
   }
 });
 
-test("export smoke: pptx, html, and images to a temp directory", () => {
-  // Three Chromium-backed conversions run back to back.
+test("export smoke: Core 5 features in pdf, pptx, html, and images", () => {
+  // Browser-backed conversions run back to back.
   test.setTimeout(120000);
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-e2e-export-"));
 
   try {
     const pptxPath = path.join(tempDir, "deck.pptx");
     const pptx = runMarpx([
-      "fixtures/clean-slide.md",
+      "template/core5-components.md",
       "--pptx",
       "--output",
       pptxPath,
@@ -131,9 +131,16 @@ test("export smoke: pptx, html, and images to a temp directory", () => {
     expect(pptx.status, pptx.stderr).toBe(0);
     expect(fs.statSync(pptxPath).size).toBeGreaterThan(0);
 
+    const pdfPath = path.join(tempDir, "deck.pdf");
+    const pdf = runMarpx([
+      "template/core5-components.md", "--pdf", "--output", pdfPath,
+    ]);
+    expect(pdf.status, pdf.stderr).toBe(0);
+    expect(fs.readFileSync(pdfPath).subarray(0, 5).toString()).toBe("%PDF-");
+
     const htmlPath = path.join(tempDir, "deck.html");
     const html = runMarpx([
-      "fixtures/clean-slide.md",
+      "template/core5-components.md",
       "--html",
       "--output",
       htmlPath,
@@ -142,10 +149,14 @@ test("export smoke: pptx, html, and images to a temp directory", () => {
     expect(html.status, html.stderr).toBe(0);
     const htmlContent = fs.readFileSync(htmlPath, "utf8");
     expect(htmlContent).toContain("<section");
+    expect(htmlContent).toContain('class="shiki marp-shiki"');
+    expect(htmlContent).toContain('class="mermaid-diagram"');
+    expect(htmlContent).toContain("<mjx-container");
+    expect(htmlContent).toContain("data-marp-mermaid");
 
     const imagesPrefix = path.join(tempDir, "slide.png");
     const images = runMarpx([
-      "fixtures/clean-slide.md",
+      "template/core5-components.md",
       "--images",
       "png",
       "--output",

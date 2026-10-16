@@ -214,7 +214,7 @@ def parse_record(path: Path) -> tuple[dict[str, Any], str]:
         raise ValueError("missing YAML frontmatter delimited by ---")
     metadata = yaml.safe_load(match.group(1))
     if not isinstance(metadata, dict):
-        raise ValueError("frontmatter must be a mapping")
+        raise TypeError("frontmatter must be a mapping")
     return metadata, match.group(2)
 
 
@@ -325,7 +325,13 @@ def collect(root: Path) -> tuple[dict[str, Record], list[str]]:
                 continue
             try:
                 metadata, body = parse_record(path)
-            except (OSError, UnicodeError, ValueError, yaml.YAMLError) as exc:
+            except (
+                OSError,
+                UnicodeError,
+                TypeError,
+                ValueError,
+                yaml.YAMLError,
+            ) as exc:
                 fail(path, str(exc))
                 continue
             for validator in (common_validator, type_validators[expected_type]):

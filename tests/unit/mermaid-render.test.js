@@ -96,8 +96,14 @@ test('mermaid render emits multiline labels as tspans', () => {
 
   assert.doesNotMatch(svg, /&lt;br/)
   assert.doesNotMatch(svg, /&quot;/)
-  assert.match(svg, /<tspan x="[^"]+" dy="-0\.25em">foo<\/tspan>/)
-  assert.match(svg, /<tspan x="[^"]+" dy="1\.2em">bar<\/tspan>/)
+  assert.match(svg, /<tspan x="[^"]+" dy="-[^"]+">foo<\/tspan>/)
+  assert.match(svg, /<tspan x="[^"]+" dy="[\d.]+">bar<\/tspan>/)
+})
+
+test('mermaid render measures fullwidth Japanese labels before layout', () => {
+  const japanese = renderMermaid('flowchart TD\nA["日本語文字"] --> B[Output]')
+  const latin = renderMermaid('flowchart TD\nA["abcde"] --> B[Output]')
+  assert.ok(firstNodeRect(japanese).width > firstNodeRect(latin).width)
 })
 
 test('mermaid render sizes explicit multiline node labels before layout', () => {
@@ -209,6 +215,7 @@ test('mermaid cache does not store failed renders', (t) => {
 
   const failed = renderFence(code)
   assert.match(failed, /language-mermaid/)
+  assert.match(failed, /data-marpagent-render-error="mermaid"/)
 
   const retried = renderFence(code)
   assert.match(retried, /<div class="mermaid-diagram"><svg>/)
@@ -216,6 +223,47 @@ test('mermaid cache does not store failed renders', (t) => {
   const cached = renderFence(code)
   assert.equal(calls(), 2)
   assert.equal(cached, retried)
+})
+
+test('native Mermaid failures retain their source and expose one render diagnostic', () => {
+  const { Marp } = require('@marp-team/marp-core/full')
+  const html = new Marp()
+    .use(marpMermaidPlugin)
+    .render('```mermaid interactive\nnot a diagram\n```').html
+  assert.match(html, /language-mermaid/)
+  assert.equal(
+    (html.match(/data-marpagent-render-error="mermaid"/g) || []).length,
+    1,
+  )
+})
+
+test('Mermaid render diagnostics escape the error message', (t) => {
+  useTempCacheDir(t)
+  stubExecFileSync(t, () => {
+    const error = new Error('boom')
+    error.stderr = `"><img src=x onerror=alert(1)> $& 'q'\nsecond line`
+    throw error
+  })
+  const html = renderFence('flowchart LR\nA --> B')
+  assert.equal(
+    html.match(/<pre ([^>]*)>/)[1],
+    'data-marpagent-render-error="mermaid" data-marpagent-render-message="' +
+      '&quot;&gt;&lt;img src=x onerror=alert(1)&gt; $&amp; &#39;q&#39;"',
+  )
+  assert.doesNotMatch(html, /<img|second line/)
+})
+
+test('a successful native fallback is not reported as a diagram failure', (t) => {
+  useTempCacheDir(t)
+  stubExecFileSync(t, () => {
+    throw new Error('subprocess unavailable')
+  })
+  const { Marp } = require('@marp-team/marp-core/full')
+  const html = new Marp()
+    .use(marpMermaidPlugin)
+    .render('```mermaid\nflowchart LR\nA --> B\n```').html
+  assert.match(html, /data-marp-mermaid/)
+  assert.doesNotMatch(html, /data-marpagent-render-error/)
 })
 
 test('MARP_AGENT_MERMAID_CACHE=0 disables the mermaid cache', (t) => {
@@ -237,9 +285,8 @@ test('MARP_AGENT_MERMAID_CACHE=0 disables the mermaid cache', (t) => {
 test('mermaid cache key covers source, renderer files, and package versions', () => {
   const fingerprint = {
     render: 'render-hash',
-    patch: 'patch-hash',
-    beautifulMermaid: '0.1.3',
-    mathjax: '4.1.1',
+    beautifulMermaid: '1.1.3',
+    mathjax: '4.1.3',
   }
   const code = 'flowchart TD\n  A --> B\n'
   const key = marpMermaidPlugin.buildCacheKey(code, fingerprint)
@@ -258,7 +305,6 @@ test('mermaid cache fingerprint resolves renderer hashes and dependency versions
   const mathjax = require('../../node_modules/mathjax/package.json')
 
   assert.match(fingerprint.render, /^[0-9a-f]{64}$/)
-  assert.match(fingerprint.patch, /^[0-9a-f]{64}$/)
   assert.equal(fingerprint.beautifulMermaid, beautifulMermaid.version)
   assert.equal(fingerprint.mathjax, mathjax.version)
 })

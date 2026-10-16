@@ -669,6 +669,61 @@ theme: lab
   }
 });
 
+test("measureRenderedSlides reports only painted render errors", async (t) => {
+  if (!(await supportsVisualChecks())) {
+    t.skip("Visual overflow checks are unavailable in this environment.");
+    return;
+  }
+
+  const dir = fs.mkdtempSync(
+    path.join(os.tmpdir(), "marp-agent-render-errors-"),
+  );
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const deckPath = path.join(dir, "slide.md");
+  const box = '<rect width="10" height="10"/>';
+  fs.writeFileSync(
+    deckPath,
+    `---
+marp: true
+theme: lab
+---
+
+# Hidden copies
+
+<span class="katex-error" title="visibility" style="visibility:hidden">a</span>
+<span style="opacity:0"><span class="katex-error" title="opacity">b</span></span>
+<span class="katex-error" title="sr-only" style="position:absolute;clip:rect(1px,1px,1px,1px);width:1px;height:1px;overflow:hidden">c</span>
+<code><span class="katex-error" title="code">d</span></code>
+<pre data-marpagent-render-error="mermaid" data-marpagent-render-message="offscreen" style="position:absolute;left:-4000px">e</pre>
+<svg width="40" height="40"><defs><g data-mjx-error="defs">${box}</g></defs><g style="opacity:0" data-mjx-error="svg opacity">${box}</g><g visibility="hidden" data-mjx-error="svg visibility">${box}</g><g style="display:none" data-mjx-error="svg display">${box}</g></svg>
+
+---
+
+# Painted
+
+<span class="katex-error" title="ParseError: painted &quot;&gt;">f</span>
+<svg width="40" height="40"><g data-mjx-error="painted svg"><g data-mjx-error="nested">${box}</g></g></svg>
+<pre data-marpagent-render-error="mermaid" data-marpagent-render-message="bad &lt;diagram&gt;">g</pre>
+`,
+  );
+
+  const result = await measureRenderedSlides(deckPath, { strictVisual: true });
+  assert.deepEqual(result.slides[0].renderErrors, []);
+  assert.deepEqual(
+    result.slides[1].renderErrors.map(({ kind, engine, message, source }) => [
+      kind,
+      engine,
+      message,
+      source,
+    ]),
+    [
+      ["math", "katex", 'painted ">', "f"],
+      ["math", "mathjax", "painted svg", ""],
+      ["diagram", "mermaid", "bad <diagram>", ""],
+    ],
+  );
+});
+
 test("measureRenderedSlides renders a deck whose directory name contains # and %", async (t) => {
   if (!(await supportsVisualChecks())) {
     t.skip("Visual overflow checks are unavailable in this environment.");

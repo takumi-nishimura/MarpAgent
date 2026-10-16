@@ -1,59 +1,7 @@
 // Subprocess script: reads Mermaid source from stdin, renders SVG,
 // post-processes $...$ / $$...$$ math via MathJax, outputs final SVG.
 
-const fs = require('node:fs')
 const { decodeXML, escapeText } = require('entities')
-const Module = require('node:module')
-const path = require('node:path')
-const {
-  applyBeautifulMermaidPatch,
-  assertSupportedBeautifulMermaidVersion,
-} = require('./mermaid-patch')
-
-// Patch beautiful-mermaid in-process to support CJK character width estimation.
-// Replaces the patch-package approach: transforms the source before it enters
-// the require cache so no on-disk modification is needed.
-function patchBeautifulMermaid() {
-  const filepath = require.resolve('beautiful-mermaid')
-  if (require.cache[filepath]) return
-
-  const packageJsonPath = resolvePackageJsonPath(filepath)
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
-  assertSupportedBeautifulMermaidVersion(packageJson.version)
-
-  const source = fs.readFileSync(filepath, 'utf8')
-  const patched = applyBeautifulMermaidPatch(source)
-
-  if (!patched.patched) {
-    return
-  }
-
-  const compiled = new Module(filepath, module)
-  compiled.filename = filepath
-  compiled.paths = Module._nodeModulePaths(path.dirname(filepath))
-  compiled._compile(patched.source, filepath)
-  require.cache[filepath] = compiled
-}
-
-function resolvePackageJsonPath(entryPath) {
-  let dir = path.dirname(entryPath)
-  const root = path.parse(dir).root
-
-  while (dir !== root) {
-    const candidate = path.join(dir, 'package.json')
-    if (fs.existsSync(candidate)) {
-      const parsed = JSON.parse(fs.readFileSync(candidate, 'utf8'))
-      if (parsed.name === 'beautiful-mermaid') {
-        return candidate
-      }
-    }
-    dir = path.dirname(dir)
-  }
-
-  throw new Error(
-    'Could not resolve beautiful-mermaid package.json from module entry path.',
-  )
-}
 
 function parseAttr(attrStr, name) {
   const m = attrStr.match(new RegExp(`${name}="([^"]*)"`))
@@ -313,14 +261,22 @@ async function postProcessMath(svg) {
 }
 
 async function main() {
-  patchBeautifulMermaid()
-  const { renderMermaid, THEMES } = require('beautiful-mermaid')
+  // Version 1 provides CJK metrics and multiline layout without source patches.
+  const { renderMermaidSVG } = await import('beautiful-mermaid')
 
   let input = ''
   for await (const chunk of process.stdin) input += chunk
-  const svg = await renderMermaid(input, {
-    ...THEMES['github-light'],
+  const svg = renderMermaidSVG(input, {
     transparent: true,
+    // Match Core 5's public theme variables. Cached SVGs then adapt to the
+    // active slide palette and local overrides without another subprocess.
+    bg: 'var(--marp-mermaid-background, var(--marp-shiki-background))',
+    fg: 'var(--marp-mermaid-foreground, var(--marp-shiki-foreground))',
+    line: 'var(--marp-mermaid-line)',
+    accent: 'var(--marp-mermaid-accent, var(--marp-shiki-token-keyword))',
+    muted: 'var(--marp-mermaid-muted, var(--marp-shiki-token-comment))',
+    surface: 'var(--marp-mermaid-surface, var(--marp-shiki-background))',
+    border: 'var(--marp-mermaid-border)',
   })
   const result = postProcessLineBreaks(await postProcessMath(svg))
   process.stdout.write(result)

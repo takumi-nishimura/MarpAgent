@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { Marp } = require("@marp-team/marp-core");
+const { Marp } = require("@marp-team/marp-core/full");
 
 const {
   ensureCustomSizesForMarkdown,

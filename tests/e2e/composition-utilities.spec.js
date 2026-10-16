@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const fs = require("node:fs");
 const path = require("node:path");
-const { Marp } = require("@marp-team/marp-core");
+const { Marp } = require("@marp-team/marp-core/full");
 
 async function render(page, markdown, theme) {
     const marp = new Marp({ html: true });

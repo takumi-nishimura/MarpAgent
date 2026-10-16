@@ -1,5 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { findPackageJSON } = require("node:module");
+const { pathToFileURL } = require("node:url");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 
 enforceSupportedNodeRuntime();
@@ -60,7 +62,77 @@ async function checkMarpBinary() {
   return {
     name: "marp-cli",
     status: "pass",
-    detail: `Found ${marpPath}.`,
+    detail: `CLI ${require("@marp-team/marp-cli/package.json").version}: ${marpPath}.`,
+  };
+}
+
+function checkConfiguredEngine({ createMarp } = {}) {
+  const { Marp } = require("@marp-team/marp-core/full");
+  const { createConfiguredMarp } = require("../src/slide-map");
+  const version = require("@marp-team/marp-core/package.json").version;
+  const create = createMarp || createConfiguredMarp;
+
+  for (const math of ["katex", "mathjax"]) {
+    const marp = create();
+    if (!(marp instanceof Marp)) {
+      throw new Error(
+        `The configured engine is not the installed full Core ${version}.`,
+      );
+    }
+    const { html } = marp.render(`---
+math: ${math}
+---
+$x^2$
+
+\`\`\`js {1}
+const value = 42;
+\`\`\`
+
+\`\`\`mermaid
+flowchart LR
+A["日本語 $x<y$"] --> B[Output]
+\`\`\`
+
+\`\`\`mermaid interactive
+flowchart LR
+A --> B
+\`\`\`
+`);
+    const checks = [
+      ["Shiki", /class="shiki marp-shiki"/],
+      ["line highlighting", /class="line highlighted"/],
+      [math, math === "katex" ? /class="katex"/ : /<mjx-container/],
+      ["extended Mermaid", /class="mermaid-diagram"/],
+      ["diagram math", /data-mml-node="math"/],
+      ["native Mermaid", /data-marp-mermaid/],
+    ];
+    for (const [feature, pattern] of checks) {
+      if (!pattern.test(html))
+        throw new Error(
+          `Core ${version}: ${feature} did not render (${math} probe).`,
+        );
+    }
+    if (/katex-error|data-mjx-error|data-marpagent-render-error/.test(html)) {
+      throw new Error(
+        `Core ${version}: the ${math} probe contains a rendering error.`,
+      );
+    }
+  }
+
+  const features = [
+    "shiki",
+    "line-highlight",
+    "katex",
+    "mathjax",
+    "mermaid-math",
+    "mermaid-native",
+  ];
+  return {
+    name: "marp-engine",
+    status: "pass",
+    version,
+    features,
+    detail: `Configured full Core ${version}: ${features.join(", ")} rendered successfully.`,
   };
 }
 
@@ -99,30 +171,15 @@ async function checkPlaywrightLaunch() {
 }
 
 async function checkBeautifulMermaidVersion() {
-  const fs = require("node:fs");
-  const path = require("node:path");
-  const { assertSupportedBeautifulMermaidVersion } = require("../src/mermaid-patch");
-
-  let dir = path.dirname(require.resolve("beautiful-mermaid"));
-  const root = path.parse(dir).root;
-
-  while (dir !== root) {
-    const candidate = path.join(dir, "package.json");
-    if (fs.existsSync(candidate)) {
-      const pkg = JSON.parse(fs.readFileSync(candidate, "utf8"));
-      if (pkg.name === "beautiful-mermaid") {
-        assertSupportedBeautifulMermaidVersion(pkg.version);
-        return {
-          name: "beautiful-mermaid",
-          status: "pass",
-          detail: `Version ${pkg.version} is supported by patch canary.`,
-        };
-      }
-    }
-    dir = path.dirname(dir);
-  }
-
-  throw new Error("Could not resolve beautiful-mermaid package.json.");
+  const file = findPackageJSON("beautiful-mermaid", pathToFileURL(__filename));
+  const { version } = JSON.parse(fs.readFileSync(file, "utf8"));
+  const { renderMermaidSVG } = await import("beautiful-mermaid");
+  renderMermaidSVG("flowchart LR\nA --> B");
+  return {
+    name: "beautiful-mermaid",
+    status: "pass",
+    detail: `Version ${version} renders SVG successfully.`,
+  };
 }
 
 function printTextReport(checks) {
@@ -139,6 +196,7 @@ async function main() {
   const runners = [
     checkNodeRuntime,
     checkMarpBinary,
+    checkConfiguredEngine,
     checkThemes,
     checkPlaywrightLaunch,
     checkBeautifulMermaidVersion,
@@ -166,4 +224,6 @@ async function main() {
   process.exit(hasFailure ? 1 : 0);
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = { checkConfiguredEngine };

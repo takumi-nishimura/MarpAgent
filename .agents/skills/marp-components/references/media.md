@@ -31,6 +31,10 @@ Video:
 
 ## Mermaid Diagrams
 
+Plain `mermaid` fences use MarpAgent's cached renderer and support `$...$` math in diagram labels. Attribute-bearing fences such as `mermaid interactive` use Core 5's renderer; diagram math and the MarpAgent cache apply only to plain fences. Choose the plain fence for printable research diagrams with formulas. Check the intended HTML and static output when using interactive diagrams.
+
+Both renderers use the active theme's Shiki palette and the same `--mermaid-*` sizing controls below. For a needed local color change, set `--marp-mermaid-foreground`, `--marp-mermaid-line`, or `--marp-mermaid-accent` on the wrapper instead of rewriting generated SVG elements. Cached diagrams follow these CSS overrides without rerendering.
+
 Wrap in a width-constrained div:
 
 ````markdown

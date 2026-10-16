@@ -31,6 +31,23 @@ HTML / PDF / PPTX
 npm install
 ```
 
+Marp CLI is pinned to 4.5.1 and Marp Core to 5.0.2 (currently the upstream
+release candidate). The repository config explicitly constructs the Core 5
+`@marp-team/marp-core/full` engine, so exports and in-process slide parsing use
+the same features even when launched outside this directory. CLI also installs
+its own Core 4 fallback dependency; that copy is not the configured renderer.
+All optional Core 5 rendering dependencies are declared in `package.json`.
+
+Code highlighting uses Shiki. Shared themes map `--marp-shiki-*` variables to
+their existing light/dark design tokens; custom `.hljs-*` overrides need to be
+migrated to these variables. Plain Mermaid fences retain the repository's
+cached renderer with diagram math, while attributes such as `mermaid interactive`
+use the upstream renderer. See the [Core 5 migration guide](https://github.com/marp-team/marp-core/blob/v5.0.2/docs/migration-v5.md)
+and [ADR-0004](docs/decisions/ADR-0004-adopt-marp-core-5-with-explicit-full-engine.md).
+
+For runnable examples of code line highlighting (`js {2,4-5}`), diagram math,
+and native Mermaid, see [template/core5-components.md](template/core5-components.md).
+
 ## Quick Start
 
 ```bash
@@ -126,6 +143,11 @@ files land next to the slide deck:
 sequences. For `--images`, `--output` is the file prefix —
 `--output out/slide.png` produces `out/slide.001.png`, `out/slide.002.png`, …
 
+`marpx --doctor` reports the CLI and configured Core versions and renders
+small Shiki, line-highlight, KaTeX, MathJax, diagram-math, and native-Mermaid
+probes through the same engine used for exports. A missing rendering feature
+fails the diagnostic; the browser availability check is reported separately.
+
 HTML export keeps relative references to deck media instead of embedding
 them. Open the HTML from the deck directory (the default output location)
 so `assets/` and `shared/` paths resolve; an `--output` path outside the
@@ -148,9 +170,53 @@ findings; JSON lists output failures in `artifacts.errors`, while `report.json`
 and SARIF run properties use `artifactErrors`. Report screenshots use the same
 browser selection and conversion timeout as image exports.
 
+Rendered Mermaid source fallbacks are blocking `diagram-render-error`
+findings. Visible KaTeX and MathJax errors, including errors inside diagrams,
+are `math-render-error` findings. They carry the same slide identity as other
+rendered findings; hidden slides and literal code examples are ignored. A
+successful native fallback does not count as a diagram error. These checks
+require the rendered validation pass. See [ADR-0005](docs/decisions/ADR-0005-report-rendered-diagram-and-math-failures.md).
+
 Autofix changes tiny typography classes in HTML `class` attributes and removes
 plain `<small>` wrappers. It preserves image URLs, prose, code examples, and
 the original line endings. Use `--autofix --dry-run` to inspect the edits.
+
+### Scroll a selected slide during presentation
+
+Add `<!-- _scroll: true -->` to an intentionally long slide, such as a detailed
+table or appendix. It applies only to that page:
+
+```markdown
+<!-- _scroll: true -->
+## Detailed results
+
+Long table or body content goes here.
+
+---
+
+## Next slide
+
+This page uses the normal layout and navigation.
+```
+
+In `marpx` live presentation and exported Bespoke HTML, the body scrolls with
+the wheel, trackpad, touch, or Up/Down/PageUp/PageDown/Home/End. Header, first
+top-level heading, footer, and page number stay fixed. Left/Right and existing
+page controls still change slides. Focused form controls keep their own keys.
+The shared `lab`, `muji`, and `toshiba` themes include this layout.
+
+Open the presenter window from the same presentation (`p` or the presenter
+button). The current page's scroll position synchronizes in either direction,
+including a presenter opened after scrolling. Each page remembers its position
+when revisited. Synchronization is within the same browser/origin and native
+Marp presentation session; independently opened presentations remain separate.
+
+PDF, PPTX, images, and printing show only the initial body viewport. Validation
+reports a non-blocking `scroll-export-overflow` warning when detail would be
+omitted, while checking successive scroll positions for clipping, small text,
+collisions, and rendering errors. Split the page for a complete static handout.
+See the [runnable example](fixtures/scroll-slide.md) and
+[ADR-0006](docs/decisions/ADR-0006-adopt-opt-in-synchronized-slide-body-scrolling.md).
 
 For interactive authoring, use `marpx ...`. `.mise.toml` adds the repository
 root to `PATH` when mise is active, and the repo-local wrapper runs the npm
@@ -274,6 +340,11 @@ flowchart TD
 Use `--mermaid-width`, `--mermaid-max-width`, `--mermaid-max-height`, and
 `--mermaid-overflow` on a wrapper when the default diagram size does not fit.
 Do not rely on post-render text font-size changes for node sizing.
+
+These sizing controls apply to both plain and attribute-bearing Mermaid
+fences. Both use the active theme's Shiki palette. Override
+`--marp-mermaid-foreground`, `--marp-mermaid-line`, or `--marp-mermaid-accent`
+on the wrapper for a local color change; cached SVGs follow the CSS variables.
 
 For node label line breaks, use `<br/>` or `\n` inside a quoted Mermaid label.
 Explicit line breaks are measured before layout, so the node box height grows
