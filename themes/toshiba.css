@@ -1635,10 +1635,17 @@ section[data-marpagent-scroll="true"] > .marpagent-scroll-body {
   min-height: 0;
   min-width: 0;
   margin-bottom: 48px;
+  margin-inline-end: calc(var(--padding-x) * -0.6);
+  padding-inline-end: calc(var(--padding-x) * 0.6);
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior-y: contain;
   touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: var(--fg-muted) transparent;
+  @supports (color: color-mix(in lab, red, red)) {
+    scrollbar-color: color-mix(in srgb, var(--fg-muted) 30%, transparent) transparent;
+  }
 }
 section[data-marpagent-scroll="true"]:not(:has(> header)) > :first-child {
   margin-top: 0.5em;
