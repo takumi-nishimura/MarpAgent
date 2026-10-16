@@ -112,6 +112,17 @@ section p {
   margin: 0.5em 0;
 }
 
+/* Native slide footers share the pagination's type scale and bottom inset. */
+section > footer:not(.paper-footer) {
+  position: absolute;
+  inset-inline: var(--padding-x);
+  bottom: 20px;
+  margin: 0;
+  padding: 0;
+  font-size: 0.5em;
+  color: var(--fg-muted);
+}
+
 /* Pagination */
 section::after {
   font-size: 0.5em;

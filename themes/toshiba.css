@@ -610,6 +610,15 @@ section li {
 section p {
   margin: 0.5em 0;
 }
+section > footer:not(.paper-footer) {
+  position: absolute;
+  inset-inline: var(--padding-x);
+  bottom: 20px;
+  margin: 0;
+  padding: 0;
+  font-size: 0.5em;
+  color: var(--fg-muted);
+}
 section::after {
   font-size: 0.5em;
   color: var(--fg-muted);
