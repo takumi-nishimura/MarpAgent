@@ -66,3 +66,5 @@ skip判定を共通ヘルパーに集約し，環境不足（launch失敗）の�
 2026-10-17: 精査レポートで検出（tests/CI領域の精読）．
 
 2026-10-18：共通classifierは実行ファイル不在，必要library不在，明示的sandbox起動拒否だけを認める．launch以外のclose失敗，型エラー，module不在，汎用Chromium/Playwright/visual-check文字列を環境skipから除いた．偽launchとcloseを使う回帰で旧helperの例外隠蔽を再現後，3件が成功した．`PLAYWRIGHT_BROWSERS_PATH`を存在しない場所へ向けた別unitプロセスでは，明示的可用性テストがexit 1となった．正常環境のunit313件，CLI smoke 6件，厳格ゲートも成功した．
+
+2026-10-18：[PR #50の追加指摘](https://github.com/takumi-nishimura/MarpAgent/pull/50#discussion_r4303752820)を受け，`marpBrowserArgs`の独自診断`No browser executable exists. Tried: ...`を環境不足として認識する条件を追加した．行頭の診断に限定し，同じ文言を含むassertion失敗は除外する．実際のブラウザ検出処理に全候補不在を与える回帰テストでRED→GREENを確認した．classifierとブラウザ選択の計19件が成功し，strict E2Eの環境不足を失敗とする条件は維持している．

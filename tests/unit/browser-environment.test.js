@@ -7,6 +7,7 @@ const {
   createVisualSupportCheck,
   supportsVisualChecks,
 } = require("./helpers/visual-support");
+const { marpBrowserArgs } = require("../../src/marp-browser");
 
 test("only missing browser launch prerequisites qualify for environment skips", () => {
   for (const message of [
@@ -24,9 +25,32 @@ test("only missing browser launch prerequisites qualify for environment skips", 
     "Error: no-sandbox option was passed to the wrong helper",
     "Cannot find module 'playwright'",
     "spawn marp ENOENT",
+    "AssertionError: expected No browser executable exists. Tried: /missing/chrome",
   ]) {
     assert.equal(isBrowserEnvironmentFailure(message), false, message);
   }
+});
+
+test("marpx's missing-executable diagnostic qualifies as a browser prerequisite", () => {
+  assert.throws(
+    () =>
+      marpBrowserArgs({
+        platform: "linux",
+        env: {},
+        exists: () => false,
+        which: () => null,
+        playwrightChromiumPath: () => "/missing/chromium",
+      }),
+    (error) => {
+      assert.match(error.message, /^No browser executable exists\. Tried:/);
+      assert.equal(isBrowserEnvironmentFailure(error), true);
+      assert.equal(
+        isBrowserEnvironmentFailure(`Error: ${error.message}\n`),
+        true,
+      );
+      return true;
+    },
+  );
 });
 
 test("visual support caches known environment failures without hiding implementation bugs", async () => {

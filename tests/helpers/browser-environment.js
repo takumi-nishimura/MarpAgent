@@ -2,6 +2,7 @@ function isBrowserEnvironmentFailure(error) {
   const message = String(error?.message || error || "");
   // Match launch prerequisites, never a generic browser name or validator failure.
   return [
+    /^(?:Error: )?No browser executable exists\. Tried: [^\r\n]+/m,
     /Executable doesn't exist at [^\n]+/i,
     /Host system is missing dependencies to run browsers/i,
     /error while loading shared libraries: \S+: cannot open shared object file/i,
