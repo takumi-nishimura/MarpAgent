@@ -57,3 +57,5 @@ freshness検査の入力をtracked designへ限定するか，scaffold検査を�
 ## Notes
 
 2026-10-16：新規スクロールの単体検査14件，厳格なfixture検証17件，全E2Eの62件は成功した．FirefoxのCDP専用タッチ注入1件は対象外．全単体検査が成功したとは報告せず，このissueで残る検証上の問題を追跡する．
+
+2026-10-17：全体精査で根因構造を裏取りした．`tests/unit/cli-args.test.js:194-221`が実リポジトリの`designs/`・`themes/src/`・`fixtures/`へ書き出し，並列実行（`scripts/run-node-tests.js`の`node --test`）で`tests/unit/theme-css.test.js:492-499`のfreshness検査が列挙と削除の合間にENOENTとなり得る．`theme-watch.test.js:74-82`は中間状態観察を前提とする待ち込みであり，連続atomic saveがdebounceで合流すると単独実行でも失敗し得ることが読み取れる．対応の目安: scaffold検証の一時ディレクトリ隔離と，watcherテストの最終状態判定．
