@@ -248,6 +248,18 @@ section { background: url(assets/img/missing-scoped.png); }
   }
 });
 
+test("frontmatter CSS assets are checked with BOM and longer closing delimiters", (t) => {
+  const dir = makeDeck();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const deckPath = writeSlide(
+    dir,
+    '\uFEFF---\nmarp: true\nstyle: |\n  section { background-image: url(missing-cover.png); }\n  ----  \n\n# Cover\n',
+  );
+  assert.deepEqual(missingBySlide(findMissingAssets(deckPath)), {
+    1: [["missing-cover.png", "not found"]],
+  });
+});
+
 test("findMissingAssets reports missing video sources and posters", () => {
   const dir = makeDeck({ "assets/video/present.mp4": "mp4" });
   try {

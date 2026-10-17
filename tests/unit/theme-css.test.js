@@ -40,9 +40,7 @@ function collectMarkdownFiles(targetPath) {
   return files.sort();
 }
 
-// Compiled themes are the ones Marp loads (see marp.config.js). Theme sources
-// are not listed directly because cli-args.test.js scaffolds a temporary
-// source into themes/src/ while tests run concurrently.
+// Compiled themes are the ones Marp loads (see marp.config.js).
 function discoverThemeNames() {
   return fs
     .readdirSync(path.join(repoRoot, "themes"))

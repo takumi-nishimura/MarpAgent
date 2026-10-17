@@ -1,7 +1,42 @@
 const { test, expect } = require("@playwright/test");
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
+const { pathToFileURL } = require("node:url");
 const { createConfiguredMarp } = require("../../src/slide-map");
+const { auditSlidesInPage, renderToHtml } = require("../../src/visual-overflow");
+
+test("BOM frontmatter keeps the rendered validator canvas and readability floors at 4:3", async ({ page }) => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-bom-canvas-"));
+    try {
+        await page.route("https://fonts.googleapis.com/**", (route) => route.abort());
+        for (const prefix of ["", "\uFEFF"]) {
+            const deckPath = path.join(dir, "slide.md");
+            fs.writeFileSync(deckPath, `${prefix}---\nmarp: true\ntheme: lab\nsize: 4:3\n---\n# Canvas\n`);
+            const rendered = renderToHtml(deckPath);
+            try {
+                await page.goto(pathToFileURL(rendered.htmlPath).href);
+                const [audit] = await page.evaluate(auditSlidesInPage, {
+                    tolerancePx: 2,
+                    overlapTolerancePx: 2,
+                    mediaToleranceRatio: 0.02,
+                    safeMarginPx: 20,
+                    referenceHeightPx: 720,
+                    bodyFloorPx: 12,
+                    secondaryFloorPx: 8,
+                    referenceWidthPx: 1280,
+                });
+                expect([audit.width, audit.height]).toEqual([1024, 768]);
+                expect(audit.safeMarginPx).toBe(21);
+                expect(audit.textFloorPx.body).toBeCloseTo(9.6);
+            } finally {
+                fs.rmSync(rendered.tempRoot, { recursive: true, force: true });
+            }
+        }
+    } finally {
+        fs.rmSync(dir, { recursive: true, force: true });
+    }
+});
 
 const palettes = {
     lab: { light: "rgb(215, 58, 73)", dark: "rgb(198, 120, 221)" },
@@ -42,6 +77,7 @@ Before $x^2$ after.
         ["normal", palette.light],
         ["invert", palette.dark],
         ["neogaia invert", palette.light],
+        ["github-light invert", palette.light],
     ]) {
         test(`${theme} ${className}: both Mermaid renderers follow theme colors and sizing`, async ({
             page,

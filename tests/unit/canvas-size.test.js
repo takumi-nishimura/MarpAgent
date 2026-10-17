@@ -6,6 +6,7 @@ const { Marp } = require("@marp-team/marp-core/full");
 
 const {
   ensureCustomSizesForMarkdown,
+  getCanvasSize,
   findCustomPixelSizes,
   injectCustomSizeMetadata,
   isASeriesCanvas,
@@ -13,6 +14,27 @@ const {
 } = require("../../src/canvas-size");
 
 const repoRoot = path.resolve(__dirname, "../..");
+const { createConfiguredMarp, buildSlideMap } = require("../../src/slide-map");
+
+test("a leading BOM preserves canvas directives and slide source locations", () => {
+  for (const prefix of ["", "\uFEFF"]) {
+    const markdown = `${prefix}---\nmarp: true\ntheme: lab\nsize: 4:3\n---\n# Content\n`;
+    const marp = createConfiguredMarp();
+    marp.themeSet.add(fs.readFileSync(path.join(repoRoot, "themes/lab.css"), "utf8"));
+    assert.equal(getCanvasSize(markdown), "4:3");
+    assert.match(marp.render(markdown).html, /viewBox="0 0 1024 768"/);
+    const slides = buildSlideMap(markdown);
+    assert.equal(slides.length, 1);
+    assert.equal(slides[0].line, 6);
+    assert.equal(slides[0].raw, "# Content\n");
+  }
+});
+
+test("canvas frontmatter accepts longer closing fences and trailing spaces", () => {
+  for (const closing of ["----", "---  ", "   ----\t"]) {
+    assert.equal(getCanvasSize(`---\nsize: 4:3\n${closing}\n# Content`), "4:3");
+  }
+});
 
 test("parseCustomPixelSize accepts bounded width x height values", () => {
   assert.deepEqual(parseCustomPixelSize("400x200"), {

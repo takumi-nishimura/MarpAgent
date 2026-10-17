@@ -1,15 +1,11 @@
 const CUSTOM_PIXEL_SIZE_RE = /^([1-9]\d{0,4})x([1-9]\d{0,4})$/;
 const A_SERIES_SIZE_RE = /^a4-(?:portrait|landscape)$/i;
+const { frontmatterForMarkdown } = require("./markdown-input");
 
 function getFrontmatterBlock(markdown) {
-  const lines = String(markdown || "").split(/\r?\n/);
-  if (lines[0]?.trim() !== "---") return "";
-  let closingIndex = 1;
-  while (closingIndex < lines.length && lines[closingIndex].trim() !== "---") {
-    closingIndex += 1;
-  }
-  if (closingIndex >= lines.length) return "";
-  return lines.slice(1, closingIndex).join("\n");
+  return (
+    frontmatterForMarkdown(markdown)?.content.replace(/\r\n|\r/g, "\n") || ""
+  );
 }
 
 function readFrontmatterValue(markdown, key) {

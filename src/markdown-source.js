@@ -2,6 +2,10 @@ const MarkdownIt = require("markdown-it");
 const htmlInline =
   require("markdown-it/lib/rules_inline/html_inline.mjs").default;
 const image = require("markdown-it/lib/rules_inline/image.mjs").default;
+const {
+  normalizeMarkdown,
+  frontmatterForMarkdown,
+} = require("./markdown-input");
 
 // Keep source locations while using the same Markdown grammar as Marp.
 // Parsing alone never runs renderers, loads media, or invokes Mermaid.
@@ -69,10 +73,13 @@ function parseSource(source) {
   source = String(source || "");
   const lines = sourceLines(source);
   // Front matter is not Markdown content. Retain line numbers and offsets.
-  const input = source.replace(
-    /^(?:\uFEFF)?---\r?\n[\s\S]*?\r?\n---(?=\r?\n|$)/,
-    (value) => value.replace(/[^\r\n]/g, " "),
-  );
+  let input = normalizeMarkdown(source);
+  const frontmatter = frontmatterForMarkdown(input);
+  if (frontmatter) {
+    input =
+      input.slice(0, frontmatter.end).replace(/[^\r\n]/g, " ") +
+      input.slice(frontmatter.end);
+  }
   const tokens = parser.parse(input, {});
   const fragments = [];
   for (const token of tokens) {

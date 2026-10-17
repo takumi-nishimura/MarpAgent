@@ -57,6 +57,24 @@ test("supports multi-paragraph alert bodies", () => {
   assert.match(block, /<p>Second paragraph\.<\/p>/);
 });
 
+test("matches GitHub by keeping later alert markers inside the same blockquote", () => {
+  const html = renderBody("> [!NOTE]\n> a\n>\n> [!WARNING]\n> b");
+  const block = extractCallout(html, "note");
+  assert.ok(block);
+  assert.match(block, /\[!WARNING\]/);
+  assert.doesNotMatch(html, /<div class="warning">/);
+});
+
+test("blank lines between blockquotes render two or more separate alerts", () => {
+  for (const types of [["NOTE", "WARNING"], ["NOTE", "WARNING", "TIP"]]) {
+    const html = renderBody(types.map((type) => `> [!${type}]\n> ${type} body.`).join("\n\n"));
+    for (const type of types) {
+      assert.ok(extractCallout(html, type.toLowerCase()));
+    }
+    assert.doesNotMatch(html, /\[!/);
+  }
+});
+
 test("handles an alert with no body content", () => {
   const html = renderBody("> [!WARNING]");
   const block = extractCallout(html, "warning");
