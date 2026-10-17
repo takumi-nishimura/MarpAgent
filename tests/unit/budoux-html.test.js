@@ -42,6 +42,11 @@ test("leaves HTML void elements self-closing after BudouX cleanup", () => {
     assert.match(html, /<img src="x\.png" alt="x"\s*\/>/);
 });
 
+test("closes empty elements whose quoted attributes contain greater-than signs", () => {
+    const html = renderBody('<div title="a > b /&gt;"></div>\n\nAfter');
+    assert.match(html, /<div title="a > b \/>">\s*<\/div>/);
+});
+
 test("preserves Core 5 browser scripts through Japanese line breaking", () => {
     const upstreamHtml = new Marp({ html: true }).render("# Title").html;
     const scripts = upstreamHtml.match(/<script\b[^>]*>[\s\S]*?<\/script>/g);

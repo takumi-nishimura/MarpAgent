@@ -1,7 +1,8 @@
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
-const { execFileSync } = require("node:child_process");
+const { runConversionSync } = require("./conversion-runtime");
+const { getMarpBin } = require("./preview-runtime");
 const { marpBrowserArgs } = require("./marp-browser");
 const { isASeriesCanvas } = require("./canvas-size");
 const { copyDeckForRender, findMissingAssets } = require("./media-assets");
@@ -558,12 +559,7 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers, slideMap }) {
     slideMap || buildSlideMap(fs.readFileSync(deckPath, "utf8"));
 
   const repoRoot = path.resolve(__dirname, "..");
-  const marpBinary = path.join(
-    repoRoot,
-    "node_modules",
-    ".bin",
-    process.platform === "win32" ? "marp.cmd" : "marp",
-  );
+  const marpBinary = getMarpBin(repoRoot);
   const tempRoot = fs.mkdtempSync(
     path.join(os.tmpdir(), "marp-agent-validator-"),
   );
@@ -579,7 +575,7 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers, slideMap }) {
     ensureDir(tempDeckDir);
     copyDeckForRender(deckPath, copiedDeckDir);
 
-    execFileSync(
+    runConversionSync(
       marpBinary,
       [
         "--images",
@@ -594,8 +590,6 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers, slideMap }) {
         cwd: copiedDeckDir,
         encoding: "utf8",
         stdio: "pipe",
-        timeout: Number(process.env.MARP_AGENT_CONVERT_TIMEOUT_MS) || 120000,
-        killSignal: "SIGKILL",
       },
     );
 

@@ -1,5 +1,7 @@
 const path = require("node:path");
-const { spawnSync } = require("node:child_process");
+const {
+  runValidation: runValidationProcess,
+} = require("./lib/validation-process");
 
 const repoRoot = path.resolve(__dirname, "..");
 const validateScript = path.join(repoRoot, "scripts", "validate-deck.js");
@@ -13,6 +15,13 @@ const validateScript = path.join(repoRoot, "scripts", "validate-deck.js");
 //   is unavailable, because a render supersedes them (`overflow-risk`,
 //   `typography-drift`).
 const expectations = [
+  // The README example must always be measured, including in the local gate.
+  {
+    fixture: "decks/example/slide.md",
+    errors: [],
+    hints: [],
+    requireVisual: true,
+  },
   { fixture: "fixtures/clean-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/core5-slide.md", errors: [], hints: [] },
   {
@@ -85,24 +94,18 @@ const expectations = [
 ];
 const strictVisual = process.env.MARP_AGENT_REQUIRE_VISUAL === "1";
 
-function runValidation(deckPath) {
-  const args = [validateScript, deckPath, "--format", "json"];
-  if (strictVisual) {
-    args.push("--strict-visual");
-  }
-
-  const result = spawnSync(process.execPath, args, {
-    cwd: repoRoot,
-    encoding: "utf8",
-  });
-
-  if (result.stderr) process.stderr.write(result.stderr);
-  if (result.status === 2 || !result.stdout) {
-    console.error(`Validation did not complete for ${deckPath}.`);
+function runValidation(deckPath, requireVisual) {
+  try {
+    return runValidationProcess({
+      repoRoot,
+      validateScript,
+      deckPath,
+      strictVisual: strictVisual || requireVisual,
+    });
+  } catch (error) {
+    console.error(error.message);
     process.exit(1);
   }
-
-  return { status: result.status, report: JSON.parse(result.stdout) };
 }
 
 function sortedUnique(values) {
@@ -121,8 +124,9 @@ for (const {
   warnings = [],
   hints,
   fallbackHints = [],
+  requireVisual = false,
 } of expectations) {
-  const { status, report } = runValidation(fixture);
+  const { status, report } = runValidation(fixture, requireVisual);
   const measured = report.visualCheck?.status === "measured";
   const expectedHints = sortedUnique(
     measured ? hints : [...hints, ...fallbackHints],

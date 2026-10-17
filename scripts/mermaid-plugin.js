@@ -5,8 +5,8 @@
 // Rendered SVGs are cached on disk under node_modules/.cache/marpagent-mermaid/
 // so unchanged diagrams skip the render subprocess, within one process and
 // across processes. The cache key covers the diagram source, a hash of
-// src/mermaid-render.js, and the beautiful-mermaid
-// and mathjax versions. MARP_AGENT_MERMAID_CACHE=0 disables the cache;
+// src/mermaid-render.js, and the beautiful-mermaid, mathjax, and entities
+// versions. MARP_AGENT_MERMAID_CACHE=0 disables the cache;
 // MARP_AGENT_MERMAID_CACHE_DIR overrides the cache directory (used by tests).
 const childProcess = require('child_process')
 const crypto = require('crypto')
@@ -25,6 +25,7 @@ const DEFAULT_CACHE_DIR = path.join(
 )
 const CACHE_MAX_ENTRIES = 256
 const CACHE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000
+const RENDER_MAX_BUFFER = 32 * 1024 * 1024
 // A Mermaid fence that rendered as its source instead of a diagram carries
 // these attributes so the browser audit (src/visual-overflow.js) can report it.
 const RENDER_ERROR_ATTRIBUTE = 'data-marpagent-render-error'
@@ -67,6 +68,7 @@ function cacheFingerprint() {
     render: fileSha256(RENDER_SCRIPT),
     beautifulMermaid: resolvePackageVersion('beautiful-mermaid'),
     mathjax: resolvePackageVersion('mathjax'),
+    entities: resolvePackageVersion('entities'),
   }
 }
 
@@ -106,13 +108,28 @@ function pruneCache(
   { maxEntries = CACHE_MAX_ENTRIES, maxAgeMs = CACHE_MAX_AGE_MS } = {},
 ) {
   const now = Date.now()
-  const entries = fs
-    .readdirSync(dir)
-    .filter((name) => name.endsWith('.svg'))
-    .map((name) => {
-      const file = path.join(dir, name)
-      return { file, mtimeMs: fs.statSync(file).mtimeMs }
-    })
+  const entries = []
+  for (const name of fs.readdirSync(dir)) {
+    const file = path.join(dir, name)
+    const temporary = /\.svg\.([1-9]\d*)\.tmp$/.exec(name)
+    if (temporary) {
+      // A crashed writer leaves its PID in the name. Never remove files
+      // belonging to a concurrent live writer or one we cannot inspect.
+      try {
+        process.kill(Number(temporary[1]), 0)
+      } catch (error) {
+        if (error.code === 'ESRCH') fs.rmSync(file, { force: true })
+      }
+      continue
+    }
+    if (!name.endsWith('.svg')) continue
+    try {
+      const stat = fs.statSync(file)
+      if (stat.isFile()) entries.push({ file, mtimeMs: stat.mtimeMs })
+    } catch {
+      // Another process may have just evicted the same entry.
+    }
+  }
 
   const fresh = entries.filter((entry) => now - entry.mtimeMs <= maxAgeMs)
   for (const stale of entries.filter(
@@ -128,16 +145,22 @@ function pruneCache(
 }
 
 function writeCache(dir, key, svg) {
+  const tmp = `${cacheFilePath(dir, key)}.${process.pid}.tmp`
   try {
     fs.mkdirSync(dir, { recursive: true })
     // Write via a per-process temp file so a concurrent reader never sees a
     // partial SVG.
-    const tmp = `${cacheFilePath(dir, key)}.${process.pid}.tmp`
     fs.writeFileSync(tmp, svg)
     fs.renameSync(tmp, cacheFilePath(dir, key))
   } catch (error) {
     console.warn(`[mermaid] cache-write-failed: ${error.message}`)
     return
+  } finally {
+    try {
+      fs.rmSync(tmp, { force: true })
+    } catch {
+      // A later prune can remove leftovers after this process exits.
+    }
   }
 
   try {
@@ -153,6 +176,7 @@ function spawnRender(code) {
       input: code,
       encoding: 'utf-8',
       timeout: 30000,
+      maxBuffer: RENDER_MAX_BUFFER,
     })
   } catch (error) {
     const detail =
@@ -169,6 +193,12 @@ function renderMermaidSync(code) {
   }
 
   const dir = mermaidCacheDir()
+  try {
+    // Clean crash leftovers even when this render hits the cache or fails.
+    pruneCache(dir)
+  } catch {
+    // Cache maintenance must not make rendering fail.
+  }
   const key = buildCacheKey(code)
   const cached = readCache(dir, key)
   if (cached !== null) {

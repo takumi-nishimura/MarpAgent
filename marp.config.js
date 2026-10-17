@@ -2,6 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { Marp } = require("@marp-team/marp-core/full");
 const { ensureCustomSizesForMarkdown } = require("./src/canvas-size");
+const { normalizeMarkdown } = require("./src/markdown-input");
 const { loadDefaultJapaneseParser } = require("budoux");
 const marpGithubAlertsPlugin = require("./scripts/github-alerts-plugin");
 const marpHideSlidesPlugin = require("./scripts/hide-slides-plugin");
@@ -42,7 +43,7 @@ const VOID_TAGS = new Set([
     "track",
     "wbr",
 ]);
-const SELF_CLOSING_TAG_RE = /<([a-z][a-z0-9]*)\b([^>]*?)\s*\/>/gi;
+const SELF_CLOSING_TAG_RE = /<([a-z][a-z0-9]*)\b((?:[^>"']|"[^"]*"|'[^']*')*?)\s*\/>/gi;
 
 function expandSelfClosingNonVoidTags(html) {
     return html.replace(SELF_CLOSING_TAG_RE, (match, tagName, attrs) => {
@@ -96,6 +97,10 @@ module.exports = {
             .use(marpMermaidPlugin)
             .use(marpGithubAlertsPlugin)
             .use(marpScrollSlidesPlugin);
+        // Normalize both rendering and direct markdown.parse calls (slide maps).
+        base.markdown.core.ruler.before("normalize", "marpagent_bom", (state) => {
+            state.src = normalizeMarkdown(state.src);
+        });
         const _render = base.render.bind(base);
         base.render = (markdown, env) => {
             ensureCustomSizesForMarkdown(base, markdown);

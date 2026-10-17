@@ -112,29 +112,39 @@ function findInstalledBrowser({
 
 // The headless shell build does not hit the Chrome for Testing stall, so it
 // is preferred over the full browser binary when resolvable.
-function getPlaywrightChromiumPath(repoRoot) {
+function getPlaywrightChromiumPath(
+  repoRoot,
+  { exists = fs.existsSync, candidates } = {},
+) {
   const script = [
-    "let found;",
+    "const candidates = [];",
     "try {",
     '  const { registry } = require("playwright-core/lib/server/registry/index");',
     '  const shell = registry.findExecutable("chromium-headless-shell");',
-    "  if (shell) found = shell.executablePath();",
+    "  if (shell) candidates.push(shell.executablePath());",
     "} catch {}",
-    "if (!found) found = require(\"playwright\").chromium.executablePath();",
-    "process.stdout.write(found);",
+    'try { candidates.push(require("playwright").chromium.executablePath()); } catch {}',
+    "process.stdout.write(JSON.stringify(candidates));",
   ].join("\n");
 
   try {
-    return execFileSync(process.execPath, ["-e", script], {
-      cwd: repoRoot,
-      encoding: "utf8",
-    }).trim();
+    candidates ??= JSON.parse(
+      execFileSync(process.execPath, ["-e", script], {
+        cwd: repoRoot,
+        encoding: "utf8",
+      }),
+    );
   } catch (error) {
     throw new Error(
       "No installed Chrome or Edge was found, and the Playwright Chromium " +
         `fallback is unavailable: ${error.message}`,
     );
   }
+  const found = candidates.find((candidate) => candidate && exists(candidate));
+  if (found) return found;
+  throw new Error(
+    `No browser executable exists. Tried: ${candidates.join(", ") || "no Playwright candidates"}. Install a browser with npx playwright install chromium, or set CHROME_PATH to an installed Chrome or Edge executable.`,
+  );
 }
 
 // Returns the CLI args pinning a browser for marp-cli: [] when Marp can find
@@ -145,8 +155,28 @@ function marpBrowserArgs({
   playwrightChromiumPath = getPlaywrightChromiumPath,
   ...detectOptions
 } = {}) {
-  if (findInstalledBrowser(detectOptions)) return [];
-  return ["--browser-path", playwrightChromiumPath(repoRoot)];
+  const attempted = [];
+  const exists = detectOptions.exists || fs.existsSync;
+  const recordExists = (candidate) => {
+    attempted.push(candidate);
+    return exists(candidate);
+  };
+  if (findInstalledBrowser({ ...detectOptions, exists: recordExists }))
+    return [];
+  try {
+    const candidate = playwrightChromiumPath(repoRoot, {
+      exists: recordExists,
+    });
+    if (candidate && recordExists(candidate))
+      return ["--browser-path", candidate];
+  } catch (error) {
+    throw new Error(
+      `No browser executable exists. Tried: ${attempted.join(", ") || "no installed candidates"}. ${error.message}`,
+    );
+  }
+  throw new Error(
+    `No browser executable exists. Tried: ${attempted.join(", ")}. Install a browser with npx playwright install chromium, or set CHROME_PATH to an installed Chrome or Edge executable.`,
+  );
 }
 
 module.exports = {

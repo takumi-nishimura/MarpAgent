@@ -1,0 +1,151 @@
+{
+    "updated": "2026-10-18",
+    "issue": "ISS-0042",
+    "accepted": {
+        "@marp-team/marp-cli": {
+            "severity": "high",
+            "advisories": [],
+            "nodes": ["node_modules/@marp-team/marp-cli"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "@marp-team/marp-core": {
+            "severity": "low",
+            "advisories": [],
+            "nodes": [
+                "node_modules/@marp-team/marp-cli/node_modules/@marp-team/marp-core"
+            ],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "@puppeteer/browsers": {
+            "severity": "high",
+            "advisories": [],
+            "nodes": ["node_modules/@puppeteer/browsers"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "@xmldom/xmldom": {
+            "severity": "high",
+            "advisories": [
+                "https://github.com/advisories/GHSA-27p8-2357-5qqv",
+                "https://github.com/advisories/GHSA-3px3-54cx-rmw9",
+                "https://github.com/advisories/GHSA-4w3w-2rp5-g8jm",
+                "https://github.com/advisories/GHSA-6gmq-8vp8-gcm6",
+                "https://github.com/advisories/GHSA-6h8r-xr42-gp59",
+                "https://github.com/advisories/GHSA-6mj3-qw4j-hgrw",
+                "https://github.com/advisories/GHSA-8344-3jmq-59r6",
+                "https://github.com/advisories/GHSA-93r5-fhx6-vmg9",
+                "https://github.com/advisories/GHSA-965w-775f-mr7g",
+                "https://github.com/advisories/GHSA-c7q8-3ch8-vqpv",
+                "https://github.com/advisories/GHSA-g53g-w8rj-fmg7",
+                "https://github.com/advisories/GHSA-vr34-hp96-76pp",
+                "https://github.com/advisories/GHSA-w2rr-34g9-rvrj"
+            ],
+            "nodes": ["node_modules/mathjax-full/node_modules/@xmldom/xmldom"],
+            "fixAvailable": true
+        },
+        "basic-ftp": {
+            "severity": "high",
+            "advisories": ["https://github.com/advisories/GHSA-c475-qrg2-pj4r"],
+            "nodes": ["node_modules/basic-ftp"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "extract-zip": {
+            "severity": "high",
+            "advisories": [
+                "https://github.com/advisories/GHSA-7pqw-9j4j-h8q3",
+                "https://github.com/advisories/GHSA-jmr9-qjv8-65gv"
+            ],
+            "nodes": ["node_modules/extract-zip"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "gaxios": {
+            "severity": "moderate",
+            "advisories": [],
+            "nodes": ["node_modules/gaxios"],
+            "fixAvailable": true
+        },
+        "get-uri": {
+            "severity": "high",
+            "advisories": [],
+            "nodes": ["node_modules/get-uri"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "katex": {
+            "severity": "low",
+            "advisories": ["https://github.com/advisories/GHSA-238p-pmpm-9mq7"],
+            "nodes": ["node_modules/@marp-team/marp-cli/node_modules/katex"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "pac-proxy-agent": {
+            "severity": "high",
+            "advisories": [],
+            "nodes": ["node_modules/pac-proxy-agent"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "proxy-agent": {
+            "severity": "high",
+            "advisories": [],
+            "nodes": ["node_modules/proxy-agent"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "puppeteer-core": {
+            "severity": "high",
+            "advisories": [],
+            "nodes": ["node_modules/puppeteer-core"],
+            "fixAvailable": {
+                "name": "@marp-team/marp-cli",
+                "version": "0.12.1",
+                "isSemVerMajor": true
+            }
+        },
+        "speech-rule-engine": {
+            "severity": "moderate",
+            "advisories": [],
+            "nodes": [
+                "node_modules/mathjax-full/node_modules/speech-rule-engine"
+            ],
+            "fixAvailable": true
+        },
+        "uuid": {
+            "severity": "moderate",
+            "advisories": ["https://github.com/advisories/GHSA-w5hq-g745-h8pq"],
+            "nodes": ["node_modules/uuid"],
+            "fixAvailable": true
+        }
+    }
+}

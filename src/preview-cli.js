@@ -12,7 +12,7 @@ function parseDeckAndPageArgs(args, { repoRoot }) {
   }
 
   const firstAsPage = parsePositiveInteger(args[0]);
-  if (firstAsPage !== undefined && args.length === 1) {
+  if (firstAsPage !== undefined) {
     throw new Error("Deck path is required before displayed page.");
   }
 

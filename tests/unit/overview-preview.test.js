@@ -1,12 +1,36 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const vm = require("node:vm");
 
 const {
   buildOverviewDocument,
+  buildReloadScript,
   buildWaitingDocument,
   extractSlides,
   getOverviewOutputPath,
 } = require("../../src/overview-preview");
+
+test("overview stops polling when it starts a reload", async () => {
+  let callback;
+  let cleared;
+  let reloads = 0;
+  let requests = 0;
+  vm.runInNewContext(buildReloadScript("/meta"), {
+    document: { body: { dataset: { reloadToken: "before" } }, addEventListener() {} },
+    window: {
+      setInterval(fn) { callback = fn; return 7; },
+      clearInterval(id) { cleared = id; },
+      addEventListener() {},
+      location: { reload() { reloads += 1; } },
+    },
+    fetch: async () => { requests += 1; return { json: async () => ({ token: "after" }) }; },
+  });
+  await new Promise(setImmediate);
+  await callback();
+  assert.equal(cleared, 7);
+  assert.equal(reloads, 1);
+  assert.equal(requests, 1);
+});
 
 const renderedHtml = `<!doctype html>
 <html>

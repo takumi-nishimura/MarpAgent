@@ -1,7 +1,12 @@
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
-const { execFileSync } = require("node:child_process");
+const {
+  conversionTimeout,
+  runConversionSync,
+  withBrowser,
+} = require("./conversion-runtime");
+const { getMarpBin } = require("./preview-runtime");
 const { fileURLToPath, pathToFileURL } = require("node:url");
 const { detectHiddenSlides } = require("./hidden-slides");
 const { buildSlideMap, renderedSlides } = require("./slide-map");
@@ -56,14 +61,9 @@ function emitDiagnostic(onDiagnostic, payload) {
  * and element screenshots.
  * Returns the path to the generated HTML file (caller must clean up tempDir).
  */
-function renderToHtml(deckPath) {
+function renderToHtml(deckPath, options = {}) {
   const repoRoot = path.resolve(__dirname, "..");
-  const marpBinary = path.join(
-    repoRoot,
-    "node_modules",
-    ".bin",
-    process.platform === "win32" ? "marp.cmd" : "marp",
-  );
+  const marpBinary = getMarpBin(repoRoot);
   const configPath = path.join(repoRoot, "marp.config.js");
 
   const tempRoot = fs.mkdtempSync(
@@ -84,7 +84,7 @@ function renderToHtml(deckPath) {
       path.basename(deckPath, path.extname(deckPath)) + ".html";
     const outputPath = path.join(copiedDeckDir, outputName);
 
-    execFileSync(
+    runConversionSync(
       marpBinary,
       [
         "--html",
@@ -101,6 +101,7 @@ function renderToHtml(deckPath) {
         cwd: copiedDeckDir,
         encoding: "utf8",
         stdio: "pipe",
+        ...options,
       },
     );
 
@@ -976,8 +977,7 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
     throw wrapped;
   }
 
-  const browser = await playwright.chromium.launch({ headless: true });
-  try {
+  return withBrowser(async (browser) => {
     const page = await browser.newPage();
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto(pathToFileURL(htmlPath).href, {
@@ -1095,9 +1095,7 @@ async function measureSlidesInBrowser(htmlPath, options = {}) {
         ({ occurrences, ...error }) => error,
       ),
     }));
-  } finally {
-    await browser.close();
-  }
+  }, { ...options, chromium: options.chromium || playwright.chromium });
 }
 
 /**
@@ -1126,6 +1124,8 @@ function buildRenderedToMarkdownMap(markdown, options = {}) {
  */
 async function measureRenderedSlides(deckPath, options = {}) {
   const { onDiagnostic, strictVisual = false } = options;
+  const timeoutMs = options.timeoutMs ?? conversionTimeout();
+  const started = Date.now();
   let tempRoot;
   try {
     if (process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE === "1") {
@@ -1133,10 +1133,12 @@ async function measureRenderedSlides(deckPath, options = {}) {
     }
 
     const markdown = fs.readFileSync(deckPath, "utf8");
-    const rendered = renderToHtml(deckPath);
+    const rendered = renderToHtml(deckPath, { timeoutMs });
     tempRoot = rendered.tempRoot;
 
-    const audits = await measureSlidesInBrowser(rendered.htmlPath);
+    const audits = await measureSlidesInBrowser(rendered.htmlPath, {
+      timeoutMs: Math.max(1, timeoutMs - (Date.now() - started)),
+    });
     const renderedToMarkdown = buildRenderedToMarkdownMap(markdown, {
       slideMap: options.slideMap,
     });
@@ -1208,10 +1210,8 @@ async function measureRenderedSlides(deckPath, options = {}) {
  * Take a screenshot of a single slide by its section id attribute.
  * Returns a PNG Buffer.
  */
-async function screenshotSlide(htmlPath, slideId) {
-  const playwright = require("playwright");
-  const browser = await playwright.chromium.launch({ headless: true });
-  try {
+async function screenshotSlide(htmlPath, slideId, options = {}) {
+  return withBrowser(async (browser) => {
     const page = await browser.newPage();
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "networkidle" });
@@ -1224,9 +1224,7 @@ async function screenshotSlide(htmlPath, slideId) {
     }
 
     return await section.screenshot();
-  } finally {
-    await browser.close();
-  }
+  }, options);
 }
 
 module.exports = {

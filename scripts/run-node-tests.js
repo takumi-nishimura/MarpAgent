@@ -14,6 +14,9 @@ function collectTestFiles(dirPath) {
 
   for (const entry of entries) {
     const entryPath = path.join(dirPath, entry.name);
+    // Include dot directories, but never follow links: they can duplicate tests,
+    // escape tests/unit, or form directory cycles.
+    if (entry.isSymbolicLink()) continue;
     if (entry.isDirectory()) {
       files.push(...collectTestFiles(entryPath));
       continue;

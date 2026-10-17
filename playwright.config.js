@@ -1,28 +1,33 @@
 // Disable Chromium sandbox in sandboxed environments (e.g., Claude Code, CI, Docker).
 // Set PLAYWRIGHT_CHROMIUM_SANDBOX=true to opt back in.
-const useSandbox = process.env.PLAYWRIGHT_CHROMIUM_SANDBOX === 'true';
+const useSandbox = process.env.PLAYWRIGHT_CHROMIUM_SANDBOX === "true";
 
 module.exports = {
-  testDir: './tests/e2e',
+  testDir: "./tests/e2e",
   timeout: 30000,
+  forbidOnly: !!process.env.CI,
+  // Retry once in CI for transient browser startup failures; local failures stay immediate.
+  retries: process.env.CI ? 1 : 0,
   use: {
-    viewport: { width: 1280, height: 720 },  // Match slide dimensions
-    screenshot: 'only-on-failure',
+    viewport: { width: 1280, height: 720 }, // Match slide dimensions
+    screenshot: "only-on-failure",
   },
   projects: [
     {
-      name: 'chromium',
+      name: "chromium",
+      testMatch: "**/*.spec.js",
       use: {
-        browserName: 'chromium',
+        browserName: "chromium",
         launchOptions: {
-          args: useSandbox ? [] : ['--no-sandbox', '--disable-setuid-sandbox'],
+          args: useSandbox ? [] : ["--no-sandbox", "--disable-setuid-sandbox"],
         },
       },
     },
     {
-      name: 'firefox-overview',
-      testMatch: /(?:overview-(?:live-reload|canvas)|scroll-slides)\.spec\.js/,
-      use: { browserName: 'firefox' },
+      name: "firefox-overview",
+      testMatch:
+        /(?:^|[\\/])(?:overview-(?:live-reload|canvas)|scroll-slides)\.spec\.js$/,
+      use: { browserName: "firefox" },
     },
   ],
 };

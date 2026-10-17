@@ -25,26 +25,44 @@ function discoverDesigns() {
     .sort();
 }
 
-let failed = false;
-for (const name of discoverDesigns()) {
-  const designPath = path.join("designs", name, "DESIGN.md");
-  const result = spawnSync(getDesignmdBin(), ["lint", designPath], {
-    cwd: repoRoot,
-    encoding: "utf8",
-  });
+function lintDesigns() {
+  let failed = false;
+  for (const name of discoverDesigns()) {
+    const designPath = path.join("designs", name, "DESIGN.md");
+    const result = spawnSync(getDesignmdBin(), ["lint", designPath], {
+      cwd: repoRoot,
+      encoding: "utf8",
+    });
 
-  if (result.stdout) process.stdout.write(result.stdout);
-  if (result.stderr) process.stderr.write(result.stderr);
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
+    if (result.error) {
+      console.error(`Cannot run ${getDesignmdBin()}: ${result.error.message}`);
+      failed = true;
+      continue;
+    }
 
-  if (result.status !== 0) {
-    failed = true;
-    continue;
+    if (result.status !== 0) {
+      failed = true;
+      continue;
+    }
+
+    try {
+      const report = JSON.parse(result.stdout);
+      if (report.summary.errors > 0 || report.summary.warnings > 0) {
+        failed = true;
+      }
+    } catch (error) {
+      console.error(`Invalid designmd report for ${designPath}: ${error.message}`);
+      failed = true;
+    }
   }
-
-  const report = JSON.parse(result.stdout);
-  if (report.summary.errors > 0 || report.summary.warnings > 0) {
-    failed = true;
-  }
+  return failed ? 1 : 0;
 }
 
-process.exit(failed ? 1 : 0);
+try {
+  process.exitCode = lintDesigns();
+} catch (error) {
+  console.error(`Failed to lint designs: ${error.message}`);
+  process.exitCode = 1;
+}
