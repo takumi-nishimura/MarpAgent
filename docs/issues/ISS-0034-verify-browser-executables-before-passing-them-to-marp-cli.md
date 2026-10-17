@@ -56,3 +56,5 @@ Playwrightのheadless shellと通常Chromiumを候補列として取得し，存
 2026-10-17: 精査レポートで検出（src/補助モジュール精読）．
 
 2026-10-18: 消えたshellから通常Chromiumへのfallbackと，不在pathをMarpへ渡さずインストール案内を返すunit testを追加した．既存のシステムChrome/Edge選択とHTML exportを含めて通過した．
+
+2026-10-18: [PR #50の初回CI](https://github.com/takumi-nishimura/MarpAgent/actions/runs/39054126986)では，プリインストールされたChromeがPATH上のテスト用候補より優先され，変換が成功したため，失敗終了を期待する回帰テストだけが失敗した．ブラウザ起動境界で選択された実行ファイルを記録し，実ブラウザの代わりに短命な子プロセスを起動する検査へ変更した．選択結果が実在し，2つの存在しない環境変数指定のいずれでもないことを確認するため，インストール済みブラウザの優先順位に依存しない．`node --test tests/unit/marp-browser.test.js`の15件が成功した．
