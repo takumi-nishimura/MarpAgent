@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const { createThemeRepo } = require("./helpers/theme-repo");
 
 const repoRoot = path.join(__dirname, "../..");
 
@@ -88,6 +89,14 @@ test("marpx --autofix requires -v or --lint", () => {
 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /--autofix can only be used with/);
+});
+
+test("marpx rejects validator-only options in serve mode", () => {
+  for (const args of [["--strict"], ["--format", "json"]]) {
+    const result = runNodeScript("bin/marpx.js", args);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /can only be used with --validate/);
+  }
 });
 
 test("marpx --dry-run requires --autofix", () => {
@@ -193,19 +202,11 @@ test("marpx --outline refuses to overwrite an existing outline without --force",
 });
 
 test("marpx --theme-new forwards scaffold options", () => {
-  const themeName = `test-theme-${process.pid}-${Date.now()}`;
-  const cleanupPaths = [
-    path.join(repoRoot, "designs", themeName),
-    path.join(repoRoot, "themes", "src", `${themeName}.css`),
-    path.join(repoRoot, "fixtures", `${themeName}-slide.md`),
-  ];
-
-  for (const targetPath of cleanupPaths) {
-    fs.rmSync(targetPath, { recursive: true, force: true });
-  }
+  const root = createThemeRepo();
+  const themeName = "test-theme";
 
   try {
-    const result = runNodeScript("bin/marpx.js", [
+    const result = runNodeScript(path.join(root, "bin/marpx.js"), [
       "--theme-new",
       themeName,
       "--source-url",
@@ -215,13 +216,11 @@ test("marpx --theme-new forwards scaffold options", () => {
 
     assert.equal(result.status, 0, result.stderr || result.stdout);
     const design = fs.readFileSync(
-      path.join(repoRoot, "designs", themeName, "DESIGN.md"),
+      path.join(root, "designs", themeName, "DESIGN.md"),
       "utf8",
     );
     assert.match(design, /Scaffold source: https:\/\/example\.com\/design/);
   } finally {
-    for (const targetPath of cleanupPaths) {
-      fs.rmSync(targetPath, { recursive: true, force: true });
-    }
+    fs.rmSync(root, { recursive: true, force: true });
   }
 });

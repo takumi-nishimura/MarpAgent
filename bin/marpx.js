@@ -6,6 +6,7 @@ const os = require("node:os");
 const { execFileSync, spawn } = require("node:child_process");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 const { marpBrowserArgs } = require("../src/marp-browser");
+const { conversionTimeout, runConversion } = require("../src/conversion-runtime");
 
 enforceSupportedNodeRuntime();
 
@@ -195,6 +196,18 @@ if (values.hints && mode !== "validate" && mode !== "lint") {
   process.exit(1);
 }
 
+if (values.strict && mode !== "validate" && mode !== "lint") {
+  console.error("Error: --strict can only be used with --validate or --lint");
+  process.exit(1);
+}
+
+if (values.format && !["validate", "lint", "doctor"].includes(mode)) {
+  console.error(
+    "Error: --format can only be used with --validate, --lint, or --doctor",
+  );
+  process.exit(1);
+}
+
 if (values["no-strict-brief"] && mode !== "outline") {
   console.error("Error: --no-strict-brief can only be used with --outline");
   process.exit(1);
@@ -263,6 +276,11 @@ function runScript(scriptName, args) {
 
   forwardChildSignals(child);
 
+  child.once("error", (error) => {
+    console.error(`Error: failed to start ${scriptPath}: ${error.message}`);
+    process.exit(1);
+  });
+
   child.on("exit", (code, signal) => {
     if (signal) {
       process.exit(signal === "SIGINT" ? 130 : 143);
@@ -272,7 +290,8 @@ function runScript(scriptName, args) {
 }
 
 function getMarpBin() {
-  return path.join(repoRoot, "node_modules", ".bin", "marp");
+  // Theme commands do not require Marp or its rendering dependencies.
+  return require("../src/preview-runtime").getMarpBin(repoRoot);
 }
 
 function discoverThemes() {
@@ -302,19 +321,21 @@ function generateDesignTokens(name) {
 
 function watchDesignTokens(names) {
   const timers = new Map();
+  const watchers = [];
 
   for (const name of names) {
     if (!designExists(name)) continue;
     const designPath = path.join(repoRoot, "designs", name, "DESIGN.md");
     // Editors commonly replace DESIGN.md with a new inode on save. Watch
     // its parent so subsequent saves keep reaching the same watcher.
-    fs.watch(path.dirname(designPath), (_event, fileName) => {
+    const watcher = fs.watch(path.dirname(designPath), (_event, fileName) => {
       if (fileName && fileName.toString() !== path.basename(designPath)) return;
       const currentTimer = timers.get(name);
       if (currentTimer) clearTimeout(currentTimer);
       timers.set(
         name,
         setTimeout(() => {
+          timers.delete(name);
           try {
             generateDesignTokens(name);
           } catch (error) {
@@ -325,64 +346,53 @@ function watchDesignTokens(names) {
         }, 100),
       );
     });
+    watchers.push(watcher);
+    console.log(`[theme:${name}] Watching designs/${name}/DESIGN.md`);
   }
+  return () => {
+    for (const timer of timers.values()) clearTimeout(timer);
+    for (const watcher of watchers) watcher.close();
+  };
 }
 
 // Upper bound for one-shot conversions so a stalled browser fails with a
 // clear error instead of hanging (ISS-0029). The interactive --preview is not
 // bounded. Override with MARP_AGENT_CONVERT_TIMEOUT_MS.
-const CONVERT_TIMEOUT_MS =
-  Number(process.env.MARP_AGENT_CONVERT_TIMEOUT_MS) || 120000;
+let CONVERT_TIMEOUT_MS;
+if ([...exportModes, "screenshot", "validate", "lint"].includes(mode)) {
+  try {
+    CONVERT_TIMEOUT_MS = conversionTimeout();
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
+  }
+}
 
-function runMarp(extraArgs, { timeoutMs } = {}) {
+function runMarp(extraArgs, { timeoutMs = null } = {}) {
+  if (!fs.existsSync(getMarpBin())) {
+    console.error(`Error: Marp CLI binary not found: ${getMarpBin()}`);
+    process.exit(1);
+  }
   let browserArgs;
   try {
-    browserArgs = marpBrowserArgs({ repoRoot });
+    browserArgs = mode === "html" ? [] : marpBrowserArgs({ repoRoot });
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
   }
 
-  const child = spawn(
+  runConversion(
     getMarpBin(),
-    [
-      ...browserArgs,
-      "--config",
-      configPath,
-      ...extraArgs,
-    ],
-    { cwd: repoRoot, stdio: "inherit" },
-  );
-  forwardChildSignals(child);
-
-  let timedOut = false;
-  let killTimer;
-  const timer =
-    timeoutMs > 0
-      ? setTimeout(() => {
-          timedOut = true;
-          // SIGTERM lets marp-cli/puppeteer close its browser; escalate to
-          // SIGKILL if the process still has not exited.
-          child.kill("SIGTERM");
-          killTimer = setTimeout(() => {
-            if (child.exitCode === null) child.kill("SIGKILL");
-          }, 5000);
-        }, timeoutMs)
-      : null;
-
-  child.on("exit", (code, signal) => {
-    if (timer) clearTimeout(timer);
-    if (killTimer) clearTimeout(killTimer);
-    if (timedOut) {
-      console.error(
-        `Error: marp did not finish within ${Math.round(timeoutMs / 1000)}s; the browser may have stalled. ` +
-          "Set CHROME_PATH to a working Chrome or Edge executable, or raise MARP_AGENT_CONVERT_TIMEOUT_MS.",
-      );
-      process.exit(1);
-    }
-    if (signal) process.exit(signal === "SIGINT" ? 130 : 143);
-    process.exit(code ?? 1);
-  });
+    [...browserArgs, "--config", configPath, ...extraArgs],
+    { cwd: repoRoot, timeoutMs },
+  )
+    .then((code) => {
+      process.exitCode = code;
+    })
+    .catch((error) => {
+      console.error(`Error: ${error.message}`);
+      process.exitCode = 1;
+    });
 }
 
 switch (mode) {
@@ -432,9 +442,17 @@ switch (mode) {
     }
     const slideId = entry.slideId;
 
-    const { htmlPath, tempRoot } = renderToHtml(ssDeckPath);
+    let htmlPath;
+    let tempRoot;
+    const screenshotStarted = Date.now();
 
-    screenshotSlide(htmlPath, slideId)
+    Promise.resolve()
+      .then(() => {
+        ({ htmlPath, tempRoot } = renderToHtml(ssDeckPath));
+        return screenshotSlide(htmlPath, slideId, {
+          timeoutMs: Math.max(1, CONVERT_TIMEOUT_MS - (Date.now() - screenshotStarted)),
+        });
+      })
       .then((buffer) => {
         const screenshotPath = values.output
           ? path.resolve(values.output)
@@ -451,7 +469,7 @@ switch (mode) {
         process.exitCode = 1;
       })
       .finally(() => {
-        fs.rmSync(tempRoot, { recursive: true, force: true });
+        if (tempRoot) fs.rmSync(tempRoot, { recursive: true, force: true });
       });
     break;
   }
@@ -564,13 +582,36 @@ switch (mode) {
       process.exit(1);
     }
 
-    for (const name of themes) generateDesignTokens(name);
+    try {
+      for (const name of themes) generateDesignTokens(name);
+    } catch (error) {
+      console.error(`Error: failed to generate design tokens: ${error.message}`);
+      process.exit(1);
+    }
 
     const tailwind = getTailwindBin();
     const watchFlag = values.watch;
     const children = [];
 
-    if (watchFlag) watchDesignTokens(themes);
+    const stopWatching = watchFlag ? watchDesignTokens(themes) : () => {};
+    let exitCode = 0;
+    let exited = 0;
+    let shutdownTimer;
+    const stopChildren = (signal) => {
+      stopWatching();
+      for (const child of children) child.kill(signal);
+      if (!shutdownTimer) {
+        shutdownTimer = setTimeout(() => {
+          for (const child of children) child.kill("SIGKILL");
+        }, 1000);
+      }
+    };
+    for (const signal of ["SIGINT", "SIGTERM"]) {
+      process.once(signal, () => {
+        exitCode ||= 128 + os.constants.signals[signal];
+        stopChildren(signal);
+      });
+    }
 
     for (const name of themes) {
       const input = path.join(repoRoot, "themes", "src", `${name}.css`);
@@ -592,25 +633,21 @@ switch (mode) {
       }
 
       children.push(child);
-    }
-
-    if (watchFlag) {
-      // In watch mode, forward signals to all children
-      for (const sig of ["SIGINT", "SIGTERM"]) {
-        process.on(sig, () => {
-          for (const child of children) child.kill(sig);
-        });
-      }
-    }
-
-    // Wait for all children to exit
-    let exitCode = 0;
-    let exited = 0;
-    for (const child of children) {
-      child.on("exit", (code) => {
-        if (code && code > exitCode) exitCode = code;
+      child.once("error", (error) => {
+        console.error(`Error: failed to start theme compiler ${name}: ${error.message}`);
+        exitCode ||= 1;
+        stopChildren("SIGTERM");
+      });
+      // close also fires after spawn errors and after buffered diagnostics flush.
+      child.once("close", (code, signal) => {
+        exitCode ||= code ?? (signal ? 128 + os.constants.signals[signal] : 1);
+        if (exitCode) stopChildren("SIGTERM");
         exited++;
-        if (exited === children.length) process.exit(exitCode);
+        if (exited === children.length) {
+          clearTimeout(shutdownTimer);
+          stopWatching();
+          process.exit(exitCode);
+        }
       });
     }
     break;

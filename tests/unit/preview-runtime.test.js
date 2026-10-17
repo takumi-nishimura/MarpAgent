@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const { PassThrough } = require("node:stream");
+const { EventEmitter } = require("node:events");
 
 const {
   forwardChildSignals,
@@ -20,10 +21,29 @@ const paginationFixtureDeckPath = path.join(
   "paginate-skip-slide.md",
 );
 
+test("browser opener failure warns with the URL and remains recoverable", () => {
+  const child = new EventEmitter();
+  const warnings = [];
+  const url = "http://127.0.0.1:8080/slides.md";
+  assert.equal(
+    openBrowser(url, {
+      env: {},
+      spawn: () => child,
+      warn: (message) => warnings.push(message),
+    }),
+    child,
+  );
+  child.emit(
+    "error",
+    Object.assign(new Error("spawn xdg-open ENOENT"), { code: "ENOENT" }),
+  );
+  assert.match(warnings.join("\n"), /ENOENT/);
+  assert.ok(warnings.join("\n").includes(url));
+});
+
 test("getMarpBin returns platform-appropriate binary path", () => {
   const bin = getMarpBin(repoRoot);
-  const expected =
-    process.platform === "win32" ? "marp.cmd" : "marp";
+  const expected = process.platform === "win32" ? "marp.cmd" : "marp";
 
   assert.equal(path.basename(bin), expected);
   assert.ok(bin.includes(path.join("node_modules", ".bin")));
@@ -43,7 +63,11 @@ test("openBrowser returns null when MARP_AGENT_NO_OPEN is set", () => {
 test("forwardLines pipes each line to the writer and calls onLine", async () => {
   const input = new PassThrough();
   const chunks = [];
-  const writer = { write(data) { chunks.push(data); } };
+  const writer = {
+    write(data) {
+      chunks.push(data);
+    },
+  };
   const lines = [];
 
   forwardLines(input, writer, (line) => lines.push(line));
@@ -60,7 +84,10 @@ test("forwardLines pipes each line to the writer and calls onLine", async () => 
 });
 
 test("resolveRequestedSlideId returns undefined when displayedPage is undefined", () => {
-  assert.equal(resolveRequestedSlideId("/fake", "/fake", undefined, repoRoot), undefined);
+  assert.equal(
+    resolveRequestedSlideId("/fake", "/fake", undefined, repoRoot),
+    undefined,
+  );
 });
 
 test("resolveRequestedSlideId throws when page is not found", () => {

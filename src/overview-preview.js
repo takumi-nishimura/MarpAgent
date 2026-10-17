@@ -429,12 +429,15 @@ function buildReloadScript(metaUrl) {
         let reloadStarted = false;
 
         async function pollForReload() {
+          if (reloadStarted) return;
           try {
             const response = await fetch("${metaUrl}", { cache: "no-store" });
             const payload = await response.json();
 
             if (payload.token !== reloadToken && !reloadStarted) {
               reloadStarted = true;
+              window.clearInterval(pollingTimer);
+              pollingTimer = undefined;
               window.location.reload();
             }
           } catch {
@@ -443,7 +446,7 @@ function buildReloadScript(metaUrl) {
         }
 
         function startPolling() {
-          if (pollingTimer !== undefined) return;
+          if (pollingTimer !== undefined || reloadStarted) return;
           pollForReload();
           pollingTimer = window.setInterval(pollForReload, 500);
         }
@@ -451,7 +454,11 @@ function buildReloadScript(metaUrl) {
         document.addEventListener("visibilitychange", () => {
           if (document.visibilityState === "visible") pollForReload();
         });
-        window.addEventListener("pageshow", pollForReload);
+        window.addEventListener("pageshow", startPolling);
+        window.addEventListener("pagehide", () => {
+          window.clearInterval(pollingTimer);
+          pollingTimer = undefined;
+        });
 
         startPolling();`;
 }
