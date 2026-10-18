@@ -1,7 +1,7 @@
 // Fenced-code helpers for source heuristics. Slide boundaries are not split
 // here: src/slide-map.js derives them from the configured Marp engine.
 
-const FENCE_MARKER_RE = /^(```+|~~~+)/;
+const FENCE_MARKER_RE = /^ {0,3}(```+|~~~+)([^\r\n]*)/;
 
 /**
  * Advance fenced-code tracking over one source line. `fence` is null outside
@@ -10,13 +10,16 @@ const FENCE_MARKER_RE = /^(```+|~~~+)/;
  * string after it.
  */
 function nextFenceState(fence, line) {
-  const trimmed = line.trim();
-  const marker = trimmed.match(FENCE_MARKER_RE)?.[1];
-  if (!marker) return fence;
-  if (!fence) return { char: marker[0], length: marker.length };
+  const match = line.match(FENCE_MARKER_RE);
+  if (!match) return fence;
+  const [, marker, tail] = match;
+  if (!fence) {
+    if (marker[0] === "`" && tail.includes("`")) return null;
+    return { char: marker[0], length: marker.length };
+  }
   return marker[0] === fence.char &&
     marker.length >= fence.length &&
-    trimmed.slice(marker.length).trim() === ""
+    tail.trim() === ""
     ? null
     : fence;
 }
@@ -32,8 +35,9 @@ function splitFenceSegments(markdown) {
   let fence = null;
 
   for (const chunk of String(markdown).split(/(?<=\n)/)) {
-    const fenced = fence !== null || FENCE_MARKER_RE.test(chunk.trim());
-    fence = nextFenceState(fence, chunk);
+    const nextFence = nextFenceState(fence, chunk);
+    const fenced = fence !== null || nextFence !== null;
+    fence = nextFence;
     const last = segments[segments.length - 1];
     if (last && last.fenced === fenced) {
       last.text += chunk;

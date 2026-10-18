@@ -1,22 +1,30 @@
-let cachedSupportCheck;
+const {
+  isBrowserEnvironmentFailure,
+} = require("../../helpers/browser-environment");
 
-async function supportsVisualChecks() {
-  if (!cachedSupportCheck) {
-    cachedSupportCheck = (async () => {
-      try {
-        const playwright = require("playwright");
-        const browser = await playwright.chromium.launch({ headless: true });
+function createVisualSupportCheck(
+  launch = () => require("playwright").chromium.launch({ headless: true }),
+) {
+  let cachedSupportCheck;
+  return async function supportsVisualChecks() {
+    if (!cachedSupportCheck) {
+      cachedSupportCheck = (async () => {
+        let browser;
+        try {
+          browser = await launch();
+        } catch (error) {
+          if (!isBrowserEnvironmentFailure(error)) throw error;
+          return false;
+        }
         await browser.close();
         return true;
-      } catch {
-        return false;
-      }
-    })();
-  }
-
-  return cachedSupportCheck;
+      })();
+    }
+    return cachedSupportCheck;
+  };
 }
 
 module.exports = {
-  supportsVisualChecks,
+  createVisualSupportCheck,
+  supportsVisualChecks: createVisualSupportCheck(),
 };

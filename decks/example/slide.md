@@ -63,7 +63,7 @@ VS Code 拡張やCLIで使える OSS ツール
 
 重要な図を早めに置き，描画結果を見ながら構成を見直す
 
-<div style="width: 90%">
+<div style="width: 65%">
 
 ```mermaid
 graph LR

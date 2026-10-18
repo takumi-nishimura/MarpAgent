@@ -7,6 +7,7 @@ const { spawnSync } = require("node:child_process");
 
 const {
   findInstalledBrowser,
+  getPlaywrightChromiumPath,
   marpBrowserArgs,
 } = require("../../src/marp-browser");
 
@@ -120,17 +121,115 @@ test("marpBrowserArgs lets Marp detect an installed browser itself", () => {
   assert.deepEqual(args, []);
 });
 
+test(
+  "Marp ignores missing browser environment paths when selecting an installed browser",
+  { skip: process.platform !== "linux" },
+  (t) => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-browser-env-"));
+    t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+    const candidate = path.join(root, "google-chrome-stable");
+    const marker = path.join(root, "browser-started");
+    const preload = path.join(root, "capture-browser.cjs");
+    fs.writeFileSync(
+      candidate,
+      `#!/usr/bin/env node
+    process.exit(1);
+  `,
+      { mode: 0o755 },
+    );
+    fs.writeFileSync(
+      preload,
+      `const childProcess = require("node:child_process");
+const { spawn } = childProcess;
+childProcess.spawn = function (command, args, options) {
+  if (args?.some((arg) => arg.startsWith("--remote-debugging-"))) {
+    require("node:fs").writeFileSync(${JSON.stringify(marker)}, command);
+    return spawn(process.execPath, ["-e", "process.exit(1)"], options);
+  }
+  return spawn(command, args, options);
+};
+require("node:module").syncBuiltinESMExports();
+`,
+    );
+    const env = {
+      ...process.env,
+      CHROME_PATH: path.join(root, "missing-chrome"),
+      LIGHTHOUSE_CHROMIUM_PATH: path.join(root, "missing-lighthouse"),
+      PATH: `${root}${path.delimiter}${process.env.PATH}`,
+      NODE_OPTIONS: `${process.env.NODE_OPTIONS || ""} --require ${JSON.stringify(preload)}`,
+    };
+    assert.deepEqual(
+      marpBrowserArgs({
+        repoRoot,
+        env,
+        platform: "linux",
+        which: (command) =>
+          command === "google-chrome-stable" ? candidate : null,
+      }),
+      [],
+    );
+
+    const result = spawnSync(
+      process.execPath,
+      [
+        "bin/marpx.js",
+        "fixtures/clean-slide.md",
+        "--images",
+        "png",
+        "--output",
+        path.join(root, "slide.png"),
+      ],
+      { cwd: repoRoot, env, encoding: "utf8", timeout: 10000 },
+    );
+    assert.equal(result.error, undefined, result.error?.message);
+    // Stop at the browser launch boundary: a desktop-installed Chrome may
+    // outrank the PATH stand-in, but either must be a real executable.
+    assert.equal(result.status, 1, result.stderr);
+    const selected = fs.readFileSync(marker, "utf8");
+    assert.notEqual(selected, env.CHROME_PATH);
+    assert.notEqual(selected, env.LIGHTHOUSE_CHROMIUM_PATH);
+    assert.ok(
+      fs.existsSync(selected),
+      `Selected browser does not exist: ${selected}`,
+    );
+  },
+);
+
 test("marpBrowserArgs pins the Playwright Chromium fallback", () => {
   const args = marpBrowserArgs({
     repoRoot,
     playwrightChromiumPath: () => "/pw/chromium",
     env: {},
     platform: "linux",
-    exists: nothingExists,
+    exists: (candidate) => candidate === "/pw/chromium",
     which: noWhich,
   });
 
   assert.deepEqual(args, ["--browser-path", "/pw/chromium"]);
+});
+
+test("browser fallback skips a removed headless shell", () => {
+  assert.equal(
+    getPlaywrightChromiumPath(repoRoot, {
+      candidates: ["/removed/shell", "/installed/chromium"],
+      exists: (candidate) => candidate === "/installed/chromium",
+    }),
+    "/installed/chromium",
+  );
+});
+
+test("browser selection diagnoses missing fallback paths", () => {
+  assert.throws(
+    () =>
+      marpBrowserArgs({
+        repoRoot,
+        env: {},
+        exists: nothingExists,
+        which: noWhich,
+        playwrightChromiumPath: () => "/removed/chromium",
+      }),
+    /\/removed\/chromium[\s\S]*playwright install chromium/,
+  );
 });
 
 test("marpx export aborts with a clear error when the conversion stalls", () => {

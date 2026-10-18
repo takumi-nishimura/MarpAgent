@@ -537,10 +537,10 @@ section {
   --bg-gray-5: var(--color-surface-muted);
   --color-em: var(--color-emphasis);
   --color-strong: var(--color-accent-strong);
-  --logos-light: url(logos/logo_light.svg);
-  --logos-dark: url(logos/logo_dark.svg);
-  --logo-primary-light: url(logos/logo_light.svg);
-  --logo-primary-dark: url(logos/logo_dark.svg);
+  --logos-light: none;
+  --logos-dark: none;
+  --logo-primary-light: none;
+  --logo-primary-dark: none;
   --logo-secondary-light: none;
   --logo-secondary-dark: none;
   --logo-light: var(--logo-primary-light);
@@ -1541,7 +1541,7 @@ section.invert, section.dracula, section.one-dark, section.nord, section.neogaia
   --marp-shiki-token-string-expression: var(--color-code-dark-string);
   --marp-shiki-token-link: var(--color-code-dark-number);
 }
-section.neogaia.invert {
+section.github-light, section.neogaia.invert {
   --marp-shiki-token-constant: var(--color-code-number);
   --marp-shiki-token-string: var(--color-code-string);
   --marp-shiki-token-comment: var(--color-code-comment);

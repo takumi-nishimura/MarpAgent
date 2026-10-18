@@ -18,12 +18,12 @@ section {
   --color-strong: var(--color-accent-strong); /* Orange for better visibility on light background */
 
   /* New list-based logo variables - configurable per-slide via style directive */
-  --logos-light: url(logos/logo_light.svg);
-  --logos-dark: url(logos/logo_dark.svg);
+  --logos-light: none;
+  --logos-dark: none;
 
   /* Backward compatibility aliases */
-  --logo-primary-light: url(logos/logo_light.svg);
-  --logo-primary-dark: url(logos/logo_dark.svg);
+  --logo-primary-light: none;
+  --logo-primary-dark: none;
   --logo-secondary-light: none;
   --logo-secondary-dark: none;
   --logo-light: var(--logo-primary-light);

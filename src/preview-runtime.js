@@ -5,31 +5,45 @@ const { spawn } = require("node:child_process");
 const { findSlideIdByDisplayedPage } = require("./marp-pagination");
 
 function getMarpBin(repoRoot) {
-  return path.join(
-    repoRoot,
-    "node_modules",
-    ".bin",
-    process.platform === "win32" ? "marp.cmd" : "marp",
+  return (
+    process.env.MARP_AGENT_MARP_BIN ||
+    path.join(
+      repoRoot,
+      "node_modules",
+      ".bin",
+      process.platform === "win32" ? "marp.cmd" : "marp",
+    )
   );
 }
 
-function openBrowser(url) {
-  if (process.env.MARP_AGENT_NO_OPEN === "1") {
+function openBrowser(
+  url,
+  { env = process.env, spawn: spawnBrowser = spawn, warn = console.warn } = {},
+) {
+  if (env.MARP_AGENT_NO_OPEN === "1") {
     return null;
   }
 
-  if (process.platform === "darwin") {
-    return spawn("open", [url], { stdio: "ignore", detached: true });
-  }
-
-  if (process.platform === "win32") {
-    return spawn("cmd", ["/c", "start", "", url], {
-      stdio: "ignore",
-      detached: true,
-    });
-  }
-
-  return spawn("xdg-open", [url], { stdio: "ignore", detached: true });
+  const command =
+    process.platform === "darwin"
+      ? "open"
+      : process.platform === "win32"
+        ? "cmd"
+        : "xdg-open";
+  const args = process.platform === "win32" ? ["/c", "start", "", url] : [url];
+  const child = spawnBrowser(command, args, {
+    stdio: "ignore",
+    detached: true,
+  });
+  const failed = (reason) =>
+    warn(
+      `[preview] Cannot open browser (${command}: ${reason}). Open ${url} manually; MARP_AGENT_NO_OPEN=1 disables automatic opening.`,
+    );
+  child.once("error", (error) => failed(error.message));
+  child.once("exit", (code) => {
+    if (code) failed(`exit ${code}`);
+  });
+  return child;
 }
 
 function forwardLines(stream, writer, onLine = () => {}) {
@@ -51,7 +65,11 @@ function resolveRequestedSlide(deckPath, configPath, displayedPage, repoRoot) {
     return undefined;
   }
 
-  const resolved = findSlideIdByDisplayedPage(deckPath, configPath, displayedPage);
+  const resolved = findSlideIdByDisplayedPage(
+    deckPath,
+    configPath,
+    displayedPage,
+  );
 
   if (!resolved) {
     throw new Error(
@@ -65,7 +83,12 @@ function resolveRequestedSlide(deckPath, configPath, displayedPage, repoRoot) {
   return resolved;
 }
 
-function resolveRequestedSlideId(deckPath, configPath, displayedPage, repoRoot) {
+function resolveRequestedSlideId(
+  deckPath,
+  configPath,
+  displayedPage,
+  repoRoot,
+) {
   return resolveRequestedSlide(deckPath, configPath, displayedPage, repoRoot)
     ?.slideId;
 }

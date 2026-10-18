@@ -2,7 +2,10 @@
 id: ISS-0030
 title: "Stabilize theme lifecycle tests"
 type: issue
-status: open
+status: closed
+resolution: completed
+resolved: "2026-10-18"
+updated: "2026-10-18"
 date: "2026-10-16"
 authors:
   - Codex
@@ -10,6 +13,9 @@ scope:
   - tests/unit/theme-watch.test.js
   - tests/unit/theme-css.test.js
   - tests/unit/new-theme.test.js
+  - tests/unit/cli-args.test.js
+  - tests/unit/helpers/theme-repo.js
+  - bin/marpx.js
 tags:
   - testing
   - themes
@@ -41,10 +47,10 @@ artifacts:
 
 ## Acceptance criteria
 
-- [ ] テーマ作成テストとfreshness検査を並列実行しても，一時テーマの列挙／削除競合が発生しない．
-- [ ] 監視テストが単独と全体の両方で複数回成功し，2回のatomic saveそれぞれの色を検出する．
-- [ ] 更新を止めた監視実装ではテストが失敗することを確認する．
-- [ ] タイムアウト延長だけで隠さず，失敗時に保存回数，期待色，実際のtoken，watcherのreadinessを判別できる．
+- [x] テーマ作成テストとfreshness検査を並列実行しても，一時テーマの列挙／削除競合が発生しない．
+- [x] 監視テストが単独と全体の両方で複数回成功し，2回のatomic saveそれぞれの色を検出する．
+- [x] 更新を止めた監視実装ではテストが失敗することを確認する．
+- [x] タイムアウト延長だけで隠さず，失敗時に保存回数，期待色，実際のtoken，watcherのreadinessを判別できる．
 
 ## Out of scope
 
@@ -57,3 +63,9 @@ freshness検査の入力をtracked designへ限定するか，scaffold検査を�
 ## Notes
 
 2026-10-16：新規スクロールの単体検査14件，厳格なfixture検証17件，全E2Eの62件は成功した．FirefoxのCDP専用タッチ注入1件は対象外．全単体検査が成功したとは報告せず，このissueで残る検証上の問題を追跡する．
+
+2026-10-17：全体精査で根因構造を裏取りした．`tests/unit/cli-args.test.js:194-221`が実リポジトリの`designs/`・`themes/src/`・`fixtures/`へ書き出し，並列実行（`scripts/run-node-tests.js`の`node --test`）で`tests/unit/theme-css.test.js:492-499`のfreshness検査が列挙と削除の合間にENOENTとなり得る．`theme-watch.test.js:74-82`は中間状態観察を前提とする待ち込みであり，連続atomic saveがdebounceで合流すると単独実行でも失敗し得ることが読み取れる．対応の目安: scaffold検証の一時ディレクトリ隔離と，watcherテストの最終状態判定．
+
+2026-10-18：現行実装を再検証した．前日のdebounce説明は訂正する．既存テストは1回目の反映を待ってから2回目を保存しており，2保存の合流を失敗原因とは断定できない．単独実行は成功した．scaffold CLIテストを共有helperで作る一時repositoryへ隔離し，実repositoryのdesign列挙との競合を除いた．watcher登録完了のログとcompiler初回build完了の両方を待ち，保存回数・期待primary・実際のtoken・子の終了状態を失敗診断へ追加した．反映待ちは従来どおり5秒で，2色をそれぞれ検証する．
+
+監視の再生成callbackだけを無効にした一時コピーでは，1回目の保存で期待色`#123ABC`，実際`#202228`，watcher/compiler readyを示して失敗した．theme関連51件を並列に3回実行し，全て成功した．全unit313件も厳格ゲートと単体再実行で成功した．theme compilerの起動・signal終了の回帰はISS-0032と共通の修正として6件で確認した．

@@ -287,6 +287,7 @@ test('mermaid cache key covers source, renderer files, and package versions', ()
     render: 'render-hash',
     beautifulMermaid: '1.1.3',
     mathjax: '4.1.3',
+    entities: '4.5.0',
   }
   const code = 'flowchart TD\n  A --> B\n'
   const key = marpMermaidPlugin.buildCacheKey(code, fingerprint)
@@ -303,10 +304,62 @@ test('mermaid cache fingerprint resolves renderer hashes and dependency versions
   const fingerprint = marpMermaidPlugin.cacheFingerprint()
   const beautifulMermaid = require('../../node_modules/beautiful-mermaid/package.json')
   const mathjax = require('../../node_modules/mathjax/package.json')
+  const entities = require('../../node_modules/entities/package.json')
 
   assert.match(fingerprint.render, /^[0-9a-f]{64}$/)
   assert.equal(fingerprint.beautifulMermaid, beautifulMermaid.version)
   assert.equal(fingerprint.mathjax, mathjax.version)
+  assert.equal(fingerprint.entities, entities.version)
+})
+
+test('an entities upgrade misses SVGs cached with the previous version', (t) => {
+  const dir = useTempCacheDir(t)
+  const code = 'flowchart LR\nA --> B'
+  const previous = { ...marpMermaidPlugin.cacheFingerprint(), entities: 'previous-version' }
+  fs.writeFileSync(path.join(dir, `${marpMermaidPlugin.buildCacheKey(code, previous)}.svg`), '<svg>stale</svg>')
+  const calls = stubExecFileSync(t, () => '<svg>fresh</svg>')
+
+  const html = renderFence(code)
+  assert.match(html, /<svg>fresh<\/svg>/)
+  assert.equal(renderFence(code), html)
+  assert.equal(calls(), 1)
+})
+
+test('Mermaid subprocess renders SVG output larger than one MiB', (t) => {
+  useTempCacheDir(t)
+  const html = renderFence(`flowchart LR\nA["${'large label '.repeat(100000)}"]`)
+  assert.ok(Buffer.byteLength(html) > 1024 * 1024)
+  assert.match(html, /^<div class="mermaid-diagram"><svg\b/)
+  assert.match(html, /<\/svg><\/div>$/)
+  assert.doesNotMatch(html, /data-marpagent-render-error/)
+})
+
+test('cache hits remove crash leftovers without deleting a live writer temp file', (t) => {
+  const dir = useTempCacheDir(t)
+  const deadPid = Number(childProcess.execFileSync(process.execPath, ['-p', 'process.pid'], { encoding: 'utf8' }))
+  const calls = stubExecFileSync(t, () => '<svg><text>ok</text></svg>')
+  const code = 'flowchart LR\nA --> B'
+  renderFence(code)
+  const dead = path.join(dir, `crashed.svg.${deadPid}.tmp`)
+  const active = path.join(dir, `writing.svg.${process.pid}.tmp`)
+  fs.writeFileSync(dead, 'partial')
+  fs.writeFileSync(active, 'partial')
+
+  renderFence(code)
+
+  assert.equal(calls(), 1)
+  assert.equal(fs.existsSync(dead), false)
+  assert.equal(fs.existsSync(active), true)
+})
+
+test('failed cache writes remove their own temporary file', (t) => {
+  const dir = useTempCacheDir(t)
+  stubExecFileSync(t, () => '<svg><text>ok</text></svg>')
+  const original = fs.renameSync
+  fs.renameSync = () => { throw new Error('rename failed') }
+  t.after(() => { fs.renameSync = original })
+  assert.match(renderFence('flowchart LR\nA --> B'), /mermaid-diagram/)
+  assert.deepEqual(fs.readdirSync(dir), [])
 })
 
 test('pruneCache evicts by age first, then oldest entries beyond the limit', (t) => {

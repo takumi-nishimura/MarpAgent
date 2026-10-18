@@ -22,6 +22,13 @@ test("parseDeckAndPageArgs rejects page-only shorthand", () => {
   );
 });
 
+test("parseDeckAndPageArgs diagnoses a page before the deck", () => {
+  assert.throws(
+    () => parseDeckAndPageArgs(["12", "fixtures/clean-slide.md"], { repoRoot }),
+    /Deck path is required before displayed page/,
+  );
+});
+
 test("parseDeckAndPageArgs resolves explicit deck paths", () => {
   assert.deepEqual(
     parseDeckAndPageArgs(["fixtures/clean-slide.md", "3"], { repoRoot }),

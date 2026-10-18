@@ -52,7 +52,9 @@ function requestPath(port, requestPath) {
 }
 
 function createFixture() {
-  const tmpDir = fs.mkdtempSync(path.join("/tmp", "overview-server-test-"));
+  const tmpDir = fs.mkdtempSync(
+    path.join(os.tmpdir(), "overview-server-test-"),
+  );
   const outputPath = path.join(tmpDir, "output.html");
   const deckPath = path.join(tmpDir, "slide.md");
   fs.writeFileSync(deckPath, "---\n---\n# Slide 1");
@@ -62,6 +64,49 @@ function createFixture() {
 async function closeServer(server) {
   await new Promise((resolve) => server.close(resolve));
 }
+
+test("static file deletion between stat and stream open returns 404 without stopping the server", async (t) => {
+  const fixture = createFixture();
+  const file = path.join(fixture.tmpDir, "asset.css");
+  fs.writeFileSync(file, "body {}");
+  const original = fs.createReadStream;
+  t.mock.method(fs, "createReadStream", (requested, ...args) => {
+    if (requested === file) fs.unlinkSync(file);
+    return original(requested, ...args);
+  });
+  const server = createServer({ deckDir: fixture.tmpDir, ...fixture });
+  try {
+    const port = await listenOnFreePort(server);
+    const missing = await requestPath(port, "/asset.css");
+    assert.equal(missing.statusCode, 404);
+    assert.equal(
+      (await requestPath(port, "/__marp_agent__/meta")).statusCode,
+      200,
+    );
+  } finally {
+    await closeServer(server);
+    fs.rmSync(fixture.tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("rendered output deletion during a request returns 404 and preserves availability", async (t) => {
+  const fixture = createFixture();
+  fs.writeFileSync(fixture.outputPath, "<html>Example</html>");
+  const original = fs.readFileSync;
+  t.mock.method(fs, "readFileSync", (requested, ...args) => {
+    if (requested === fixture.outputPath) fs.unlinkSync(requested);
+    return original(requested, ...args);
+  });
+  const server = createServer({ deckDir: fixture.tmpDir, ...fixture });
+  try {
+    const port = await listenOnFreePort(server);
+    assert.equal((await requestPath(port, "/")).statusCode, 404);
+    assert.equal((await requestPath(port, "/")).statusCode, 200);
+  } finally {
+    await closeServer(server);
+    fs.rmSync(fixture.tmpDir, { recursive: true, force: true });
+  }
+});
 
 test("metadata reports missing output without caching", async () => {
   const fixture = createFixture();
@@ -231,7 +276,9 @@ test("render queue coalesces requests made while a render is running", async () 
 });
 
 test("renderDeck publishes the rendered deck and keeps it when a later render fails", async () => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "overview-render-test-"));
+  const tmpDir = fs.mkdtempSync(
+    path.join(os.tmpdir(), "overview-render-test-"),
+  );
   const deckPath = path.join(tmpDir, "slide.md");
   const outputPath = path.join(tmpDir, ".slide.overview.html");
 
@@ -240,10 +287,10 @@ test("renderDeck publishes the rendered deck and keeps it when a later render fa
     assert.equal(await renderDeck({ configPath, deckPath, outputPath }), true);
     const rendered = fs.readFileSync(outputPath, "utf8");
     assert.match(rendered, /Rendered once/);
-    assert.deepEqual(
-      fs.readdirSync(tmpDir).sort(),
-      [".slide.overview.html", "slide.md"],
-    );
+    assert.deepEqual(fs.readdirSync(tmpDir).sort(), [
+      ".slide.overview.html",
+      "slide.md",
+    ]);
 
     fs.rmSync(deckPath);
     assert.equal(await renderDeck({ configPath, deckPath, outputPath }), false);
@@ -330,7 +377,9 @@ async function waitForTokenChange(overview, url, previousToken) {
 }
 
 test("concurrent overview servers keep serving and following saves", async () => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "overview-concurrent-test-"));
+  const tmpDir = fs.mkdtempSync(
+    path.join(os.tmpdir(), "overview-concurrent-test-"),
+  );
   const deckPaths = ["a", "b", "c"].map((name) => {
     const deckDir = path.join(tmpDir, name);
     fs.mkdirSync(deckDir);
@@ -349,7 +398,9 @@ test("concurrent overview servers keep serving and following saves", async () =>
       }),
     );
 
-    deckPaths.forEach((deckPath, index) => writeDeck(deckPath, `Deck ${index} saved`));
+    deckPaths.forEach((deckPath, index) =>
+      writeDeck(deckPath, `Deck ${index} saved`),
+    );
 
     await Promise.all(
       overviews.map((overview, index) =>

@@ -3,6 +3,7 @@ const path = require("node:path");
 const { fileURLToPath } = require("node:url");
 const { decodeHTMLAttribute } = require("entities");
 const { HTML_PART_RE, parseSource, sourceLines } = require("./markdown-source");
+const { frontmatterForMarkdown } = require("./markdown-input");
 const { buildSlideMap } = require("./slide-map");
 
 // Consume every attribute so strings inside quoted values cannot become
@@ -194,12 +195,7 @@ function copyDeckForRender(deckPath, destinationDir) {
 }
 
 function extractFrontmatter(markdown) {
-  const lines = String(markdown || "").split(/\r?\n/);
-  if (lines[0]?.trim() !== "---") return "";
-  const closing = lines.findIndex(
-    (line, index) => index > 0 && line.trim() === "---",
-  );
-  return closing === -1 ? "" : lines.slice(1, closing).join("\n");
+  return frontmatterForMarkdown(markdown)?.content || "";
 }
 
 /**

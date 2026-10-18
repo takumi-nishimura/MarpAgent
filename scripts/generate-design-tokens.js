@@ -56,6 +56,9 @@ function getOutputPath(name) {
 
 function exportTokens(name) {
   const designPath = path.join(repoRoot, "designs", name, "DESIGN.md");
+  if (!fs.existsSync(designPath)) {
+    throw new Error(`Design file not found: ${designPath}`);
+  }
   const css = execFileSync(
     getDesignmdBin(),
     ["export", "--format", "css-tailwind", designPath],
@@ -95,5 +98,10 @@ function generateOne(name) {
   console.log(`Generated ${path.relative(repoRoot, outputPath)}`);
 }
 
-const designNames = allDesigns ? discoverDesigns() : [designName];
-for (const name of designNames) generateOne(name);
+try {
+  const designNames = allDesigns ? discoverDesigns() : [designName];
+  for (const name of designNames) generateOne(name);
+} catch (error) {
+  console.error(`Failed to generate design tokens: ${error.message}`);
+  process.exitCode = 1;
+}

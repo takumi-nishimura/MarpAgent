@@ -22,7 +22,13 @@
   var idle = style.getPropertyValue('--bespoke-marp-cursor-idle').trim() || '1s'
   var idleMs = parseFloat(idle) * 1000
 
-  var CHANNEL = 'marp-laser-cursor'
+  // Match the native presenter session while keeping unrelated decks isolated.
+  var deck = new URL(window.location.href)
+  deck.hash = ''
+  for (var name of ['view', 'sync', 'f']) deck.searchParams.delete(name)
+  deck.searchParams.sort()
+  var session = window.history.state && window.history.state.marpBespokeSyncKey
+  var CHANNEL = 'marp-laser-cursor:' + JSON.stringify([deck.href, session || ''])
 
   // Returns the currently active slide element.
   function activeSlide() {

@@ -2,16 +2,17 @@ const { test, expect } = require("@playwright/test");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
-const { spawn, spawnSync } = require("node:child_process");
+const { spawn } = require("node:child_process");
+const { killProcessGroup, runProcess, waitForProcessGroupExit } = require("../helpers/process-group");
+const { isBrowserEnvironmentFailure } = require("../helpers/browser-environment");
 
 const repoRoot = path.resolve(__dirname, "../..");
 const marpxBin = path.join(repoRoot, "bin", "marpx.js");
 const strictE2E = process.env.MARP_AGENT_STRICT_E2E === "1";
 
 function runMarpx(args) {
-  return spawnSync(process.execPath, [marpxBin, ...args], {
+  return runProcess(process.execPath, [marpxBin, ...args], {
     cwd: repoRoot,
-    encoding: "utf8",
     env: {
       ...process.env,
       MARP_AGENT_NO_OPEN: "1",
@@ -20,7 +21,7 @@ function runMarpx(args) {
 }
 
 function canSkipForChromiumFailure(stderr) {
-  return /browserType\.launch|Playwright|Chromium|no-sandbox|visual-check-failed/i.test(stderr || "");
+  return isBrowserEnvironmentFailure(stderr);
 }
 
 function waitForPattern(stream, pattern, timeoutMs = 30000) {
@@ -53,43 +54,12 @@ async function terminateChild(child) {
   ]);
 }
 
-// Children spawned with `detached: true` lead their own process group, so
-// every descendant of marpx (the mode script and its `marp --watch` child)
-// shares the group id and can be listed and cleaned up precisely.
-function listProcessGroupMembers(pgid) {
-  const result = spawnSync("ps", ["-eo", "pid=,pgid="], { encoding: "utf8" });
-  if (result.status !== 0) return [];
-  return result.stdout
-    .split("\n")
-    .map((line) => line.trim().split(/\s+/).map(Number))
-    .filter(([pid, group]) => Number.isInteger(pid) && group === pgid)
-    .map(([pid]) => pid);
-}
-
-async function waitForProcessGroupExit(pgid, timeoutMs = 10000) {
-  const deadline = Date.now() + timeoutMs;
-  let members = listProcessGroupMembers(pgid);
-  while (members.length > 0 && Date.now() < deadline) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    members = listProcessGroupMembers(pgid);
-  }
-  return members;
-}
-
-function killProcessGroup(pgid) {
-  try {
-    process.kill(-pgid, "SIGKILL");
-  } catch {
-    // The process group is already gone.
-  }
-}
-
-test("outline generation smoke", () => {
+test("outline generation smoke", async () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-e2e-outline-"));
   const outputPath = path.join(tempDir, "outline.md");
 
   try {
-    const result = runMarpx([
+    const result = await runMarpx([
       "fixtures/good-brief.md",
       "--outline",
       "--output",
@@ -106,14 +76,14 @@ test("outline generation smoke", () => {
   }
 });
 
-test("export smoke: Core 5 features in pdf, pptx, html, and images", () => {
+test("export smoke: Core 5 features in pdf, pptx, html, and images", async () => {
   // Browser-backed conversions run back to back.
   test.setTimeout(120000);
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-e2e-export-"));
 
   try {
     const pptxPath = path.join(tempDir, "deck.pptx");
-    const pptx = runMarpx([
+    const pptx = await runMarpx([
       "template/core5-components.md",
       "--pptx",
       "--output",
@@ -132,14 +102,21 @@ test("export smoke: Core 5 features in pdf, pptx, html, and images", () => {
     expect(fs.statSync(pptxPath).size).toBeGreaterThan(0);
 
     const pdfPath = path.join(tempDir, "deck.pdf");
-    const pdf = runMarpx([
+    const pdf = await runMarpx([
       "template/core5-components.md", "--pdf", "--output", pdfPath,
     ]);
+    if (pdf.status !== 0 && canSkipForChromiumFailure(pdf.stderr)) {
+      if (strictE2E) {
+        expect(pdf.status, pdf.stderr).toBe(0);
+      }
+      test.skip("Chromium is unavailable in this environment.");
+      return;
+    }
     expect(pdf.status, pdf.stderr).toBe(0);
     expect(fs.readFileSync(pdfPath).subarray(0, 5).toString()).toBe("%PDF-");
 
     const htmlPath = path.join(tempDir, "deck.html");
-    const html = runMarpx([
+    const html = await runMarpx([
       "template/core5-components.md",
       "--html",
       "--output",
@@ -155,7 +132,7 @@ test("export smoke: Core 5 features in pdf, pptx, html, and images", () => {
     expect(htmlContent).toContain("data-marp-mermaid");
 
     const imagesPrefix = path.join(tempDir, "slide.png");
-    const images = runMarpx([
+    const images = await runMarpx([
       "template/core5-components.md",
       "--images",
       "png",
@@ -181,8 +158,8 @@ test("export smoke: Core 5 features in pdf, pptx, html, and images", () => {
   }
 });
 
-test("screenshot smoke", () => {
-  const result = runMarpx(["fixtures/clean-slide.md", "--screenshot", "1"]);
+test("screenshot smoke", async () => {
+  const result = await runMarpx(["fixtures/clean-slide.md", "--screenshot", "1"]);
 
   if (result.status !== 0 && canSkipForChromiumFailure(result.stderr)) {
     if (strictE2E) {
@@ -202,10 +179,10 @@ test("screenshot smoke", () => {
   fs.rmSync(screenshotPath, { force: true });
 });
 
-test("screenshot of a later page", () => {
+test("screenshot of a later page", async () => {
   // The bespoke template hides inactive slides, so pages after the first used
   // to time out; rendering with the bare template keeps every slide visible.
-  const result = runMarpx(["fixtures/paginate-skip-slide.md", "--screenshot", "2"]);
+  const result = await runMarpx(["fixtures/paginate-skip-slide.md", "--screenshot", "2"]);
 
   if (result.status !== 0 && canSkipForChromiumFailure(result.stderr)) {
     if (strictE2E) {
@@ -262,7 +239,7 @@ test("overview smoke", async ({ browserName }, testInfo) => {
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
       });
     } catch (error) {
-      if (strictE2E) {
+      if (strictE2E || !isBrowserEnvironmentFailure(error)) {
         throw error;
       }
       test.skip("Chromium is unavailable in this environment.");
@@ -275,8 +252,11 @@ test("overview smoke", async ({ browserName }, testInfo) => {
     await browser.close();
   } finally {
     await terminateChild(child);
-    leftovers = await waitForProcessGroupExit(child.pid);
-    killProcessGroup(child.pid);
+    try {
+      leftovers = await waitForProcessGroupExit(child.pid);
+    } finally {
+      killProcessGroup(child.pid);
+    }
   }
   expect(leftovers).toEqual([]);
 });
@@ -315,8 +295,11 @@ test("SIGTERM to marpx stops the overview child processes", async () => {
     expect(child.exitCode).not.toBeNull();
   } finally {
     await terminateChild(child);
-    leftovers = await waitForProcessGroupExit(child.pid);
-    killProcessGroup(child.pid);
+    try {
+      leftovers = await waitForProcessGroupExit(child.pid);
+    } finally {
+      killProcessGroup(child.pid);
+    }
   }
   expect(leftovers).toEqual([]);
 });

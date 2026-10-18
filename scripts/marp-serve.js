@@ -2,11 +2,13 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
-
 const {
-  buildDeckUrl,
-  parseDeckAndPageArgs,
-} = require("../src/preview-cli");
+  getBindAddress,
+  previewBaseUrls,
+  warnIfPublic,
+} = require("../src/preview-binding");
+
+const { buildDeckUrl, parseDeckAndPageArgs } = require("../src/preview-cli");
 const {
   forwardChildSignals,
   forwardLines,
@@ -33,8 +35,10 @@ function printUsage() {
 
 function main() {
   let parsedArgs;
+  let bindAddress;
 
   try {
+    bindAddress = getBindAddress();
     parsedArgs = parseDeckAndPageArgs(process.argv.slice(2), {
       repoRoot,
     });
@@ -71,40 +75,55 @@ function main() {
   const deckDir = path.dirname(deckPath);
   const marpBin = process.env.MARP_AGENT_MARP_BIN || getMarpBin(repoRoot);
   const marpArgs = ["--server", "--watch", "--config", configPath, deckDir];
+  warnIfPublic(bindAddress);
 
   let child;
   let opened = false;
   let notifierRetries = 0;
-  let outputTail = "";
 
   const tryOpen = (line) => {
     if (opened) return;
-    const match = line.match(/http:\/\/localhost:\d+/);
+    const match = line.match(/http:\/\/(?:\[[^\]]+\]|[^/\s]+):\d+/);
     if (!match) return;
 
-    const url = buildDeckUrl(match[0], deckPath, slidePosition);
+    const urls = previewBaseUrls(bindAddress, new URL(match[0]).port).map(
+      (baseUrl) => buildDeckUrl(baseUrl, deckPath, slidePosition),
+    );
+    const url = urls[0];
     const browser = openBrowser(url);
     browser?.unref();
     opened = true;
     process.stdout.write(`[preview] Opened ${url}\n`);
-  };
-
-  const observeLine = (line) => {
-    outputTail = `${outputTail}${line}\n`.slice(-8192);
-    tryOpen(line);
+    for (const available of urls.slice(1))
+      process.stdout.write(`[preview] Available ${available}\n`);
   };
 
   const start = () => {
-    outputTail = "";
+    let outputTail = "";
+    const observeLine = (line) => {
+      outputTail = `${outputTail}${line}\n`.slice(-8192);
+      tryOpen(line);
+    };
     child = spawn(marpBin, marpArgs, {
       cwd: repoRoot,
       stdio: ["inherit", "pipe", "pipe"],
+      env: {
+        ...process.env,
+        MARP_AGENT_BIND_ADDRESS: bindAddress,
+        NODE_OPTIONS: `${process.env.NODE_OPTIONS || ""} --require ${JSON.stringify(path.join(repoRoot, "src/marp-bind-preload.js"))}`,
+      },
     });
 
     forwardLines(child.stdout, process.stdout, observeLine);
     forwardLines(child.stderr, process.stderr, observeLine);
 
-    child.on("exit", (code, signal) => {
+    child.once("error", (error) => {
+      console.error(`Error: failed to start ${marpBin}: ${error.message}`);
+      process.exit(1);
+    });
+
+    // Wait for both output streams to flush before deciding whether to retry.
+    child.on("close", (code, signal) => {
       if (signal) {
         process.exit(signal === "SIGINT" ? 130 : 143);
         return;

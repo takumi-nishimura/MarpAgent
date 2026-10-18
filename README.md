@@ -126,9 +126,18 @@ The shorter new brief is not an input contract for that legacy generator.
 | `marpx --theme-new <name> --source-url <url>` | Scaffold a new theme |
 | `marpx --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
-| `npm run quality:gate` | Run unit tests + fixture validation gate |
+| `npm run quality:gate` | Run unit tests + fixture/example validation + E2E tests |
 | `npm run quality:gate:strict` | Enforce visual checks + strict e2e policy |
+| `npm run audit:dependencies` | Compare the production dependency audit with the reviewed ISS-0042 baseline |
 | `npm run test:e2e` | Run Playwright CLI smoke tests |
+
+`npm test` requires a working Playwright Chromium. Install browsers with
+`npx playwright install --with-deps chromium firefox`. Individual visual tests
+can skip when launch prerequisites are missing, but an explicit availability
+test fails so a browserless unit run cannot pass. Non-strict E2E smoke tests skip
+only known missing browser prerequisites; rendering errors and assertions fail.
+Strict gates allow no browser-environment skips. CLI smoke commands time out
+after 20 seconds and terminate their process group, including browser descendants.
 
 All exports go through the repository Marp config (plugins, BudouX, theme
 set). Browser-backed exports (`--pdf`, `--pptx`, `--images`, and the browser
@@ -142,6 +151,27 @@ files land next to the slide deck:
 `slide.pdf`, `slide.pptx`, `slide.html`, or `slide.001.png`-style image
 sequences. For `--images`, `--output` is the file prefix —
 `--output out/slide.png` produces `out/slide.001.png`, `out/slide.002.png`, …
+
+The timeout also bounds validation rendering, report image exports, and
+`--screenshot`, including browser operations. Set a positive integer in
+milliseconds; zero, negative, and invalid values are rejected. A timeout
+terminates the conversion and its browser processes. Interactive preview
+and watch sessions remain open until stopped. HTML export needs no browser.
+Browser fallback candidates are checked before use; if none exists, the
+diagnostic lists attempted paths and the browser installation command.
+
+Live serve and overview listen on `127.0.0.1` by default. To preview from
+another device on a trusted LAN, use
+`MARP_AGENT_BIND_ADDRESS=0.0.0.0 marpx <slide.md>` or append `--overview`.
+The startup output lists URLs using the machine's actual network addresses.
+An explicit local IP, `localhost`, or IPv6 address also works. Non-loopback
+binding exposes the deck directory and linked shared assets to the network
+without authentication; the repository enables `allowLocalFiles: true`.
+Use this only for trusted preview sessions. Marp CLI 4.5.1 has no bind-address
+option, so a child-scoped adapter supplies the host for its HTTP server and
+watch notifier. `MARP_AGENT_NO_OPEN=1` disables automatic browser opening;
+if an opener such as `xdg-open` is missing, the server keeps running and
+prints a URL that can be opened manually.
 
 `marpx --doctor` reports the CLI and configured Core versions and renders
 small Shiki, line-highlight, KaTeX, MathJax, diagram-math, and native-Mermaid
@@ -314,6 +344,26 @@ Canvas size is an explicit frontmatter concern: `16:9`, `4:3`, `a4-portrait`,
 selected by the `.paper-header` / `.paper-columns` structure, not by a separate
 theme or slide class.
 
+A leading UTF-8 BOM is removed before Marp parses the deck, so rendering,
+slide identities, and canvas inspection use the same frontmatter directives.
+Source edits retain the original BOM and source offsets. Frontmatter closing
+delimiters may contain extra dashes or trailing spaces, as in Marp itself.
+
+### Adjacent alerts
+
+Separate alerts with an empty line without a `>` marker:
+
+```markdown
+> [!NOTE]
+> First alert.
+
+> [!WARNING]
+> Second alert.
+```
+
+A line containing only `>` starts another paragraph in the same alert. As on
+GitHub, a later `[!WARNING]` in that blockquote remains ordinary body text.
+
 ### Mermaid sizing
 
 Mermaid diagrams are rendered to SVG before the slide is styled. Changing
@@ -358,6 +408,9 @@ flowchart TD
 ````
 
 ### Title logo sizing
+
+Themes default to no logo. Set `--logos-dark` and `--logos-light` to existing
+deck-relative image URLs when your deck needs them.
 
 Title slides default to height-based logo sizing so wide wordmarks remain
 legible. Override `--logo-title-background-size` in deck frontmatter only when

@@ -3,6 +3,11 @@ const http = require("node:http");
 const path = require("node:path");
 const { marpCli } = require("@marp-team/marp-cli");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
+const {
+  getBindAddress,
+  previewBaseUrls,
+  warnIfPublic,
+} = require("../src/preview-binding");
 
 const {
   buildOverviewUrl,
@@ -81,7 +86,9 @@ async function renderDeck({ configPath, deckPath, outputPath }) {
       fs.renameSync(renderingPath, outputPath);
       return true;
     } catch (error) {
-      console.error(`[preview:overview] Cannot publish render: ${error.message}`);
+      console.error(
+        `[preview:overview] Cannot publish render: ${error.message}`,
+      );
     }
   }
 
@@ -132,12 +139,16 @@ function watchDirectory(dirPath, isRelevant, onChange) {
       if (!fileName || isRelevant(fileName.toString())) onChange();
     });
     watcher.on("error", (error) => {
-      console.error(`[preview:overview] Stopped watching ${dirPath}: ${error.message}`);
+      console.error(
+        `[preview:overview] Stopped watching ${dirPath}: ${error.message}`,
+      );
       watcher.close();
     });
     return watcher;
   } catch (error) {
-    console.error(`[preview:overview] Cannot watch ${dirPath}: ${error.message}`);
+    console.error(
+      `[preview:overview] Cannot watch ${dirPath}: ${error.message}`,
+    );
     return undefined;
   }
 }
@@ -214,47 +225,89 @@ function resolveStaticPath(deckDir, requestPath) {
 }
 
 function createServer({ deckDir, deckPath, outputPath, targetSlideId }) {
-  const server = http.createServer((request, response) => {
-    const requestUrl = new URL(request.url || "/", "http://127.0.0.1");
-
-    if (requestUrl.pathname === "/__marp_agent__/meta") {
-      sendJson(response, { token: getReloadToken(outputPath) });
-      return;
+  const failRequest = (response, error) => {
+    const missing = ["ENOENT", "ENOTDIR", "EISDIR"].includes(error.code);
+    if (!missing)
+      console.error(`[preview:overview] Request failed: ${error.message}`);
+    if (response.headersSent) {
+      response.destroy();
+    } else {
+      sendText(
+        response,
+        missing ? 404 : 500,
+        missing ? "Not found" : "Cannot read preview file",
+      );
     }
+  };
+  const server = http.createServer((request, response) => {
+    try {
+      const requestUrl = new URL(request.url || "/", "http://127.0.0.1");
 
-    if (requestUrl.pathname === "/" || requestUrl.pathname === "/index.html") {
-      const reloadToken = getReloadToken(outputPath);
-      const deckName = path.basename(deckPath);
-
-      response.writeHead(200, {
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "no-store",
-      });
-
-      if (!fs.existsSync(outputPath)) {
-        response.end(buildWaitingDocument(deckName, reloadToken));
+      if (requestUrl.pathname === "/__marp_agent__/meta") {
+        sendJson(response, { token: getReloadToken(outputPath) });
         return;
       }
 
-      const renderedHtml = fs.readFileSync(outputPath, "utf8");
-      response.end(
-        buildOverviewDocument(renderedHtml, { reloadToken, targetSlideId }),
-      );
-      return;
+      if (
+        requestUrl.pathname === "/" ||
+        requestUrl.pathname === "/index.html"
+      ) {
+        const reloadToken = getReloadToken(outputPath);
+        const deckName = path.basename(deckPath);
+
+        if (!fs.existsSync(outputPath)) {
+          response.writeHead(200, {
+            "Content-Type": "text/html; charset=utf-8",
+            "Cache-Control": "no-store",
+          });
+          response.end(buildWaitingDocument(deckName, reloadToken));
+          return;
+        }
+
+        const renderedHtml = fs.readFileSync(outputPath, "utf8");
+        const document = buildOverviewDocument(renderedHtml, {
+          reloadToken,
+          targetSlideId,
+        });
+        response.writeHead(200, {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-store",
+        });
+        response.end(document);
+        return;
+      }
+
+      const filePath = resolveStaticPath(deckDir, requestUrl.pathname);
+
+      if (
+        !filePath ||
+        !fs.existsSync(filePath) ||
+        fs.statSync(filePath).isDirectory()
+      ) {
+        sendText(response, 404, "Not found");
+        return;
+      }
+
+      const stream = fs.createReadStream(filePath);
+      stream.once("error", (error) => failRequest(response, error));
+      response.once("close", () => stream.destroy());
+      stream.once("open", () => {
+        response.writeHead(200, {
+          "Content-Type": getMimeType(filePath),
+          "Cache-Control": "no-store",
+        });
+        stream.pipe(response);
+      });
+    } catch (error) {
+      failRequest(response, error);
     }
+  });
 
-    const filePath = resolveStaticPath(deckDir, requestUrl.pathname);
-
-    if (!filePath || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-      sendText(response, 404, "Not found");
-      return;
-    }
-
-    response.writeHead(200, {
-      "Content-Type": getMimeType(filePath),
-      "Cache-Control": "no-store",
-    });
-    fs.createReadStream(filePath).pipe(response);
+  server.on("clientError", (error, socket) => {
+    console.error(`[preview:overview] Invalid HTTP request: ${error.message}`);
+    if (socket.writable)
+      socket.end("HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n");
+    else socket.destroy();
   });
 
   return server;
@@ -262,8 +315,10 @@ function createServer({ deckDir, deckPath, outputPath, targetSlideId }) {
 
 function main() {
   let parsedArgs;
+  let bindAddress;
 
   try {
+    bindAddress = getBindAddress();
     parsedArgs = parseDeckAndPageArgs(process.argv.slice(2), {
       repoRoot,
     });
@@ -316,17 +371,22 @@ function main() {
   process.on("SIGINT", () => shutdown(130));
   process.on("SIGTERM", () => shutdown(143));
 
-  server.listen(0, "127.0.0.1", () => {
+  server.on("error", (error) => {
+    console.error(`[preview:overview] Server failed: ${error.message}`);
+    shutdown(1);
+  });
+  warnIfPublic(bindAddress);
+  server.listen(0, bindAddress, () => {
     const address = server.address();
     if (!address || typeof address === "string") {
       console.error("Failed to determine overview preview address.");
       process.exit(1);
     }
 
-    const url = buildOverviewUrl(
-      `http://127.0.0.1:${address.port}`,
-      targetSlideId,
+    const urls = previewBaseUrls(bindAddress, address.port).map((baseUrl) =>
+      buildOverviewUrl(baseUrl, targetSlideId),
     );
+    const url = urls[0];
     let opened = false;
 
     // Open the browser only after the first successful render so the user
@@ -339,6 +399,8 @@ function main() {
       const browser = openBrowser(url);
       browser?.unref();
       process.stdout.write(`[preview:overview] Opened ${url}\n`);
+      for (const available of urls.slice(1))
+        process.stdout.write(`[preview:overview] Available ${available}\n`);
     });
     const requestRender = () => {
       queue.request();
@@ -348,8 +410,16 @@ function main() {
     // still triggers a follow-up render.
     watchers.push(
       ...[
-        watchDirectory(deckDir, (fileName) => fileName === deckFileName, requestRender),
-        watchDirectory(themesDir, (fileName) => fileName.endsWith(".css"), requestRender),
+        watchDirectory(
+          deckDir,
+          (fileName) => fileName === deckFileName,
+          requestRender,
+        ),
+        watchDirectory(
+          themesDir,
+          (fileName) => fileName.endsWith(".css"),
+          requestRender,
+        ),
       ].filter(Boolean),
     );
     requestRender();

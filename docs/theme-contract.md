@@ -224,6 +224,14 @@ with a visual redesign unless that is the explicit task.
 
 ## Typography Contract
 
+The shipped themes import Noto Sans JP from Google Fonts. When that service is
+unavailable, the browser uses installed fonts from the theme's fallback list;
+glyph widths and validator measurements can differ. For repeatable offline
+exports, install the same font version on every rendering machine or provide
+deck-local font files with `@font-face`, and keep the browser version fixed.
+The remote import remains for existing decks; it does not make the rendering
+environment hermetic.
+
 Allowed author-facing text utilities:
 
 - `.text-xl5`, `.text-xl4`, `.text-xl3`, `.text-xl2`, `.text-xl`, `.text-lg`
