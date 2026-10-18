@@ -18,24 +18,34 @@ HTML / PDF / PPTX
 
 ## Prerequisites
 
-- mise with shell activation enabled
-  (`eval "$(mise activate zsh)"` in your zsh startup file)
-- `.mise.toml` pins `node = "25.6.0"` and adds this repository root to `PATH`,
+Use Node.js 25.x. The repository pins Node 25.6.0 in `.mise.toml`. With mise
+installed, run these commands from the repository root:
+
+```bash
+mise install
+mise exec -- npm ci
+mise exec -- npx playwright install --with-deps chromium firefox
+```
+
+Chromium is required for rendered validation, screenshots, and unit tests.
+Firefox is also required for the full E2E suite. If Node.js 25.x is already
+managed by another tool, run `npm ci` and the browser installation command
+directly, without `mise exec --`.
+
+- Enable mise shell activation (for example, `eval "$(mise activate zsh)"`
+  in your zsh startup file). `.mise.toml` adds this repository root to `PATH`,
   so `marpx decks/...` works without `./`
-- Use `./marpx ...` as the fallback when the current shell has not loaded mise
-- Use `npm run marpx --` for automation and CI
+- Use `./marpx ...` when mise is installed but shell activation is unavailable
+- Use `npm run marpx -- ...` for automation, CI, or a Node.js 25.x installation
+  managed without mise
 - Avoid `npx marpx` in this checkout because the package's own bin is not
   linked into `node_modules/.bin`
 
-```bash
-npm install
-```
-
-Marp CLI is pinned to 4.5.1 and Marp Core to 5.0.2 (currently the upstream
-release candidate). The repository config explicitly constructs the Core 5
-`@marp-team/marp-core/full` engine, so exports and in-process slide parsing use
-the same features even when launched outside this directory. CLI also installs
-its own Core 4 fallback dependency; that copy is not the configured renderer.
+Marp CLI is pinned to 4.5.1 and Marp Core to 5.0.2. The repository config
+explicitly constructs the Core 5 `@marp-team/marp-core/full` engine, so exports
+and in-process slide parsing use the same features even when launched outside
+this directory. CLI also installs its own Core 4 fallback dependency; that copy
+is not the configured renderer.
 All optional Core 5 rendering dependencies are declared in `package.json`.
 
 Code highlighting uses Shiki. Shared themes map `--marp-shiki-*` variables to
@@ -104,7 +114,7 @@ The shorter new brief is not an input contract for that legacy generator.
 | `marpx -n decks/<path> --paper` | Scaffold a new A-series paper deck |
 | `marpx <slide.md>` | Serve with live reload |
 | `marpx <slide.md> <page>` | Serve and open at displayed page |
-| `marpx <slide.md> --screenshot <page>` | Screenshot the slide at a displayed page to `/tmp` |
+| `marpx <slide.md> --screenshot <page>` | Save a screenshot to the system temporary directory and print its path |
 | `marpx <slide.md> --screenshot <page> --output <path>` | Screenshot the slide at a displayed page to a chosen path |
 | `marpx <slide.md> -p` | Single-shot preview |
 | `marpx <slide.md> [page] --overview` | Thumbnail overview (optionally focused on a displayed page) |
@@ -127,17 +137,24 @@ The shorter new brief is not an input contract for that legacy generator.
 | `marpx --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
 | `npm run quality:gate` | Run unit tests + fixture/example validation + E2E tests |
-| `npm run quality:gate:strict` | Enforce visual checks + strict e2e policy |
+| `npm run quality:gate:strict` | Run the quality gate with required visual checks and strict E2E policy |
 | `npm run audit:dependencies` | Compare the production dependency audit with the reviewed ISS-0042 baseline |
-| `npm run test:e2e` | Run Playwright CLI smoke tests |
+| `npm run test:e2e` | Run Playwright browser and CLI E2E tests |
 
-`npm test` requires a working Playwright Chromium. Install browsers with
-`npx playwright install --with-deps chromium firefox`. Individual visual tests
-can skip when launch prerequisites are missing, but an explicit availability
-test fails so a browserless unit run cannot pass. Non-strict E2E smoke tests skip
-only known missing browser prerequisites; rendering errors and assertions fail.
+`npm test` requires a working Playwright Chromium installed as described above.
+Individual visual tests can skip when launch prerequisites are missing, but an
+explicit availability test fails so a browserless unit run cannot pass.
+Non-strict E2E smoke tests skip only known missing browser prerequisites;
+rendering errors and assertions fail.
 Strict gates allow no browser-environment skips. CLI smoke commands time out
 after 20 seconds and terminate their process group, including browser descendants.
+
+Dependency auditing runs separately from `quality:gate`. Run
+`npm run audit:dependencies` to compare production findings against the reviewed
+baseline tracked in [ISS-0042](docs/issues/ISS-0042-track-production-dependency-audit-findings.md).
+A passing audit can include those known unresolved findings. CI runs this check
+for changes to dependencies or audit tooling, and weekly to catch newly
+published advisories.
 
 All exports go through the repository Marp config (plugins, BudouX, theme
 set). Browser-backed exports (`--pdf`, `--pptx`, `--images`, and the browser
@@ -268,7 +285,10 @@ MarpAgent/
 ├── assets/             # Shared assets (logos, fonts)
 ├── themes/             # Marp entries and surfaces built with Tailwind CSS v4
 ├── src/                # Rendering, previews, validation, and CLI support
-├── scripts/            # Test runner
+├── scripts/            # CLI tools, rendering plugins, and quality checks
+├── fixtures/           # Rendered validation examples and regression cases
+├── tests/              # Unit and browser/CLI E2E tests
+├── docs/               # Engineering contracts and issue/decision records
 └── .agents/skills/     # AI agent authoring skills
 ```
 
@@ -306,9 +326,15 @@ Common capabilities:
 - Laser pointer effect during presentation
 - Mermaid diagram support with MathJax
 
-See `designs/README.md` for the design index, `designs/<name>/DESIGN.md` for
-each visual identity, and `docs/theme-contract.md` for the engineering contract
+See [designs/README.md](designs/README.md) for the design index,
+`designs/<name>/DESIGN.md` for each visual identity, and the
+[theme contract](docs/theme-contract.md) for the engineering contract
 shared by CSS, templates, skills, Tailwind, and the validator.
+
+Shared themes load Noto Sans JP from Google Fonts. Offline rendering can use
+fallback fonts with different text widths. For repeatable exports, install the
+same font version or supply deck-local fonts, and keep the browser version fixed
+as described in the theme contract.
 
 `designs/<name>/DESIGN.md` is the source of truth for each design's tokens.
 `marpx --theme` regenerates the matching
@@ -378,9 +404,9 @@ To make a Mermaid diagram larger, scale the rendered SVG/container instead:
 
 ```mermaid
 flowchart TD
-  A[リアルタイム協調エージェント]
-  B[人間基準での較正]
-  C[未知ユーザーへの適応]
+  A[Real-time collaborative agent]
+  B[Calibration against human performance]
+  C[Adaptation to new users]
   A --> B --> C
 ```
 
