@@ -76,11 +76,16 @@ section:where(:not(:has(> .paper-header))) :is(em, .marker, mark) {
     box-decoration-break: clone;
 }
 
-section:where(:not(:has(> .paper-header))) .marker {
+section:where(:not(:has(> .paper-header))) .marker,
+section:where(:not(:has(> .paper-header))) mark {
     background: linear-gradient(
-        transparent 60%,
-        color-mix(in srgb, var(--color-deck-yellow) 40%, transparent) 60%
+        transparent 70%,
+        color-mix(in srgb, var(--color-deck-yellow) 40%, transparent) 70%
     );
+}
+
+section:where(:not(:has(> .paper-header))) mark {
+    color: inherit;
 }
 
 section:where(:not(:has(> .paper-header))) figcaption {

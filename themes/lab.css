@@ -1823,11 +1823,14 @@ section:where(:not(:has(> .paper-header))) :is(em, .marker, mark) {
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
-section:where(:not(:has(> .paper-header))) .marker {
-  background: linear-gradient( transparent 60%, color-mix(in srgb, #d1c600 40%, transparent) 60% );
+section:where(:not(:has(> .paper-header))) .marker, section:where(:not(:has(> .paper-header))) mark {
+  background: linear-gradient( transparent 70%, color-mix(in srgb, #d1c600 40%, transparent) 70% );
   @supports (color: color-mix(in lab, red, red)) {
-    background: linear-gradient( transparent 60%, color-mix(in srgb, var(--color-deck-yellow) 40%, transparent) 60% );
+    background: linear-gradient( transparent 70%, color-mix(in srgb, var(--color-deck-yellow) 40%, transparent) 70% );
   }
+}
+section:where(:not(:has(> .paper-header))) mark {
+  color: inherit;
 }
 section:where(:not(:has(> .paper-header))) figcaption {
   font-size: var(--text-caption);

@@ -65,6 +65,7 @@ async function render(
                 leading: parseFloat(value.lineHeight),
                 color: value.color,
                 background: value.backgroundImage,
+                fill: value.backgroundColor,
                 decoration: value.boxDecorationBreak,
             };
         };
@@ -74,6 +75,7 @@ async function render(
             strong: style("strong"),
             emphasis: style("em"),
             marker: style(".marker"),
+            mark: style("mark"),
             caption: style("figcaption"),
             footnote: style(".footnote"),
             table: style("td"),
@@ -120,8 +122,102 @@ test("plain lab keeps invert and named-scheme emphasis colored", async ({
         expect(value.strong.weight).toBe("700");
         expect(value.strong.color).not.toBe(value.body.color);
         expect(value.emphasis.background).toContain("linear-gradient");
+        expect(value.mark.background).toContain("linear-gradient");
+        expect(value.mark.color).toBe(value.body.color);
         expect(value.table.color).toBe(value.body.color);
     }
+});
+
+test("lab markers use uniform bands with clear space above a following mark", async ({
+    page,
+}) => {
+    const source = fs
+        .readFileSync(
+            path.join(__dirname, "../../fixtures/lab-typography-slide.md"),
+            "utf8",
+        )
+        .replaceAll(
+            "fig.png",
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80'/%3E",
+        );
+    await mount(page, source);
+    const value = await page
+        .locator("section")
+        .nth(1)
+        .evaluate((section) => {
+            const bands = (selector) => {
+                const element = section.querySelector(selector);
+                const style = getComputedStyle(element);
+                // Measure the painted part of each inline fragment, including a
+                // solid fill when no gradient is present.
+                const stop = style.backgroundImage.match(/\s(\d+)%/);
+                const start = stop ? Number(stop[1]) / 100 : 0;
+                return {
+                    weight: style.fontWeight,
+                    fill: style.backgroundColor,
+                    color: style.color,
+                    fragments: [...element.getClientRects()].map((rect) => ({
+                        top: rect.top + rect.height * start,
+                        bottom: rect.bottom,
+                        height: rect.height * (1 - start),
+                    })),
+                };
+            };
+            return {
+                em: bands(".col em"),
+                marker: bands(".marker"),
+                mark: bands("mark"),
+                strong: getComputedStyle(section.querySelector("strong"))
+                    .fontWeight,
+                color: getComputedStyle(section).color,
+            };
+        });
+    expect(value.marker.fragments.length).toBeGreaterThanOrEqual(2);
+    const referenceHeight = value.em.fragments[0].height;
+    expect(value.marker.fragments[0].height).toBeCloseTo(referenceHeight, 1);
+    expect(value.mark.fragments[0].height).toBeCloseTo(referenceHeight, 1);
+    for (const marker of [value.em, value.marker, value.mark]) {
+        expect(marker.weight).toBe("400");
+        expect(marker.fill).toBe("rgba(0, 0, 0, 0)");
+        expect(marker.color).toBe(value.color);
+    }
+    expect(value.strong).toBe("700");
+    const preceding = value.marker.fragments
+        .filter((band) => band.bottom <= value.mark.fragments[0].top)
+        .at(-1);
+    expect(preceding).toBeDefined();
+    expect(
+        value.mark.fragments[0].top - preceding.bottom,
+    ).toBeGreaterThanOrEqual(referenceHeight);
+});
+
+test("lab marker changes preserve authored paint and the other surfaces", async ({
+    page,
+}) => {
+    for (const [theme, paper] of [
+        ["lab", true],
+        ["muji", false],
+        ["toshiba", false],
+    ]) {
+        const value = await render(page, { theme, paper });
+        expect(value.emphasis.background).toContain("70%");
+        expect(value.marker.background).toContain("60%");
+        expect(value.mark.background).toBe("none");
+        expect(value.mark.fill).not.toBe("rgba(0, 0, 0, 0)");
+    }
+    const overridden = await render(page, {
+        style: "em { background: rgb(20, 60, 90); } section .marker { background: rgb(20, 60, 90); } mark { background: rgb(20, 60, 90); color: rgb(255, 255, 255); }",
+    });
+    for (const marker of [
+        overridden.emphasis,
+        overridden.marker,
+        overridden.mark,
+    ]) {
+        expect(marker.background).toBe("none");
+        expect(marker.fill).toBe("rgb(20, 60, 90)");
+    }
+    expect(overridden.mark.color).toBe("rgb(255, 255, 255)");
+    expect(overridden.strong.weight).toBe("700");
 });
 
 test("plain lab preserves deck overrides and the independent paper and other-theme scales", async ({
