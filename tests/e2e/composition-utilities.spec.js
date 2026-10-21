@@ -134,11 +134,20 @@ for (const theme of ["lab", "muji", "toshiba"]) {
             ).toBe(true);
             const marker = at("results", boundary).locator("mark");
             await expect(marker).toBeVisible();
-            expect(
-                await marker.evaluate(
-                    (node) => getComputedStyle(node).backgroundColor,
-                ),
-            ).not.toBe("rgba(0, 0, 0, 0)");
+            const paint = await marker.evaluate((node) => {
+                const style = getComputedStyle(node);
+                return {
+                    fill: style.backgroundColor,
+                    band: style.backgroundImage,
+                };
+            });
+            if (theme === "lab") {
+                // Lab marks now use the same underline band as other markers.
+                expect(paint.band).toContain("linear-gradient");
+                expect(paint.band).toContain("70%");
+            } else {
+                expect(paint.fill).not.toBe("rgba(0, 0, 0, 0)");
+            }
             await expect(
                 at("diagram", boundary).locator(".mermaid-diagram > svg"),
             ).toHaveCount(1);
