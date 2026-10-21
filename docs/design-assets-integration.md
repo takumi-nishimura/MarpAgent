@@ -4,6 +4,10 @@
 
 本人の指示に従い，#53〜#61ごとにCodex `gpt-6.1-sol`／reasoning `max`のサブリーダーを起動し，Herdrの独立worktreeで実装した．main leaderが共有API，競合，統合と受け入れを管理する．最新の運用方針は，GitHubにPRを作成し，内容のレビューはローカルで済ませることである．PR作成，ローカルレビュー，merge，Issue閉鎖を別の状態として管理する．
 
+## lab既定化への方針更新
+
+本人の指摘を受け，比較用のlab-refinedを常設せず，改善済みの文字階層と外観をlabの既定へ取り込む．追加classは不要にし，paper・他テーマ・原稿の明示上書きを保つ．.bodyの明示的な配置とは別の判断である．採用は[ADR-0010](decisions/ADR-0010-make-the-improved-lab-typography-the-default.md)，新条件の検証は[XR-0005](explorations/XR-0005-verify-lab-defaults-without-an-extra-selection-class.md)で追跡する．以下の初期lab-refined比較は当時の履歴であり，新しい既定の利用手順ではない．
+
 ## 現在の公開・レビュー方針
 
 既に組合せを検証した統合ブランチを，[Draft PR #62](https://github.com/takumi-nishimura/MarpAgent/pull/62)としてmainへ提示した．PR本文から各ISSの説明・代表画像・検証結果へ辿れるようにし，担当ごとの論理commitを保持する．GitHub上でreviewerを指定したり，GitHubレビュー承認を完了条件に加えたりしない．

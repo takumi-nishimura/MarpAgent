@@ -2,7 +2,7 @@
 id: ADR-0007
 title: "Adopt opt-in body layout and lab visual refinement"
 type: decision
-status: accepted
+status: superseded
 date: "2026-10-21"
 authors: [codex-main]
 scope: ["themes","validation"]
