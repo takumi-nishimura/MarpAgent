@@ -1,0 +1,766 @@
+{
+  "capturedAt": "2026-10-21T05:11:15.800Z",
+  "sourceRevision": "756b461e9c2b7f33985a546a253639fe6addd8a8",
+  "fixtureRevision": "119fbbbedb7076394de166af783fd8e10dc23b58",
+  "implementationRevision": "2cdef2e448e6b098907eb6dad76a13668d7e17ec",
+  "sourceSha256": "623961a6398fdb21ce7c99b3f81fd1bed4c6b42b75eb1aed457215495545f01a",
+  "bodySourceSha256": "16ad814507eb7df2f2d519563e9500286da29c7a622e04272075e1ae92267f77",
+  "node": "v25.6.0",
+  "browser": "145.0.7632.6",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "dpr": 1,
+  "fonts": [
+    {
+      "family": "Noto Sans JP",
+      "weight": 400,
+      "cssSource": "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap",
+      "source": "https://fonts.gstatic.com/s/notosansjp/v57/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEj75s.ttf",
+      "sha256": "f037d714109f22d57ce75fd9a6b9d23439c903061fb11106c070b2dcc03f2021"
+    },
+    {
+      "family": "Noto Sans JP",
+      "weight": 700,
+      "cssSource": "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap",
+      "source": "https://fonts.gstatic.com/s/notosansjp/v57/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFPYk75s.ttf",
+      "sha256": "59bb5d2915bba3a256950116e7a48a810bd8cde63793d5111b9e5726eec1e799"
+    }
+  ],
+  "fontPolicy": "Identical hashed TTFs copied read-only from the baseline run into a private Fontconfig directory; Google Fonts blocked; target-page usage checked by Chromium CDP.",
+  "auditOptions": {
+    "tolerancePx": 2,
+    "overlapTolerancePx": 2,
+    "mediaToleranceRatio": 0.02,
+    "safeMarginPx": 20,
+    "referenceHeightPx": 720,
+    "referenceWidthPx": 1280,
+    "bodyFloorPx": 12,
+    "secondaryFloorPx": 8
+  },
+  "results": [
+    {
+      "theme": "lab",
+      "cssSha256": "469896df4f2a52878f8e5a838923532a688e0841d61ec7b1133474181d517846",
+      "peerBaselineOverflowPx": 86,
+      "variants": [
+        {
+          "variant": "baseline",
+          "geometry": {
+            "text": "主資料と補足 比較の根拠に広い列を割り当てる 同じデータを，図と近くの説明で読む． 読み取れること 条件Bの値は条件Aより大きい．同じ入力条件であることが比較の前提になる． この架空の値から，別の条件での性能は判断しない．",
+            "caption": "同じ​データを​，図と​近くの​説明で​読む．",
+            "alt": "架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位",
+            "image": {
+              "x": 293.484375,
+              "y": 3735.75,
+              "width": 280,
+              "height": 640,
+              "bottom": 4375.75,
+              "naturalWidth": 280,
+              "naturalHeight": 640,
+              "objectFit": "contain"
+            },
+            "painted": {
+              "width": 280,
+              "height": 640
+            },
+            "captionBox": {
+              "x": 293.140625,
+              "y": 4383.546875,
+              "width": 280.703125,
+              "height": 22,
+              "bottom": 4405.546875
+            },
+            "ratio": 2,
+            "emphasis": {
+              "text": "同じ入力条件",
+              "color": "rgb(217, 119, 6)",
+              "weight": "500"
+            }
+          },
+          "headingFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": false,
+              "glyphCount": 18
+            }
+          ],
+          "bodyFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": false,
+              "glyphCount": 45
+            }
+          ],
+          "classFindings": [],
+          "audit": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 86
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 56
+              }
+            ],
+            "maxOverflowPx": 86,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          },
+          "neighborAudits": [
+            {
+              "page": 5,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            },
+            {
+              "page": 7,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            }
+          ],
+          "screenshot": "../../../fixtures/layout-baselines/baseline/lab/columns-portrait.png",
+          "svgLabelSizeEstimatePx": 24
+        },
+        {
+          "variant": "body",
+          "geometry": {
+            "text": "主資料と補足 比較の根拠に広い列を割り当てる 同じデータを，図と近くの説明で読む． 読み取れること 条件Bの値は条件Aより大きい．同じ入力条件であることが比較の前提になる． この架空の値から，別の条件での性能は判断しない．",
+            "caption": "同じ​データを​，図と​近くの​説明で​読む．",
+            "alt": "架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位",
+            "image": {
+              "x": 40,
+              "y": 135.75,
+              "width": 787,
+              "height": 501.25,
+              "bottom": 637,
+              "naturalWidth": 280,
+              "naturalHeight": 640,
+              "objectFit": "contain"
+            },
+            "painted": {
+              "width": 219.296875,
+              "height": 501.25
+            },
+            "captionBox": {
+              "x": 40,
+              "y": 650,
+              "width": 787,
+              "height": 22,
+              "bottom": 672
+            },
+            "ratio": 2,
+            "emphasis": {
+              "text": "同じ入力条件",
+              "color": "rgb(217, 119, 6)",
+              "weight": "500"
+            }
+          },
+          "headingFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": false,
+              "glyphCount": 18
+            }
+          ],
+          "bodyFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": false,
+              "glyphCount": 45
+            }
+          ],
+          "classFindings": [],
+          "audit": {
+            "clipped": [],
+            "maxOverflowPx": 0,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          },
+          "neighborAudits": [
+            {
+              "page": 5,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            },
+            {
+              "page": 7,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            }
+          ],
+          "screenshot": "lab-body.png",
+          "svgLabelSizeEstimatePx": 18.796875
+        }
+      ],
+      "peerTrials": [
+        {
+          "name": "utility",
+          "imageBox": {
+            "width": 280,
+            "height": 640,
+            "naturalWidth": 280,
+            "naturalHeight": 640
+          },
+          "audit": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 86
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 56
+              }
+            ],
+            "maxOverflowPx": 86,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          }
+        },
+        {
+          "name": "inline",
+          "imageBox": {
+            "width": 210,
+            "height": 480,
+            "naturalWidth": 280,
+            "naturalHeight": 640
+          },
+          "audit": {
+            "clipped": [],
+            "maxOverflowPx": 0,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          }
+        }
+      ]
+    },
+    {
+      "theme": "muji",
+      "cssSha256": "fd2b7db670488622ff7787f53dae5227c496bd360b01794c2aebf79625129bb2",
+      "peerBaselineOverflowPx": 87,
+      "variants": [
+        {
+          "variant": "baseline",
+          "geometry": {
+            "text": "主資料と補足 比較の根拠に広い列を割り当てる 同じデータを，図と近くの説明で読む． 読み取れること 条件Bの値は条件Aより大きい．同じ入力条件であることが比較の前提になる． この架空の値から，別の条件での性能は判断しない．",
+            "caption": "同じ​データを​，図と​近くの​説明で​読む．",
+            "alt": "架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位",
+            "image": {
+              "x": 299.328125,
+              "y": 3737.9375,
+              "width": 280,
+              "height": 640,
+              "bottom": 4377.9375,
+              "naturalWidth": 280,
+              "naturalHeight": 640,
+              "objectFit": "contain"
+            },
+            "painted": {
+              "width": 280,
+              "height": 640
+            },
+            "captionBox": {
+              "x": 299.328125,
+              "y": 4385.125,
+              "width": 280,
+              "height": 23.046875,
+              "bottom": 4408.171875
+            },
+            "ratio": 1.999922136572452,
+            "emphasis": {
+              "text": "同じ入力条件",
+              "color": "rgb(127, 0, 25)",
+              "weight": "500"
+            }
+          },
+          "headingFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": false,
+              "glyphCount": 18
+            }
+          ],
+          "bodyFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": false,
+              "glyphCount": 45
+            }
+          ],
+          "classFindings": [],
+          "audit": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 87
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 58
+              }
+            ],
+            "maxOverflowPx": 87,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          },
+          "neighborAudits": [
+            {
+              "page": 5,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            },
+            {
+              "page": 7,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            }
+          ],
+          "screenshot": "../../../fixtures/layout-baselines/baseline/muji/columns-portrait.png",
+          "svgLabelSizeEstimatePx": 24
+        },
+        {
+          "variant": "body",
+          "geometry": {
+            "text": "主資料と補足 比較の根拠に広い列を割り当てる 同じデータを，図と近くの説明で読む． 読み取れること 条件Bの値は条件Aより大きい．同じ入力条件であることが比較の前提になる． この架空の値から，別の条件での性能は判断しない．",
+            "caption": "同じ​データを​，図と​近くの​説明で​読む．",
+            "alt": "架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位",
+            "image": {
+              "x": 56,
+              "y": 125.9375,
+              "width": 766.65625,
+              "height": 511.015625,
+              "bottom": 636.953125,
+              "naturalWidth": 280,
+              "naturalHeight": 640,
+              "objectFit": "contain"
+            },
+            "painted": {
+              "width": 223.5693359375,
+              "height": 511.015625
+            },
+            "captionBox": {
+              "x": 56,
+              "y": 648.953125,
+              "width": 766.65625,
+              "height": 23.046875,
+              "bottom": 672
+            },
+            "ratio": 1.999922136572452,
+            "emphasis": {
+              "text": "同じ入力条件",
+              "color": "rgb(127, 0, 25)",
+              "weight": "500"
+            }
+          },
+          "headingFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": false,
+              "glyphCount": 18
+            }
+          ],
+          "bodyFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": false,
+              "glyphCount": 45
+            }
+          ],
+          "classFindings": [],
+          "audit": {
+            "clipped": [],
+            "maxOverflowPx": 0,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          },
+          "neighborAudits": [
+            {
+              "page": 5,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            },
+            {
+              "page": 7,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            }
+          ],
+          "screenshot": "muji-body.png",
+          "svgLabelSizeEstimatePx": 19.1630859375
+        }
+      ],
+      "peerTrials": [
+        {
+          "name": "utility",
+          "imageBox": {
+            "width": 280,
+            "height": 640,
+            "naturalWidth": 280,
+            "naturalHeight": 640
+          },
+          "audit": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 87
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 58
+              }
+            ],
+            "maxOverflowPx": 87,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          }
+        },
+        {
+          "name": "inline",
+          "imageBox": {
+            "width": 210,
+            "height": 480,
+            "naturalWidth": 280,
+            "naturalHeight": 640
+          },
+          "audit": {
+            "clipped": [],
+            "maxOverflowPx": 0,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          }
+        }
+      ]
+    },
+    {
+      "theme": "toshiba",
+      "cssSha256": "6285b67f8ca8ad9e9a439cdd7771b691d5070444bb2c4e4f4b616388b4745a78",
+      "peerBaselineOverflowPx": 98,
+      "variants": [
+        {
+          "variant": "baseline",
+          "geometry": {
+            "text": "主資料と補足 比較の根拠に広い列を割り当てる 同じデータを，図と近くの説明で読む． 読み取れること 条件Bの値は条件Aより大きい．同じ入力条件であることが比較の前提になる． この架空の値から，別の条件での性能は判断しない．",
+            "caption": "同じ​データを​，図と​近くの​説明で​読む．",
+            "alt": "架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位",
+            "image": {
+              "x": 298.8125,
+              "y": 3747.75,
+              "width": 280,
+              "height": 640,
+              "bottom": 4387.75,
+              "naturalWidth": 280,
+              "naturalHeight": 640,
+              "objectFit": "contain"
+            },
+            "painted": {
+              "width": 280,
+              "height": 640
+            },
+            "captionBox": {
+              "x": 298.46875,
+              "y": 4395.546875,
+              "width": 280.703125,
+              "height": 22,
+              "bottom": 4417.546875
+            },
+            "ratio": 2,
+            "emphasis": {
+              "text": "同じ入力条件",
+              "color": "rgb(0, 0, 0)",
+              "weight": "700"
+            }
+          },
+          "headingFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": false,
+              "glyphCount": 18
+            }
+          ],
+          "bodyFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": false,
+              "glyphCount": 37
+            },
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": false,
+              "glyphCount": 8
+            }
+          ],
+          "classFindings": [],
+          "audit": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 98
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 68
+              }
+            ],
+            "maxOverflowPx": 98,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          },
+          "neighborAudits": [
+            {
+              "page": 5,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            },
+            {
+              "page": 7,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            }
+          ],
+          "screenshot": "../../../fixtures/layout-baselines/baseline/toshiba/columns-portrait.png",
+          "svgLabelSizeEstimatePx": 24
+        },
+        {
+          "variant": "body",
+          "geometry": {
+            "text": "主資料と補足 比較の根拠に広い列を割り当てる 同じデータを，図と近くの説明で読む． 読み取れること 条件Bの値は条件Aより大きい．同じ入力条件であることが比較の前提になる． この架空の値から，別の条件での性能は判断しない．",
+            "caption": "同じ​データを​，図と​近くの​説明で​読む．",
+            "alt": "架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位",
+            "image": {
+              "x": 56,
+              "y": 139.75,
+              "width": 765.65625,
+              "height": 497.25,
+              "bottom": 637,
+              "naturalWidth": 280,
+              "naturalHeight": 640,
+              "objectFit": "contain"
+            },
+            "painted": {
+              "width": 217.546875,
+              "height": 497.25
+            },
+            "captionBox": {
+              "x": 56,
+              "y": 650,
+              "width": 765.65625,
+              "height": 22,
+              "bottom": 672
+            },
+            "ratio": 2,
+            "emphasis": {
+              "text": "同じ入力条件",
+              "color": "rgb(0, 0, 0)",
+              "weight": "700"
+            }
+          },
+          "headingFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": false,
+              "glyphCount": 18
+            }
+          ],
+          "bodyFonts": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": false,
+              "glyphCount": 37
+            },
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": false,
+              "glyphCount": 8
+            }
+          ],
+          "classFindings": [],
+          "audit": {
+            "clipped": [],
+            "maxOverflowPx": 0,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          },
+          "neighborAudits": [
+            {
+              "page": 5,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            },
+            {
+              "page": 7,
+              "clipped": [],
+              "maxOverflowPx": 0,
+              "smallText": [],
+              "overlaps": [],
+              "maxOverlapPx": 0
+            }
+          ],
+          "screenshot": "toshiba-body.png",
+          "svgLabelSizeEstimatePx": 18.646875
+        }
+      ],
+      "peerTrials": [
+        {
+          "name": "utility",
+          "imageBox": {
+            "width": 280,
+            "height": 640,
+            "naturalWidth": 280,
+            "naturalHeight": 640
+          },
+          "audit": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 98
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 68
+              }
+            ],
+            "maxOverflowPx": 98,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          }
+        },
+        {
+          "name": "inline",
+          "imageBox": {
+            "width": 210,
+            "height": 480,
+            "naturalWidth": 280,
+            "naturalHeight": 640
+          },
+          "audit": {
+            "clipped": [],
+            "maxOverflowPx": 0,
+            "smallText": [],
+            "overlaps": [],
+            "maxOverlapPx": 0
+          }
+        }
+      ]
+    }
+  ],
+  "adjustmentLedger": {
+    "peerInline": {
+      "pageSpecificCssRules": 0,
+      "inlineElements": 1,
+      "inlineDeclarations": 1,
+      "imageMaxHeightPx": 480,
+      "layoutWrappers": 3
+    },
+    "body": {
+      "pageSpecificCssRules": 0,
+      "inlineElements": 0,
+      "inlineDeclarations": 0,
+      "layoutWrappers": 4,
+      "sharedClassesAdded": [
+        "body",
+        "fill",
+        "box"
+      ],
+      "sharedClassesReplaced": [
+        {
+          "from": "items-start",
+          "to": "items-stretch"
+        }
+      ],
+      "columnSplit": "8:4 unchanged"
+    }
+  },
+  "limits": [
+    "One portrait boundary case plus adjacent pages only; not all 14 layouts after migration.",
+    "Font and geometry checks do not establish presentation-distance readability or semantic/scientific correctness.",
+    "No Firefox/PDF/PPTX/scroll/paper rerun or integrated full gate in this trial."
+  ],
+  "harness": "check.cjs",
+  "harnessSha256": "70ed37b97afae8e9561f2c2031b9be34da1de03085ead7969b44f23b6d32a71a",
+  "retainedChecks": {
+    "sameTargetTextAndEmphasis": true,
+    "sameAdjacentAudits": true,
+    "columnRatio": 2,
+    "baselineOverflowMatchesPeer": true,
+    "fontHashesMatchPeer": true
+  },
+  "visualReview": {
+    "reviewer": "marp-i56-lead",
+    "scope": "Lab before/after and muji/toshiba after at native 1280x720; input condition, 52/68, arbitrary unit, caption, caveats and emphasis retained.",
+    "unmeasured": "Presentation-distance readability, scientific validity, all 14 migrated layouts, and main integrated strict gate."
+  },
+  "peerRecord": "756b461e9c2b7f33985a546a253639fe6addd8a8:fixtures/layout-baselines/baseline-2026-10-21.md"
+}

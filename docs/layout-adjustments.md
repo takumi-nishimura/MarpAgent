@@ -78,6 +78,33 @@ section {
 部品を直接調整できる場合は変数を使い，独立した配置関係が必要な場合は
 その関係を表す wrapper を使う．
 
+## 縦長図で確認した調整量
+
+#54 の committed 証拠（`756b461`）と同じ Noto Sans JP の TTF hash，
+1280×720，Chromium，図と文章を使い，`columns-portrait` の1ケースを確認した．
+共有 CSS は #55 の取り込み後を使い，移行前の欠け量が #54 と一致することも確認した．
+数値は [測定 JSON](evidence/ISS-0048-body-adjustments/report.json)，
+変更箇所は [原稿差分](evidence/ISS-0048-body-adjustments/body.patch)に保存した．
+
+| 方法 | ページ固有の寸法指定 | 配置 wrapper | 欠け lab／muji／toshiba |
+| :--- | :--- | :--- | :--- |
+| 自然寸法のまま | 0 | 3 | 86／87／98px |
+| `max-h-full` を画像に追加（#54） | utility 1つ | 3 | 86／87／98px |
+| `max-height: 480px`（#54） | inline 1要素・1宣言 | 3 | 0／0／0px |
+| `.body` と高さをつなぐ既存クラス | 0 | 4 | 0／0／0px |
+
+最後の行では `.body` wrapper を1つ増やし，既存 grid に `.fill`，
+図の列に `.box` を追加して，`items-start` を `items-stretch` に替えた．
+8:4 の列比率は維持した．固定寸法1宣言を不要にできた一方，wrapper が1つ増える．
+どのケースでも指定量が減るという評価ではない．新しい utility，ページ固有 CSS，
+長い selector，`!important` は追加していない．
+
+図の描画高は lab 501.25px，muji 511.02px，toshiba 497.25px となった．
+図の数値・入力条件・caption・留保・強調を保持し，隣接5／7ページの audit は同一だった．
+これは1ケースでの欠け・文字衝突・最小文字サイズ違反の確認であり，
+全14ケースの `.body` 移行や投影距離での可読性を評価したものではない．
+`max-h-full` の名前が存在しても，親高さの前提を満たさなければ効かないことがわかる．
+
 ## クラスの利用可否を確認する
 
 validator のクラス診断は常に `severity: info`，`source: classes` の助言である．

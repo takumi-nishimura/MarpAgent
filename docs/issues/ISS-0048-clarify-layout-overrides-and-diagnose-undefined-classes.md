@@ -2,7 +2,7 @@
 id: ISS-0048
 title: "Clarify layout overrides and diagnose undefined classes"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -21,8 +21,12 @@ artifacts:
     - 6560cc4
     - 44a841d
     - f397ea5
+    - 2cdef2e
+    - 950742d
+    - 756b461
   manifests: []
-  results: []
+  results:
+    - docs/evidence/ISS-0048-body-adjustments/
   commands: []
 ---
 
@@ -66,14 +70,14 @@ GitHub IssueとISSの対応: #53 = ISS-0045，#54 = ISS-0046，#55 = ISS-0047，
 
 ## Acceptance criteria
 
-- [ ] よく使う調整が共通クラスまたは少数のCSS変数で書け，個別の `!important` や長いselectorを重ねずに済む例がある．何が減ったかを#54の比較方式で示す．
-- [ ] inline/scoped CSSによる意図的な上書きを保持し，テーマ変更だけで構図を切り替えない．文字サイズutilityの既存のem/rem挙動を無断で変更しない．
+- [x] よく使う調整が共通クラスまたは少数のCSS変数で書け，個別の `!important` や長いselectorを重ねずに済む例がある．何が減ったかを#54の比較方式で示す．
+- [x] inline/scoped CSSによる意図的な上書きを保持し，テーマ変更だけで構図を切り替えない．文字サイズutilityの既存のem/rem挙動を無断で変更しない．
 - [x] 未生成のTailwindクラス，タイプミス，デッキ内で正しく定義したクラス，複合selector内のクラスを区別するテストがある．コード例内のclass文字列やMarpが付加するクラスを誤警告しない．
 - [x] 動的または外部CSSなど，静的解析で判定できないものは「不明」とし，機械的に削除・改名しない．使われていないCSS marker classも即不合格にしない．
 - [x] 診断は既存validatorの助言として始め，実際の描画欠陥のerrorと分ける．元ファイル・行・描画ページを既存slide mapへ対応付ける．
 - [x] `h-full` の親高さなど，検出範囲と限界を文書化する．診断がないことを配置の適切さの保証にしない．
 - [x] 全配布テーマで公開クラスと変数が存在し，デッキを追加しても共通CSS生成結果が変化しない．生成済みthemesの鮮度テストも通る．
-- [ ] 既存原稿の明示指定を保持し，互換性差分と移行例を確認できる．美観変更はlabの別Issueへ分ける．
+- [x] 既存原稿の明示指定を保持し，互換性差分と移行例を確認できる．美観変更はlabの別Issueへ分ける．
 
 ## 対象外
 
@@ -176,3 +180,42 @@ sandbox 内で `spawnSync` に EPERM が付く一方で status 0・空 stdout �
 
 新たな helper／reviewer は使っていない．前節の無料 OpenCode の境界例検証を再利用した．
 残る項目は #54 の比較方式による調整量・全体の互換性確認であり，main の統合前なので status は in-progress を維持する．
+
+### 調整量の評価と担当作業の完了 2026-10-21
+
+main が示した #54 の `119fbbb`／`950742d`／`756b461` を read-only で確認した．
+`baseline-2026-10-21.md`，試行差分，3テーマの observations，CLI 検査を照合し，
+`max-h-full` 一つでは親高さが決まらず欠けが残り，画像一要素の `max-height: 480px` 一宣言で
+欠けが解消するという，既存クラスの利用条件に関する committed 証拠を再利用した．
+#54 の commit 自体や画像一式はこの branch に cherry-pick していない．
+
+補足試行は `columns-portrait` の1ケースに限定した．同じ TTF hash の Noto Sans JP を
+run 専用 Fontconfig にコピーし，Google Fonts を遮断して，対象見出し／本文の実使用を CDP で確認した．
+Chromium 145.0.7632.6，1280×720，DPR 1，図・原稿の hash も #54 と照合した．
+取り込み済み #55 CSS で移行前の欠け 86／87／98px が再現したため，異なるフォントでの比較ではない．
+
+`.body` wrapper を1つ追加し，既存 grid に `.fill`，図の列に `.box`，
+`items-start` から `items-stretch` への置換で高さをつないだ．
+8:4 の列，本文・図・数値・単位・入力条件・caption・留保・強調を保持した．
+全3テーマで欠け／文字衝突／最小文字サイズ違反は0，class 指摘0，隣接5／7ページの audit は同一だった．
+対象の3テーマの移行後画像と lab の移行前画像を1280×720で確認し，欠けていた入力条件と caption を確認した．
+
+調整量は，ページ固有 CSS 0を維持し，inline 寸法1要素・1宣言を0へできた．
+一方で配置 wrapper は3→4，追加共有 class は `.body`／`.fill`／`.box` と整列 class の置換が必要だった．
+`!important`，長い selector，新規 utility は追加していない．
+画像の実描画高は lab 501.25px／muji 511.02px／toshiba 497.25px であり，
+固定480pxの試行と同じ高さを仮定していない．SVG の24px文字の表示寸法は幾何的には約18.6–19.2pxとなるが，
+この値を投影距離での十分な可読性の実測として扱わない．
+
+差分・JSON・画像・実行した harness は `docs/evidence/ISS-0048-body-adjustments/` に保存した．
+実行は `flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i56-adjustment-check.cjs /tmp/marpagent-parallel-20261021/issue-56`．
+同じ harness を `check.cjs` に保存したので，`node docs/evidence/ISS-0048-body-adjustments/check.cjs <repo-root>` で再実行できる．
+再実行には #54 の commit object と `/tmp/marp-i54-baseline/fonts/NotoSansJP-{400,700}.ttf` が必要であり，
+hash が一致しない場合や Noto Sans JP を実使用できない場合には成功としない．
+
+実測済みなのは上記の1ケース，隣接ページの audit，前節の診断53件・描画7件・4ページ strict 検証である．
+全14ケースの `.body` 移行，投影時の可読性，Firefox／PDF／PPTX／paper／scroll の追加再測定，
+#57 等も含めた main の統合 strict gate は今回実施していない．
+独立診断実装時の139件の pass はその時点の証跡として保持し，現在の統合 full gate と読み替えない．
+main の指定どおり重複 full gate は実行せず，担当作業を完了して status を in-review にした．
+統合後の受入確認と閉鎖は main が行う．新たな helper／reviewer は使っていない．

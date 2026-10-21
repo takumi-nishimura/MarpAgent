@@ -1,0 +1,25 @@
+diff --git a/fixtures/layout-baselines/slide.md b/fixtures/layout-baselines/slide.md
+index 0b01274..765f2ca 100644
+--- a/fixtures/layout-baselines/slide.md
++++ b/fixtures/layout-baselines/slide.md
+@@ -91,8 +91,9 @@ style: |
+
+ ## 比較の根拠に広い列を割り当てる
+
+-<div class="grid grid-cols-12 gap-6 items-start" data-region="columns">
+-<div class="col-span-8 min-w-0" data-region="evidence">
++<div class="body">
++<div class="grid grid-cols-12 gap-6 items-stretch fill" data-region="columns">
++<div class="col-span-8 min-w-0 box" data-region="evidence">
+
+ <figure>
+ <img src="assets/img/comparison-portrait.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+@@ -111,6 +112,8 @@ style: |
+ </div>
+ </div>
+
++</div>
++
+ ---
+
+ <!-- case: stack-standard -->
