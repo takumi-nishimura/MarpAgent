@@ -242,3 +242,5 @@ main に ADR（固定 host CLI／TALA 前置き／静的自己完結図の採用
 ### Boundary corrections after main review
 
 - #60 の限定確認で，CSS `image-set()` の文字列 URL が `Url` node の検査から漏れ，cache hit でも通ることが判明した．静的な色・font 形式以外の function を拒否する方式へ変更した．通常・vendor prefix・escape・大文字表記・custom property・style 要素／属性と改変 cache の回帰を追加し，修正前の失敗を確認した．`node --test tests/unit/d2-svg.test.js tests/unit/d2-render.test.js` は 16 passed，skip なし．通常の固定 D2 原稿から当該 CSS を生成できることは確認されておらず，供給 SVG と改変 cache の境界を修正した結果である．
+- main が追加必須とした inline block／import 漏れは，開始行を tag のみに限定し，固定 D2 と同じ最初の delimiter が単独行にあることを確認する方式で修正した．inline，特殊記号 delimiter，本文内の早期終端，閉じていない block を CLI 起動前に拒否する．異なる cwd と共有 cache の回帰は，修正前に単体 2 件・固定 D2 1 件が失敗し，修正後は単体 `d2-render.test.js` 11 passed，固定 D2 の当該回帰 1 passed，skip なし．cache を cwd 別に分ける変更は行っていない．
+- 修正後の独立再確認はサービス側の応答制限で未実施である．main の指示に従い，同担当への再送や別 model による代替確認を依頼せず，修正前 RED と修正後の単体・統合試験を main へ引き渡す．

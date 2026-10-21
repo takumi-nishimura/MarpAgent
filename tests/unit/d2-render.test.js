@@ -108,6 +108,52 @@ test("unsupported dependencies and boards are rejected before invoking D2", (t) 
     );
 });
 
+test("inline and inconsistent D2 block strings fail before any CLI invocation", (t) => {
+    const w = workspace(t);
+    for (const source of [
+        "a: |js console.log(1)|\n...@./external.d2\nb: |js\nx\n|\n",
+        "a: ||js console.log(1)||\n...@./external.d2\nb: ||js\nx\n||\n",
+        "a: |js\nconsole.log(1)|\n...@./external.d2\nb: |js\nx\n|\n",
+        "a: |!js\nx\n!|\n...@./external.d2\nb: |js\nx\n|\n",
+        "a: |js\nx\n|\n...@./external.d2\n",
+        "a: | js\nx\n|\n",
+        "a: |js\nx\n|; unexpected\n",
+        "a: ||js\nx\n|\n",
+        "a: |js\nunterminated\n",
+    ])
+        assert.throws(
+            () => renderD2Sync(source, { env: w.env, cwd: w.root }),
+            { code: "D2_UNSUPPORTED_SOURCE" },
+            source,
+        );
+    assert.equal(fs.existsSync(path.join(w.root, "calls.jsonl")), false);
+    for (const source of [
+        "a: |js\nimport x from '@example';\n|\n",
+        "a: ||js\nconst x = a | b;\n||\n",
+        "a: |latex\nx^2\n|;\n",
+        "a: |\nPlain Markdown\n|\n",
+        "a: |md\r\nPlain text\r\n  |\r\n",
+        'a: "The pipe | is text"\n',
+    ])
+        assert.doesNotThrow(() => assertSelfContainedD2(source), source);
+});
+
+test("inline-block imports cannot read or share cached content across projects", (t) => {
+    const w = workspace(t);
+    const second = path.join(w.root, "second-project");
+    fs.mkdirSync(second);
+    fs.writeFileSync(path.join(w.root, "external.d2"), "FIRST_PROJECT_MARKER");
+    fs.writeFileSync(path.join(second, "external.d2"), "SECOND_PROJECT_MARKER");
+    const source = "a: |js console.log(1)|\n...@./external.d2\nb: |js\nx\n|\n";
+    for (const cwd of [w.root, second])
+        assert.throws(
+            () => renderD2Sync(source, { env: w.env, cwd, salt: "shared" }),
+            { code: "D2_UNSUPPORTED_SOURCE" },
+        );
+    assert.equal(fs.existsSync(path.join(w.root, "calls.jsonl")), false);
+    assert.equal(fs.existsSync(w.env.MARP_AGENT_D2_CACHE_DIR), false);
+});
+
 test("missing CLI, unsupported version and input overflow are explicit failures", (t) => {
     const w = workspace(t);
     assert.throws(

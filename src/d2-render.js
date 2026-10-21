@@ -61,23 +61,40 @@ function assertSelfContainedD2(source) {
                     "D2_UNSUPPORTED_SOURCE",
                     "Unsupported D2 block string; use a multiline block.",
                 );
-            const language = source
-                .slice(index, lineEnd)
-                .trim()
-                .split(/\s/)[0]
-                .toLowerCase();
-            const end = new RegExp(
-                `^[ \\t]*${marker.replaceAll("|", "\\|")}[ \\t]*(?:;|$)`,
-                "gm",
+            // Accept only pipe delimiters and a tag on the opening line. D2
+            // supports inline content and arbitrary symbol delimiters too;
+            // treating those as multiline can hide an import after the block.
+            const header = /^([A-Za-z0-9_][A-Za-z0-9_+.-]*)?[ \t]*\r?$/.exec(
+                source.slice(index, lineEnd),
             );
-            end.lastIndex = lineEnd + 1;
-            const closing = end.exec(source);
-            if (!closing)
+            if (!header)
+                throw failure(
+                    "D2_UNSUPPORTED_SOURCE",
+                    "Unsupported inline D2 block string or delimiter; put only a language tag after the opening pipes.",
+                );
+            const language = (header[1] || "").toLowerCase();
+            // Fixed D2 closes at the first delimiter, even in the middle of a
+            // content line. Never search past it for a later standalone one.
+            const closing = source.indexOf(marker, lineEnd + 1);
+            if (closing < 0)
                 throw failure(
                     "D2_UNSUPPORTED_SOURCE",
                     "Unsupported or unterminated D2 block string.",
                 );
-            const content = source.slice(lineEnd + 1, closing.index);
+            const closingLineStart = source.lastIndexOf("\n", closing - 1) + 1;
+            const nextLine = source.indexOf("\n", closing + marker.length);
+            const closingLineEnd = nextLine < 0 ? source.length : nextLine;
+            if (
+                !/^[ \t]*$/.test(source.slice(closingLineStart, closing)) ||
+                !/^[ \t]*(?:;[ \t]*)?\r?$/.test(
+                    source.slice(closing + marker.length, closingLineEnd),
+                )
+            )
+                throw failure(
+                    "D2_UNSUPPORTED_SOURCE",
+                    "Unsupported D2 block boundary; put the matching closing pipes on their own line.",
+                );
+            const content = source.slice(lineEnd + 1, closingLineStart);
             if (
                 ["md", "markdown", ""].includes(language) &&
                 content.includes("${")
@@ -95,7 +112,7 @@ function assertSelfContainedD2(source) {
                     "D2_UNSUPPORTED_SOURCE",
                     "Only self-contained D2 is supported: Markdown links, images and HTML are unsupported.",
                 );
-            index = closing.index + closing[0].length;
+            index = closing + marker.length;
             continue;
         }
         if (char === '"' || char === "'") {

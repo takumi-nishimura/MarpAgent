@@ -111,6 +111,7 @@ test("fixed D2 renders Japanese, long labels, math, groups and tall and wide dia
         japanese:
             "direction: right\nhuman: 人間\nrobot: 日本語の長いラベルを持つ共有ロボット\nhuman -> robot",
         math: "formula: |latex\nx^2 + \\alpha = \\frac{1}{2}\n|",
+        code: "snippet: ||js\nconst value = a | b;\n||",
         group: "direction: right\nagent: {input: Input; output: Output; input -> output}\nresult: Result\nagent -> result",
         positioned: "a: Input\nb: Output\nb.near: a\na -> b",
         tall: "a -> b -> c -> d -> e",
@@ -149,6 +150,37 @@ test("fixed D2 renders Japanese, long labels, math, groups and tall and wide dia
         ),
         /<svg/,
     );
+});
+
+test("inline-block imports are rejected in both projects before the fixed CLI or shared cache", (t) => {
+    const root = workspace(t);
+    const second = path.join(root, "second-project");
+    fs.mkdirSync(second);
+    fs.writeFileSync(
+        path.join(root, "external.d2"),
+        "external: FIRST_PROJECT_MARKER\n",
+    );
+    fs.writeFileSync(
+        path.join(second, "external.d2"),
+        "external: SECOND_PROJECT_MARKER\n",
+    );
+    const cache = path.join(root, "shared-cache");
+    const source = "a: |js console.log(1)|\n...@./external.d2\nb: |js\nx\n|\n";
+    for (const cwd of [root, second])
+        assert.throws(
+            () =>
+                renderD2Sync(source, {
+                    cwd,
+                    salt: "same-block",
+                    env: {
+                        ...process.env,
+                        MARP_AGENT_D2_CACHE: "1",
+                        MARP_AGENT_D2_CACHE_DIR: cache,
+                    },
+                }),
+            { code: "D2_UNSUPPORTED_SOURCE" },
+        );
+    assert.equal(fs.existsSync(cache), false);
 });
 
 test("configured engine preserves measured labels, isolates repeated diagrams and reports source lines", () => {
