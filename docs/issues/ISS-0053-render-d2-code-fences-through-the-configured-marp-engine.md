@@ -24,6 +24,20 @@ artifacts:
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/61
 
+## 現在の説明
+
+**変更前の問題**：D2を使うには別途SVGを生成し，原稿と図の更新を合わせる必要があった．Markdownのd2ブロックを正本にし，プレビューとすべての出力で同じ図・失敗判定を使えるようにする作業である．
+
+**実装したこと**：D2 0.9.0の外部CLIを共通Marp engineへ接続した．既定TALAと固定seedを与え，原稿によるELK等の設定を尊重する．成功SVGだけをcacheし，図ごとのID・CSS・font名を分離する．日本語fontを明示でき，構文エラーやfont不足をvalidationとexportへ伝える．
+
+**使い方・確認先**：[サンプル原稿](../../fixtures/d2-components.md)のようにd2フェンスを書く．D2実体はMARP_AGENT_D2_PATH，日本語TTFはMARP_AGENT_D2_FONT_PATHで指定できる．[利用ガイド](../d2.md)には設定優先順位，数式，図の寸法，日本語edge labelの書き方を記載した．
+
+**確認したこと**：日本語・長ラベル・数式・group・縦横比・同一図の複数挿入を実描画した．限定レビューで見つかったCSS文字列URL，inline block境界，detached子残留を修正した．最終D2 unit37件，実CLI7件，D2入りZIP2件が成功し，利用者も生成HTMLを画面で確認した．
+
+**残る条件・対象外**：初版はブロック内で完結する静的図が対象で，import・外部画像・link・複数board・animationは拒否する．固定CLIと日本語fontの導入は必要だが，生成HTMLの閲覧側にはD2を要求しない．Linuxで検証し，任意悪意あるCLIの隔離や追跡不能な子の終了は保証しない．独立した修正後レビューのサービス制限は残し，mainの確認と回帰試験を根拠とする．
+
+実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+
 ## Execution update 2026-10-21
 
 本人がIssueごとのCodex sol maxサブリーダー，Herdr worktreeによる並行開発，Devin・無料OpenCodeの活用を指示した．本ISSを作業の正本とし，以下は起票時に取り込んだGitHub仕様である．本文中の未起票・未実装・過去の権限境界は元の記録時点を表す．

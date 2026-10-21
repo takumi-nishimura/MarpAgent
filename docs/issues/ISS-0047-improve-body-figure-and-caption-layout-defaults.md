@@ -34,6 +34,20 @@ artifacts:
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
 
+## 現在の説明
+
+**変更前の問題**：図に高さ100%を指定しても親の高さが決まらず，見出しやcaptionが増えると図や説明が下端へはみ出す場合があった．図の高さをページごとに調整する場面を減らし，図と説明を一緒に収めることが目的である．
+
+**実装したこと**：通常スライド直下の.bodyを，見出しの下に残る領域として明示できるようにした．内部の.fillは残り高さを使い，figureはcaptionを縮めず確保してからimage・video・SVGをcontainで収める．列やfigureの間隔は少数の公開変数で調整する．
+
+**使い方・確認先**：本文と図のまとまりを`<div class="body">`で囲む．既存の明示寸法を維持したいfigureには.figure-naturalを使う．[利用契約と調整変数](../theme-contract.md)と[新旧の代表画像](../evidence/ISS-0047-body-layout/README.md)を参照する．
+
+**確認したこと**：lab・muji・toshiba，16:9・4:3，追加見出し・caption，不均等二列と縦積み，過密本文の診断，media・列の整列，画像・PDF出力を確認した．旧.fill単独，表紙，paper，scroll，明示cropの互換性も試験した．mainの配置関連browser46件と最終gateが成功した．
+
+**残る条件・対象外**：選択した.body内だけへ適用し，既存原稿を一括変換しない．長文を隠したり，内容を削って合格にしたりしない．旧width utilityでも縦長図を修復でき，wrapperは増えるため，個別指定の最小数が全体で減るという完了条件は未達として残している．
+
+実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+
 ## Execution update 2026-10-21
 
 本人がIssueごとのCodex sol maxサブリーダー，Herdr worktreeによる並行開発，Devin・無料OpenCodeの活用を指示した．本ISSを作業の正本とし，以下は起票時に取り込んだGitHub仕様である．本文中の未起票・未実装・過去の権限境界は元の記録時点を表す．

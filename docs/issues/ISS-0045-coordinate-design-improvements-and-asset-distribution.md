@@ -33,6 +33,20 @@ artifacts:
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/53
 
+## 現在の説明
+
+**変更前の問題**：配置，外観，素材管理，配布，D2を同時に変更すると，同じCSSやCLIを複数担当が書き換え，単独では動いても組合せで壊れるおそれがある．このISSは，全体の実装境界と受け入れを管理する親作業である．
+
+**実装したこと**：GitHub #53〜#61ごとにCodex sol max担当とHerdr worktreeを割り当て，配置系列，素材・ZIP系列，D2，プレビューを並行開発した．main leaderが.bodyの公開変数，素材参照の共通API，D2失敗をZIPへ伝えるAPIを調整し，論理commitを統合した．
+
+**使い方・確認先**：成果物の入口は[統合計画](../design-assets-integration.md)．子ISSの説明，利用方法，比較画像，実行コマンドへ辿れる．利用者が個々の担当ログを読み合わせなくても，実装と残る条件を区別できる構成にする．
+
+**確認したこと**：最終コードbe3fc23でunit504件，strict fixture18件，browser113件が成功した．browserの既存対象外1件はskip．固定D2実CLI7件とD2入りZIP2件も成功し，記録66件を検証した．
+
+**残る条件・対象外**：最新方針は「GitHubにPRを作り，レビューはローカルで済ませる」．既存の担当レビュー・mainの差分確認・回帰試験を再利用し，GitHub上のレビュー承認は完了条件にしない．#55の一般的な指定数削減は未立証で，独立再レビューの一部が未実施だった事実も残す．親の閉鎖とmergeは別に判断する．
+
+実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+
 ## Execution update 2026-10-21
 
 本人がIssueごとのCodex sol maxサブリーダー，Herdr worktreeによる並行開発，Devin・無料OpenCodeの活用を指示した．本ISSを作業の正本とし，以下は起票時に取り込んだGitHub仕様である．本文中の未起票・未実装・過去の権限境界は元の記録時点を表す．

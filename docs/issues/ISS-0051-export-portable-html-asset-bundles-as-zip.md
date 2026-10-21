@@ -42,6 +42,20 @@ artifacts:
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/59
 
+## 現在の説明
+
+**変更前の問題**：通常のHTMLだけを別PCへ渡すと，元デッキの画像や動画，sharedへの相対参照が切れることがある．発表に必要な資源をまとめて，元repoがなくても閲覧できる配布物を作る作業である．
+
+**実装したこと**：共通engineが一度生成した最終HTMLから，CSS・SVG内の依存まで辿って必要なローカル資源を収集する．参照を配布先に書き換え，通常ファイルとmanifestをZIPへ収める．symlink先の素材も配布時だけ通常ファイルに固定し，元素材を変更しない．
+
+**使い方・確認先**：`npm run marpx -- <slide.md> --zip`で作成する．--dry-runは書かずに計画を確認し，--strict-offlineは外部依存が残れば失敗する．--outputで配布先を指定し，既存出力の置換には--forceを明示する．[READMEのZIP説明](../../README.md)を参照する．
+
+**確認したこと**：画像・動画・poster，共有・流用素材，CSS/SVGの推移的参照，private実体，manifest整合，path traversal，読取り中の交換，失敗時の既存出力保持を試験した．元repo・D2・font入力を除去した場所で，空PATH・通信遮断によるfile/HTTP表示も確認した．実D2入りZIP2件と最終gateが成功した．
+
+**残る条件・対象外**：remote資源を自動取得しない．Mermaidの外部font importなどは依存として報告し，strict-offlineでは拒否する．任意JavaScriptによる動的読込みは収集対象外．brief・無関係な素材・非表示ページ専用素材等を含めず，話者ノートや出典の扱いはREADMEの公開仕様で確認する．
+
+実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+
 ## Execution update 2026-10-21
 
 本人がIssueごとのCodex sol maxサブリーダー，Herdr worktreeによる並行開発，Devin・無料OpenCodeの活用を指示した．本ISSを作業の正本とし，以下は起票時に取り込んだGitHub仕様である．本文中の未起票・未実装・過去の権限境界は元の記録時点を表す．

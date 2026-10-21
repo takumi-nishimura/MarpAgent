@@ -24,6 +24,20 @@ artifacts:
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/58
 
+## 現在の説明
+
+**変更前の問題**：デッキごとにある画像や動画，共有assets，別デッキへのリンクが混在し，使いたい素材や現在の利用先を探し，相対リンクを作る作業が手作業だった．
+
+**実装したこと**：assets list/search/doctor/reuseを追加した．素材の種類・寸法・hash，参照原稿・元行・表示ページ，captionなどを一覧・検索できる．同じ実体への別名と，同一内容の別ファイルを区別し，指定した素材だけを利用デッキ内の相対ファイルsymlinkとして流用する．
+
+**使い方・確認先**：npm run marpx -- assets search "測定装置" --repo /path/to/my-decks --previewで候補を確認し，assets list --usesで利用先を調べる．reuseは--dry-runでsource・destination・相対targetを確認できる．正確な引数例は[素材操作ガイド](../media-assets.md)を参照する．
+
+**確認したこと**：共有・デッキ内・別デッキ素材，日本語や空白のパス，リンクの欠落・循環・repo外参照，private除外，previewの通信禁止，既存リンクの非上書きを試験した．#59と共通のresolverを使い，mainの統合gateも成功した．
+
+**残る条件・対象外**：素材の内容から意味検索するAIやOCRは導入していない．出典が原稿にない場合に推測して補わず，同一内容候補の自動削除や所有元の移動もしない．Windowsでsymlinkを利用できない場合は診断し，コピーへ自動変更しない．my-decks内の既存リンク修正は別repoの作業として残る．
+
+実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+
 ## Execution update 2026-10-21
 
 本人がIssueごとのCodex sol maxサブリーダー，Herdr worktreeによる並行開発，Devin・無料OpenCodeの活用を指示した．本ISSを作業の正本とし，以下は起票時に取り込んだGitHub仕様である．本文中の未起票・未実装・過去の権限境界は元の記録時点を表す．

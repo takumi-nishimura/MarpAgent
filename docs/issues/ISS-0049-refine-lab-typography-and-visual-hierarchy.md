@@ -45,6 +45,20 @@ artifacts:
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/57
 
+## 現在の説明
+
+**変更前の問題**：labの見出し・本文・caption・脚注の関係を整えたい一方，色付き太字やマーカー，既存原稿の構図は保持したかった．文字サイズの変更による折返しを，配置変更と分けて評価する作業である．
+
+**実装したこと**：lab-refinedを明示したときだけ，新しい文字階層・行間・caption・脚注の寸法を使うようにした．値はDESIGN.mdから生成するtokenへ集約し，色付き強調とマーカーを保持した．#55のbody領域やheader-gapは重複して定義しない．
+
+**使い方・確認先**：[移行例](../lab-refinement.md)のようにlabへclass: normal lab-refinedを指定する．通常のlabも引き続き選べる．[同一内容の比較画像](../evidence/ISS-0049-lab-refinement/README.md)で，強調，captionの折返し，本文との関係を確認できる．
+
+**確認したこと**：同じ実フォントと23ページで，lab-refinedを選ばない表示は旧版と画素一致した．有効時も本文は23/23ページで一致し，captionの折返し差2箇所を記録した．.bodyを使う4構図は収まり，生成token・テーマ・関連テストと最終gateが成功した．
+
+**残る条件・対象外**：既定labを置換する変更ではない．captionや文字の自然幅は変わり得るため移行時は描画確認が必要．.bodyなしの縦長図の欠けは残り，文字変更だけで解消したとは扱わない．比較画像・原稿差分・互換性の説明をPRから参照可能にし，内容のレビューはローカルで行う．
+
+実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+
 ## Execution update 2026-10-21
 
 本人がIssueごとのCodex sol maxサブリーダー，Herdr worktreeによる並行開発，Devin・無料OpenCodeの活用を指示した．本ISSを作業の正本とし，以下は起票時に取り込んだGitHub仕様である．本文中の未起票・未実装・過去の権限境界は元の記録時点を表す．
