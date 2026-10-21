@@ -5,6 +5,7 @@ const { gunzipSync } = require("node:zlib");
 const root = path.resolve(__dirname, "../../..");
 const { chromium } = require(path.join(root, "node_modules/playwright"));
 const config = require(path.join(root, "marp.config"));
+const postcss = require(path.join(root, "node_modules/postcss"));
 const [fontArgument, outputArgument] = process.argv.slice(2);
 if (!fontArgument || !outputArgument)
     throw new Error(
@@ -193,9 +194,11 @@ const styles = {
                     (section) =>
                         section.closest("svg[data-marpit-svg]").outerHTML,
                 );
+                const localCss = postcss.parse(css);
+                localCss.walkAtRules("import", (rule) => rule.remove());
                 fs.writeFileSync(
                     path.join(output, `${name}.html`),
-                    `<meta charset="utf-8"><title>Caption ${language} ${label}</title><style>body{margin:0}${css.replace(/@import[^;]+;/g, "")}${fontCss}svg[data-marpit-svg]{display:block;width:100vw;height:auto}</style>${singleSlide}`,
+                    `<meta charset="utf-8"><title>Caption ${language} ${label}</title><style>body{margin:0}${localCss.toString()}${fontCss}svg[data-marpit-svg]{display:block;width:100vw;height:auto}</style>${singleSlide}`,
                 );
                 report.captures[label].slides[language] = measured;
                 await page.close();

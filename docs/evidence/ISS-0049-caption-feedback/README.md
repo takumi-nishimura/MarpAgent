@@ -31,3 +31,5 @@ FONTCONFIG_FILE=path/to/fonts.conf flock path/to/browser.lock \
 ```
 
 4枚のPNG，計測JSON，fontと素材を内包した確認用HTMLを出力する．HTMLの描画は閲覧側のbrowserに依存する．ブラウザー側の機能と長文時の制限は[MDNのtext-wrap説明](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-wrap)を参照する．非対応環境では従来の折返しとなる．
+
+HTML出力の補正：初版のharnessは外部font importを正規表現で削除しており，URL内のセミコロンを文末と誤認してHTML用CSSを壊していた．CSS parserによるimport ruleの除去へ変更した．PNG描画・計測の経路は非変更で，補正後の再実行では保存済み4枚のPNG hashと全slide測定値が一致した．Mac向けの確認用HTMLも再生成した．
