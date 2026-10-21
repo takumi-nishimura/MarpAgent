@@ -48,11 +48,13 @@ D2は積極採用する．[10月20日の設計検討](https://github.com/takumi-
 
 初回統合c3b6f5dのnpm run quality:gate:strictはunit493件とfixture全件，browser111件が成功した．Firefoxのnative touch1件は既存の対象外条件でskipであり，成功件数に含めない．同revisionのnpm run test:d2は固定0.9.0と日本語Noto400で6件成功した．
 
-追加#59接続後のnpm run test:zip:d2は2件成功した．元repo・指定D2実体・font入力を除き，空PATHと通信遮断の条件でfile/HTTP表示を確認し，実D2構文エラーと未導入時に既存ZIPを保持した．最終revisionでの再確認は統合結果を追記する．
+追加#59接続後のnpm run test:zip:d2は2件成功した．元repo・指定D2実体・font入力を除き，空PATHと通信遮断の条件でfile/HTTP表示を確認し，実D2構文エラーと未導入時に既存ZIPを保持した．
+
+最終コードrevision be3fc23でmainが再実行し，quality:gate:strictはunit504件，strict fixture18件，browser113件が成功した．既存Firefox native touch1件だけが対象外skipで，失敗はない．固定D2 0.9.0／Noto400のtest:d2は7件，test:zip:d2は2件成功し，いずれもskipはない．[検証manifest](evidence/integration-2026-10-21/validation.json)に条件・コマンド・ログhashと限定確認の範囲を保存した．
 
 resolver b7fa592の限定レビューは固定POSIX treeと明示bundleで包含不具合なし，関連24件・追加8件成功．ZIP側で必要なpolicy明示，private実体判定，公開field選別，読取り時の交換対策を#59へ渡し，3f91136のunitと実CLI E2Eへ反映した．ZIP追加独立レビューはサービスの応答制限により静的読取り後に中断し，再現・ZIP実体の確認完了とは扱わない．担当の境界テストとmainの統合試験を確認の根拠とする．
 
-D2の外部processとSVGを扱う具体的なリスクに対し，完了済み#60担当が限定レビューを行った．34f8d9fで，CSS image-setの文字列URL，短時間で終了する親が残すdetached子，inline blockの境界解釈によるimport見逃しとcwd間cache混同を再現した．#61が境界別に修正し，mainが差分と境界の回帰試験を確認する．独立した修正後の再確認はサービス側の応答制限で完了せず，再送や別modelへの迂回は行わない．CSS修正5f7d501は統合済み，残りと最終検証を待つ．
+D2の外部processとSVGを扱う具体的なリスクに対し，完了済み#60担当が限定レビューを行った．34f8d9fで，CSS image-setの文字列URL，短時間で終了する親が残すdetached子，inline blockの境界解釈によるimport見逃しとcwd間cache混同を再現した．#61が5f7d501／5699ea4／d7d077dで境界別に修正し，mainは差分を読み，37件のD2 unitを含む全体gateと固定CLIの回帰を確認した．Linuxの子終了回帰は3試行とも終了し，呼出元と同名env値を持つ無関係なprocessは生存した．独立した修正後の再確認はサービス側の応答制限で完了せず，再送や別modelへの迂回は行っていない．担当のRED/GREENとmainの統合試験を修正確認の根拠とする．
 
 ## 判断記録と受け入れ範囲
 
@@ -62,4 +64,6 @@ D2の外部processとSVGを扱う具体的なリスクに対し，完了済み#6
 
 Linuxでの検証であり，Windows/macOS実機，投影距離での可読性，任意fontの計測精度，別PDF/PowerPoint viewerでの全ページ目視は未実施．D2は信頼済みの自己完結した原稿を対象とし，任意の悪意あるCLIや原稿のOS隔離を保証しない．[my-decks #2](https://github.com/takumi-nishimura/my-decks/issues/2)は別repo所有のままとする．
 
-最終受け入れは，D2の3指摘解消と統合版のstrict gate・D2・ZIP受入の結果で判断する．公開はIssue単位のレビュー順に沿って行えるようwork branchと論理commitを保持する．
+mainはD2の3指摘解消と統合版のstrict gate・D2・ZIPの成功を確認し，ローカル統合を受け入れた．今回作成したADR-0007〜0009をaccepted，XR-0003〜0004をadoptedとする．既存記録の判断は置換しない．#55の個別指定数の一般的削減と#57のPR添付条件は達成済みとせず，親・子ISSは公開前のin-reviewを保つ．
+
+公開時は#60を独立単位とし，配置系列は#54→#55→#56→#57，素材系列は#58→#59，D2は#61としてレビューできる．D2入りZIPの接続は#59と#61の両方を前提にし，最後に#53の横断確認を行う．各work branch，論理commit，元の作業worktreeを保持した．

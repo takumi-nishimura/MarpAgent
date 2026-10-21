@@ -155,16 +155,16 @@ import，ローカル/リモートの外部画像・icon，複数board，animati
 
 ## Acceptance criteria
 
-- [ ] d2ブロックを含む原稿を，通常のmarpxから描画できる．HTML/PDF/PPTX/images/overview/screenshot/validationが同じ登録済みエンジンを利用する．
-- [ ] D2なし・Mermaidだけの原稿，通常コード例，非表示ページ，解析だけのslide mapが従来どおり動く．既存のMermaid数式・fallback・cacheの回帰がない．
-- [ ] TALA既定とD2標準設定による明示変更の優先順位をテストする．環境変数やCLIの既定指定が原稿の意図を黙って上書きしない．
-- [ ] 日本語，長いラベル，数式，グループ，部分位置指定，縦横比の異なる図を実際のスライド領域で確認する．内部文字の可読性を既存validatorの成功だけで保証しない．
-- [ ] 同一図の複数挿入でID/CSSが干渉しない．BudouX・共通CSS・テーマ変更が計測済みSVGを壊さない．
-- [ ] 未変更再描画で再実行しない．入力・D2版・有効設定・フォント・saltの変更で適切に無効化する．失敗した出力はcacheされない．
-- [ ] D2未導入，古い版，実行不可，構文エラー，非ゼロ終了＋部分SVG，壊れたSVG，timeout，出力超過を判別できる．プレビューと配布exportのエラーポリシーが仕様どおりである．
-- [ ] 通常のD2原稿を描画してもデッキに生成管理ファイルを増やさず，元原稿・既存出力を失敗処理で破壊しない．
-- [ ] 自己完結図を含むHTMLを，D2のない閲覧環境・ネットワーク遮断条件で確認する．外部参照やフォントの未解決条件を成功扱いしない．
-- [ ] 単体テストの擬似実行ファイルによる失敗試験と，固定版D2を使う実描画試験を分ける．必要なD2がないCIの実描画試験を黙ってskipして完了としない．
+- [x] d2ブロックを含む原稿を，通常のmarpxから描画できる．HTML/PDF/PPTX/images/overview/screenshot/validationが同じ登録済みエンジンを利用する．
+- [x] D2なし・Mermaidだけの原稿，通常コード例，非表示ページ，解析だけのslide mapが従来どおり動く．既存のMermaid数式・fallback・cacheの回帰がない．
+- [x] TALA既定とD2標準設定による明示変更の優先順位をテストする．環境変数やCLIの既定指定が原稿の意図を黙って上書きしない．
+- [x] 日本語，長いラベル，数式，グループ，部分位置指定，縦横比の異なる図を実際のスライド領域で確認する．内部文字の可読性を既存validatorの成功だけで保証しない．
+- [x] 同一図の複数挿入でID/CSSが干渉しない．BudouX・共通CSS・テーマ変更が計測済みSVGを壊さない．
+- [x] 未変更再描画で再実行しない．入力・D2版・有効設定・フォント・saltの変更で適切に無効化する．失敗した出力はcacheされない．
+- [x] D2未導入，古い版，実行不可，構文エラー，非ゼロ終了＋部分SVG，壊れたSVG，timeout，出力超過を判別できる．プレビューと配布exportのエラーポリシーが仕様どおりである．
+- [x] 通常のD2原稿を描画してもデッキに生成管理ファイルを増やさず，元原稿・既存出力を失敗処理で破壊しない．
+- [x] 自己完結図を含むHTMLを，D2のない閲覧環境・ネットワーク遮断条件で確認する．外部参照やフォントの未解決条件を成功扱いしない．
+- [x] 単体テストの擬似実行ファイルによる失敗試験と，固定版D2を使う実描画試験を分ける．必要なD2がないCIの実描画試験を黙ってskipして完了としない．
 
 ## 実装単位案
 
@@ -247,3 +247,7 @@ main に ADR（固定 host CLI／TALA 前置き／静的自己完結図の採用
 - 正常終了した root の detached 子が pipe を保持しない場合は，Linux で実行ごとのランダムな内部識別子を子の環境へ渡し，継承先と PID 開始時刻を確認して終了するよう修正した．呼出元の同名変数は置き換え，無関係な同値環境の process を終了しない回帰を追加した．修正前は子が `Ssl` で生存して 1 件失敗，修正後は 3 回とも終了して無関係 process は生存した．提供された `issue61-boundary-repro.cjs` の descendant mode も 1295ms 時点で `state: gone`，`survived: false` だった．固定 D2 の後処理と任意悪意ある executable の隔離は区別し，環境・pipe・観測済み親子関係から外れる任意 detached tree の終了は保証しないことを `docs/d2.md` に明記した．新しい runtime 依存や隔離の無効化は追加していない．
 - 3 件修正後の D2 単体 5 files は `node --test tests/unit/d2-diagnostics.test.js tests/unit/d2-svg.test.js tests/unit/d2-process.test.js tests/unit/d2-render.test.js tests/unit/d2-plugin.test.js` で 37 passed，skip なし．
 - 固定版の統合受入は `MARP_AGENT_D2_PATH=/tmp/marpagent-d2-0.9.0/d2-v0.9.0/bin/d2 MARP_AGENT_D2_FONT_PATH=/tmp/marpagent-d2-NotoSansJP-Regular.ttf PLAYWRIGHT_BROWSERS_PATH=/tmp/marpagent-i61-browsers flock -w 60 /tmp/marpagent-parallel-20261021/browser-tests.lock npm run test:d2` で 7 passed，skip なし．新しい共有 cache／2 cwd の import 拒否と，複数 pipe の code block の実描画を含む．修正後の全体 strict gate と ZIP 統合の再実行は main の確認に委ねる．
+
+## Main final integration 2026-10-21
+
+最終コードbe3fc23でmainがstrict gate（unit504件，fixture18件，browser113件成功，既存Firefox対象外1件skip），固定D2実CLI7件，D2入りZIP2件を実行し，失敗なしを確認した．条件と限定確認の範囲は[統合記録](../design-assets-integration.md)を参照する．ローカル統合の受け入れと公開レビューを区別し，状態はin-reviewを維持する．

@@ -2,7 +2,7 @@
 id: ADR-0007
 title: "Adopt opt-in body layout and lab visual refinement"
 type: decision
-status: proposed
+status: accepted
 date: "2026-10-21"
 authors: [codex-main]
 scope: ["themes","validation"]
@@ -12,7 +12,7 @@ supersedes: []
 issues: ["ISS-0046","ISS-0047","ISS-0048","ISS-0049"]
 artifacts:
   revisions: ["f397ea5","995073f","2cdef2e","05b9c7b"]
-  manifests: []
+  manifests: ["docs/evidence/integration-2026-10-21/validation.json"]
   results: ["fixtures/layout-baselines/baseline-2026-10-21.md","docs/lab-refinement-stable-review.md"]
   commands: []
 ---
@@ -45,7 +45,7 @@ labの文字階層はlab-refinedで選び，既定labの置換は行わない．
 
 ## Validation
 
-XR-0003の同一原稿・実フォント比較と，各ISSのunit/browser検証を根拠にする．main統合では対象unit60件とChromium46件を確認した．全体strict gateの判定は統合記録へ追記する．
+XR-0003の同一原稿・実フォント比較と，各ISSのunit/browser検証を根拠にする．main統合では対象unit60件とChromium46件を確認した．最終be3fc23のstrict gateはunit504件，fixture18件，browser113件成功，既存対象外1件skipだった．[統合記録](../design-assets-integration.md)と検証manifestに条件を残す．指定数の一般的削減を採用条件とはせず，互換性を保つ明示選択として受け入れる．
 
 ## Related Records
 

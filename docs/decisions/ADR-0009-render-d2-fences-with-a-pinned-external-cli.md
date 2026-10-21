@@ -2,7 +2,7 @@
 id: ADR-0009
 title: "Render D2 fences with a pinned external CLI"
 type: decision
-status: proposed
+status: accepted
 date: "2026-10-21"
 authors: [codex-main]
 scope: ["diagrams","exports"]
@@ -12,7 +12,7 @@ supersedes: []
 issues: ["ISS-0053"]
 artifacts:
   revisions: ["00c2e2a","49c9ce7","34f8d9f"]
-  manifests: []
+  manifests: ["docs/evidence/integration-2026-10-21/validation.json"]
   results: ["docs/d2.md"]
   commands: []
 ---
@@ -41,13 +41,15 @@ D2 0.9.0の外部CLIを明示導入し，d2フェンスからだけ呼ぶ．runt
 
 成功SVGだけを内容に基づくcacheへ保存し，ID/CSS/font名を図ごとに隔離する．生成HTMLのD2診断carrierをvalidationとexportで共有し，ZIPは再compileせず同じHTMLをassertする．日本語fontは利用者が明示し，OSから収集しない．
 
+inline／不整合なblock境界はCLI前に拒否し，CSS functionは静的な色・埋込font形式のallowlistで検査する．Linuxの後処理は実行ごとのランダムな継承env識別子とPID開始時刻を確認し，親子関係・pipe追跡を併用する．識別子・pipe・観測済み親子関係をすべて失う任意の実行体には終了保証を与えない．
+
 ## Consequences
 
 全描画経路で同じ図を利用でき，配布HTMLはD2なしで表示できる．host CLIと適切なフォントの導入が必要になる．任意のTTFの計測精度，未信頼原稿の隔離，外部資源の依存追跡，macOS/Windowsのprocess挙動は初版の検証範囲を超える．Mermaidは維持する．
 
 ## Validation
 
-XR-0004に固定版・日本語・数式・negative font条件を記録する．workerでD2 unit31件，実CLI6件，既存関連126件を確認済み．mainは統合版の実CLI，offlineZIP，限定subprocess/SVGレビューとstrict gateを追跡する．
+XR-0004に固定版・日本語・数式・negative font条件を記録する．初期worker検証のD2 unit31件，実CLI6件に加え，限定レビューの3指摘を境界別commitで修正した．最終be3fc23でmainがD2 unit37件を含むstrict gate，固定実CLI7件，offline ZIP2件を確認した．D2とZIPのskipはない．修正後の独立再確認はサービス側の応答制限で未実施であり，mainの差分確認と回帰試験を根拠とする．[統合記録](../design-assets-integration.md)へ条件を保存した．
 
 ## Related Records
 

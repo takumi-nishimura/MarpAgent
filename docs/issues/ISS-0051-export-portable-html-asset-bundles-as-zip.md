@@ -101,16 +101,16 @@ GitHub IssueとISSの対応: #53 = ISS-0045，#54 = ISS-0046，#55 = ISS-0047，
 
 ## Acceptance criteria
 
-- [ ] 画像・動画・poster・共有素材・別デッキ素材を含むデッキをZIP出力でき，展開先に元repoがなくてもローカル参照を解決できる．アーカイブ内には通常ファイルだけがある．
-- [ ] ローカル依存だけのfixtureは，別の一時ディレクトリへ展開し，ネットワークを遮断したブラウザで全表示ページとメディアの読込みを確認する．fileで開く場合の対応範囲と，HTTPで提供する場合の手順を実測に基づきREADMEへ記載する．
-- [ ] 外部資源を含むfixtureでは依存が列挙され，完全オフライン指定では非ゼロ終了する．未対応の動的依存を対応済みとしない．
-- [ ] CSS→画像，CSS→CSS，SVG→画像の参照を辿って書き換えられる．内部fragment，data URL，通常の引用リンクを誤収集しない．
-- [ ] 日本語・空白のパス，同名で内容が異なる素材，同一素材の複数参照，深いdeckディレクトリ，親symlinkで期待どおりになる．
-- [ ] repo外参照，絶対リンク，循環，欠落，名前衝突，読取失敗を検出し，原稿・素材・既存ZIPを変更しない．path traversalを含むケースで収集範囲を越えない．
-- [ ] 無関係な素材，非表示ページ専用の素材，brief/note/.env/.gitを同梱しないテストがある．話者ノートと出典の保持・除外は仕様どおり確認する．
-- [ ] manifestの格納先と内容ハッシュがZIP実体に一致し，収集順等の非本質的な揺れを抑えられる．再現性を保証しない項目は明記する．
-- [ ] 既存の通常export，validator，scroll/presenter，数式・Mermaidを壊さず，ZIPに必要な描画器・設定を別実装で二重管理しない．
-- [ ] CLIのhelp・README・利用例，単体テストと展開後のE2Eを追加し，エラー終了・cleanup・出力先指定を検証する．
+- [x] 画像・動画・poster・共有素材・別デッキ素材を含むデッキをZIP出力でき，展開先に元repoがなくてもローカル参照を解決できる．アーカイブ内には通常ファイルだけがある．
+- [x] ローカル依存だけのfixtureは，別の一時ディレクトリへ展開し，ネットワークを遮断したブラウザで全表示ページとメディアの読込みを確認する．fileで開く場合の対応範囲と，HTTPで提供する場合の手順を実測に基づきREADMEへ記載する．
+- [x] 外部資源を含むfixtureでは依存が列挙され，完全オフライン指定では非ゼロ終了する．未対応の動的依存を対応済みとしない．
+- [x] CSS→画像，CSS→CSS，SVG→画像の参照を辿って書き換えられる．内部fragment，data URL，通常の引用リンクを誤収集しない．
+- [x] 日本語・空白のパス，同名で内容が異なる素材，同一素材の複数参照，深いdeckディレクトリ，親symlinkで期待どおりになる．
+- [x] repo外参照，絶対リンク，循環，欠落，名前衝突，読取失敗を検出し，原稿・素材・既存ZIPを変更しない．path traversalを含むケースで収集範囲を越えない．
+- [x] 無関係な素材，非表示ページ専用の素材，brief/note/.env/.gitを同梱しないテストがある．話者ノートと出典の保持・除外は仕様どおり確認する．
+- [x] manifestの格納先と内容ハッシュがZIP実体に一致し，収集順等の非本質的な揺れを抑えられる．再現性を保証しない項目は明記する．
+- [x] 既存の通常export，validator，scroll/presenter，数式・Mermaidを壊さず，ZIPに必要な描画器・設定を別実装で二重管理しない．
+- [x] CLIのhelp・README・利用例，単体テストと展開後のE2Eを追加し，エラー終了・cleanup・出力先指定を検証する．
 
 ## 入口・実装分割
 
@@ -160,3 +160,7 @@ src/portable-export.jsは共通assertD2RenderSucceededを必須importし，単�
 統合後のunit/CLI/media/resolver/D2/process/runtimeは111件成功した．security4条件を含むZIP E2E 4件と，既存PDF/PPTX/HTML/images smoke 1件も成功した．最後の版記録追加後はexport/CLI/diagnostics 7件と実D2 ZIP 2件を再確認した．recordsは61件valid，変更JSのformatとdiff検査も成功した．スクリーンショットの日本語図ラベルと数式も確認した．bodyの日本語はOS fontに依存するため，合成fixtureの見出しはEnglishとし，明示fontの検証対象をD2図内に限定した．
 
 合成成果物は/tmp/marpagent-parallel-20261021/issue59-d2-artifacts/combined-d2.zipとfile/http-page-1/2.pngである．main全体の統合strict gateと最終受入は未実施であり，ISSはin-reviewを維持する．
+
+## Main final integration 2026-10-21
+
+最終コードbe3fc23でmainがstrict gate（unit504件，fixture18件，browser113件成功，既存Firefox対象外1件skip），固定D2実CLI7件，D2入りZIP2件を実行し，失敗なしを確認した．条件と限定確認の範囲は[統合記録](../design-assets-integration.md)を参照する．ローカル統合の受け入れと公開レビューを区別し，状態はin-reviewを維持する．

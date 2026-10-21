@@ -2,7 +2,7 @@
 id: XR-0004
 title: "Evaluate fixed D2 rendering configuration and Japanese fonts"
 type: exploration
-status: running
+status: adopted
 date: "2026-10-21"
 authors: [codex-main]
 scope: ["diagrams","fonts"]
@@ -14,7 +14,7 @@ supersedes: []
 issues: ["ISS-0053"]
 artifacts:
   revisions: ["49c9ce7","34f8d9f"]
-  manifests: []
+  manifests: ["docs/evidence/integration-2026-10-21/validation.json"]
   results: ["docs/d2.md","fixtures/d2-components.md"]
   commands: []
 ---
@@ -51,9 +51,11 @@ D2同梱Latin fontに日本語が不足する．通常TTFのitalic slotへの自
 
 workerのD2 unit31件と実CLI6件はskipなしで成功した．HTML/overviewのD2なし・通信遮断閲覧，日本語・長label・LaTeX・group・near・縦横比・同一図複数挿入を確認した．HTML/PDF/PPTX/3PNG/screenshotは生成成功し，PNGを確認した．別PDF/PowerPoint viewerでの目視は未実施．
 
+限定レビューでCSS文字列URL，pipe-free detached子の残留，inline block内のimport見逃しを再現した．5f7d501／5699ea4／d7d077dで修正し，担当の修正前REDと修正後37 unit／7実CLI成功を確認した．mainも最終be3fc23で37 D2 unitを含む全体strict gate，実CLI7件，元repo・compiler・font入力を除いたoffline ZIP2件を実行し，成功した．Linuxの新しい子終了回帰は3試行で対象子が終了し，無関係なprocessを保持した．独立した修正後の再確認はサービス応答制限で未実施である．
+
 ## Conclusion
 
-固定CLIと明示fontによる初版を支持する．任意のTTFの計測精度をglyph検査だけで保証する仮説は棄却する．main統合の実CLI・ZIP・process/SVG限定確認を加えて状態を確定する．
+固定CLIと明示fontによる初版を支持し，ADR-0009へ採用判断を反映する．任意のTTFの計測精度をglyph検査だけで保証する仮説は棄却する．source/SVGの保守的検査とLinuxの追跡可能な子の後処理は確認したが，任意悪意あるCLIの隔離や任意detached treeの終了は保証しない．
 
 ## Reusable Findings
 
@@ -62,6 +64,8 @@ workerのD2 unit31件と実CLI6件はskipなしで成功した．HTML/overview�
 ## Artifacts
 
 [利用と再現条件](../d2.md)，[原稿](../../fixtures/d2-components.md)，ISS-0053の詳細コマンドを参照．[代表画像3枚と環境・hash](../evidence/ISS-0053-d2/README.md)を保存し，mainも全3枚を確認した．統合版c3b6f5dの実CLI受入は6件成功，失敗・skipなしだった．一時成果物は/tmp/marpagent-parallel-20261021/issue61-artifacts/．mplus-counterexample.htmlとmplus-negative-test.logは不成立条件を残す．
+
+最終be3fc23のコマンド・条件・件数・ログhashは[統合検証manifest](../evidence/integration-2026-10-21/validation.json)に保存した．初期画像のrevisionと最終検証revisionを区別し，過去の観測値を上書きしない．
 
 ## Revisit Conditions
 

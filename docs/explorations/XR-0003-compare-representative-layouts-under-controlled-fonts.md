@@ -2,7 +2,7 @@
 id: XR-0003
 title: "Compare representative layouts under controlled fonts"
 type: exploration
-status: running
+status: adopted
 date: "2026-10-21"
 authors: [codex-main]
 scope: ["themes","layout"]
@@ -14,7 +14,7 @@ supersedes: []
 issues: ["ISS-0046","ISS-0047","ISS-0048","ISS-0049"]
 artifacts:
   revisions: ["1711332","119fbbb","756b461","f397ea5","995073f","05b9c7b"]
-  manifests: []
+  manifests: ["docs/evidence/integration-2026-10-21/validation.json"]
   results: ["fixtures/layout-baselines/baseline/conditions.json","fixtures/layout-baselines/baseline-2026-10-21.md","docs/lab-refinement-stable-review.md"]
   commands: []
 ---
@@ -53,7 +53,7 @@ Linux x64，Node25.6.0，Marp Core5.0.2，CLI4.5.1，Playwright1.58.2，Chromium
 
 ## Conclusion
 
-選択的な残余配置と外観の互換性を支持する．すべての個別指定を減らすという仮説は支持しない．統合strict gateと恒久証跡の集約後に状態を確定する．
+選択的な残余配置と外観の互換性を支持する．すべての個別指定を減らすという仮説は支持しない．代表画像・原稿条件・hash・再実行harnessを恒久証跡へ集約し，最終be3fc23のstrict gateでunit504件，fixture18件，browser113件成功，既存対象外1件skipを確認した．この範囲の採用判断をADR-0007へ反映する．
 
 ## Reusable Findings
 

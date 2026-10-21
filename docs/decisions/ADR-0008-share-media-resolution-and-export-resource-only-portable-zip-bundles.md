@@ -2,7 +2,7 @@
 id: ADR-0008
 title: "Share media resolution and export resource-only portable ZIP bundles"
 type: decision
-status: proposed
+status: accepted
 date: "2026-10-21"
 authors: [codex-main]
 scope: ["media","exports"]
@@ -12,7 +12,7 @@ supersedes: []
 issues: ["ISS-0050","ISS-0051"]
 artifacts:
   revisions: ["b7fa592","9db4a7a","47d06ec"]
-  manifests: []
+  manifests: ["docs/evidence/integration-2026-10-21/validation.json"]
   results: ["docs/media-reference-api.md","docs/media-assets.md"]
   commands: []
 ---
@@ -46,6 +46,8 @@ ZIPは共通engineのHTMLを一度生成し，HTML/CSS/SVGから必要資源を�
 ## Validation
 
 resolverの限定レビューでは明示bundle policyと固定POSIX treeで包含bypassは見つからず，関連24件と追加境界8件を確認した．ZIPの移設・通信遮断，private実体，manifest，競合交換，archive entryと出力保持はISS-0051とmain統合検証で追跡する．Windows実機は未検証であり，Windows互換のentry検査と区別する．
+
+最終be3fc23でmainのstrict gateが成功し，D2入りZIPの独立受入2件もskipなしで成功した．元repo・指定compiler・font入力を除去し，空PATH・通信遮断でfile/HTTP表示を確認した．追加の独立ZIPレビューはサービスの応答制限で完了していない．担当の境界テストとmainの実行を根拠とし，[統合記録](../design-assets-integration.md)に結果と限界を残す．
 
 ## Related Records
 
