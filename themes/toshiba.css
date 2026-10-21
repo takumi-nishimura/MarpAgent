@@ -1142,6 +1142,9 @@ mjx-container[jax="SVG"]:not([display]) > svg {
   min-height: 0;
   gap: var(--body-gap);
 }
+.body:is(.box.place-left, .box.place-center, .box.place-right) > :not(.self-start, .self-center, .self-end), .body :is(.box, .col > div):is(.place-left, .place-center, .place-right) > :not(.self-start, .self-center, .self-end) {
+  margin-inline: 0;
+}
 .body .fill {
   flex: 1 1 0;
   min-height: 0;

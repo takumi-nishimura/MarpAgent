@@ -58,6 +58,38 @@ function expectFitted(layout) {
 }
 
 for (const theme of ["lab", "muji", "toshiba"]) {
+    test(`${theme}: nested fill preserves both placement axes in equal-height columns`, async ({ page }) => {
+        await render(page, `
+<h2>Independent placement axes</h2>
+<div class="body box">
+<h3>Heading before the remaining-area row</h3>
+<div class="col fill" style="--col-gap: 30px">
+<div id="top" class="place-top place-left"><div class="fit">Top left</div></div>
+<div id="middle" class="place-middle place-center"><div class="fit">Middle center</div></div>
+<div id="bottom" class="place-bottom place-right"><div class="fit">Bottom right</div></div>
+</div>
+</div>`, { theme });
+        const columns = await page.evaluate(() => ["top", "middle", "bottom"].map((id) => {
+            const column = document.getElementById(id);
+            const rect = (element) => {
+                const { left, right, top, bottom, width, height } = element.getBoundingClientRect();
+                return { left, right, top, bottom, width, height };
+            };
+            return { outer: rect(column), content: rect(column.firstElementChild) };
+        }));
+        const [top, middle, bottom] = columns;
+        expect(top.outer.height).toBeGreaterThan(200);
+        expect(top.outer.height).toBeCloseTo(middle.outer.height, 1);
+        expect(top.outer.height).toBeCloseTo(bottom.outer.height, 1);
+        expect(top.content.top).toBeCloseTo(top.outer.top, 1);
+        expect(top.content.left).toBeCloseTo(top.outer.left, 1);
+        expect((middle.content.top + middle.content.bottom) / 2).toBeCloseTo((middle.outer.top + middle.outer.bottom) / 2, 1);
+        expect((middle.content.left + middle.content.right) / 2).toBeCloseTo((middle.outer.left + middle.outer.right) / 2, 1);
+        expect(bottom.content.bottom).toBeCloseTo(bottom.outer.bottom, 1);
+        expect(bottom.content.right).toBeCloseTo(bottom.outer.right, 1);
+        expect(middle.outer.left - top.outer.right).toBeCloseTo(30, 1);
+    });
+
     for (const size of ["16:9", "4:3"]) {
         test(`${theme} ${size}: body gives an extra heading or caption line space before fitting media`, async ({ page }) => {
             const layouts = [];
@@ -101,6 +133,30 @@ test("body without a header and a heading inside a column shares the remaining a
     expect(columns.ratio).toBeCloseTo(2, 2);
     expect(columns.gap).toBeCloseTo(30, 1);
     expect(layout.figures[0].top).toBeGreaterThanOrEqual(columns.headingBottom - 1);
+});
+
+test("stacked image, SVG, and video share a figure without displacing its caption", async ({ page }) => {
+    await render(page, `
+<h2>Three media, one caption</h2>
+<div class="body box">
+<figure>
+<img src="${landscape}" alt="Image"/>
+<svg viewBox="0 0 1200 800" width="1200" height="800" aria-label="Vector"><circle cx="600" cy="400" r="300"/></svg>
+<video poster="${landscape}" aria-label="Video poster" muted></video>
+<figcaption>One shared source and condition<br>Another caption line</figcaption>
+</figure>
+</div>`);
+    const layout = await boxes(page);
+    expectFitted(layout);
+    const media = layout.figures[0].media;
+    expect(media).toHaveLength(3);
+    for (let index = 1; index < media.length; index += 1) {
+        expect(media[index].top).toBeGreaterThan(media[index - 1].bottom);
+        expect(media[index].height).toBeCloseTo(media[0].height, 1);
+    }
+    expect(await page.locator("figure > svg").getAttribute("viewBox")).toBe("0 0 1200 800");
+    const intrinsic = await page.locator("img").evaluate((img) => img.naturalWidth / img.naturalHeight);
+    expect(intrinsic).toBeCloseTo(1.5, 2);
 });
 
 test("body keeps genuinely oversized text visible to rendered diagnostics", async ({ page }) => {
