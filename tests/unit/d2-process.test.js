@@ -286,6 +286,57 @@ process.exit(0);
 );
 
 test(
+    "success cleans fast pipe-free detached children without killing unrelated processes",
+    {
+        skip:
+            process.platform !== "linux" &&
+            "Linux /proc ownership is required.",
+        timeout: 15000,
+    },
+    async (t) => {
+        const root = workspace(t);
+        const tracked = trackPids(t);
+        const marker = "MARP_AGENT_D2_PROCESS_TOKEN";
+        const env = { ...process.env, [marker]: "caller-supplied-token" };
+        const unrelated = spawn(
+            process.execPath,
+            ["-e", "setInterval(() => {}, 1000)"],
+            { env, detached: true, stdio: "ignore" },
+        );
+        unrelated.unref();
+        tracked.add(unrelated.pid);
+        const pidFile = path.join(root, "detached.pid");
+        const exe = executable(
+            root,
+            "d2-fast-exit",
+            `const {spawn} = require("node:child_process");
+const fs = require("node:fs");
+const child = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)"], {detached: true, stdio: "ignore"});
+child.unref();
+fs.writeFileSync(${JSON.stringify(pidFile)}, String(child.pid));
+fs.writeSync(1, "complete\\n");
+process.exit(0);`,
+        );
+        for (let attempt = 0; attempt < 3; attempt++) {
+            const result = runD2ProcessSync(exe, [], { env, timeoutMs: 1000 });
+            const detachedPid = Number(fs.readFileSync(pidFile, "utf8"));
+            tracked.add(detachedPid);
+            assert.deepEqual(result, { stdout: "complete\n", stderr: "" });
+            const state = await waitForDead(detachedPid, 1500);
+            assert.ok(
+                !state || state.startsWith("Z"),
+                `pipe-free child ${detachedPid} survived attempt ${attempt}: ${state}`,
+            );
+            const otherState = processState(unrelated.pid);
+            assert.ok(
+                otherState && !otherState.startsWith("Z"),
+                "an unrelated process with the caller-supplied token must stay alive",
+            );
+        }
+    },
+);
+
+test(
     "stdout overflow fails with D2_PROCESS_BUFFER and retains stderr diagnostics",
     { skip: POSIX_ONLY },
     (t) => {

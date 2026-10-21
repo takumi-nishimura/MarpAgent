@@ -1,8 +1,27 @@
 const fs = require("node:fs");
+const crypto = require("node:crypto");
 const { spawn, execFile } = require("node:child_process");
 const { killProcessTree } = require("../src/conversion-runtime");
 
 const POLL_INTERVAL_MS = 25;
+const PROCESS_TOKEN_ENV = "MARP_AGENT_D2_PROCESS_TOKEN";
+
+function linuxProcess(pid) {
+    try {
+        const stat = fs.readFileSync(`/proc/${pid}/stat`, "utf8");
+        const fields = stat.slice(stat.lastIndexOf(") ") + 2).split(" ");
+        return { parent: Number(fields[1]), start: fields[19] };
+    } catch {
+        return null;
+    }
+}
+
+function sameProcess(pid, start) {
+    return (
+        process.platform !== "linux" ||
+        (start != null && linuxProcess(pid)?.start === start)
+    );
+}
 
 async function readRequest() {
     const chunks = [];
@@ -55,22 +74,43 @@ async function main() {
     const stderrChunks = [];
     let stdoutBytes = 0;
     let stderrBytes = 0;
-    const remembered = new Set();
+    const remembered = new Map();
     let pipeLinks = [];
     let pollTimer;
     let pollInFlight = false;
 
+    // This marker is private to one invocation and overrides any inherited
+    // value. On Linux it identifies inherited-environment descendants even
+    // after reparenting, without relying on output pipes or a timely ps poll.
+    const processToken = crypto.randomBytes(32).toString("hex");
+    const processMarker = `${PROCESS_TOKEN_ENV}=${processToken}`;
     const child = spawn(command, args.map(String), {
         cwd,
-        env,
+        env:
+            process.platform === "linux"
+                ? { ...(env ?? process.env), [PROCESS_TOKEN_ENV]: processToken }
+                : env,
         detached: process.platform !== "win32",
         shell: false,
         stdio: ["pipe", "pipe", "pipe"],
     });
+    const childStart =
+        process.platform === "linux" ? linuxProcess(child.pid)?.start : null;
 
-    // On Linux, an orphan that outlives its root keeps the inherited output
-    // pipes. Remember the pipe endpoints now so cleanup can find the owner even
-    // when it was never seen by a process-table snapshot.
+    function remember(pid, expectedParent) {
+        const info = process.platform === "linux" ? linuxProcess(pid) : null;
+        if (
+            process.platform === "linux" &&
+            (!info || info.parent !== expectedParent)
+        )
+            return false;
+        remembered.set(pid, info?.start);
+        return true;
+    }
+
+    // A Linux descendant may retain the output pipes while replacing its
+    // environment. Remember those endpoints as another ownership signal even
+    // when the orphan was never seen by a process-table snapshot.
     if (process.platform === "linux") {
         for (const fd of [1, 2]) {
             try {
@@ -82,8 +122,8 @@ async function main() {
         }
     }
 
-    function scanFdOwners() {
-        if (process.platform !== "linux" || pipeLinks.length === 0) return;
+    function scanLinuxOwners() {
+        if (process.platform !== "linux") return;
         let entries;
         try {
             entries = fs.readdirSync("/proc");
@@ -94,20 +134,34 @@ async function main() {
             if (!/^\d+$/.test(entry)) continue;
             const pid = Number(entry);
             if (pid === process.pid) continue;
+            const identity = linuxProcess(pid);
+            if (!identity) continue;
+            let owned = false;
+            try {
+                owned = fs
+                    .readFileSync(`/proc/${entry}/environ`, "utf8")
+                    .split("\0")
+                    .includes(processMarker);
+            } catch {
+                // Inaccessible or already-exited processes cannot match.
+            }
             for (const fd of [1, 2]) {
+                if (owned) break;
                 try {
                     if (
                         pipeLinks.includes(
                             fs.readlinkSync(`/proc/${entry}/fd/${fd}`),
                         )
                     ) {
-                        remembered.add(pid);
+                        owned = true;
                         break;
                     }
                 } catch {
                     // Races with process exit are expected.
                 }
             }
+            if (owned && sameProcess(pid, identity.start))
+                remembered.set(pid, identity.start);
         }
     }
 
@@ -126,16 +180,22 @@ async function main() {
             pollInFlight = false;
             if (settled) return;
             if (!error) {
-                const roots = new Set([child.pid, ...remembered]);
+                const roots = new Set(
+                    [...remembered]
+                        .filter(([pid, start]) => sameProcess(pid, start))
+                        .map(([pid]) => pid),
+                );
+                if (sameProcess(child.pid, childStart)) roots.add(child.pid);
                 let changed = true;
                 while (changed) {
                     changed = false;
                     for (const row of table.split("\n")) {
                         const [pid, ppid] = row.trim().split(/\s+/).map(Number);
                         if (roots.has(ppid) && !roots.has(pid)) {
-                            roots.add(pid);
-                            remembered.add(pid);
-                            changed = true;
+                            if (remember(pid, ppid)) {
+                                roots.add(pid);
+                                changed = true;
+                            }
                         }
                     }
                 }
@@ -145,15 +205,29 @@ async function main() {
     }
 
     function cleanupTree(signalName = "SIGKILL") {
-        scanFdOwners();
-        killProcessTree(child.pid, signalName);
-        for (const pid of remembered) {
-            try {
-                process.kill(-pid, signalName);
-            } catch {}
+        scanLinuxOwners();
+        if (sameProcess(child.pid, childStart))
+            killProcessTree(child.pid, signalName);
+        for (const [pid, start] of remembered) {
+            if (!sameProcess(pid, start)) continue;
+            if (process.platform !== "linux")
+                try {
+                    process.kill(-pid, signalName);
+                } catch {}
             try {
                 process.kill(pid, signalName);
             } catch {}
+        }
+        // Catch a child forked while the first ownership snapshot was read.
+        // This is bounded cleanup for the trusted CLI, not hostile containment.
+        if (process.platform === "linux") {
+            scanLinuxOwners();
+            for (const [pid, start] of remembered) {
+                if (!sameProcess(pid, start)) continue;
+                try {
+                    process.kill(pid, signalName);
+                } catch {}
+            }
         }
     }
 
