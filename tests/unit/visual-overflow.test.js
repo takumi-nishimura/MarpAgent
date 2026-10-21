@@ -338,6 +338,10 @@ marp: true
 theme: lab
 ---
 
+<style scoped>
+section, section h1 { line-height: normal; }
+</style>
+
 # Crowded bottom
 
 <div style="height: 544px"></div>
@@ -424,6 +428,7 @@ Claim with a citation<sup>[1]</sup>
 
 <style scoped>
 section { font-size: 16px; }
+.footnote { font-size: 0.4em; }
 </style>
 
 Body text on a smaller base
@@ -465,14 +470,15 @@ Body text on a smaller base
 
     // Footnotes, citation markers, and captions use the lower floor, and
     // text inside a nested SVG is not measured.
-    assert.equal(sizeOf(3, "[1] Default footnote.").fontPx, 10.4);
+    assert.equal(sizeOf(3, "[1] Default footnote.").fontPx, 14);
     assert.equal(sizeOf(3, "[1] Default footnote.").secondary, true);
     assert.equal(sizeOf(3, "[1]").secondary, true);
     assert.equal(sizeOf(3, "Figure caption").secondary, true);
+    assert.equal(sizeOf(3, "Figure caption").fontPx, 19.5);
     assert.equal(sizeOf(3, "diagram label"), undefined);
     assert.deepEqual(bySlide[3].smallText, []);
 
-    // A footnote below the lower floor is still reported.
+    // An explicit relative-size override below the lower floor is still reported.
     assert.deepEqual(bySlide[4].smallText, [
       {
         label: '"[1] Shrunk footnote."',

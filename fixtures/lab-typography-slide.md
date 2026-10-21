@@ -1,11 +1,11 @@
 ---
 marp: true
 theme: lab
-class: normal lab-refined
+class: normal
 paginate: true
 ---
 
-<!-- _class: title lab-refined -->
+<!-- _class: title -->
 <!-- _paginate: skip -->
 <!-- _header: Generic visual fixture -->
 
@@ -73,7 +73,7 @@ Research presentation · 2026
 
 ---
 
-<!-- _class: normal lab-refined invert -->
+<!-- _class: normal invert -->
 <!-- _header: Dark surface -->
 
 ## 暗い背景でも強調を読める
