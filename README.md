@@ -190,6 +190,14 @@ watch notifier. `MARP_AGENT_NO_OPEN=1` disables automatic browser opening;
 if an opener such as `xdg-open` is missing, the server keeps running and
 prints a URL that can be opened manually.
 
+Live serve starts on HTTP port 8080 when `PORT` is absent. If Marp reports
+that the port is already in use, it retries successive ports through 8089
+and exits with an error if all ten candidates fail. The startup URLs and
+automatically opened browser URL use the selected port and retain a requested
+displayed page. Setting `PORT` explicitly (for example,
+`PORT=8090 marpx <slide.md>`) disables this fallback, so an occupied explicit
+port produces Marp's original error. Overview keeps its existing port selection.
+
 `marpx --doctor` reports the CLI and configured Core versions and renders
 small Shiki, line-highlight, KaTeX, MathJax, diagram-math, and native-Mermaid
 probes through the same engine used for exports. A missing rendering feature

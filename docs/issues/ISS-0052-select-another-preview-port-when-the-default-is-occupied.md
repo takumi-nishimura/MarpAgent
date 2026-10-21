@@ -2,7 +2,7 @@
 id: ISS-0052
 title: "Select another preview port when the default is occupied"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -17,7 +17,12 @@ artifacts:
   revisions: []
   manifests: []
   results: []
-  commands: []
+  commands:
+    - node --test tests/unit/marp-serve.test.js tests/unit/preview-runtime.test.js tests/unit/preview-cli.test.js tests/unit/preview-binding.test.js tests/unit/marp-pagination.test.js tests/unit/slide-map.test.js tests/unit/preview-overview.test.js tests/unit/overview-preview.test.js
+    - node /tmp/marpagent-parallel-20261021/issue-60-http-check.cjs
+    - node_modules/.bin/prettier --check --tab-width 2 scripts/marp-serve.js src/preview-runtime.js tests/unit/marp-serve.test.js
+    - git diff --check
+    - uv run .github/records.py validate
 ---
 
 # Select another preview port when the default is occupied
@@ -56,14 +61,14 @@ GitHub IssueとISSの対応: #53 = ISS-0045，#54 = ISS-0046，#55 = ISS-0047，
 
 ## Acceptance criteria
 
-- [ ] `PORT`未指定で8080が空いていれば，従来どおり8080で起動する．
-- [ ] 8080が使用中なら8081以降を試し，複数の候補ポートが使用中でも空いているポートで起動してスライドをHTTP 200で取得できる．
-- [ ] 起動ログとブラウザで開くURLは実際に選択したポートを使い，指定ページへの遷移も維持する．
-- [ ] `PORT`を明示した場合はその指定を尊重し，競合時には別ポートへ自動変更せず原因が分かるエラーで終了する．
-- [ ] 空き確認後に別プロセスがポートを取得した場合も，実際の起動失敗を受けて次のポートを試す．探索回数または範囲に上限を設け，上限到達時はエラーで終了する．
-- [ ] HTTPポート競合以外の起動失敗をポート探索で隠さず，既存のwatch notifier競合時の再試行と終了シグナルの転送が回帰しない．
-- [ ] 単体テストで既定ポートの空き・競合，複数ポートの競合，明示した`PORT`の競合，起動時の競合と探索上限を検証する．
-- [ ] READMEに自動選択と`PORT`明示時の挙動を記載する．
+- [x] `PORT`未指定で8080が空いていれば，従来どおり8080で起動する．
+- [x] 8080が使用中なら8081以降を試し，複数の候補ポートが使用中でも空いているポートで起動してスライドをHTTP 200で取得できる．
+- [x] 起動ログとブラウザで開くURLは実際に選択したポートを使い，指定ページへの遷移も維持する．
+- [x] `PORT`を明示した場合はその指定を尊重し，競合時には別ポートへ自動変更せず原因が分かるエラーで終了する．
+- [x] 空き確認後に別プロセスがポートを取得した場合も，実際の起動失敗を受けて次のポートを試す．探索回数または範囲に上限を設け，上限到達時はエラーで終了する．
+- [x] HTTPポート競合以外の起動失敗をポート探索で隠さず，既存のwatch notifier競合時の再試行と終了シグナルの転送が回帰しない．
+- [x] 単体テストで既定ポートの空き・競合，複数ポートの競合，明示した`PORT`の競合，起動時の競合と探索上限を検証する．
+- [x] READMEに自動選択と`PORT`明示時の挙動を記載する．
 
 ## 実装上の注意
 
@@ -74,3 +79,12 @@ GitHub IssueとISSの対応: #53 = ISS-0045，#54 = ISS-0046，#55 = ISS-0047，
 HTTPポート競合を検出したら，次の候補ポートを子プロセスの`PORT`に設定して再起動する方法が考えられる．HTTPポート競合とwatch notifier競合は区別し，空きポートの事前確認だけには依存しない．
 
 WindowsやWSLの設定変更，使用中プロセスの終了，bindアドレス指定の追加，`--overview`のポート選択方式の変更は対象外とする．
+
+## Implementation and verification 2026-10-21
+
+- `PORT`が環境に存在しない場合だけ，8080〜8089の10候補を順に試す．事前の空き確認は行わず，Marp子プロセスが実際のHTTP bind失敗で返す診断と試行中のポート番号が一致した場合だけ候補を進める．ANSI装飾と診断の折り返しに対応した．
+- 明示`PORT`は空文字・不正値も含めて子へそのまま渡し，HTTP競合の元の診断と終了コードを維持する．notifierの5回の再試行予算と250 msの遅延はHTTP探索から独立させ，HTTP候補の変更で予算をリセットしない．混合診断では暗黙PORTのHTTP候補変更を優先する．
+- 指定モデル`fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-high`をDevinの`accept-edits`モードで限定実装に利用した．`--sandbox`はbubblewrap不在で初回起動できず，無制限承認モードは使っていない．leadが差分を確認し，両シグナルとfallback後のページ指定，出力完了待ちのテストを補強した．担当helperは終了済み．
+- 実装前の実CLI再現では，8080が空いている場合のHTTP 200と，8080占有時に終了コード3で停止するREDを確認した．実装後は専用loopback `127.0.0.60`で，空き8080，8080・8081の実bind競合から8082への切替とHTTP 200，ブラウザ起動コマンドへ渡す実URL，非表示・ページ番号スキップを含む表示ページ1→`#2`，明示`PORT=8080`と`PORT=`の終了コード3，10候補の探索打切りを確認した．SIGINT→130とSIGTERM→143，終了後のソケット解放も実CLIで確認した．一時デッキと待受プロセスは削除・終了済み．
+- 上記8ファイルの関連Nodeテストは72件成功，失敗・skipとも0件．起動後の実bind競合を再現するstub，複数競合，ANSI・折り返し，探索上限，明示値，別ポート・非ポートの失敗，notifierの競合・混合診断・予算，fallback後のURL/hash，両シグナルの現子プロセスへの転送とnotifier再試行待機中の終了を含む．
+- JavaScriptは既存の2-space書式を保ってPrettier確認し，`git diff --check`を実行した．Python変更はない．全体のstrict gateとmainへの統合確認はmain leaderが担当し，このISSは`in-review`で保持する．他issueへの依存・共有インターフェイス変更はない．
