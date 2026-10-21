@@ -47,6 +47,12 @@ lab の `.marker` と `mark` を，既存 `em` と同じ下30%・色の不透明
 
 `background` / `color` による局所上書き，色付き strong，paper，muji/toshiba と名前付き明暗 scheme を確認した．共通 CSS や caption の処理は変更しない．[今回の明暗 before / after・font / CSS / 入力 hash・測定条件](evidence/ISS-0049-marker-feedback/README.md) を別に保存し，過去の証跡は保持する．
 
+## Caption wrapping feedback
+
+日本語captionにも従来からBudouXの文節区切りが適用される．今回の追加は行長の均しで，paper以外のlabの`figcaption`に`text-wrap-style: balance`を指定する．本文・見出しの折返し方式は変更しない．`.nobr`と`white-space: nowrap`を尊重し，意図的に従来の詰め方を使うcaptionには`style="text-wrap-style: auto"`を指定できる．
+
+固定fontの代表例では，短い行／長い行の幅が英語0.310→0.958，日本語0.258→0.942になった．どちらも2行のままで，全文・日本語の12箇所の文節区切り・図とcaptionの寸法は保持した．[画像・条件・測定値](evidence/ISS-0049-caption-feedback/README.md)を新しい証跡へ保存した．ChromiumとFirefoxで計8件の回帰が成功し，Mac/Safari実機は未確認．長文やfont変更で同じ行数を保証するものではない．
+
 ## Default change validation
 
 plain lab の太字700を期待するテストで，旧 CSS の実測500により RED を確認した．lab 専用 mapping を既定へ移して同じテストが GREEN となった．追加の選択用 class はテストにも原稿にも不要．

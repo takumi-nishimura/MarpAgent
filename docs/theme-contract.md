@@ -375,6 +375,18 @@ available space even though column order, grouping, and alignment are retained.
 Validate existing lab decks after updating. See [the lab typography guide](lab-refinement.md)
 for token mappings, fixed-font comparisons, known boundaries, and validation.
 
+Lab slide `em`, `.marker`, and `mark` use matching lower-30% marker bands;
+the yellow band for `.marker` and `mark` has 40% color opacity. `mark`
+inherits the surrounding text color. Deck-local paint overrides remain valid.
+
+Japanese captions already receive BudouX phrase boundaries. Lab slide
+`figcaption` additionally uses `text-wrap-style: balance` to distribute short
+captions across lines. The longhand preserves authored `white-space: nowrap`
+and `.nobr` runs. Use `text-wrap-style: auto` on a caption to restore ordinary
+wrapping. This change does not apply balancing to body text, paper, or other
+themes. Line breaks still depend on the font, available width, and browser;
+see [the caption comparison](evidence/ISS-0049-caption-feedback/README.md).
+
 ### Rendered checks
 
 An opted-in `<!-- _scroll: true -->` slide keeps its original canvas size and

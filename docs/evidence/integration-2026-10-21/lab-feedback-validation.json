@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-21",
+  "implementation": "94eb340",
+  "finalCodeRevision": "185084dfc6ef874d1f5fb3c65a4ce0868dff1623",
+  "checks": {
+    "unit": {
+      "passed": 504,
+      "skipped": 0
+    },
+    "strictFixtures": {
+      "passed": 18
+    },
+    "browser": {
+      "passed": 119,
+      "skipped": 1,
+      "skipReason": "Existing Firefox native touch case"
+    },
+    "captionCrossBrowser": {
+      "passed": 8,
+      "skipped": 0,
+      "browsers": [
+        "Chromium",
+        "Firefox"
+      ]
+    },
+    "designLint": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "designTokens": "matched",
+    "themeRebuild": "no diff"
+  },
+  "initialStrictFailure": "Unit and fixture stages passed; one browser assertion still required solid mark background. Updated this oracle for the intended lab band, preserving solid fills for other themes; reran all browser tests successfully.",
+  "priorUnchangedChecks": {
+    "revision": "4029409",
+    "realD2": 7,
+    "realD2Zip": 2,
+    "rerun": false,
+    "reason": "No D2, ZIP, resolver, dependency or runtime changes in this feedback correction."
+  },
+  "environment": {
+    "node": "v25.6.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "fontconfig": "/tmp/marp-i54-baseline/fonts.conf",
+    "captionFontEnvironment": "MARP_AGENT_TEST_JAPANESE_FONT_PATH",
+    "chromium": "145.0.7632.6",
+    "playwright": "1.58.2"
+  },
+  "commands": [
+    "npm run marpx -- --theme lab",
+    "npm run quality:gate:strict",
+    "MARP_AGENT_STRICT_E2E=1 npm run test:e2e",
+    "playwright test --config /tmp/marpagent-parallel-20261021/caption-feedback.config.cjs",
+    "npm run design:lint",
+    "npm run design:tokens:check"
+  ],
+  "logs": {
+    "initialStrict": {
+      "file": "lab-feedback-strict-gate.log",
+      "sha256": "3cbf5b1140f40f4406e15a7e4722fe715e9d94f1b8c89d1adab669662c4e757b"
+    },
+    "browserGreen": {
+      "file": "lab-feedback-browser-green.log",
+      "sha256": "e0d8612cb90b801f961eb14ebbbddb6c9e9b6952699002a2f5f2fdb9971920fd"
+    },
+    "captionRed": {
+      "file": "caption-balance-red.log",
+      "sha256": "31575895e5bcf639d9a47a094ab43cef1932555b9fac1209fe26591526e20cf0"
+    },
+    "captionFixedFont": {
+      "file": "caption-balance-fixed-font.log",
+      "sha256": "d7663461a986285cf1b0f55a295f53ae19bf16f9ebcd4e137ba45cc051b39621"
+    },
+    "capture": {
+      "file": "caption-feedback-capture.log",
+      "sha256": "bd4116b8ecd56fd04a806b48f9aaf73e95bff66b3564dfb4a255214b13e793e6"
+    }
+  }
+}
