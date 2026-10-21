@@ -101,7 +101,7 @@ my-decksではこれを基礎に，本文サイズ，見出し位置，補足欄
 - [x] DESIGN.mdのliteral値，生成token，テーマ内の対応が一致し，同じ値を複数箇所へ手で複製しない．新しい公開変数は契約に記載する．
 - [x] 原稿の左右・上下配置，列順，図と説明のgroupは変わらない．フォントや文字サイズによる折返し変化は別に点検し，収まりの保証を誇張しない．
 - [ ] shared CSSを変更する場合はmuji/toshiba，paper，scroll，数式・コード等への差を確認する．他テーマのブランド表現をlabに揃える変更は含めない．
-- [ ] 新旧の画像・原稿差分，既知の互換性差分，残した個別調整，移行方法をPRに添える．既存labの既定変更はレビューで明示的に確認する．
+- [x] 新旧の画像・原稿差分，既知の互換性差分，残した個別調整，移行方法をPRに添える．既存labの既定変更はレビューで明示的に確認する．
 - [x] `design:lint`，`design:tokens:check`，テーマ再生成，対象fixtureのstrict validationと関連テストを実行し，未実行項目を区別する．
 
 ## 対象外
@@ -148,3 +148,7 @@ repo内ISSは未起票．現行規約と既存記録を照合し，記録CLIで�
 関連 unit 45件，browser 43件が pass．strict は7条件すべて実測され，5条件は finding 0 / 終了0．残る #54 の既定と改良版はともにページ6だけ `content-clipped` / 終了1で，最大86px→83px．既存の境界例を token 変更で直したとは扱わず，情報削除や局所 CSS で比較入力を変えない．#55 `.body` の4構図，4:3，lab smoke，Core 5 の数式・コード・Mermaid は error 0．#56 `2eb7616` の committed collector も `lab-refined`，`.body`，`.figure-natural` を unknown reason なしで認識した．#56 branch 全体は未取込．
 
 詳細は `docs/lab-refinement-stable-review.md`．main の最終統合・full strict gate・画像添付と受入を残して in-review とする．新規 ADR/XR の採番，push，merge，公開は行っていない．
+
+## PR publication 2026-10-21
+
+[Draft PR #62](https://github.com/takumi-nishimura/MarpAgent/pull/62)のVisual evidence and compatibility節から，新旧画像・原稿条件・比較手順・移行方法を参照可能にした．既定labを置換しないこととcaptionの折返し差もPRへ記載したため，PR添付の完了条件を確認済みにした．レビューはローカルで行い，GitHub上の承認を待つ条件は追加しない．shared typographyを変更する条件付き項目は，本ISSでは共有typographyを変更していないため適用対象外である．
