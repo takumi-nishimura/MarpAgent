@@ -7,6 +7,7 @@ const { marpBrowserArgs } = require("./marp-browser");
 const { isASeriesCanvas } = require("./canvas-size");
 const { copyDeckForRender, findMissingAssets } = require("./media-assets");
 const { splitFenceSegments } = require("./markdown-slides");
+const { findClassFindings } = require("./class-diagnostics");
 const {
   buildSlideMap,
   findSlide,
@@ -207,8 +208,8 @@ function detectTableMetrics(lines) {
 //   the deck references that is definitely missing; fails the run.
 // - "warning": a design risk measured on the render (edge crowding), or a
 //   source heuristic reported while rendering was unavailable.
-// - "info": a source heuristic reported alongside a successful render; a
-//   non-blocking hint that is hidden from the text summary by default.
+// - "info": source heuristics alongside a successful render, and class
+//   availability advice in every mode; hidden from text output by default.
 const HEURISTIC_SEVERITY = { fallback: "warning", measured: "info" };
 
 function buildFinding(
@@ -416,7 +417,10 @@ function validateDeckMarkdown(markdown, options = {}) {
     lintSlide(slide, { paper, severity: options.heuristicSeverity }),
   );
   const findings = attachSlideIdentity(
-    results.flatMap((result) => result.findings),
+    [
+      ...results.flatMap((result) => result.findings),
+      ...findClassFindings(markdown, { slideMap }),
+    ],
     slideMap,
   );
   return {
@@ -536,6 +540,14 @@ function buildSarifReport(deckPath, result) {
             severity: finding.severity,
             source: finding.source,
             suggestion: finding.suggestion,
+            ...(finding.source === "classes"
+              ? {
+                  className: finding.className,
+                  reason: finding.reason,
+                  unknownReasons: finding.unknownReasons,
+                  candidates: finding.candidates,
+                }
+              : {}),
           },
         })),
       },
