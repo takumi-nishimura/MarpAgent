@@ -2,7 +2,7 @@
 id: ISS-0053
 title: "Render D2 code fences through the configured Marp engine"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -200,3 +200,41 @@ D2の一般tourの一部は旧版説明が残り，0.9.0のrelease notesではMa
 本Issueの作成は，正式なADRの採用や正本Markdownへの反映完了ではない．
 コード・依存・原稿・素材の変更，D2実行，描画比較，性能評価，merge/pull，Vault同期は行っていない．
 会話URL・conversation/turn/message ID・本人発言の正確な時刻は取得していない．
+
+## Implementation checkpoint 2026-10-21
+
+最新の明示承認に従い，設計検討から実装へ進めた．`work/issue-61-20261021` で作業し，main の統合確認前のため status は in-review とする．push・merge・GitHub コメントは実施していない．
+
+### Interfaces and dependencies
+
+- `scripts/d2-plugin.js` を共通 engine に登録し，fence renderer からだけコンパイルする．解析だけの slide map と非表示スライドは CLI を起動しない．Mermaid は変更していない．
+- `src/d2-render.js` は固定 D2 0.9.0，TALA，原稿前置き `tala-seeds: [1; 2; 3]`，依存拒否，フォント内容・実体内容・parser／adapter／runner／salt を含む cache を扱う．mise shim は元のプロジェクト文脈で実体へ解決する．
+- `src/d2-process.js` と `scripts/run-d2.js` は同期呼出しの外側に supervisor を置く．非ゼロ＋部分 SVG，timeout，stdout／stderr 超過，早期 exit 後の継承 pipe，呼出元終了を処理する．UTF-8 の途中で切れた capture を byte 上限内に保つ．
+- `src/d2-svg.js` は `saxes` 6.0.0，`css-tree` 3.2.1，`fontkit` 2.0.4 を固定追加し，XML／CSS／実際に選択した font face を検査する．SVG ID，参照，selector，font family を図ごとに隔離し，BudouX から図全体を保護する．
+- 共通 engine の戻り値は `d2Diagnostics` を持つ．`src/d2-diagnostics.js` の `collectD2RenderDiagnostics(html)` と `assertD2RenderSucceeded(html)` は生成済み HTML の属性だけを読む．後者は失敗時に `code: D2_RENDER_FAILED`，`diagnostics` を持つ例外を投げる．#59 へこの API を連絡済みであり，ZIP は HTML 描画直後に呼べばブラウザも再コンパイルも不要となる．
+- CLI の配布 export は engine の strict 診断で書込前に停止する．screenshot と validation は生成済み HTML を使う．validation は browser 起動失敗後にも D2 の `diagram-render-error` を保持する．
+- D2・日本語 TTF・Chromium は試験用に明示導入した．実行時の導入処理は追加していない．CI は版固定と SHA-256 確認を伴う明示導入で `test:d2` を実行し，不足を skip しない．
+
+### Verified behavior and limitations
+
+- 固定版に TALA が同梱されること，source の elk が前置きより優先すること，layout の flag／環境変数が source より優先することを確認した．TALA の source data による seed 指定は flag より優先される．scalar seed はエラーになる．`vars: null` は D2 本体の既定へ戻り，`d2-config: null` は前置きを残す．
+- D2 同梱 Latin font の日本語不足を確認し，埋込 font face の字形不足を成功扱いしないようにした．通常書体は `MARP_AGENT_D2_FONT_PATH`，斜体は別途 `MARP_AGENT_D2_FONT_ITALIC_PATH` で明示する．OS のフォントを収集しない．
+- M PLUS 1p Regular を italic slot へ流用すると，TALA 0.9.0 が複数の seed でも内部 invariant error を返す例を再現した．通常書体から斜体への自動流用を避けた．edge label は既定で italic のため，通常書体の日本語には `style.italic: false` を原稿で明示する．斜体 TTF の明示と elk への変更による描画も検証した．renderer が黙って engine／font を切り替えることはない．
+- 字形の存在だけでは計測精度を保証できず，M PLUS 1p で一部 label の縦位置が node の下へずれる例も確認した．最終受入は Noto Sans JP を fonttools 4.60.1 で weight 400 に固定し，label が node 枠内に入ることを browser で検査する．M PLUS の生成済み HTML を `mplus-counterexample.html` として成果物ディレクトリへ保存した．追加した node 枠検査は M PLUS 条件で期待どおり失敗し，`mplus-negative-test.log` に結果を保存した．
+- 日本語，長いラベル，LaTeX，グループ，near による部分位置指定，縦長／横長，同一図の複数挿入を実 CLI とブラウザで確認した．HTML／overview は offline context で表示・font 解決・寸法を確認した．PNG を目視し，PDF／PPTX／images／screenshot の生成成功を確認した．PDF／PPTX の別 viewer での目視は行っていない．
+- 初版は信頼済みの自己完結した静的な図のみ．import，icon／image，link，複数 board，Markdown label の外部資源・substitution，外部 layout plugin は拒否する．字句検査と host CLI は未信頼原稿の sandbox ではない．外部依存の収集・watch／ZIP 素材追加は実装していない．明示フォントを差し替えた場合は再描画で内容ハッシュを再確認する．
+- Linux で実行した結果であり，macOS／Windows の実 CLI・process cleanup は未検証．main の統合 strict gate，#59 と組み合わせた D2 含有 offline ZIP は main の担当として残す．
+
+### Validation evidence
+
+- D2 単体：`node --test tests/unit/d2-diagnostics.test.js tests/unit/d2-svg.test.js tests/unit/d2-process.test.js tests/unit/d2-render.test.js tests/unit/d2-plugin.test.js` — 31 passed，skip なし．
+- 固定版：`MARP_AGENT_D2_PATH=/tmp/marpagent-d2-0.9.0/d2-v0.9.0/bin/d2 MARP_AGENT_D2_FONT_PATH=/tmp/marpagent-d2-NotoSansJP-Regular.ttf PLAYWRIGHT_BROWSERS_PATH=/tmp/marpagent-i61-browsers CHROME_NO_SANDBOX=1 flock /tmp/marpagent-parallel-20261021/browser-tests.lock npm run test:d2` — 6 passed，skip なし．
+- 既存回帰：`PLAYWRIGHT_BROWSERS_PATH=/tmp/marpagent-i61-browsers CHROME_NO_SANDBOX=1 flock /tmp/marpagent-parallel-20261021/browser-tests.lock node --test tests/unit/mermaid-render.test.js tests/unit/marp-engine.test.js tests/unit/budoux-html.test.js tests/unit/hide-slides.test.js tests/unit/slide-map.test.js tests/unit/conversion-runtime.test.js tests/unit/validate-deck.test.js tests/unit/visual-overflow.test.js tests/unit/doctor.test.js` — 126 passed，skip なし．
+- CLI 追加回帰：同じ browser 環境で `node --test tests/unit/cli-args.test.js tests/unit/conversion-runtime.test.js tests/unit/doctor.test.js tests/unit/marp-engine.test.js tests/unit/validate-observability.test.js tests/unit/process-failures.test.js` — 33 passed，skip なし．上記 126 件との重複を含む．
+- 成果物：`/tmp/marpagent-parallel-20261021/issue61-artifacts/` に `d2.html`，`d2.pdf`，`d2.pptx`，`d2.001.png`〜`d2.003.png`，`d2-slide2.png` を保存した．原稿は `fixtures/d2-components.md`．
+- doctor は D2 実体パス，0.9.0，TALA bundled を pass として報告した．D2 なしの既存 CLI／Mermaid テストも通過した．
+- runner の当初3ファイルは Devin `fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-high` に委任した．リードが差分を読み，13 件へ拡張して親終了と chunk 境界を修正し，関連テストを自分で実行した．独立 reviewer は起動していない．
+
+### Central record allocation request
+
+main に ADR（固定 host CLI／TALA 前置き／静的自己完結図の採用）と XR（固定版の設定優先順位・null・font slot 障害・日本語／数式・cache／process の試行結果）の採番を依頼した．この worktree では新しい ISS／ADR／XR 番号を割り当てていない．根拠と制約は上記 Notes と `docs/d2.md` を引き継ぐ．

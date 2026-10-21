@@ -58,6 +58,12 @@ and [ADR-0004](docs/decisions/ADR-0004-adopt-marp-core-5-with-explicit-full-engi
 For runnable examples of code line highlighting (`js {2,4-5}`), diagram math,
 and native Mermaid, see [template/core5-components.md](template/core5-components.md).
 
+`d2` fences render self-contained static diagrams through the same engine.
+Install the pinned host D2 0.9.0 explicitly; the application never installs it
+at runtime. TALA is the project default, and source `vars.d2-config` can select
+ELK or Dagre. Japanese labels require an explicitly supplied suitable TTF font.
+See [D2 setup, scope, diagnostics and acceptance tests](docs/d2.md).
+
 ## Quick Start
 
 ```bash

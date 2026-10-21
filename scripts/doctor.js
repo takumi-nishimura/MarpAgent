@@ -182,6 +182,37 @@ async function checkBeautifulMermaidVersion() {
   };
 }
 
+function checkD2() {
+  try {
+    const { resolveD2 } = require("../src/d2-render");
+    const { runD2ProcessSync } = require("../src/d2-process");
+    const cwd = process.env.MARP_AGENT_D2_CWD || process.cwd();
+    const runtime = resolveD2({ cwd });
+    const layouts = runD2ProcessSync(runtime.executable, ["layout"], {
+      cwd,
+      env: runtime.env,
+      timeoutMs: runtime.timeoutMs,
+      maxBuffer: 65536,
+    }).stdout;
+    if (!/tala \(bundled\)/.test(layouts))
+      throw new Error("TALA is not available as a bundled layout.");
+    return {
+      name: "d2",
+      status: "pass",
+      executable: runtime.executable,
+      version: runtime.version,
+      tala: true,
+      detail: `Optional D2 ${runtime.version}: ${runtime.executable}; TALA is bundled.`,
+    };
+  } catch (error) {
+    return {
+      name: "d2",
+      status: "warn",
+      detail: `${error.message} Decks without D2 fences do not need D2.`,
+    };
+  }
+}
+
 function printTextReport(checks) {
   for (const check of checks) {
     process.stdout.write(`[${check.status}] ${check.name}: ${check.detail}\n`);
@@ -200,6 +231,7 @@ async function main() {
     checkThemes,
     checkPlaywrightLaunch,
     checkBeautifulMermaidVersion,
+    checkD2,
   ];
 
   for (const run of runners) {
@@ -226,4 +258,4 @@ async function main() {
 
 if (require.main === module) main();
 
-module.exports = { checkConfiguredEngine };
+module.exports = { checkConfiguredEngine, checkD2 };

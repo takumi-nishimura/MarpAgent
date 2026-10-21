@@ -918,6 +918,7 @@ const RENDER_ENGINE_NAMES = {
   katex: "KaTeX",
   mathjax: "MathJax",
   mermaid: "Mermaid",
+  d2: "D2",
 };
 
 function formatRenderErrorTitle(rule, errors) {
@@ -954,13 +955,16 @@ function buildRenderErrorFindings(renderedSlides) {
         (item) => item.kind === kind,
       );
       if (errors.length === 0) continue;
+      const effectiveRule = kind === "diagram" && errors.some(error => error.engine === "d2")
+        ? { ...rule, noun: "A diagram", namesEngine: true, suggestion: "Fix the listed diagram source or install its supported renderer; check the original Markdown line." }
+        : rule;
       findings.push(
         buildFinding(
           { number: slideAudit.slideNumber },
           rule.ruleId,
           "error",
-          formatRenderErrorTitle(rule, errors),
-          rule.suggestion,
+          formatRenderErrorTitle(effectiveRule, errors),
+          effectiveRule.suggestion,
           "render",
         ),
       );
@@ -1077,7 +1081,31 @@ async function validateDeckWithVisualCheck(deckPath, options = {}) {
         ),
       );
     }
-    result.findings.push(...buildRenderErrorFindings(measurement.slides));
+    result.findings.push(...buildRenderErrorFindings(measurement.slides.map(audit => ({
+      ...audit,
+      renderErrors: (audit.renderErrors || []).filter(error =>
+        error.engine !== "d2" ||
+        !(measurement.d2Diagnostics || []).some(diagnostic => diagnostic.slide === audit.slideNumber),
+      ),
+    }))));
+  }
+
+  // Compiler errors are known from the rendered HTML even if the browser
+  // could not launch. Do not compile again or turn them into source hints.
+  for (const diagnostic of measurement.d2Diagnostics || []) {
+    result.findings.push({
+      ...buildFinding(
+        { number: diagnostic.slide },
+        "diagram-render-error",
+        "error",
+        `D2 failed to render at line ${diagnostic.line}: ${diagnostic.message}`,
+        "Fix the D2 diagnostic at the original Markdown line, then render again.",
+        "render",
+      ),
+      engine: "d2",
+      code: diagnostic.code,
+      line: diagnostic.line,
+    });
   }
 
   // The file check runs whether or not the render succeeded; rendered media

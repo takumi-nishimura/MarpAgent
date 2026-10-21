@@ -9,6 +9,7 @@
   "scripts": {
     "marpx": "node bin/marpx.js",
     "test": "node scripts/run-node-tests.js",
+    "test:d2": "node --test tests/integration/d2-cli.test.js",
     "doctor": "node scripts/doctor.js",
     "audit:dependencies": "node scripts/audit-dependencies.js",
     "design:lint": "node scripts/lint-designs.js",

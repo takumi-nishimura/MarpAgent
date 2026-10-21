@@ -310,6 +310,12 @@ function forwardChildSignals(child) {
   }
 }
 
+// Keep D2/mise and relative explicit fonts in the original project even when
+// a mode script renders from this checkout or a temporary copied deck.
+process.env.MARP_AGENT_D2_CWD ||= positionals[0]
+  ? path.dirname(path.resolve(positionals[0]))
+  : process.cwd();
+
 // Dispatch to existing scripts
 function runScript(scriptName, args) {
   const scriptPath = path.join(scriptsDir, scriptName);
@@ -428,7 +434,15 @@ function runMarp(extraArgs, { timeoutMs = null } = {}) {
   runConversion(
     getMarpBin(),
     [...browserArgs, "--config", configPath, ...extraArgs],
-    { cwd: repoRoot, timeoutMs },
+    {
+      cwd: repoRoot,
+      timeoutMs,
+      env: {
+        ...process.env,
+        MARP_AGENT_D2_CWD: process.env.MARP_AGENT_D2_CWD || process.cwd(),
+        ...(exportModes.has(mode) ? { MARP_AGENT_D2_STRICT: "1" } : {}),
+      },
+    },
   )
     .then((code) => {
       process.exitCode = code;
@@ -530,6 +544,9 @@ switch (mode) {
     Promise.resolve()
       .then(() => {
         ({ htmlPath, tempRoot } = renderToHtml(ssDeckPath));
+        require("../src/d2-diagnostics").assertD2RenderSucceeded(
+          fs.readFileSync(htmlPath, "utf8"),
+        );
         return screenshotSlide(htmlPath, slideId, {
           timeoutMs: Math.max(1, CONVERT_TIMEOUT_MS - (Date.now() - screenshotStarted)),
         });

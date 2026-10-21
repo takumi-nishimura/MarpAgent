@@ -27,8 +27,31 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox
 
+      - name: Setup pinned uv for test font preparation
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.13.1"
+
+      - name: Install pinned D2 acceptance tools explicitly
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 https://github.com/terrastruct/d2/releases/download/v0.9.0/d2-v0.9.0-linux-amd64.tar.gz -o "$RUNNER_TEMP/d2.tar.gz"
+          printf '%s  %s\n' 5669ddc46b99e942cc96078f4a4e36d5e62103348f4c05179ede27802fdd87a9 "$RUNNER_TEMP/d2.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/d2.tar.gz" -C "$RUNNER_TEMP"
+          curl --fail --location --retry 3 'https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf' -o "$RUNNER_TEMP/NotoSansJP-variable.ttf"
+          printf '%s  %s\n' c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f "$RUNNER_TEMP/NotoSansJP-variable.ttf" | sha256sum --check
+          uv run --no-project --with fonttools==4.60.1 python -m fontTools.varLib.instancer "$RUNNER_TEMP/NotoSansJP-variable.ttf" wght=400 --output "$RUNNER_TEMP/NotoSansJP-Regular.ttf"
+
+      - name: Run fixed-version D2 acceptance
+        env:
+          MARP_AGENT_D2_PATH: ${{ runner.temp }}/d2-v0.9.0/bin/d2
+          MARP_AGENT_D2_FONT_PATH: ${{ runner.temp }}/NotoSansJP-Regular.ttf
+        run: npm run test:d2
+
       - name: Run strict quality gate
         env:
+          MARP_AGENT_D2_PATH: ${{ runner.temp }}/d2-v0.9.0/bin/d2
+          MARP_AGENT_D2_FONT_PATH: ${{ runner.temp }}/NotoSansJP-Regular.ttf
           # GitHub's Ubuntu runners cannot start Chromium's sandbox for the
           # browser that Marp CLI launches for PDF/PPTX/image export, so the
           # browser exits with "Target closed". Playwright's own browsers are

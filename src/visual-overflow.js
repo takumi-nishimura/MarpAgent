@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const { collectD2RenderDiagnostics } = require("./d2-diagnostics");
 const {
   conversionTimeout,
   runConversionSync,
@@ -99,6 +100,10 @@ function renderToHtml(deckPath, options = {}) {
       ],
       {
         cwd: copiedDeckDir,
+        env: {
+          ...process.env,
+          MARP_AGENT_D2_CWD: process.env.MARP_AGENT_D2_CWD || path.dirname(path.resolve(deckPath)),
+        },
         encoding: "utf8",
         stdio: "pipe",
         ...options,
@@ -667,6 +672,11 @@ function auditRenderErrorsInPage({ includeOccurrences = false } = {}) {
       engine: "mermaid",
       selector: "[data-marpagent-render-error='mermaid']",
     },
+    {
+      kind: "diagram",
+      engine: "d2",
+      selector: "[data-marpagent-render-error='d2']",
+    },
   ];
   // SVG containers whose content is referenced, not painted in place, and
   // the hidden copies math renderers keep for assistive technology.
@@ -1127,6 +1137,7 @@ async function measureRenderedSlides(deckPath, options = {}) {
   const timeoutMs = options.timeoutMs ?? conversionTimeout();
   const started = Date.now();
   let tempRoot;
+  let d2Diagnostics = [];
   try {
     if (process.env.MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE === "1") {
       throw new Error("Forced visual check failure via MARP_AGENT_FORCE_VISUAL_CHECK_FAILURE.");
@@ -1135,6 +1146,7 @@ async function measureRenderedSlides(deckPath, options = {}) {
     const markdown = fs.readFileSync(deckPath, "utf8");
     const rendered = renderToHtml(deckPath, { timeoutMs });
     tempRoot = rendered.tempRoot;
+    d2Diagnostics = collectD2RenderDiagnostics(fs.readFileSync(rendered.htmlPath, "utf8"));
 
     const audits = await measureSlidesInBrowser(rendered.htmlPath, {
       timeoutMs: Math.max(1, timeoutMs - (Date.now() - started)),
@@ -1147,6 +1159,7 @@ async function measureRenderedSlides(deckPath, options = {}) {
 
     return {
       status: "measured",
+      d2Diagnostics,
       slides: audits.map((audit) => ({
         slideNumber: renderedToMarkdown[audit.slideIndex] ?? audit.slideIndex + 1,
         renderedSlide: audit.slideIndex + 1,
@@ -1198,7 +1211,7 @@ async function measureRenderedSlides(deckPath, options = {}) {
       strictError.cause = error;
       throw strictError;
     }
-    return { status: "skipped", reason: error.message, slides: [] };
+    return { status: "skipped", reason: error.message, slides: [], d2Diagnostics };
   } finally {
     if (tempRoot) {
       fs.rmSync(tempRoot, { recursive: true, force: true });
