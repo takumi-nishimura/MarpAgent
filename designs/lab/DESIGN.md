@@ -13,6 +13,8 @@ colors:
   on-surface: "#202228"
   accent-strong: "#D97706"
   emphasis: "#D1C600"
+  mark-fill: "rgba(215, 182, 0, 0.24)"
+  mark-fill-invert: "rgba(250, 220, 90, 0.2)"
   muted-invert: "#AAAAAA"
   highlight-invert: "#FDBA74"
   table-border: "#999999"
@@ -182,6 +184,7 @@ spacing:
   callout-rule-width: 3px
   table-cell-x: 10px
   table-cell-y: 6px
+  mark-inline: 0.08em
 components:
   slide-canvas:
     backgroundColor: "{colors.neutral}"
@@ -225,6 +228,12 @@ components:
     backgroundColor: "{colors.emphasis}"
     textColor: "{colors.on-surface}"
     typography: "{typography.body-sm}"
+  reference-mark:
+    backgroundColor: "{colors.mark-fill}"
+    typography: "{typography.body-md}"
+  reference-mark-invert:
+    backgroundColor: "{colors.mark-fill-invert}"
+    typography: "{typography.body-md}"
   strong-emphasis:
     textColor: "{colors.strong-ink}"
     typography: "{typography.label-md}"
@@ -576,10 +585,22 @@ can wrap differently and need a rendered check; no compatibility class is kept.
 
 Strong text uses the darker warm accent on light surfaces and the
 existing inverted highlight on plain `invert` slides. It remains colored and
-uses the already requested bold font weight. `em`, `.marker`, and `mark`
-retain their marker meaning, with cloned backgrounds at line breaks. The
-utility marker uses the emphasis marker's translucent treatment so that dark
-surface text remains visible through the colored band.
+uses the already requested bold font weight. `em` emphasizes part of a sentence
+with the existing translucent band in the lower 30% of the inline box.
+`.marker` retains that band for compatibility with existing decks.
+
+`mark` identifies a reference or attention range with a distinct, pale fill in
+the central 80% of its inline box. Its top and bottom 10% remain transparent;
+it stays inline and clones the background at line breaks. It inherits text
+color and weight and uses `spacing.mark-inline` (0.08em) on each horizontal side,
+with no vertical padding or line-height change. `colors.mark-fill` is
+rgba(215, 182, 0, 0.24) on light surfaces; `colors.mark-fill-invert` is
+rgba(250, 220, 90, 0.2) on dark surfaces. The lab mapping selects the effective
+surface using the same invert/named-scheme rules as tables, including light
+`neogaia invert` and `github-light` surfaces. Explicit deck-local background
+and text-color overrides remain valid. Paper and other themes keep their own
+existing treatment. No extra authoring class or migration warning is required.
+
 Captions and citations use the darker muted ink; named schemes keep
 their existing muted colors. Tables retain a visible cell grid and bold header,
 with explicit dark fills on dark schemes. Callouts retain their labels and icons

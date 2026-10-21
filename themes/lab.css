@@ -56,6 +56,8 @@
     --color-on-surface: #202228;
     --color-accent-strong: #d97706;
     --color-emphasis: #d1c600;
+    --color-mark-fill: #d7b6003d;
+    --color-mark-fill-invert: #fadc5a33;
     --color-muted-invert: #aaaaaa;
     --color-highlight-invert: #fdba74;
     --color-table-border: #999999;
@@ -210,6 +212,7 @@
     --spacing-callout-rule-width: 3px;
     --spacing-table-cell-x: 10px;
     --spacing-table-cell-y: 6px;
+    --spacing-mark-inline: 0.08em;
     --color-deck-white: var(--color-neutral);
     --color-deck-black: var(--color-primary);
     --color-deck-gray: var(--color-secondary);
@@ -1773,6 +1776,7 @@ section:where(:not(:has(> .paper-header))) {
   --lab-table-header: var(--color-table-header);
   --lab-table-stripe: var(--color-table-stripe);
   --lab-table-border: var(--color-table-border);
+  --lab-mark-fill: var(--color-mark-fill);
   font-size: var(--text-body-md);
   font-weight: var(--font-weight-body-md);
   line-height: var(--leading-body-md);
@@ -1785,6 +1789,7 @@ section:where(:not(:has(> .paper-header))):where( .invert, .dracula, .one-dark, 
   --lab-table-header: var(--color-table-header-invert);
   --lab-table-stripe: var(--color-table-stripe-invert);
   --lab-table-border: var(--color-table-border-invert);
+  --lab-mark-fill: var(--color-mark-fill-invert);
 }
 section:where(:not(:has(> .paper-header))) h1 {
   font-size: var(--text-headline-lg);
@@ -1823,14 +1828,16 @@ section:where(:not(:has(> .paper-header))) :is(em, .marker, mark) {
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
-section:where(:not(:has(> .paper-header))) .marker, section:where(:not(:has(> .paper-header))) mark {
+section:where(:not(:has(> .paper-header))) .marker {
   background: linear-gradient( transparent 70%, color-mix(in srgb, #d1c600 40%, transparent) 70% );
   @supports (color: color-mix(in lab, red, red)) {
     background: linear-gradient( transparent 70%, color-mix(in srgb, var(--color-deck-yellow) 40%, transparent) 70% );
   }
 }
 section:where(:not(:has(> .paper-header))) mark {
+  background: linear-gradient( transparent 10%, var(--lab-mark-fill) 10% 90%, transparent 90% );
   color: inherit;
+  padding: 0 var(--spacing-mark-inline);
 }
 section:where(:not(:has(> .paper-header))) figcaption {
   font-size: var(--text-caption);

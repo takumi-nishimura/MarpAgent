@@ -142,9 +142,10 @@ for (const theme of ["lab", "muji", "toshiba"]) {
                 };
             });
             if (theme === "lab") {
-                // Lab marks now use the same underline band as other markers.
+                // Lab marks identify a reference range with an inset fill.
                 expect(paint.band).toContain("linear-gradient");
-                expect(paint.band).toContain("70%");
+                expect(paint.band).toContain("10%");
+                expect(paint.band).toContain("90%");
             } else {
                 expect(paint.fill).not.toBe("rgba(0, 0, 0, 0)");
             }

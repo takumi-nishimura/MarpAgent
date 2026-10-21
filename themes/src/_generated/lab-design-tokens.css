@@ -10,6 +10,8 @@
   --color-on-surface: #202228;
   --color-accent-strong: #d97706;
   --color-emphasis: #d1c600;
+  --color-mark-fill: #d7b6003d;
+  --color-mark-fill-invert: #fadc5a33;
   --color-muted-invert: #aaaaaa;
   --color-highlight-invert: #fdba74;
   --color-table-border: #999999;
@@ -166,4 +168,5 @@
   --spacing-callout-rule-width: 3px;
   --spacing-table-cell-x: 10px;
   --spacing-table-cell-y: 6px;
+  --spacing-mark-inline: 0.08em;
 }

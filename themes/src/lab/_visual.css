@@ -7,6 +7,7 @@ section:where(:not(:has(> .paper-header))) {
     --lab-table-header: var(--color-table-header);
     --lab-table-stripe: var(--color-table-stripe);
     --lab-table-border: var(--color-table-border);
+    --lab-mark-fill: var(--color-mark-fill);
 
     font-size: var(--text-body-md);
     font-weight: var(--font-weight-body-md);
@@ -30,6 +31,7 @@ section:where(:not(:has(> .paper-header))):where(
     --lab-table-header: var(--color-table-header-invert);
     --lab-table-stripe: var(--color-table-stripe-invert);
     --lab-table-border: var(--color-table-border-invert);
+    --lab-mark-fill: var(--color-mark-fill-invert);
 }
 
 section:where(:not(:has(> .paper-header))) h1 {
@@ -76,8 +78,7 @@ section:where(:not(:has(> .paper-header))) :is(em, .marker, mark) {
     box-decoration-break: clone;
 }
 
-section:where(:not(:has(> .paper-header))) .marker,
-section:where(:not(:has(> .paper-header))) mark {
+section:where(:not(:has(> .paper-header))) .marker {
     background: linear-gradient(
         transparent 70%,
         color-mix(in srgb, var(--color-deck-yellow) 40%, transparent) 70%
@@ -85,7 +86,13 @@ section:where(:not(:has(> .paper-header))) mark {
 }
 
 section:where(:not(:has(> .paper-header))) mark {
+    background: linear-gradient(
+        transparent 10%,
+        var(--lab-mark-fill) 10% 90%,
+        transparent 90%
+    );
     color: inherit;
+    padding: 0 var(--spacing-mark-inline);
 }
 
 section:where(:not(:has(> .paper-header))) figcaption {

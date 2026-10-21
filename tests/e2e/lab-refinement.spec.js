@@ -109,26 +109,32 @@ test("plain lab uses readable type roles and preserves colored emphasis", async 
 test("plain lab keeps invert and named-scheme emphasis colored", async ({
     page,
 }) => {
-    for (const scheme of [
-        "invert",
-        "dracula",
-        "one-dark",
-        "nord",
-        "neogaia",
-        "neogaia invert",
-        "github-light",
+    for (const [scheme, dark] of [
+        ["", false],
+        ["invert", true],
+        ["dracula", true],
+        ["dracula invert", true],
+        ["one-dark", true],
+        ["nord", true],
+        ["neogaia", true],
+        ["neogaia invert", false],
+        ["github-light", false],
+        ["github-light invert", false],
     ]) {
         const value = await render(page, { classes: scheme });
         expect(value.strong.weight).toBe("700");
         expect(value.strong.color).not.toBe(value.body.color);
         expect(value.emphasis.background).toContain("linear-gradient");
         expect(value.mark.background).toContain("linear-gradient");
+        expect(value.mark.background).toContain(
+            dark ? "rgba(250, 220, 90, 0.2)" : "rgba(215, 182, 0, 0.24)",
+        );
         expect(value.mark.color).toBe(value.body.color);
         expect(value.table.color).toBe(value.body.color);
     }
 });
 
-test("lab markers use uniform bands with clear space above a following mark", async ({
+test("lab mark references use an inset fill across wrapped lines while em stays a band", async ({
     page,
 }) => {
     const source = fs
@@ -139,27 +145,43 @@ test("lab markers use uniform bands with clear space above a following mark", as
         .replaceAll(
             "fig.png",
             "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80'/%3E",
+        )
+        .replaceAll(
+            "<mark>要確認</mark>",
+            "<mark>同じ測定条件で比較した結果であり，参加者や装置が異なる条件への一般化は示していない</mark>",
         );
     await mount(page, source);
-    const value = await page
-        .locator("section")
-        .nth(1)
-        .evaluate((section) => {
+    const values = await page.locator("section").evaluateAll((sections) =>
+        [sections[1], sections[3]].map((section) => {
             const bands = (selector) => {
                 const element = section.querySelector(selector);
                 const style = getComputedStyle(element);
-                // Measure the painted part of each inline fragment, including a
-                // solid fill when no gradient is present.
-                const stop = style.backgroundImage.match(/\s(\d+)%/);
-                const start = stop ? Number(stop[1]) / 100 : 0;
+                // Compare painted fragments with their inline boxes, including
+                // the transparent top and bottom of a reference fill.
+                const stops = [
+                    ...style.backgroundImage.matchAll(/\s(\d+)%/g),
+                ].map((stop) => Number(stop[1]) / 100);
+                const start = stops[0] || 0;
+                const end = stops.length > 2 ? stops.at(-1) : 1;
                 return {
                     weight: style.fontWeight,
                     fill: style.backgroundColor,
                     color: style.color,
+                    display: style.display,
+                    decoration: style.boxDecorationBreak,
+                    padding: [
+                        parseFloat(style.paddingTop),
+                        parseFloat(style.paddingRight),
+                        parseFloat(style.paddingBottom),
+                        parseFloat(style.paddingLeft),
+                    ],
                     fragments: [...element.getClientRects()].map((rect) => ({
                         top: rect.top + rect.height * start,
-                        bottom: rect.bottom,
-                        height: rect.height * (1 - start),
+                        bottom: rect.top + rect.height * end,
+                        height: rect.height * (end - start),
+                        boxTop: rect.top,
+                        boxBottom: rect.bottom,
+                        boxHeight: rect.height,
                     })),
                 };
             };
@@ -171,24 +193,46 @@ test("lab markers use uniform bands with clear space above a following mark", as
                     .fontWeight,
                 color: getComputedStyle(section).color,
             };
-        });
-    expect(value.marker.fragments.length).toBeGreaterThanOrEqual(2);
-    const referenceHeight = value.em.fragments[0].height;
-    expect(value.marker.fragments[0].height).toBeCloseTo(referenceHeight, 1);
-    expect(value.mark.fragments[0].height).toBeCloseTo(referenceHeight, 1);
-    for (const marker of [value.em, value.marker, value.mark]) {
-        expect(marker.weight).toBe("400");
-        expect(marker.fill).toBe("rgba(0, 0, 0, 0)");
-        expect(marker.color).toBe(value.color);
+        }),
+    );
+    for (const value of values) {
+        const reference = value.em.fragments[0];
+        expect(reference.height).toBeCloseTo(reference.boxHeight * 0.3, 1);
+        expect(value.marker.fragments[0].height).toBeCloseTo(
+            reference.height,
+            1,
+        );
+        expect(value.mark.fragments.length).toBeGreaterThanOrEqual(2);
+        for (const fragment of value.mark.fragments) {
+            expect(fragment.height).toBeCloseTo(fragment.boxHeight * 0.8, 1);
+            expect(fragment.top - fragment.boxTop).toBeCloseTo(
+                fragment.boxHeight * 0.1,
+                1,
+            );
+            expect(fragment.boxBottom - fragment.bottom).toBeCloseTo(
+                fragment.boxHeight * 0.1,
+                1,
+            );
+        }
+        for (let index = 1; index < value.mark.fragments.length; index++) {
+            expect(
+                value.mark.fragments[index].top -
+                    value.mark.fragments[index - 1].bottom,
+            ).toBeGreaterThan(0);
+        }
+        for (const marker of [value.em, value.marker, value.mark]) {
+            expect(marker.weight).toBe("400");
+            expect(marker.fill).toBe("rgba(0, 0, 0, 0)");
+            expect(marker.color).toBe(value.color);
+            expect(marker.decoration).toBe("clone");
+        }
+        expect(value.mark.display).toBe("inline");
+        expect(value.mark.padding[0]).toBe(0);
+        expect(value.mark.padding[2]).toBe(0);
+        expect(value.mark.padding[1]).toBeCloseTo(2.08, 2);
+        expect(value.mark.padding[3]).toBeCloseTo(2.08, 2);
+        expect(value.strong).toBe("700");
     }
-    expect(value.strong).toBe("700");
-    const preceding = value.marker.fragments
-        .filter((band) => band.bottom <= value.mark.fragments[0].top)
-        .at(-1);
-    expect(preceding).toBeDefined();
-    expect(
-        value.mark.fragments[0].top - preceding.bottom,
-    ).toBeGreaterThanOrEqual(referenceHeight);
 });
 
 test("lab marker changes preserve authored paint and the other surfaces", async ({
@@ -205,6 +249,10 @@ test("lab marker changes preserve authored paint and the other surfaces", async 
         expect(value.mark.background).toBe("none");
         expect(value.mark.fill).not.toBe("rgba(0, 0, 0, 0)");
     }
+    const inherited = await render(page, {
+        style: "section p { color: rgb(35, 70, 100); }",
+    });
+    expect(inherited.mark.color).toBe("rgb(35, 70, 100)");
     const overridden = await render(page, {
         style: "em { background: rgb(20, 60, 90); } section .marker { background: rgb(20, 60, 90); } mark { background: rgb(20, 60, 90); color: rgb(255, 255, 255); }",
     });
