@@ -286,6 +286,16 @@ extracted directory as a static HTTP root; with Python 3 installed, run
 `python3 -m http.server 8000 --bind 127.0.0.1` from that directory and open
 `http://127.0.0.1:8000/index.html`.
 
+D2 ZIP acceptance is available separately as `npm run test:zip:d2` with
+`MARP_AGENT_D2_PATH` set to D2 0.9.0 and `MARP_AGENT_D2_FONT_PATH` set to an
+explicit Japanese TTF. The test deletes the source repository, compiler
+alias, and font input before opening the extracted ZIP through both `file:`
+and HTTP with remote networking blocked and an empty browser process PATH.
+It verifies embedded fonts, Japanese diagram labels, repeated diagram IDs,
+math, and all displayed pages. Actual D2 compile and missing-tool failures
+must preserve the existing ZIP. The recipient needs a browser to view the
+static bundle; D2 is used during export.
+
 Slide numbers come from one slide map computed with the configured Marp
 engine (`src/slide-map.js`), so hidden slides, empty slides, setext headings,
 and `headingDivider` count the way Marp renders them. Page arguments for

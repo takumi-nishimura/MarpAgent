@@ -31,11 +31,15 @@ test("dry-run compiles HTML once through the common config and writes no archive
             assert.ok(args.some((v) => v.endsWith("marp.config.js")));
             assert.ok(!args.includes("--template"));
             temporary = args[args.indexOf("-o") + 1];
-            fs.writeFileSync(temporary, "<section>visible citation</section>");
+            fs.writeFileSync(
+                temporary,
+                '<section>visible citation<div class="d2-diagram" data-marpagent-d2="true"><svg></svg></div></section>',
+            );
         },
     });
     assert.equal(conversions, 1);
     assert.deepEqual(result.errors, []);
+    assert.equal(result.manifest.renderer.d2, "0.9.0");
     assert.equal(fs.existsSync(options.outputPath), false);
     assert.equal(fs.existsSync(path.dirname(temporary)), false);
 });
@@ -91,17 +95,23 @@ test("conversion and configured-engine diagnostics preserve existing ZIP and cle
                     temporary = args[args.indexOf("-o") + 1];
                     fs.writeFileSync(
                         temporary,
-                        '<section data-marpagent-render-error="d2"></section>',
+                        '<pre data-marpagent-render-error="d2" data-marpagent-render-code="D2_COMPILE_FAILED" data-marpagent-render-message="Fixture error" data-marpagent-source-line="7" data-marpagent-source-slide="2"></pre>',
                     );
                 },
-                assertRenderSucceeded(html) {
-                    assert.match(html, /data-marpagent-render-error="d2"/);
-                    const error = new Error("D2 failed");
-                    error.code = "D2_RENDER_FAILED";
-                    throw error;
-                },
+                assertRenderSucceeded() {},
             }),
-        { code: "D2_RENDER_FAILED" },
+        {
+            code: "D2_RENDER_FAILED",
+            diagnostics: [
+                {
+                    engine: "d2",
+                    code: "D2_COMPILE_FAILED",
+                    message: "Fixture error",
+                    line: 7,
+                    slide: 2,
+                },
+            ],
+        },
     );
     assert.equal(conversions, 1);
     assert.equal(fs.existsSync(path.dirname(temporary)), false);

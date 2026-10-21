@@ -18,13 +18,24 @@ artifacts:
     - 5cd7293
     - ea34382
     - b7fa592
+    - 47d06ec
+    - 3f91136
+    - dc3f3cf
+    - 00c2e2a
+    - 49c9ce7
+    - c14fac2
+    - 34f8d9f
   manifests: []
-  results: []
+  results:
+    - /tmp/marpagent-parallel-20261021/issue59-d2-artifacts
   commands:
     - node --test --test-isolation=none --test-reporter=spec tests/unit/bundle-references.test.js tests/unit/portable-bundle.test.js tests/unit/portable-export.test.js tests/unit/portable-cli.test.js tests/unit/cli-args.test.js tests/unit/media-assets.test.js tests/unit/hide-slides.test.js tests/unit/media-reference-graph.test.js
     - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 npx playwright test tests/e2e/portable-bundle.spec.js tests/e2e/cli-smoke.spec.js --project=chromium --workers=1 --grep 'relocated bundle|Mermaid font dependencies|export smoke'
     - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 npx playwright test tests/e2e/portable-bundle.spec.js --project=chromium --workers=1
     - uv run .github/records.py validate
+    - node --test --test-isolation=none --test-reporter=spec tests/unit/bundle-references.test.js tests/unit/portable-bundle.test.js tests/unit/portable-export.test.js tests/unit/portable-cli.test.js tests/unit/cli-args.test.js tests/unit/media-assets.test.js tests/unit/hide-slides.test.js tests/unit/media-reference-graph.test.js tests/unit/d2-diagnostics.test.js tests/unit/d2-svg.test.js tests/unit/d2-render.test.js tests/unit/d2-plugin.test.js tests/unit/d2-process.test.js tests/unit/conversion-runtime.test.js
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_D2_PATH=/tmp/marpagent-d2-0.9.0/d2-v0.9.0/bin/d2 MARP_AGENT_D2_FONT_PATH=/tmp/marpagent-d2-NotoSansJP-Regular.ttf PLAYWRIGHT_BROWSERS_PATH=/tmp/marpagent-i61-browsers CHROME_NO_SANDBOX=1 MARP_AGENT_ZIP_D2_ARTIFACT_DIR=/tmp/marpagent-parallel-20261021/issue59-d2-artifacts npm run test:zip:d2
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 PLAYWRIGHT_BROWSERS_PATH=/tmp/marpagent-i61-browsers CHROME_NO_SANDBOX=1 npx playwright test tests/e2e/portable-bundle.spec.js tests/e2e/cli-smoke.spec.js --project=chromium --workers=1 --grep 'relocated bundle|Mermaid font dependencies|ZIP CLI|export smoke'
 ---
 
 # Export portable HTML asset bundles as ZIP
@@ -128,7 +139,7 @@ Devin fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-highを参照書換えに12分限�
 
 単体・CLI・既存media/hidden-slide回帰は61件成功した．移設して元repoを削除したChromiumのfile/HTTP・通信遮断E2Eが成功した．深いdeck，shared親symlink，別deck素材，空白・日本語名，画像，CSS→CSS→画像，SVG→画像，動画・poster・音声，非表示ページ，話者ノート除外，引用保持，数式，全表示ページの移動を確認した．追加のMermaid通信依存E2Eと，既存のPDF/PPTX/HTML/images export smokeを合わせた3件がstrict modeで成功した．Mermaidが生成するSVGにはGoogle Fonts Interへのimportがあり，strict-offlineで拒否することと，通常ZIPのmanifest/READMEで依存を列挙することを確認した．外部フォントを自動取得・除去しない．
 
-共通設定によるHTML変換は一度だけ実行し，失敗なら公開しない．#61のassertD2RenderSucceededの接続・複合受入はmainのrelayと統合確認を待つ．採用判断のADRを必要とする場合はmainが中央でIDを割り当てる．担当worktreeから新規record IDの採番，push，merge，GitHubコメント送信は行わない．
+共通設定によるHTML変換は一度だけ実行し，失敗なら公開しない．#61のassertD2RenderSucceededの接続・複合受入は以下の統合checkpointに記録した．採用判断のADRを必要とする場合はmainが中央でIDを割り当てる．担当worktreeから新規record IDの採番，push，merge，GitHubコメント送信は行わない．
 
 mainへの統合確認待ちとしてin-reviewにした．上の受入チェックボックスは，並行Issueの共通APIとD2の統合をmainが確認してから更新する．最終HTMLと書換え資源に加えREADMEのハッシュもmanifestへ記録し，自己ハッシュを持てないmanifest.jsonはmetadataFilesへ明示する．
 
@@ -136,4 +147,16 @@ mainへの統合確認待ちとしてin-reviewにした．上の受入チェッ�
 
 mainからrelayされたb7fa592限定security review（/tmp/marpagent-i53-resolver-review-b7fa592.txt）の4接続条件を，既存結果の再利用と追加回帰テストで確認した．各resolver呼出のbundle policy明示を検査し，APIがallowedとするinnocent名のsymlinkでも，実体が.envまたは.git/objects/private.pngならCSS/SVG経由で除外する．絶対pathを持つAPI結果へダミーorigin/contextを加えても，公開manifestとREADMEには含めない．検査後にrepo外symlinkへ交換した場合はreadSyncを呼ぶ前にRESOURCE_CHANGEDで拒否し，検査済みhandleを開いた後のpathname交換では元の許可済みbytesだけを同梱する．実CLIへ決定的なopen直前交換を注入したE2Eでも，外部fdのread回数0，close済み，非ゼロ終了，既存ZIP保持を確認した．private alias拒否・dry-run metadata保護E2Eも追加し，移設E2Eと合わせて4件成功した．追加後の対象unit/CLI/media/resolverはprocess isolationを使わない集計で75件成功した．これはLinux/POSIXの合成fixtureと指定した交換時点の確認であり，任意の競合・別OSまで保証するものではない．foundationの新規欠陥とは扱わず，production codeの変更は不要だった．
 
-#61の確定relay（00c2e2a → 49c9ce7 → c14fac2 → 34f8d9f，詳細は/tmp/marpagent-parallel-20261021/issue61-checkpoint.md）を確認した．mainが保持する統合範囲へ未承認のpeer commitを取り込まず，ZIP側の変換境界へMARP_AGENT_D2_CWDとMARP_AGENT_D2_STRICT=1を渡す接続を追加した．cwdは元deckのdirectoryを既定にし，明示設定を保持し，呼出元envは変更しない．HTML変換後・収集前の共通assertD2RenderSucceeded呼出と，失敗時の既存ZIP保持・cleanupは従来どおりで，再compileは行わない．この変換境界のunit testは成功したが，実subprocessへのenv転送には#61のsrc/conversion-runtime.js差分が必要で，実D2入りoffline ZIPと統合strict gateはmainでの統合確認待ちである．main paneがinteractive input待ちで通知できない場合もUIへ介入せず，共有checkpointと最終応答へ条件を残す．
+#61の確定relay後，ZIP側の変換境界へMARP_AGENT_D2_CWDとMARP_AGENT_D2_STRICT=1を渡す接続を追加した．cwdは元deckのdirectoryを既定にし，明示設定を保持し，呼出元envは変更しない．main paneがinteractive input待ちで通知できない場合もUIへ介入せず，共有checkpointと最終応答へ条件を残す．
+
+## D2 integration checkpoint
+
+mainの明示許可後，自分のWIPをdc3f3cfへ保存し，#61の00c2e2a → 49c9ce7 → c14fac2 → 34f8d9fを指定順で取り込んだ．ローカル対応はb32b987 → d8e02b3 → f7fd293 → 4fb6176である．package/package-lockの競合はZIPとD2の全依存を残して解消し，npm ci --offlineで整合を確認した．binはZIPフラグのscopeとD2のcwd/strict両契約を保持した．
+
+src/portable-export.jsは共通assertD2RenderSucceededを必須importし，単回変換後・収集前に必ず呼ぶ．追加hookで迂回できず，診断carrierのengine/code/message/line/slideを同じErrorへ保持する．D2が使われるHTMLでは共通adapterのD2_VERSIONをmanifestへ記録する．バージョンの再照会や再compileは行わない．
+
+明示的なnpm run test:zip:d2を追加した．合成source repo内にD2 aliasと明示TTFを用意し，相対font設定を元deck cwdから解決してZIPを作る．その後source repo・compiler alias・font inputを削除し，ブラウザのPATHを空directoryにして，fileとHTTPの両方を外部通信遮断で開いた．全2ページ，日本語図ラベル，繰返し図のID分離，埋込fontの読込，グループと数式を確認した．非表示ページの壊れたD2は配布に含まれない．実D2構文エラーは通常出力・dry-runとも非ゼロ終了し，D2未導入も失敗して既存ZIPを保持した．2件ともskipなしで成功した．
+
+統合後のunit/CLI/media/resolver/D2/process/runtimeは111件成功した．security4条件を含むZIP E2E 4件と，既存PDF/PPTX/HTML/images smoke 1件も成功した．最後の版記録追加後はexport/CLI/diagnostics 7件と実D2 ZIP 2件を再確認した．recordsは61件valid，変更JSのformatとdiff検査も成功した．スクリーンショットの日本語図ラベルと数式も確認した．bodyの日本語はOS fontに依存するため，合成fixtureの見出しはEnglishとし，明示fontの検証対象をD2図内に限定した．
+
+合成成果物は/tmp/marpagent-parallel-20261021/issue59-d2-artifacts/combined-d2.zipとfile/http-page-1/2.pngである．main全体の統合strict gateと最終受入は未実施であり，ISSはin-reviewを維持する．
