@@ -22,6 +22,7 @@ artifacts:
     - docs/theme-contract.md
     - /tmp/marpagent-i55-body-validation/report.json
     - /tmp/marpagent-i55-baseline119-font/comparison.json
+    - /tmp/marpagent-i55-baseline119-font/repair-comparison-with-width-utility/comparison.json
   commands:
     - node --test tests/unit/theme-css.test.js
     - npm run test:e2e -- tests/e2e/body-layout.spec.js tests/e2e/composition-utilities.spec.js --project=chromium --workers=1
@@ -74,6 +75,37 @@ Devin `fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-high` に `tests/e2e/layout-compa
 描画条件はNode 25.6.0，Marp Core 5.0.2，Playwright 1.58.2，Chromium 145.0.7632.6，1280×720，DPR 1である．Google Fontsの通信を止め，Google Fonts repositoryのNoto Sans JP可変TTF（SHA-256 `c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f`）を両条件へ同じように埋め込んだ．CDPでも見出しのcustom font使用を確認した．外部SVG画像はページのwebfontを継承しないため，初回の欠字を見た実行は図内ラベル評価に使わず保存した．再比較では同じTTFからラベル27文字のwoff2 subset（SHA-256 `86fe6d5d8ebd71a87280cebfe32b6e200a73d22c5b5a496cc26bc3fd68c72d8b`）をSVG内へ両条件同一に埋め込んだ．図内ラベルの欠字が消えた画像で上記確認を行った．
 
 入力Markdown，CSS，48枚の画像，raw auditは `/tmp/marpagent-i55-baseline119-font/`，再実行用スクリプトは `/tmp/marpagent-i55-compare.cjs` に保存した．一時パスはこのsession内の証跡であり，恒久的な比較記録を採用する場合はmainがXR等へ保存先を割り当てる．
+
+### Minimal repair comparison requested by main
+
+mainが先行3commitのintegration取込とlab縦長列のbefore／after画像確認を完了した後，個別高さ指定の差だけを限定補足した．対象は同じcommit済み基準の `columns-portrait` と，元から収まる対照 `results-footnote-wrap` の2ケースである．CSSは旧 `1711332`／新 `44a841d` に固定し，前節と同じNoto TTF・SVG内subset，1280×720，DPR 1，Chromium 145.0.7632.6を使った．今回は8:4 gridの列幅とgapも新旧で固定し，2:1 flexへの変更を比較から除いた．
+
+旧縦長列の自然寸法ではcaption下端がlab 805.55px，muji 808.17px，toshiba 817.55pxとなり，各テーマでclipping 2件が再現した．実用的な高さ修復は `<figure style="height: 520px">` の1宣言だけで成立した．520pxは，同じ48px bottom reserveを確保するための図全体の空き高さ（lab 536.25px，muji 534.06px，toshiba 524.25px）の最小値を20px単位で切り下げて一度だけ決めた値である．繰り返し探索，追加のmedia寸法，位置補正，空spacerは使っていない．captionを含む図全体の高さなので，caption高を別指定する必要もなかった．
+
+新しい比較版は既存gridを1個の `.body` で囲み，gridへ `.fill`，既存の2列へ `.box` を追加し，`items-start` を `items-stretch` に変更した．列内の内容は上端から読む構成を保つ．既存の `grid-cols-12`，`col-span-8/4`，`gap-6` は変更せず，個別高さ・幅・gapのinline指定やCSS変数は追加していない．列幅と右列開始位置は旧版との差0.1px未満であることをassertした．構造wrapperが1個増え，classも増えるため，これをソース量や総class数の削減とは扱わない．
+
+ただし，高さ修復だけを唯一の旧版の解にすると過大主張になるため，旧CSSの既存 `<figure class="w-3/4">` だけによる代替も測定した．この1 utilityでも図とcaptionは全テーマで収まり，図内ラベルは約18pxを保った．したがって，「旧版に個別高さ指定が必須で，新版で必ず1件減る」とは結論しない．高さ修復経路の比較では1→0件だが，既存width utilityを含む最少の個別高さ指定は旧・新とも0件だった．
+
+| `columns-portrait` の修復経路 | 個別高さ宣言 | その他のcase固有サイズ指定 | caption下端 lab／muji／toshiba | 図内24pxラベルの表示寸法 |
+| --- | --- | --- | --- | --- |
+| 旧構造＋図全体 `height: 520px` | 1 | 0 | 655.75／657.94／667.75px | 18.37〜18.38px |
+| 旧構造＋既存 `.w-3/4` | 0 | 幅utility 1個 | 659.25／648.17／671.25px | 18.00〜18.51px |
+| 同じgrid＋新 `.body` の高さ連鎖 | 0 | 0 | 672.00／672.00／672.00px | 18.65〜19.16px |
+
+`results-footnote-wrap` は旧構造のままで修復不要だった．旧版に高さや幅指定を加えていないので，新版との個別高さ比較は0→0件である．旧本文下端495.55／498.56／507.55px，新 `.body` 本文下端672px，脚注上端677.00／677.31／677.00pxで，全条件で脚注と分離した．新bodyは図を拡大して残余領域を使うが，この対照例だけを根拠に移行や調整削減が必要とは扱わない．
+
+2ケース×3テーマ×4条件（無修復，旧高さ修復，旧幅utility，新body）の24描画を保存した．修復／新bodyの18描画ではclipping，overlap，small-text，edge-crowdingが0件，本文・captionのfont-size，正規化した全表示テキスト，alt，bold／markerの文字と色が無修復版と一致することをassertした．メディアはcontainで縦横比を保持し，本文下端672px以内と脚注への非侵入も確認した．leadはlabの高さ修復／新body，toshibaのwidth utility，mujiの新body対照画像を確認し，図内ラベル・数値・caption・補足・脚注が読めることを確認した．
+
+結論は，この縦長列では新bodyが520pxや75%のcase固有サイズ選択を省ける一方，旧版でも既存utilityで修復できる，という範囲である．一般的な「必要な個別高さ指定数の削減」や元々収まる対照例での削減は立証していない．実装の拡張やAC最終項の自動合格扱いは行わず，この限定的な証跡をmainの受入判断へ渡す．
+
+入力Markdown，固定CSS，24枚のPNG，生の寸法とauditは `/tmp/marpagent-i55-baseline119-font/repair-comparison-with-width-utility/` に追加した．高さ修復のみの先行実行は同親ディレクトリの `repair-comparison/` に残している．実行コマンドは次のとおりで，production／test codeは変更していない．
+
+```sh
+flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marpagent-i55-repair-compare.cjs
+node --check /tmp/marpagent-i55-repair-compare.cjs
+uv run .github/records.py validate
+git diff --check
+```
 
 ### Targeted verification
 
