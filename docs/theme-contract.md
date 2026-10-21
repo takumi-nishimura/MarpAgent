@@ -192,6 +192,8 @@ Template layout labels such as `two-column` are not theme primitives. The
 | `.summary-box` | fit-to-content call-to-action or takeaway box |
 | `.box` | content-placement wrapper outside `.col` |
 | `.fill` | body-level layout fills remaining height above the footer safe area |
+| `.body` | opt-in remaining-area composition with caption-aware media sizing |
+| `.figure-natural` | keep authored media dimensions inside an opted-in `.body` |
 | `.place-*` | content placement inside `.col > div` or `.box` |
 | `.self-*` | self-placement for fit-to-content components |
 | `.col.with-summary` | column layout whose per-column `.gap-box` sits at the bottom |
@@ -203,6 +205,94 @@ Template layout labels such as `two-column` are not theme primitives. The
 
 These components should preserve the current `lab` visual style unless a
 separate visual redesign change explicitly updates it.
+
+### Remaining body area and figures
+
+Use one direct `.body` child on a regular slide to opt into remaining-area
+layout. The section reserves the actual header height, the top gap, all
+top-level headings and introductory text, and the bottom safe area. A heading
+that wraps to another line reduces the body by that line's height. This
+contract does not estimate a heading's height or change the composition at
+runtime. Title, paper, and `_scroll` slides keep their existing layout systems.
+
+```markdown
+## Result and interpretation
+
+<div class="body col visual" style="--visual-left: 2; --visual-right: 1">
+<div>
+<figure>
+<img src="assets/img/result.png" alt="Describe the result" />
+<figcaption>Source, conditions, and qualifications</figcaption>
+</figure>
+</div>
+<div class="place-middle">
+
+The figure supplies the evidence. Explain its implication here.
+
+</div>
+</div>
+```
+
+`.body` is a column flex container; `.body.col` is a row whose columns stretch
+to the available height. `.box` and `.col > div` keep the existing `.place-*`
+controls: top/middle/bottom/spread vertically and left/center/right horizontally.
+An explicit parent placement takes precedence over a `.fit` component's default
+auto margins; deliberate child `.self-*` placement still takes precedence.
+Use `.body.box` for one content area. Use a nested `.box.fill` or `.col.fill`
+when another block, such as a column heading, precedes the area that must grow.
+An anonymous nested wrapper does not establish the height needed by a figure
+or `h-full`. The height chain must run through the direct `.body`, stretching
+columns, and any nested `.fill` wrappers. Avoid `h-full` beside a heading or
+caption: it requests the parent's entire height before reserving those siblings.
+
+Within that chain, each `figure` shares available height with its sibling
+figures. Its direct `img`, `video`, or `svg` children share the height left after
+the natural caption height and gaps. Images and videos use `object-fit: contain`;
+SVG keeps its authored `viewBox` and `preserveAspectRatio`. A second caption line
+reduces the media area instead of pushing the caption below the body. Stacking
+media in one figure also reserves its final caption. Text keeps its font size
+and natural height. Oversized text/captions remain visible to rendered clipping
+and overlap diagnostics; the theme does not hide or scroll excess content.
+
+| Variable | Default | Scope |
+| :------- | :------ | :---- |
+| `--body-top-gap` | `10px` | space below a header, or above the first content without one |
+| `--body-bottom-safe` | `48px` | reserved space above the slide bottom/padding for footnotes, footer, and pagination |
+| `--body-gap` | `0.5em` | vertical gaps in the body and its column boxes |
+| `--col-gap` | `1rem` | column gaps; `.col.visual` accepts its existing `--visual-gap` override |
+| `--figure-gap` | `0.5em` | gaps between direct media and caption inside fitting figures |
+| `--visual-left`, `--visual-right` | `1.15`, `0.85` | existing first/last column width weights |
+
+Set ratios on the `.col.visual` wrapper and gaps on the smallest relevant
+wrapper. These controls are independent of `.place-*`. For more columns use
+explicit `style="flex: N"` weights on children, or the supported grid utilities
+inside a `.fill` wrapper. Do not combine competing `grid`/`flex` display utilities
+with `.col` or `.box` on the same element.
+
+When constraints compete, first establish that height chain, then choose the
+column ratio that gives the labels and caption enough width. Adjust the body
+or figure gap if needed. To allocate more height to one stacked figure, set its
+`style="flex: 2"` weight. To limit a whole media/caption group, set the figure's
+`style="flex: none; height: 280px"`; a bare media `height: 100%` would leave no
+caption allowance. Increase `--body-bottom-safe` for a taller footnote/footer.
+If the required text itself is too tall, revise or split the slide after a
+render; reducing the media cannot make that text fit.
+
+Existing `.fill`-only decks retain their header margins, bottom reserve, and
+natural figure behavior. No deck rewrite is required. Opt in one slide at a
+time by adding `.body` to its direct wrapper (for example,
+`class="box fill"` becomes `class="body box"`, or `class="col visual fill"`
+becomes `class="body col visual"`) and inspect the render. The new defaults
+change media height allocation and reserve `48px`, rather than the legacy
+`.fill` reserve of `1.25em`.
+
+For intentionally fixed media inside a new body, add `.figure-natural` to
+that figure. Its media keep their authored inline width/height and ordinary
+flow, so the author remains responsible for fitting the group. Explicit inline
+`object-fit: cover`, `object-position`, SVG viewport settings, and deliberate
+crop remain authored choices. A fitting figure still honors inline crop;
+`.figure-natural` is needed when the inline dimensions themselves must be fixed.
+These overrides do not erase source attribution or caption qualifications.
 
 ## Token Boundary
 
