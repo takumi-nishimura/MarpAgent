@@ -89,3 +89,13 @@ my-decksには，共有assets，デッキ所有ファイル，相対symlink，�
 ## 正本記録
 
 repo内ISSは未起票．実装開始時に既存記録を照合し，記録CLIで作成・validateし，本Issueへ正本をリンクする．素材台帳schema等に実質的な選択が生じた場合だけ，proposed ADRへ分離する．
+
+## Implementation checkpoint 2026-10-21
+
+#59 が検索UIに依存せず利用できる共通APIを `src/media-reference-graph.js` に先行実装した．export，データ形式，policy境界は `docs/media-reference-api.md` に記載した．原稿抽出は既存 `src/media-assets.js` を再利用し，frontmatterを含む抽出入口を追加した．CSS URL の原稿位置は元のHTML位置へ対応付ける．
+
+`collectDeckReferences` は元行・Markdown slide・描画順・表示page・hiddenを保持する．`resolveAssetReference` / `inspectAssetPath` はrepo実体の包含，親を含むsymlink，欠落・循環，絶対リンク，別ディレクトリ単位の流用を診断する．permissiveとbundleを分け，通常validatorの `findMissingAssets` は変更していない．状態はsafe / unsafe / missingと非ローカルkindで識別できる．この検査後に内容を読む処理のファイル交換対策はbundle側の責務とした．
+
+テストは一時的な一般fixtureのみを使用し，実デッキや個人素材を変更していない．`node --test tests/unit/media-reference-graph.test.js tests/unit/media-assets.test.js tests/unit/markdown-source.test.js tests/unit/slide-map.test.js` は4ファイル通過した．`opencode/glm-5.3-flash-free` に180秒上限・読み取り専用で境界テスト案を依頼し，返却案を既存規約と照合した．相対ファイル流用を拒否する案や所有元の選定など，規約に反する提案は採用していない．
+
+一覧・検索・メタデータ・preview・明示的流用・CLI・利用例は後続実装であり，本checkpointはIssue全体の完了を意味しない．bin/marpx.jsはmainの調整対象としてこの段階では変更していない．API採用判断のADRが必要であれば，並行ID採番を避けてmainで作成する．

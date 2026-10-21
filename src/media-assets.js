@@ -20,7 +20,9 @@ const URL_SCHEME_RE = /^[a-z][a-z0-9+.-]+:/i;
 function collectCssUrls(css, offset, references) {
   for (const match of css.matchAll(CSS_URL_RE)) {
     const reference = match[1] ?? match[2] ?? match[3];
-    references.push({ reference, index: offset + match.index });
+    const index =
+      typeof offset === "function" ? offset(match.index) : offset + match.index;
+    if (index !== null) references.push({ reference, index });
   }
 }
 
@@ -45,14 +47,21 @@ function extractMediaReferences(raw) {
       if (text.startsWith("<!--")) {
         const body = text.slice(4, -3);
         if (CSS_DIRECTIVE_RE.test(body))
-          collectCssUrls(body, index, references);
+          collectCssUrls(
+            body,
+            (offset) => fragment.position(part.index + 4 + offset),
+            references,
+          );
         continue;
       }
       if (part[1]) {
         if (part[1].toLowerCase() === "style") {
+          const opening = text.match(
+            /^<style\b(?:[^>"']|"[^"]*"|'[^']*')*>/i,
+          )[0].length;
           collectCssUrls(
-            text.replace(/^<style\b[^>]*>|<\/style\s*>$/gi, ""),
-            index,
+            text.slice(opening).replace(/<\/style\s*>$/i, ""),
+            (offset) => fragment.position(part.index + opening + offset),
             references,
           );
         }
@@ -198,6 +207,22 @@ function extractFrontmatter(markdown) {
   return frontmatterForMarkdown(markdown)?.content || "";
 }
 
+/** Return source references with frontmatter URLs included, without rendering. */
+function extractDeckMediaReferences(markdown) {
+  const references = extractMediaReferences(markdown).map((item) => ({
+    ...item,
+    scope: "slide",
+  }));
+  const frontmatter = extractFrontmatter(markdown);
+  if (frontmatter) {
+    const opening = /^\uFEFF?-{3,}[ \t]*(?:\r\n|\r|\n)/.exec(markdown);
+    const globals = [];
+    collectCssUrls(frontmatter, opening?.[0].length || 0, globals);
+    references.push(...globals.map((item) => ({ ...item, scope: "frontmatter" })));
+  }
+  return references.sort((a, b) => a.index - b.index);
+}
+
 /**
  * Source-level media check (ISS-0024): resolve every local media reference
  * relative to the deck file and report the ones that do not exist. It needs
@@ -260,6 +285,7 @@ function findMissingAssets(
 module.exports = {
   copyDeckForRender,
   diagnoseMissingPath,
+  extractDeckMediaReferences,
   extractMediaReferences,
   findMissingAssets,
   resolveLocalReference,
