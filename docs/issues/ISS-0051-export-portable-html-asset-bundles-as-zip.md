@@ -21,7 +21,7 @@ artifacts:
   manifests: []
   results: []
   commands:
-    - node --test tests/unit/bundle-references.test.js tests/unit/portable-bundle.test.js tests/unit/portable-export.test.js tests/unit/portable-cli.test.js tests/unit/cli-args.test.js tests/unit/media-assets.test.js tests/unit/hide-slides.test.js tests/unit/media-reference-graph.test.js
+    - node --test --test-isolation=none --test-reporter=spec tests/unit/bundle-references.test.js tests/unit/portable-bundle.test.js tests/unit/portable-export.test.js tests/unit/portable-cli.test.js tests/unit/cli-args.test.js tests/unit/media-assets.test.js tests/unit/hide-slides.test.js tests/unit/media-reference-graph.test.js
     - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 npx playwright test tests/e2e/portable-bundle.spec.js tests/e2e/cli-smoke.spec.js --project=chromium --workers=1 --grep 'relocated bundle|Mermaid font dependencies|export smoke'
     - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 npx playwright test tests/e2e/portable-bundle.spec.js --project=chromium --workers=1
     - uv run .github/records.py validate
@@ -133,3 +133,5 @@ Devin fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-highを参照書換えに12分限�
 mainへの統合確認待ちとしてin-reviewにした．上の受入チェックボックスは，並行Issueの共通APIとD2の統合をmainが確認してから更新する．最終HTMLと書換え資源に加えREADMEのハッシュもmanifestへ記録し，自己ハッシュを持てないmanifest.jsonはmetadataFilesへ明示する．
 
 2026-10-21，mainが指定した#58の確定commit b7fa592を，既存2commitを保持して70c2158としてcherry-pickした．docs/media-reference-api.mdの契約を確認し，resolveAssetReferenceをbundle policyで使用し，包含判定も共通isPathInsideへ統一した．CSS/SVGのURL基準は資源自身，inspectAssetPathの規約判定は元の消費deckを基準に分け，正常なCSSの../imgをcross-deckと誤判定しない．絶対symlink，別deckへの直接参照，ディレクトリ単位流用を拒否する回帰テストを追加した．資源読取時のfstat・realpath照合，絶対参照/file URLの拒否，private形式の除外はbundle側で維持し，APIのpath/link/targetをmanifestへコピーしない．原稿の追加parseや再compileは行わない．接続後の単体・CLI・既存メディア・共通resolverの71件と，移設・元repo削除・file/HTTP・通信遮断のE2E 2件が成功した．
+
+mainからrelayされたb7fa592限定security review（/tmp/marpagent-i53-resolver-review-b7fa592.txt）の4接続条件を，既存結果の再利用と追加回帰テストで確認した．各resolver呼出のbundle policy明示を検査し，APIがallowedとするinnocent名のsymlinkでも，実体が.envまたは.git/objects/private.pngならCSS/SVG経由で除外する．絶対pathを持つAPI結果へダミーorigin/contextを加えても，公開manifestとREADMEには含めない．検査後にrepo外symlinkへ交換した場合はreadSyncを呼ぶ前にRESOURCE_CHANGEDで拒否し，検査済みhandleを開いた後のpathname交換では元の許可済みbytesだけを同梱する．実CLIへ決定的なopen直前交換を注入したE2Eでも，外部fdのread回数0，close済み，非ゼロ終了，既存ZIP保持を確認した．private alias拒否・dry-run metadata保護E2Eも追加し，移設E2Eと合わせて4件成功した．追加後の対象unit/CLI/media/resolverはprocess isolationを使わない集計で75件成功した．これはLinux/POSIXの合成fixtureと指定した交換時点の確認であり，任意の競合・別OSまで保証するものではない．foundationの新規欠陥とは扱わず，production codeの変更は不要だった．

@@ -414,3 +414,200 @@ test("Mermaid font dependencies are disclosed, rejected by strict offline, and b
         fs.rmSync(destination, { recursive: true, force: true });
     }
 });
+
+test("ZIP CLI excludes private symlink targets and resolver metadata while preserving existing output on rejection", async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "bundle-private-e2e-"));
+    try {
+        const deck = "decks/talk";
+        const deckPath = path.join(root, deck, "slide.md");
+        const output = path.join(root, "keep.zip");
+        const sentinels = [
+            "PRIVATE_ENV_SECRET",
+            "PRIVATE_GIT_SECRET",
+            "PRIVATE_SOURCE_CONTEXT",
+        ];
+        write(root, ".env", sentinels[0]);
+        write(root, ".git/objects/private.png", sentinels[1]);
+        write(root, `${deck}/assets/public.png`, png);
+        write(root, "decks/owner/assets/public.png", png);
+        fs.symlinkSync(
+            "../../../.env",
+            path.join(root, deck, "assets/innocent.svg"),
+        );
+        fs.symlinkSync(
+            "../../../.git/objects/private.png",
+            path.join(root, deck, "assets/innocent.png"),
+        );
+        fs.symlinkSync(
+            "../../owner/assets",
+            path.join(root, deck, "assets/whole"),
+            "dir",
+        );
+        fs.symlinkSync(
+            path.join(root, "decks/owner/assets/public.png"),
+            path.join(root, deck, "assets/absolute.png"),
+        );
+        write(
+            root,
+            `${deck}/slide.md`,
+            `---\nmarp: true\ntheme: default\n---\n# Public deck\n\n<img src="assets/public.png">\n<!-- ${sentinels[2]} <img src="assets/innocent.svg"> -->\n`,
+        );
+        const args = [
+            path.join(repoRoot, "bin/marpx.js"),
+            deckPath,
+            "--zip",
+            "--bundle-root",
+            root,
+            "--strict-offline",
+            "--output",
+            output,
+        ];
+        const first = await runProcess(process.execPath, args, {
+            cwd: repoRoot,
+        });
+        expect(first.status, first.stderr).toBe(0);
+        const archive = fs.readFileSync(output);
+        const entries = unzipSync(archive);
+        for (const data of Object.values(entries)) {
+            for (const sentinel of sentinels)
+                expect(Buffer.from(data).toString().includes(sentinel)).toBe(
+                    false,
+                );
+        }
+        for (const name of ["manifest.json", "README.txt"])
+            expect(Buffer.from(entries[name]).toString().includes(root)).toBe(
+                false,
+            );
+        fs.appendFileSync(
+            deckPath,
+            '<img src="assets/innocent.svg"><img src="assets/innocent.png"><img src="assets/whole/public.png"><img src="assets/absolute.png">\n',
+        );
+        const dry = await runProcess(
+            process.execPath,
+            [...args, "--force", "--dry-run"],
+            { cwd: repoRoot },
+        );
+        expect(dry.status, dry.stderr).toBe(1);
+        const manifest = JSON.parse(dry.stdout);
+        expect(
+            manifest.errors.filter(
+                (error) => error.code === "PRIVATE_RESOURCE",
+            ),
+        ).toHaveLength(2);
+        for (const code of ["DIRECTORY_REUSE", "ABSOLUTE_SYMLINK"])
+            expect(manifest.errors.some((error) => error.code === code)).toBe(
+                true,
+            );
+        expect(JSON.stringify(manifest).includes(root)).toBe(false);
+        for (const sentinel of sentinels)
+            expect(JSON.stringify(manifest).includes(sentinel)).toBe(false);
+        const rejected = await runProcess(
+            process.execPath,
+            [...args, "--force"],
+            { cwd: repoRoot },
+        );
+        expect(rejected.status).toBe(1);
+        expect(fs.readFileSync(output)).toEqual(archive);
+        expect(fs.readFileSync(path.join(root, ".env"), "utf8")).toBe(
+            sentinels[0],
+        );
+        expect(
+            fs.readFileSync(
+                path.join(root, ".git/objects/private.png"),
+                "utf8",
+            ),
+        ).toBe(sentinels[1]);
+    } finally {
+        fs.rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test("ZIP CLI rejects a post-inspection symlink exchange before reading outside bytes", async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "bundle-race-e2e-"));
+    const outside = fs.mkdtempSync(
+        path.join(os.tmpdir(), "bundle-race-secret-"),
+    );
+    try {
+        const target = path.join(root, "assets/public.png");
+        const secret = path.join(outside, "private.png");
+        const audit = path.join(root, "audit.json");
+        const preload = path.join(root, "exchange.cjs");
+        write(root, "assets/public.png", png);
+        write(outside, "private.png", "PRIVATE_RACE_CONTENT");
+        const deckPath = path.join(root, "slide.md");
+        write(
+            root,
+            "slide.md",
+            '---\nmarp: true\ntheme: default\n---\n# Snapshot\n\n<img src="assets/public.png">\n',
+        );
+        const output = path.join(root, "keep.zip");
+        const args = [
+            path.join(repoRoot, "bin/marpx.js"),
+            deckPath,
+            "--zip",
+            "--bundle-root",
+            root,
+            "--strict-offline",
+            "--output",
+            output,
+        ];
+        const first = await runProcess(process.execPath, args, {
+            cwd: repoRoot,
+        });
+        expect(first.status, first.stderr).toBe(0);
+        const original = fs.readFileSync(output);
+        // This deterministic adversarial preload affects only the ZIP process,
+        // after resolver inspection and before the actual resource open.
+        fs.writeFileSync(
+            preload,
+            `const fs = require("node:fs");
+const target = ${JSON.stringify(target)};
+const secret = ${JSON.stringify(secret)};
+const auditPath = ${JSON.stringify(audit)};
+const open = fs.openSync, read = fs.readSync, close = fs.closeSync;
+const state = { swapped: false, reads: 0, closed: false };
+let externalFd;
+fs.openSync = function(file, ...args) {
+  if (file === target && !state.swapped) {
+    fs.unlinkSync(target);
+    fs.symlinkSync(secret, target);
+    state.swapped = true;
+    externalFd = open.call(this, file, ...args);
+    return externalFd;
+  }
+  return open.call(this, file, ...args);
+};
+fs.readSync = function(fd, ...args) {
+  if (fd === externalFd) state.reads += 1;
+  return read.call(this, fd, ...args);
+};
+fs.closeSync = function(fd) {
+  if (fd === externalFd) state.closed = true;
+  return close.call(this, fd);
+};
+process.once("exit", () => fs.writeFileSync(auditPath, JSON.stringify(state)));
+`,
+        );
+        const rejected = await runProcess(
+            process.execPath,
+            ["--require", preload, ...args, "--force"],
+            { cwd: repoRoot },
+        );
+        expect(rejected.status, rejected.stderr).toBe(1);
+        expect(rejected.stderr).toContain("RESOURCE_CHANGED");
+        expect(JSON.parse(fs.readFileSync(audit, "utf8"))).toEqual({
+            swapped: true,
+            reads: 0,
+            closed: true,
+        });
+        expect(fs.readFileSync(output)).toEqual(original);
+        expect(
+            fs
+                .readdirSync(root)
+                .some((name) => name.startsWith(".marp-bundle-")),
+        ).toBe(false);
+    } finally {
+        fs.rmSync(root, { recursive: true, force: true });
+        fs.rmSync(outside, { recursive: true, force: true });
+    }
+});

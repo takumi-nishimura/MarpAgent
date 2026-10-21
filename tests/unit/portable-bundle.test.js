@@ -5,6 +5,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { createHash } = require("node:crypto");
 const { unzipSync } = require("fflate");
+const { resolveAssetReference } = require("../../src/media-reference-graph");
 const {
     planPortableBundle,
     writePortableBundle,
@@ -160,6 +161,185 @@ test("shared bundle policy rejects absolute links, whole-directory reuse, and di
     assert.ok(!JSON.stringify(p.manifest).includes(f.root));
     assert.ok(!JSON.stringify(p.errors).includes(f.root));
     assert.ok(p.errors.every((error) => error.from && error.reference));
+});
+
+test("every resolver call explicitly uses bundle policy and internal origin/context never enters exported metadata", (t) => {
+    const f = fixture(t, {
+        "decks/deep/talk/styles/main.css":
+            '.image { background: url("../assets/public.png"); }',
+        "decks/deep/talk/assets/public.png": "public pixels",
+    });
+    const calls = [];
+    const context = "PRIVATE_RESOLVER_SOURCE_CONTEXT";
+    const p = plan(
+        f,
+        '<section><link rel="stylesheet" href="styles/main.css"></section>',
+        {
+            resolveReference(reference, options) {
+                assert.equal(options.policy, "bundle");
+                calls.push(options.deckDir);
+                return {
+                    ...resolveAssetReference(reference, options),
+                    origin: { file: f.deckPath, context },
+                };
+            },
+        },
+    );
+    assert.deepEqual(p.errors, []);
+    assert.deepEqual(calls, [
+        path.dirname(f.deckPath),
+        path.join(path.dirname(f.deckPath), "styles"),
+    ]);
+    const outputPath = path.join(f.root, "safe.zip");
+    writePortableBundle(p, { outputPath });
+    const entries = unzipSync(fs.readFileSync(outputPath));
+    for (const name of ["manifest.json", "README.txt"]) {
+        const content = Buffer.from(entries[name]).toString();
+        assert.ok(!content.includes(f.root));
+        assert.ok(!content.includes(context));
+        assert.ok(!content.includes('"origin"'));
+        assert.ok(!content.includes('"realPath"'));
+    }
+});
+
+test("private realpaths behind innocent media names are excluded through CSS and SVG references", (t) => {
+    const f = fixture(t, {
+        "decks/deep/talk/.env": "PRIVATE_ENV_CONTENT",
+        ".git/objects/private.png": "PRIVATE_GIT_CONTENT",
+        "decks/deep/talk/styles/main.css":
+            '.image { background: url("../assets/innocent.png"); }',
+        "decks/deep/talk/assets/diagram.svg":
+            '<svg xmlns="http://www.w3.org/2000/svg"><image href="innocent.svg"/></svg>',
+    });
+    const dir = path.dirname(f.deckPath);
+    fs.symlinkSync(
+        "../../../../.git/objects/private.png",
+        path.join(dir, "assets/innocent.png"),
+    );
+    fs.symlinkSync("../.env", path.join(dir, "assets/innocent.svg"));
+    for (const reference of ["assets/innocent.png", "assets/innocent.svg"]) {
+        assert.equal(
+            resolveAssetReference(reference, {
+                repoRoot: f.root,
+                deckDir: dir,
+                policy: "bundle",
+            }).allowed,
+            true,
+        );
+    }
+    const p = plan(
+        f,
+        '<section><link rel="stylesheet" href="styles/main.css"><img src="assets/diagram.svg"></section>',
+    );
+    assert.equal(
+        p.errors.filter((error) => error.code === "PRIVATE_RESOURCE").length,
+        2,
+    );
+    assert.ok(
+        p.files.every((file) => !file.data.toString().includes("PRIVATE_")),
+    );
+    assert.ok(
+        p.manifest.files.every(
+            (file) =>
+                !file.source ||
+                (!file.source.includes(".git") &&
+                    !file.source.includes(".env")),
+        ),
+    );
+    const outputPath = path.join(f.root, "keep.zip");
+    fs.writeFileSync(outputPath, "existing archive");
+    assert.throws(
+        () => writePortableBundle(p, { outputPath, force: true }),
+        /invalid/,
+    );
+    assert.equal(fs.readFileSync(outputPath, "utf8"), "existing archive");
+});
+
+test("a resource exchanged for an outside symlink after inspection is rejected before reading its bytes", (t) => {
+    const f = fixture(t, { "decks/deep/talk/public.png": "public bytes" });
+    const outside = fs.mkdtempSync(
+        path.join(os.tmpdir(), "bundle-swap-outside-"),
+    );
+    t.after(() => fs.rmSync(outside, { recursive: true, force: true }));
+    const secret = path.join(outside, "private.png");
+    fs.writeFileSync(secret, "PRIVATE_OUTSIDE_SWAP");
+    const target = path.join(path.dirname(f.deckPath), "public.png");
+    const originalRead = fs.readSync;
+    let reads = 0;
+    t.mock.method(fs, "readSync", (...args) => {
+        reads += 1;
+        return originalRead(...args);
+    });
+    const p = plan(f, '<section><img src="public.png"></section>', {
+        resolveReference(reference, options) {
+            assert.equal(options.policy, "bundle");
+            const resolved = resolveAssetReference(reference, options);
+            assert.equal(resolved.allowed, true);
+            fs.unlinkSync(target);
+            fs.symlinkSync(secret, target);
+            return resolved;
+        },
+    });
+    assert.equal(reads, 0);
+    assert.ok(p.errors.some((error) => error.code === "RESOURCE_CHANGED"));
+    assert.ok(!JSON.stringify(p.manifest).includes(outside));
+    assert.ok(
+        p.files.every(
+            (file) => !file.data.toString().includes("PRIVATE_OUTSIDE_SWAP"),
+        ),
+    );
+    const outputPath = path.join(f.root, "keep.zip");
+    fs.writeFileSync(outputPath, "existing archive");
+    assert.throws(
+        () => writePortableBundle(p, { outputPath, force: true }),
+        /invalid/,
+    );
+    assert.equal(fs.readFileSync(outputPath, "utf8"), "existing archive");
+});
+
+test("an already verified read handle keeps the authorized snapshot when its pathname is exchanged", (t) => {
+    const f = fixture(t, {
+        "decks/deep/talk/public.png": "authorized snapshot",
+    });
+    const outside = fs.mkdtempSync(
+        path.join(os.tmpdir(), "bundle-handle-outside-"),
+    );
+    t.after(() => fs.rmSync(outside, { recursive: true, force: true }));
+    const secret = path.join(outside, "private.png");
+    fs.writeFileSync(secret, "PRIVATE_AFTER_OPEN");
+    const target = path.join(path.dirname(f.deckPath), "public.png");
+    const originalOpen = fs.openSync;
+    const originalRead = fs.readSync;
+    let targetFd;
+    let exchanged = false;
+    t.mock.method(fs, "openSync", (file, ...args) => {
+        const fd = originalOpen(file, ...args);
+        if (file === target) targetFd = fd;
+        return fd;
+    });
+    t.mock.method(fs, "readSync", (fd, ...args) => {
+        if (fd === targetFd && !exchanged) {
+            exchanged = true;
+            fs.unlinkSync(target);
+            fs.symlinkSync(secret, target);
+        }
+        return originalRead(fd, ...args);
+    });
+    const p = plan(f, '<section><img src="public.png"></section>');
+    assert.equal(exchanged, true);
+    assert.deepEqual(p.errors, []);
+    const image = p.files.find((file) => file.path.endsWith(".png"));
+    assert.equal(image.data.toString(), "authorized snapshot");
+    assert.throws(() => fs.fstatSync(targetFd), { code: "EBADF" });
+    const outputPath = path.join(f.root, "snapshot.zip");
+    writePortableBundle(p, { outputPath });
+    const entries = unzipSync(fs.readFileSync(outputPath));
+    assert.ok(
+        Object.values(entries).every(
+            (data) =>
+                !Buffer.from(data).toString().includes("PRIVATE_AFTER_OPEN"),
+        ),
+    );
 });
 
 test("parent symlinks retain the browser URL base and a symlinked bundle root remains portable", (t) => {
