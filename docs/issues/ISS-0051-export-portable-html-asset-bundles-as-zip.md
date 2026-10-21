@@ -16,11 +16,14 @@ supersedes: []
 artifacts:
   revisions:
     - 5cd7293
+    - ea34382
+    - b7fa592
   manifests: []
   results: []
   commands:
-    - node --test tests/unit/bundle-references.test.js tests/unit/portable-bundle.test.js tests/unit/portable-export.test.js tests/unit/portable-cli.test.js tests/unit/cli-args.test.js tests/unit/media-assets.test.js tests/unit/hide-slides.test.js
+    - node --test tests/unit/bundle-references.test.js tests/unit/portable-bundle.test.js tests/unit/portable-export.test.js tests/unit/portable-cli.test.js tests/unit/cli-args.test.js tests/unit/media-assets.test.js tests/unit/hide-slides.test.js tests/unit/media-reference-graph.test.js
     - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 npx playwright test tests/e2e/portable-bundle.spec.js tests/e2e/cli-smoke.spec.js --project=chromium --workers=1 --grep 'relocated bundle|Mermaid font dependencies|export smoke'
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 npx playwright test tests/e2e/portable-bundle.spec.js --project=chromium --workers=1
     - uv run .github/records.py validate
 ---
 
@@ -125,6 +128,8 @@ Devin fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-highを参照書換えに12分限�
 
 単体・CLI・既存media/hidden-slide回帰は61件成功した．移設して元repoを削除したChromiumのfile/HTTP・通信遮断E2Eが成功した．深いdeck，shared親symlink，別deck素材，空白・日本語名，画像，CSS→CSS→画像，SVG→画像，動画・poster・音声，非表示ページ，話者ノート除外，引用保持，数式，全表示ページの移動を確認した．追加のMermaid通信依存E2Eと，既存のPDF/PPTX/HTML/images export smokeを合わせた3件がstrict modeで成功した．Mermaidが生成するSVGにはGoogle Fonts Interへのimportがあり，strict-offlineで拒否することと，通常ZIPのmanifest/READMEで依存を列挙することを確認した．外部フォントを自動取得・除去しない．
 
-共通設定によるHTML変換は一度だけ実行し，失敗なら公開しない．#58のcommit済み解決APIと，#61のassertD2RenderSucceededの接続・複合受入はmainのrelayと統合確認を待つ．採用判断のADRを必要とする場合はmainが中央でIDを割り当てる．担当worktreeから新規record IDの採番，push，merge，GitHubコメント送信は行わない．
+共通設定によるHTML変換は一度だけ実行し，失敗なら公開しない．#61のassertD2RenderSucceededの接続・複合受入はmainのrelayと統合確認を待つ．採用判断のADRを必要とする場合はmainが中央でIDを割り当てる．担当worktreeから新規record IDの採番，push，merge，GitHubコメント送信は行わない．
 
 mainへの統合確認待ちとしてin-reviewにした．上の受入チェックボックスは，並行Issueの共通APIとD2の統合をmainが確認してから更新する．最終HTMLと書換え資源に加えREADMEのハッシュもmanifestへ記録し，自己ハッシュを持てないmanifest.jsonはmetadataFilesへ明示する．
+
+2026-10-21，mainが指定した#58の確定commit b7fa592を，既存2commitを保持して70c2158としてcherry-pickした．docs/media-reference-api.mdの契約を確認し，resolveAssetReferenceをbundle policyで使用し，包含判定も共通isPathInsideへ統一した．CSS/SVGのURL基準は資源自身，inspectAssetPathの規約判定は元の消費deckを基準に分け，正常なCSSの../imgをcross-deckと誤判定しない．絶対symlink，別deckへの直接参照，ディレクトリ単位流用を拒否する回帰テストを追加した．資源読取時のfstat・realpath照合，絶対参照/file URLの拒否，private形式の除外はbundle側で維持し，APIのpath/link/targetをmanifestへコピーしない．原稿の追加parseや再compileは行わない．接続後の単体・CLI・既存メディア・共通resolverの71件と，移設・元repo削除・file/HTTP・通信遮断のE2E 2件が成功した．

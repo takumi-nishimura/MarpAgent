@@ -4,6 +4,11 @@ const { createHash } = require("node:crypto");
 const { parseDocument } = require("htmlparser2");
 const { zipSync } = require("fflate");
 const { rewriteReferences } = require("./bundle-references");
+const {
+    resolveAssetReference,
+    inspectAssetPath,
+    isPathInside: inside,
+} = require("./media-reference-graph");
 
 const DEFAULT_MAX_FILES = 10000;
 const DEFAULT_MAX_BYTES = 256 * 1024 * 1024;
@@ -14,14 +19,16 @@ const EXTENSIONS = new Set(
 );
 const sha256 = (data) => createHash("sha256").update(data).digest("hex");
 const posix = (value) => value.split(path.sep).join("/");
-const inside = (root, file) => {
-    const relative = path.relative(root, file);
-    return (
-        relative === "" ||
-        (!relative.startsWith(`..${path.sep}`) &&
-            relative !== ".." &&
-            !path.isAbsolute(relative))
-    );
+const RESOLUTION_ERRORS = {
+    missing: "MISSING_RESOURCE",
+    "broken-symlink": "MISSING_RESOURCE",
+    "symlink-cycle": "SYMLINK_CYCLE",
+    unreadable: "UNREADABLE_RESOURCE",
+    "outside-repo": "OUTSIDE_ROOT",
+    "absolute-symlink": "ABSOLUTE_SYMLINK",
+    "directory-reuse": "DIRECTORY_REUSE",
+    "cross-deck-reference": "CROSS_DECK_REFERENCE",
+    "not-file": "NOT_REGULAR_FILE",
 };
 
 function isAbsoluteReference(reference) {
@@ -104,7 +111,7 @@ function planPortableBundle({
     maxFiles = DEFAULT_MAX_FILES,
     maxBytes = DEFAULT_MAX_BYTES,
     renderer = {},
-    resolveReference,
+    resolveReference = resolveAssetReference,
 } = {}) {
     if (typeof html !== "string")
         throw new TypeError("html must be a rendered HTML string");
@@ -275,27 +282,47 @@ function planPortableBundle({
                     addError("ABSOLUTE_REFERENCE", from, value);
                     return reference;
                 }
-                const local = path.resolve(path.dirname(sourcePath), decoded);
-                if (!inside(root, local)) {
+                const sourceDir = path.dirname(sourcePath);
+                if (!inside(root, path.resolve(sourceDir, decoded))) {
                     addError("OUTSIDE_ROOT", from, value);
                     return reference;
                 }
-                let real;
-                try {
-                    real = fs.realpathSync(local);
-                } catch (error) {
-                    addError(
-                        error.code === "ELOOP"
-                            ? "SYMLINK_CYCLE"
-                            : error.code === "EACCES"
-                              ? "UNREADABLE_RESOURCE"
-                              : "MISSING_RESOURCE",
-                        from,
-                        value,
-                    );
+                const resolution = resolveReference(value, {
+                    repoRoot: root,
+                    deckDir: sourceDir,
+                    policy: "bundle",
+                });
+                if (resolution.kind !== "local" || !resolution.path) {
+                    addError("UNRESOLVED_RESOURCE", from, value);
                     return reference;
                 }
-                if (!inside(root, real)) {
+                // Resolve URLs against each resource, then apply the consuming
+                // deck's policy scope so CSS ../img is not cross-deck reuse.
+                const inspected =
+                    sourceDir === path.dirname(deck)
+                        ? resolution
+                        : inspectAssetPath(resolution.path, {
+                              repoRoot: root,
+                              deckDir: path.dirname(deck),
+                              policy: "bundle",
+                          });
+                if (!inspected.allowed) {
+                    const codes = new Set(
+                        inspected.diagnostics.map(
+                            (item) =>
+                                RESOLUTION_ERRORS[item.code] ||
+                                "UNRESOLVED_RESOURCE",
+                        ),
+                    );
+                    if (codes.size === 0) codes.add("UNRESOLVED_RESOURCE");
+                    // API diagnostics contain absolute paths; only stable codes
+                    // and the original reference cross the manifest boundary.
+                    for (const code of codes) addError(code, from, value);
+                    return reference;
+                }
+                const local = inspected.path;
+                const real = inspected.realPath;
+                if (!inside(root, local) || !real || !inside(root, real)) {
                     addError("OUTSIDE_ROOT", from, value);
                     return reference;
                 }
@@ -333,17 +360,6 @@ function planPortableBundle({
                     addError("UNREADABLE_RESOURCE", from, value);
                     return reference;
                 }
-                // An injected shared resolver may add diagnostics, but cannot widen scope.
-                if (resolveReference) {
-                    const resolution = resolveReference(
-                        value,
-                        path.dirname(sourcePath),
-                    );
-                    if (resolution?.error) {
-                        addError("UNRESOLVED_RESOURCE", from, value);
-                        return reference;
-                    }
-                }
                 const kindOfResource =
                     ext === ".css" ? "css" : ext === ".svg" ? "svg" : null;
                 // Aliases of CSS/SVG may have different browser bases; retain that distinction.
@@ -378,7 +394,7 @@ function planPortableBundle({
                                 !opened.isFile() ||
                                 opened.dev !== stats.dev ||
                                 opened.ino !== stats.ino ||
-                                fs.realpathSync(local) !== real
+                                fs.realpathSync.native(local) !== real
                             ) {
                                 addError("RESOURCE_CHANGED", from, value);
                                 return reference;

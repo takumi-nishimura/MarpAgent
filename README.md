@@ -235,7 +235,14 @@ it does not execute custom scripts to discover their dependencies.
 Resources must remain within this repository after symlink resolution.
 For a deck in another repository, explicitly set `--bundle-root <repo>`.
 Absolute paths, `file:` URLs, missing files, symlink escapes, and dependency
-cycles fail collection. Only explicitly referenced repository font files
+cycles fail collection. The shared bundle resolver also rejects absolute
+symlink targets, direct cross-deck paths, and directory-level reuse. Reuse
+other decks' resources through named relative file symlinks; the standard
+deck-local `shared -> repo/assets` directory link is supported. CSS/SVG URLs
+resolve relative to the resource URL while policy checks retain the original
+consuming deck's scope. Resolver diagnostics are reduced to stable error
+codes and repository-relative origins in the distribution manifest.
+Only explicitly referenced repository font files
 are collected; publishers must have permission to redistribute those fonts.
 OS fonts are never collected. The default resource limits are 10,000 files
 and 256 MiB, configurable with `--max-bundle-files` and `--max-bundle-bytes`.

@@ -87,6 +87,14 @@ test("plans only rendered resources and rewrites CSS/SVG transitively with their
     const sharedSvg = p.manifest.files.find(
         (x) => x.source === "assets/img/same.svg",
     );
+    const sharedCss = p.manifest.files.find(
+        (x) => x.source === "assets/css/theme.css",
+    );
+    const nestedCss = p.manifest.files.find(
+        (x) => x.source === "assets/css/nested/palette.css",
+    );
+    assert.match(textOf(p, sharedCss.path), /\?theme=1#x/);
+    assert.match(textOf(p, nestedCss.path), /\?raw=1#frag/);
     assert.match(textOf(p, sharedSvg.path), /href="#local"/);
     assert.doesNotMatch(textOf(p, sharedSvg.path), /photo%20two/);
     const reused = p.manifest.files.find(
@@ -118,28 +126,71 @@ test("lists remote dependencies without fetching and rejects them in strict offl
     );
 });
 
+test("shared bundle policy rejects absolute links, whole-directory reuse, and direct cross-deck references without leaking API paths", (t) => {
+    const f = fixture(t, { "decks/owner/assets/pic.png": "owner image" });
+    const dir = path.dirname(f.deckPath);
+    fs.mkdirSync(path.join(dir, "assets"));
+    fs.symlinkSync(
+        path.join(f.root, "decks/owner/assets/pic.png"),
+        path.join(dir, "assets/absolute.png"),
+    );
+    fs.symlinkSync(
+        "../../../owner/assets",
+        path.join(dir, "assets/all"),
+        "dir",
+    );
+    fs.symlinkSync(
+        "../../../owner/assets/pic.png",
+        path.join(dir, "assets/reused.png"),
+    );
+    const p = plan(
+        f,
+        '<section><img src="assets/absolute.png"><img src="assets/all/pic.png"><img src="../../owner/assets/pic.png"><img src="assets/reused.png"></section>',
+    );
+    for (const code of [
+        "ABSOLUTE_SYMLINK",
+        "DIRECTORY_REUSE",
+        "CROSS_DECK_REFERENCE",
+    ])
+        assert.ok(
+            p.errors.some((error) => error.code === code),
+            JSON.stringify(p.errors),
+        );
+    assert.equal(p.manifest.files.filter((file) => file.source).length, 1);
+    assert.ok(!JSON.stringify(p.manifest).includes(f.root));
+    assert.ok(!JSON.stringify(p.errors).includes(f.root));
+    assert.ok(p.errors.every((error) => error.from && error.reference));
+});
+
 test("parent symlinks retain the browser URL base and a symlinked bundle root remains portable", (t) => {
     const f = fixture(t, {
-        "decks/neighbor.png": "logical URL base",
-        "decks/deep/neighbor.png": "physical target base",
+        "assets/css/theme.css":
+            '.image { background: url("../../local.png?version=1#view"); }',
+        "decks/deep/talk/local.png": "logical browser URL base",
+        "local.png": "physical filesystem base",
     });
-    fs.symlinkSync("deep/talk", path.join(f.root, "decks/alias"), "dir");
-    const p = plan(
-        { ...f, deckPath: path.join(f.root, "decks/alias/slide.md") },
-        '<section><img src="../neighbor.png"></section>',
+    fs.symlinkSync(
+        "../../../assets",
+        path.join(path.dirname(f.deckPath), "shared"),
+        "dir",
     );
+    const html =
+        '<section><link rel="stylesheet" href="shared/css/theme.css"></section>';
+    const p = plan(f, html);
     assert.deepEqual(p.errors, []);
-    assert.equal(
-        p.manifest.files.find((file) => file.source)?.source,
-        "decks/neighbor.png",
+    assert.ok(
+        p.manifest.files.some(
+            (file) => file.source === "decks/deep/talk/local.png",
+        ),
     );
+    assert.ok(!p.manifest.files.some((file) => file.source === "local.png"));
     const rootAlias = f.root + "-alias";
     fs.symlinkSync(f.root, rootAlias, "dir");
     t.after(() => fs.unlinkSync(rootAlias));
     const viaRootAlias = planPortableBundle({
-        html: '<section><img src="../neighbor.png"></section>',
+        html,
         repoRoot: rootAlias,
-        deckPath: path.join(rootAlias, "decks/alias/slide.md"),
+        deckPath: path.join(rootAlias, "decks/deep/talk/slide.md"),
     });
     assert.deepEqual(viaRootAlias.manifest, p.manifest);
 });
