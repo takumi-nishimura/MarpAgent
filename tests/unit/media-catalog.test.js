@@ -237,3 +237,42 @@ test("visible-only output still redacts context from adjacent hidden private ref
         "",
     );
 });
+
+test("public CSS selectors do not erase searchable captions", (t) => {
+    const f = fixture(t);
+    f.write("assets/figure.svg", '<svg width="10" height="20"/>');
+    f.write(
+        "decks/demo/slide.md",
+        "---\nmarp: true\nstyle: |\n  .body { background: url(../../assets/figure.svg); }\n---\n# Public\n![Measurement caption](../../assets/figure.svg)\n",
+    );
+    const catalog = buildMediaCatalog({ repoRoot: f.repoRoot });
+    assert.equal(
+        searchMediaCatalog(catalog, "Measurement caption").assets.length,
+        1,
+    );
+});
+
+test("unsupported asset formats remain listable and kind filters distinguish them", (t) => {
+    const f = fixture(t);
+    f.write("assets/print-figure.eps", "%!PS-Adobe-3.0 EPSF-3.0");
+    f.write("assets/clip.mp4", "video fixture");
+    f.write("assets/figure.svg", '<svg width="10" height="20"/>');
+    const catalog = buildMediaCatalog({ repoRoot: f.repoRoot });
+    assert.equal(catalog.assets.length, 3);
+    assert.deepEqual(
+        searchMediaCatalog(catalog, "", { type: "video" }).assets.map(
+            (asset) => asset.path,
+        ),
+        ["assets/clip.mp4"],
+    );
+    assert.deepEqual(
+        searchMediaCatalog(catalog, "", { type: "image" }).assets.map(
+            (asset) => asset.path,
+        ),
+        ["assets/figure.svg"],
+    );
+    const eps = searchMediaCatalog(catalog, "", { type: "eps" }).assets[0];
+    assert.equal(eps.kind, "other");
+    assert.match(eps.hash, /^[a-f0-9]{64}$/);
+    assert.ok(eps.dimensions.reason);
+});

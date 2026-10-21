@@ -83,7 +83,11 @@ function createMediaVisibility(repoRoot, { includePrivate = false } = {}) {
         }
         if (eligible.length === 0) return;
         const input =
-            eligible.map((file) => path.relative(root, file)).join("\0") + "\0";
+            eligible
+                .map((file) =>
+                    path.relative(root, file).split(path.sep).join("/"),
+                )
+                .join("\0") + "\0";
         const result = spawnSync(
             "git",
             ["-C", root, "check-ignore", "--no-index", "-z", "--stdin"],
@@ -122,13 +126,7 @@ function createMediaVisibility(repoRoot, { includePrivate = false } = {}) {
             /* Inspect the original excerpt. */
         }
         const parts = text.split(/[\/\\\s"'<>()[\]{}]+/);
-        if (
-            parts.some(
-                (part) =>
-                    /^(?:[._]?private)(?:[._-]|$)/i.test(part) ||
-                    (part.startsWith(".") && ![".", ".."].includes(part)),
-            )
-        )
+        if (parts.some((part) => /^(?:[._]?private)(?:[._-]|$)/i.test(part)))
             return false;
         return !parts.some((part) => excludedNames.has(part));
     }

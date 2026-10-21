@@ -90,9 +90,9 @@ function buildMediaCatalog({
                 decks.push({ file, dir: path.dirname(file) });
             if (
                 visibility.checkoutLinks.has(file) ||
-                (mediaKind(file) !== "other" &&
-                    (!deckScan ||
-                        relativePath(root, file).split("/").includes("assets")))
+                ((!deckScan ||
+                    relativePath(root, file).split("/").includes("assets")) &&
+                    !["slide.md", "paper.md"].includes(entry.name))
             )
                 discovered.add(file);
         }
