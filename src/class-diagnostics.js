@@ -3,6 +3,7 @@ const path = require("node:path");
 const { Parser } = require("htmlparser2");
 const postcss = require("postcss");
 const selectorParser = require("postcss-selector-parser");
+const { isMap, parseDocument } = require("yaml");
 const { parseSource } = require("./markdown-source");
 const { normalizeMarkdown } = require("./markdown-input");
 const { buildSlideMap, createConfiguredMarp } = require("./slide-map");
@@ -174,6 +175,7 @@ function collectHtml(source, slideMap) {
             if (index !== null)
                 comments.push({
                     body: body.trim(),
+                    rawBody: body,
                     line: lineAt(source, index),
                 });
         },
@@ -221,20 +223,33 @@ function flattenTokens(tokens) {
     ]);
 }
 
-function directiveLine(source, key, token) {
-    if (!token?.map) return null;
-    const lines = source.split("\n");
-    const pattern = new RegExp(`^\\s*(?:${key}|"${key}"|'${key}')\\s*:`);
-    for (let index = token.map[0]; index < token.map[1]; index++) {
-        if (pattern.test(lines[index])) return index + 1;
+function directiveKeyLines(text, firstLine) {
+    const lines = new Map();
+    if (typeof text !== "string") return lines;
+    // Marp owns value interpretation, including its loose YAML mode. This
+    // second parse observes root-key ranges only, never values or aliases.
+    const document = parseDocument(text, { schema: "failsafe" });
+    if (isMap(document.contents)) {
+        for (const { key } of document.contents.items) {
+            if (typeof key?.value === "string" && key.range) {
+                lines.set(
+                    key.value,
+                    firstLine - 1 + lineAt(text, key.range[0]),
+                );
+            }
+        }
     }
-    return null;
+    return lines;
 }
 
-function collectSectionClasses(source, slideMap, tokens, html) {
+function collectSectionClasses(slideMap, tokens, html) {
     const frontmatter = tokens.find((token) => token.type === "front_matter");
-    let inheritedLine = directiveLine(source, "class", frontmatter);
-    const firstSpotLine = directiveLine(source, "_class", frontmatter);
+    const frontmatterLines = directiveKeyLines(
+        frontmatter?.meta,
+        (frontmatter?.map?.[0] ?? 0) + 2,
+    );
+    let inheritedLine = frontmatterLines.get("class");
+    const firstSpotLine = frontmatterLines.get("_class");
     const declarations = [];
     const remainingComments = [...html.comments];
     for (const token of flattenTokens(tokens)) {
@@ -250,6 +265,10 @@ function collectSectionClasses(source, slideMap, tokens, html) {
             declarations.push({
                 line,
                 parsed,
+                keyLines: directiveKeyLines(
+                    comment?.rawBody ?? token.content,
+                    line,
+                ),
                 slide: slideAt(slideMap, line)?.slide,
             });
     }
@@ -264,8 +283,9 @@ function collectSectionClasses(source, slideMap, tokens, html) {
         const spot = current
             .filter(({ parsed }) => Object.hasOwn(parsed, "_class"))
             .at(-1);
-        if (local) inheritedLine = local.line;
+        if (local) inheritedLine = local.keyLines.get("class") || local.line;
         const line =
+            spot?.keyLines.get("_class") ||
             spot?.line ||
             (entry.slide === 1 ? firstSpotLine : null) ||
             inheritedLine;
@@ -292,7 +312,7 @@ function collectSectionClasses(source, slideMap, tokens, html) {
     return {
         uses,
         hasThemeDeclaration: Boolean(
-            directiveLine(source, "theme", frontmatter) ||
+            frontmatterLines.get("theme") ||
             declarations.some(({ parsed }) => Object.hasOwn(parsed, "theme")),
         ),
     };
@@ -347,12 +367,7 @@ function findClassFindings(markdown, options = {}) {
     const slideMap = options.slideMap || buildSlideMap(source);
     const html = collectHtml(source, slideMap);
     const parsed = parseDirectives(source);
-    const section = collectSectionClasses(
-        source,
-        slideMap,
-        parsed.tokens,
-        html,
-    );
+    const section = collectSectionClasses(slideMap, parsed.tokens, html);
     const theme = collectClassDefinitions(options.themeCss ?? parsed.themeCss, {
         fontOnlyImports:
             options.themeCss === undefined ? [THEME_FONT_IMPORT] : [],

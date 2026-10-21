@@ -341,3 +341,20 @@ test("class presence selectors are not enumerable definitions", () => {
     assert.equal(findings[0].ruleId, "class-availability-unknown");
     assert.equal(findings[0].reason, "class-selector-pattern");
 });
+
+test("YAML class locations exclude block-string decoys and include flow mappings", () => {
+    for (const [source, expectedLine] of [
+        [
+            "---\nheader: |\n  class: decoy\nclass: [normal, missing]\ntheme: lab\n---\n# Example",
+            4,
+        ],
+        ["---\n{theme: lab, class: [normal, missing]}\n---\n# Example", 2],
+        ["<!--\n class: normal missing\n -->\n# Example", 2],
+    ]) {
+        const findings = findClassFindings(source);
+        assert.deepEqual(
+            findings.map(({ className, line }) => [className, line]),
+            [["missing", expectedLine]],
+        );
+    }
+});

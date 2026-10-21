@@ -48,7 +48,8 @@
     "postcss": "8.5.30",
     "postcss-selector-parser": "7.1.6",
     "shiki": "4.0.2",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "yaml": "2.9.0"
   },
   "devDependencies": {
     "@google/design.md": "^0.3.0",
