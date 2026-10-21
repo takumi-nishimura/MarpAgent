@@ -46,7 +46,15 @@ jobs:
         env:
           MARP_AGENT_D2_PATH: ${{ runner.temp }}/d2-v0.9.0/bin/d2
           MARP_AGENT_D2_FONT_PATH: ${{ runner.temp }}/NotoSansJP-Regular.ttf
+          CHROME_NO_SANDBOX: "1"
         run: npm run test:d2
+
+      - name: Verify portable D2 bundles without source or network
+        env:
+          MARP_AGENT_D2_PATH: ${{ runner.temp }}/d2-v0.9.0/bin/d2
+          MARP_AGENT_D2_FONT_PATH: ${{ runner.temp }}/NotoSansJP-Regular.ttf
+          CHROME_NO_SANDBOX: "1"
+        run: npm run test:zip:d2
 
       - name: Run strict quality gate
         env:
