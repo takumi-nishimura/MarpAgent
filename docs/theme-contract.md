@@ -153,8 +153,12 @@ run `marpx --theme`, document it here, and commit the rebuilt `themes/*.css`.
 no prose-derived utilities are present, that every design token and the full
 text scale are defined, and that every class and every `var(--...)` used in
 fixtures, example decks, templates, skills, and the README exists in every
-compiled theme. The validator does not yet warn when a deck uses a class that
-the compiled theme does not define.
+compiled theme. The validator reports undefined or statically unknown classes
+as non-blocking hints (`--hints`), including original source lines and slide/page
+identity. It inventories active compiled CSS and deck-local selectors; name
+presence does not establish computed applicability. See
+[layout adjustments and class diagnostics](layout-adjustments.md) for the
+adjustment vocabulary, override rules, diagnostic fields, and coverage limits.
 
 Before Tailwind runs, `marpx --theme <name>` regenerates
 `themes/src/_generated/<name>-design-tokens.css` from

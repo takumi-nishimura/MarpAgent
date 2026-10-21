@@ -8,13 +8,28 @@ The current implementation is `src/deck-validator.js`, with rendered measurement
 |---|---|---|
 | `error` | A visible defect measured on the rendered slide (`content-clipped`, `text-overlap`, `text-too-small`, `diagram-render-error`, `math-render-error`), or a referenced media file that is definitely missing (`missing-asset`) | 1 |
 | `warning` | A design or static-export risk measured on the render (`edge-crowding`, `scroll-export-overflow`), or a source heuristic reported because rendering was unavailable | 0 (use `--strict` to fail when rendering is unavailable) |
-| `info` (hint) | A source heuristic reported alongside a successful render; hidden unless `--hints` is passed | 0 |
+| `info` (hint) | A source heuristic reported alongside a successful render, or class-availability advice in any mode; hidden unless `--hints` is passed | 0 |
 
 The CLI exits 2 for an execution failure, including a strict run whose render failed.
 
 ## Slide identity
 
-Every finding is located through one slide map built from the configured Marp engine (`src/slide-map.js`), so hidden slides, empty slides, setext headings, and `headingDivider` count as Marp renders them. `slide` is the Markdown slide index (Marp's slide order, counting hidden and empty slides). JSON, SARIF, and `report.json` findings also carry `renderedSlide` (position among rendered slides, `null` when hidden), `sectionId`, `page` (the displayed page number, `null` when none is shown), and `line` (the slide's first source line, used as the SARIF `region.startLine`). Text output and `report.md` show `slide 11 (page 10)` when the displayed page differs and `(hidden)` for a hidden slide. Report screenshots are named `slide-NNN.png` by Markdown slide index and taken from the rendered slide.
+Every finding is located through one slide map built from the configured Marp engine (`src/slide-map.js`), so hidden slides, empty slides, setext headings, and `headingDivider` count as Marp renders them. `slide` is the Markdown slide index (Marp's slide order, counting hidden and empty slides). JSON, SARIF, and `report.json` findings also carry `renderedSlide` (position among rendered slides, `null` when hidden), `sectionId`, `page` (the displayed page number, `null` when none is shown), and `line` (the slide's first source line unless a rule supplies the exact use/declaration line, used as the SARIF `region.startLine`). Text output and `report.md` show `slide 11 (page 10)` when the displayed page differs and `(hidden)` for a hidden slide. Report screenshots are named `slide-NNN.png` by Markdown slide index and taken from the rendered slide.
+
+## Class availability advice
+
+`undefined-class` and `class-availability-unknown` have `source: classes` and
+remain `info` with or without a render, including on paper and hidden slides.
+They inspect authored classes against active compiled theme CSS and deck CSS;
+generated Marp/math/diagram classes and code examples are excluded. External or
+dynamic CSS and parse failures remain unknown, and no class is renamed or
+deleted. Findings include the original use/declaration line, `className`,
+`reason`, `unknownReasons`, and up to three `candidates`. JSON/report output
+records the source file as `deckPath`; SARIF retains these fields and uses the
+exact line in its physical location. See
+[the adjustment and diagnostic contract](../../../../docs/layout-adjustments.md)
+for supported overrides and coverage limits. Selector presence does not measure
+computed style, parent height, or layout correctness.
 
 ## Rendered findings
 
@@ -52,7 +67,7 @@ Do not alter formatting or move meaningful content into excluded blocks to silen
 
 ## Paper and fallback coverage
 
-The paper detector recognizes `a4-portrait` and `a4-landscape`. Paper decks skip the source hints; the rendered check still applies to the full page, with the text size floors scaled to the canvas as described above.
+The paper detector recognizes `a4-portrait` and `a4-landscape`. Paper decks skip slide-density hints; class advice and the rendered check still apply to the full page, with the text size floors scaled to the canvas as described above.
 
 Without a browser, validation falls back to source heuristics as warnings and prints `Visual check: skipped (<reason>)`. The `missing-asset` file check still runs and still fails the run. A paper can then show `Findings: 0` without any layout measurement. Use `--strict` before claiming validation succeeded, and report unavailable checks instead of converting fallback into a success claim.
 
