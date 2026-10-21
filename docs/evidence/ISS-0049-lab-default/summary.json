@@ -1,0 +1,734 @@
+{
+  "schemaVersion": 1,
+  "issue": "ISS-0049",
+  "capturedDate": "2026-10-21",
+  "beforeRevision": "1f303a57c1a3dc4d013db7ce4a17e4361eb676fe",
+  "implementationRevision": "9bd58e17696055c208e5d312ba1b0ff3f5ce20a1",
+  "checkout": "9bd58e17696055c208e5d312ba1b0ff3f5ce20a1",
+  "environment": {
+    "os": "Linux 5.15.167.4-microsoft-standard-WSL2 x64",
+    "node": "v25.6.0",
+    "browser": "145.0.7632.6",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "dpr": 1,
+    "fontconfigSha256": "89348d4038370edf287b3c555c4507da96fb821560c2029c273e9f777be6e28d",
+    "remoteFonts": "blocked; matching local 400/700 faces registered explicitly",
+    "versions": {
+      "@marp-team/marp-core": "5.0.2",
+      "@marp-team/marp-cli": "4.5.1",
+      "playwright": "1.58.2"
+    }
+  },
+  "fonts": [
+    {
+      "weight": 400,
+      "file": "NotoSansJP-400.ttf",
+      "sha256": "f037d714109f22d57ce75fd9a6b9d23439c903061fb11106c070b2dcc03f2021",
+      "family": "Noto Sans JP",
+      "source": "https://fonts.gstatic.com/s/notosansjp/v57/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEj75s.ttf",
+      "bundled": false
+    },
+    {
+      "weight": 700,
+      "file": "NotoSansJP-700.ttf",
+      "sha256": "59bb5d2915bba3a256950116e7a48a810bd8cde63793d5111b9e5726eec1e799",
+      "family": "Noto Sans JP",
+      "source": "https://fonts.gstatic.com/s/notosansjp/v57/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFPYk75s.ttf",
+      "bundled": false
+    }
+  ],
+  "styles": {
+    "before": {
+      "file": "styles/before.css.gz",
+      "sha256": "ad440d77ab874f8538dd449b9bed931609ac377f5a99a0b3fdbf4814f2e53f8e",
+      "bytes": 55806,
+      "archiveSha256": "8c1fb7ff1282e713997ecf7df3b0a531b129ba37c98e3ca0976eaba5ee051bfc"
+    },
+    "after": {
+      "file": "styles/after.css.gz",
+      "sha256": "7df07730347204c56a4086c2a00005d8287d30d0716c43457503fadd1fd6550e",
+      "bytes": 55485,
+      "archiveSha256": "5daa42c94f22687da755d1c344c49e6449486399fdb9cd6d59bccf1fe123fbb9"
+    }
+  },
+  "inputs": [
+    {
+      "path": "fixtures/body-layout-slide.md",
+      "sha256": "90dbb525fb4ab4d84712c61a6397dc28fdd2f12850303fe85a2a4699fe544557",
+      "pages": 4,
+      "textEqual": 4,
+      "audits": {
+        "before": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        },
+        "after": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        },
+        "formerOptIn": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        }
+      },
+      "mediaErrors": {
+        "before": 0,
+        "after": 0,
+        "formerOptIn": 0
+      },
+      "renderErrors": {
+        "before": 0,
+        "after": 0,
+        "formerOptIn": 0
+      },
+      "paginationEqual": 4
+    },
+    {
+      "path": "fixtures/lab-typography-slide.md",
+      "sha256": "335257b06119520e5b6afcb2bff5c149bdc113912b362cf522729cfa09f55be3",
+      "pages": 4,
+      "textEqual": 4,
+      "audits": {
+        "before": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        },
+        "after": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        },
+        "formerOptIn": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        }
+      },
+      "mediaErrors": {
+        "before": 0,
+        "after": 0,
+        "formerOptIn": 0
+      },
+      "renderErrors": {
+        "before": 0,
+        "after": 0,
+        "formerOptIn": 0
+      },
+      "paginationEqual": 4
+    },
+    {
+      "path": "fixtures/layout-baselines/slide.md",
+      "sha256": "623961a6398fdb21ce7c99b3f81fd1bed4c6b42b75eb1aed457215495545f01a",
+      "pages": 14,
+      "textEqual": 14,
+      "audits": {
+        "before": {
+          "clippedPages": 1,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        },
+        "after": {
+          "clippedPages": 1,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        },
+        "formerOptIn": {
+          "clippedPages": 1,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        }
+      },
+      "mediaErrors": {
+        "before": 0,
+        "after": 0,
+        "formerOptIn": 0
+      },
+      "renderErrors": {
+        "before": 0,
+        "after": 0,
+        "formerOptIn": 0
+      },
+      "paginationEqual": 14
+    },
+    {
+      "path": "decks/example/slide.md",
+      "sha256": "815b0546e2ef75a8791fcc871133354ecd7a529c4d41a496feef069bea627fda",
+      "pages": 15,
+      "textEqual": 15,
+      "audits": {
+        "before": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        },
+        "after": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        },
+        "formerOptIn": {
+          "clippedPages": 0,
+          "overlapPages": 0,
+          "smallTextPages": 0
+        }
+      },
+      "mediaErrors": {
+        "before": 0,
+        "after": 0,
+        "formerOptIn": 0
+      },
+      "renderErrors": {
+        "before": 0,
+        "after": 0,
+        "formerOptIn": 0
+      },
+      "paginationEqual": 15
+    }
+  ],
+  "measurements": {
+    "pages": 37,
+    "textEqual": 37,
+    "wraps": [
+      {
+        "input": "fixtures/body-layout-slide.md",
+        "slide": 2,
+        "tag": "FIGCAPTION",
+        "text": "The caption stays with the evidence when it wraps to a second line with further necessary qualifications",
+        "before": 1,
+        "after": 2
+      },
+      {
+        "input": "fixtures/layout-baselines/slide.md",
+        "slide": 4,
+        "tag": "FIGCAPTION",
+        "text": "同じ​入力条件で​比較した​架​空の​値．​単位は​任意単位．​この​例は​図と​説明の​配置確認用であり，​実験結果を​示すものではない．​条件Aと​条件Bには​同じ​入力を​与え，​表示された​値の​差だけを​比較する．​条件の​違いに​関する​推論や，​実際の​装置・利用者への​一般化は​行わない．",
+        "before": 2,
+        "after": 3
+      }
+    ],
+    "audits": {
+      "before": {
+        "clippedPages": 1,
+        "overlapPages": 0,
+        "smallTextPages": 0
+      },
+      "after": {
+        "clippedPages": 1,
+        "overlapPages": 0,
+        "smallTextPages": 0
+      },
+      "formerOptIn": {
+        "clippedPages": 1,
+        "overlapPages": 0,
+        "smallTextPages": 0
+      }
+    },
+    "findings": [
+      {
+        "input": "fixtures/layout-baselines/slide.md",
+        "slide": 6,
+        "audits": {
+          "before": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 86
+              },
+              {
+                "label": "<img assets/img/comparison-portrait.svg>",
+                "edge": "bottom",
+                "overflowPx": 56
+              }
+            ],
+            "maxOverflowPx": 86,
+            "overlaps": [],
+            "smallText": []
+          },
+          "after": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 83
+              },
+              {
+                "label": "<img assets/img/comparison-portrait.svg>",
+                "edge": "bottom",
+                "overflowPx": 47
+              }
+            ],
+            "maxOverflowPx": 83,
+            "overlaps": [],
+            "smallText": []
+          },
+          "formerOptIn": {
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 83
+              },
+              {
+                "label": "<img assets/img/comparison-portrait.svg>",
+                "edge": "bottom",
+                "overflowPx": 47
+              }
+            ],
+            "maxOverflowPx": 83,
+            "overlaps": [],
+            "smallText": []
+          }
+        }
+      }
+    ],
+    "paginationEqual": 37
+  },
+  "auditOptions": {
+    "tolerancePx": 2,
+    "overlapTolerancePx": 2,
+    "mediaToleranceRatio": 0.02,
+    "safeMarginPx": 20,
+    "referenceWidthPx": 1280,
+    "referenceHeightPx": 720,
+    "bodyFloorPx": 12,
+    "secondaryFloorPx": 8
+  },
+  "pairs": [
+    {
+      "id": "body-caption",
+      "input": "fixtures/body-layout-slide.md",
+      "slide": 2,
+      "before": {
+        "image": "body-caption-before.png",
+        "pngSha256": "33612e14ee12316c1126bf2cd920644a4bab020f35870eb1fa4095c105e6eee5",
+        "bytes": 50761,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "normal",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [
+          {
+            "tag": "FIGCAPTION",
+            "text": "The caption stays with the evidence when it wraps to a second line with further necessary qualifications",
+            "lines": 1,
+            "rect": {
+              "left": 40,
+              "top": 1370,
+              "width": 782.671875,
+              "height": 22
+            },
+            "style": {
+              "size": "15.6px",
+              "weight": "400",
+              "leading": "normal",
+              "color": "rgb(127, 127, 127)"
+            }
+          }
+        ],
+        "strong": [],
+        "markerTags": [],
+        "media": [
+          {
+            "tag": "IMG",
+            "source": "body-layout-media.svg",
+            "rect": {
+              "left": 40,
+              "top": 855.75,
+              "width": 782.671875,
+              "height": 501.25
+            },
+            "fit": "contain",
+            "position": "50% 50%"
+          }
+        ],
+        "groups": [
+          {
+            "tag": "DIV",
+            "classes": "body col visual",
+            "rect": {
+              "left": 40,
+              "top": 855.75,
+              "width": 1200,
+              "height": 536.25
+            }
+          },
+          {
+            "tag": "FIGURE",
+            "classes": "",
+            "rect": {
+              "left": 40,
+              "top": 855.75,
+              "width": 782.671875,
+              "height": 536.25
+            }
+          }
+        ],
+        "fontUsage": {
+          "p": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 53
+            }
+          ],
+          "figcaption": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 103
+            }
+          ]
+        },
+        "pagination": {
+          "page": "2",
+          "total": "4",
+          "content": "\"2 / 4\""
+        }
+      },
+      "after": {
+        "image": "body-caption-after.png",
+        "pngSha256": "87accd1911e8fad0e9ba716ec55535c9ba074e670c3dc4002397d4325fd2af2f",
+        "bytes": 54629,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "39px",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [
+          {
+            "tag": "FIGCAPTION",
+            "text": "The caption stays with the evidence when it wraps to a second line with further necessary qualifications",
+            "lines": 2,
+            "rect": {
+              "left": 40,
+              "top": 1341.3125,
+              "width": 782.671875,
+              "height": 50.6875
+            },
+            "style": {
+              "size": "19.5px",
+              "weight": "400",
+              "leading": "25.35px",
+              "color": "rgb(98, 104, 114)"
+            }
+          }
+        ],
+        "strong": [],
+        "markerTags": [],
+        "media": [
+          {
+            "tag": "IMG",
+            "source": "body-layout-media.svg",
+            "rect": {
+              "left": 40,
+              "top": 846.546875,
+              "width": 782.671875,
+              "height": 481.765625
+            },
+            "fit": "contain",
+            "position": "50% 50%"
+          }
+        ],
+        "groups": [
+          {
+            "tag": "DIV",
+            "classes": "body col visual",
+            "rect": {
+              "left": 40,
+              "top": 846.546875,
+              "width": 1200,
+              "height": 545.453125
+            }
+          },
+          {
+            "tag": "FIGURE",
+            "classes": "",
+            "rect": {
+              "left": 40,
+              "top": 846.546875,
+              "width": 782.671875,
+              "height": 545.453125
+            }
+          }
+        ],
+        "fontUsage": {
+          "p": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 53
+            }
+          ],
+          "figcaption": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 102
+            }
+          ]
+        },
+        "pagination": {
+          "page": "2",
+          "total": "4",
+          "content": "\"2 / 4\""
+        }
+      },
+      "formerOptInPngSha256": "87accd1911e8fad0e9ba716ec55535c9ba074e670c3dc4002397d4325fd2af2f",
+      "matchesFormerOptIn": true
+    },
+    {
+      "id": "emphasis",
+      "input": "fixtures/lab-typography-slide.md",
+      "slide": 2,
+      "before": {
+        "image": "emphasis-before.png",
+        "pngSha256": "bd50aca9a378d1a47044e0be3655d47eafb4c6f2876c21a308c52cbea82d6d55",
+        "bytes": 126958,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "normal",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [],
+        "strong": [
+          {
+            "tag": "STRONG",
+            "text": "色​付きの​太字",
+            "style": {
+              "size": "26px",
+              "weight": "500",
+              "leading": "normal",
+              "color": "rgb(217, 119, 6)"
+            },
+            "rect": {
+              "left": 202,
+              "top": 859,
+              "width": 156,
+              "height": 37
+            }
+          }
+        ],
+        "markerTags": [
+          "EM",
+          "EM",
+          "SPAN",
+          "MARK"
+        ],
+        "media": [],
+        "groups": [
+          {
+            "tag": "DIV",
+            "classes": "col",
+            "rect": {
+              "left": 40,
+              "top": 946,
+              "width": 1200,
+              "height": 137
+            }
+          }
+        ],
+        "fontUsage": {
+          "p": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 63
+            }
+          ],
+          "strong": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 8
+            }
+          ]
+        },
+        "pagination": {
+          "page": "1",
+          "total": "3",
+          "content": "\"1 / 3\""
+        }
+      },
+      "after": {
+        "image": "emphasis-after.png",
+        "pngSha256": "e330c7a5db54700da279649f25e834739b0285bae18a9fdd663a9bffe237ebda",
+        "bytes": 131134,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "39px",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [],
+        "strong": [
+          {
+            "tag": "STRONG",
+            "text": "色​付きの​太字",
+            "style": {
+              "size": "26px",
+              "weight": "700",
+              "leading": "39px",
+              "color": "rgb(180, 83, 9)"
+            },
+            "rect": {
+              "left": 202,
+              "top": 850.796875,
+              "width": 156,
+              "height": 37
+            }
+          }
+        ],
+        "markerTags": [
+          "EM",
+          "EM",
+          "SPAN",
+          "MARK"
+        ],
+        "media": [],
+        "groups": [
+          {
+            "tag": "DIV",
+            "classes": "col",
+            "rect": {
+              "left": 40,
+              "top": 940.796875,
+              "width": 1200,
+              "height": 143
+            }
+          }
+        ],
+        "fontUsage": {
+          "p": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": true,
+              "glyphCount": 8
+            },
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 55
+            }
+          ],
+          "strong": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Bold",
+              "isCustomFont": true,
+              "glyphCount": 8
+            }
+          ]
+        },
+        "pagination": {
+          "page": "1",
+          "total": "3",
+          "content": "\"1 / 3\""
+        }
+      },
+      "formerOptInPngSha256": "e330c7a5db54700da279649f25e834739b0285bae18a9fdd663a9bffe237ebda",
+      "matchesFormerOptIn": true
+    }
+  ],
+  "archive": {
+    "representativePairs": 2,
+    "fontBinaryIncluded": false,
+    "fullRunSha256": "e9a1812ed429fad1a9c905c6c6090318287feaf19ed59f3023201e09e5dcce74",
+    "harnessSha256": "6b1a7bfa1c85e4c171a924bd013bcf093a973c6329051ce231f29d596f03e1ba",
+    "initialFullRunSha256": "b0bb9f84e632d5459b1f8c5f4e0354f0e77de991ca2fabb2d41a1d83744d4dd2"
+  },
+  "checks": {
+    "tdd": {
+      "red": {
+        "tests": 1,
+        "failed": 1,
+        "expectedStrongWeight": "700",
+        "observedStrongWeight": "500"
+      },
+      "green": {
+        "sameTest": true,
+        "passed": 1
+      }
+    },
+    "unitPassed": 52,
+    "renderedUnitPassed": 22,
+    "browserPassed": 46,
+    "skipped": 0,
+    "strict": [
+      {
+        "input": "fixtures/lab-typography-slide.md",
+        "size": "16:9",
+        "status": 0,
+        "visualCheck": {
+          "status": "measured"
+        },
+        "findings": []
+      },
+      {
+        "input": "fixtures/body-layout-slide.md",
+        "size": "16:9",
+        "status": 0,
+        "visualCheck": {
+          "status": "measured"
+        },
+        "findings": []
+      },
+      {
+        "input": "fixtures/body-layout-slide.md",
+        "size": "4:3",
+        "status": 0,
+        "visualCheck": {
+          "status": "measured"
+        },
+        "findings": []
+      },
+      {
+        "input": "fixtures/core5-slide.md",
+        "size": "16:9",
+        "status": 0,
+        "visualCheck": {
+          "status": "measured"
+        },
+        "findings": []
+      }
+    ]
+  },
+  "paginationCheck": {
+    "initialOrder": [
+      "before",
+      "after",
+      "formerOptIn"
+    ],
+    "verificationOrder": [
+      "formerOptIn",
+      "after",
+      "before"
+    ],
+    "freshMarpInstancePerCondition": true,
+    "matchingPages": 37,
+    "unchangedRepresentativePngs": 4,
+    "reportedDifferenceReproduced": false,
+    "themeRule": "section::after {\n  font-size: 0.5em;\n  color: var(--fg-muted);\n  content: attr(data-marpit-pagination) \" / \" attr(data-marpit-pagination-total);\n  padding-right: 20px;\n  padding-bottom: 20px;\n}",
+    "themeRuleSha256": "99487ba00a8da373329d86395afce7e182776e13c4a8606fd50ebd76daf4ca55",
+    "reason": "The typography deck excludes its title via _paginate: skip (slide 2 is 1 / 3); body-layout numbers all four pages (slide 2 is 2 / 4)."
+  }
+}

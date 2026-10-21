@@ -347,29 +347,33 @@ escapes only when rendering is unavailable.
 
 ## Validation Contract
 
-### Optional lab visual refinement
+### Lab slide typography
 
-`lab-refined` is a lab-only slide class, used with `theme: lab`. It selects the
-typography, emphasis, caption, citation, table, and supplementary-surface mapping
-in `themes/src/lab/_refined.css`, backed by `designs/lab/DESIGN.md`. Existing lab
-decks keep their default appearance. A per-slide `_class` replaces the inherited
-class list; include `lab-refined` there when the visual choice should continue.
+`theme: lab` uses the typography, emphasis, caption, citation, table, and
+supplementary-surface mapping in `themes/src/lab/_visual.css`, backed by
+`designs/lab/DESIGN.md`. No additional class is required for normal, title, or
+invert slides. The former comparison class has no selector or compatibility
+alias; remove it from existing `class` and `_class` directives.
 
-The class preserves composition and does not define body-area or media-sizing
-mechanics. It has no effect on sections with a direct `.paper-header` or on
-muji/toshiba. Existing emphasis markup and deck-local overrides remain valid.
+This lab mapping preserves composition and does not define body-area,
+header-gap, or media-sizing mechanics. It excludes sections with a direct
+`.paper-header` and is not imported by muji/toshiba. Existing emphasis markup
+and deck-local overrides remain valid.
 Generated `--text-*`, `--leading-*`, `--font-weight-*`, and `--tracking-*` tokens
 set semantic type roles; `--lab-table-header`, `--lab-table-stripe`, and
 `--lab-table-border` select the table colors for the active lab surface.
 `--lab-callout-color` selects the rule color from its semantic label token.
-These variables are local to opted-in slides. The existing font-family overrides remain
-`--font-body` and `--font-display`.
+These variables belong to lab slides. The existing font-family overrides remain
+`--font-body` and `--font-display`; named color schemes retain their colors.
 
-Font weight, line height, and caption size can change wrapping and available
-space, even though column order, grouping, and alignment are retained. Validate
-the actual deck after opting in. See [the lab refinement comparison](lab-refinement.md)
-for token mappings, font availability, compatibility evidence, and pending
-integration checks.
+Body size stays 26px with explicit line height 1.5 (39px). Strong weight changes
+from 500 to 700, captions from 15.6px to 19.5px with line height 1.3, and
+footnotes from 10.4px to 14px with line height 1.4. Tables use 22.75px type.
+The imported font weights are 400/700; family declarations alone do not prove
+that Japanese glyphs loaded. These default changes can alter wrapping and
+available space even though column order, grouping, and alignment are retained.
+Validate existing lab decks after updating. See [the lab typography guide](lab-refinement.md)
+for token mappings, fixed-font comparisons, known boundaries, and validation.
 
 ### Rendered checks
 

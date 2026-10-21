@@ -1,22 +1,22 @@
-# Lab visual refinement — ISS-0049
+# Lab slide typography — ISS-0049
 
-`theme: lab` に `lab-refined` を明示的に加える比較用の改良版．既定 lab の置換や研究原稿の一括移行は行わない．値の正本は `designs/lab/DESIGN.md`，対応先は `themes/src/lab/_refined.css`，生成物は既存の `themes/lab.css` とする．
+`theme: lab` の既定表示に，文字階層・行間・caption・脚注・色付き強調の改善を反映する．追加 class は不要．値の正本は `designs/lab/DESIGN.md`，対応先は `themes/src/lab/_visual.css`，生成物は既存の `themes/lab.css` とする．研究原稿の内容や構図は自動で変更しない．
 
 ```yaml
 ---
 marp: true
 theme: lab
-class: normal lab-refined
+class: normal
 ---
 ```
 
-スライドの `_class` は継承する class 全体を置き換えるため，表紙などでも選択を保持する場合は `<!-- _class: title lab-refined -->` と書く．移行を戻すときは `lab-refined` だけを除く．元の `**strong**`，`*em*`，`_em_`，`.marker`，`mark` はそのまま使う．
+表紙は `<!-- _class: title -->`，暗い背景は `<!-- _class: normal invert -->` のままでよい．旧比較用の `lab-refined` がある原稿では，その語を `class` / `_class` から除く．その selector・別名・新しい opt-out は設けない．元の `**strong**`，`*em*`，`_em_`，`.marker`，`mark` はそのまま使う．
 
 ## Inventory
 
-基準 revision は `1711332`．既存 fixture と `decks/example/slide.md` の内容・列順・画像は変更しない．追加の `fixtures/lab-refined-slide.md` は日本語の強調・複数行マーカー・明暗背景を検査する汎用 smoke fixture であり，#54 の代表 fixture を置き換えない．
+既定変更の比較基準は `1f303a5` の plain lab，実装は `9bd58e1`．既存 fixture と `decks/example/slide.md` の内容・列順・画像は変更しない．active fixture は `fixtures/lab-typography-slide.md` へ改名し，通常・表紙・invert の追加 class を除いた．日本語の強調・複数行マーカー・明暗背景を検査する汎用 smoke であり，#54 の代表 fixture を置き換えない．
 
-| 対象 | 既定 lab の入口・実測 | 改良版の対応 |
+| 対象 | 変更前の入口・実測 | 新しい既定 lab の対応 |
 | :--- | :------------------- | :------------- |
 | 本文 | `_base.css` の 26px，描画時は line-height `normal` | `body-md` の 26px / 1.5 / 400 |
 | 見出し | `_base.css` の em 倍率と browser の行間 | `display` / `headline-*` の size・weight・leading・tracking |
@@ -31,13 +31,30 @@ class: normal lab-refined
 
 ## Boundary and public interface
 
-新しい選択肢は lab 専用 class `lab-refined` のみ．別テーマの複製は作らない．DESIGN.md の追加 typography / color / spacing token は既存の生成規約で公開し，既存の `--font-body` / `--font-display` と deck-local style による上書きを保つ．
+既存 lab を更新し，別テーマや恒久的な追加 class は作らない．DESIGN.md の typography / color / spacing token は既存の生成規約で公開し，既存の `--font-body` / `--font-display` と deck-local style による上書きを保つ．比較用名 `strong-refined` / `muted-refined` は同じ値の `strong-ink` / `muted-ink` に改名した．`accent-strong` は header 罫線と paper 用に保持し，広い token の置換は行わない．
 
-`--lab-table-header`，`--lab-table-stripe`，`--lab-table-border` は改良版の表の色を生成 token から選ぶ局所変数．`--lab-callout-color` は各補足のラベル色に対応する罫線色．通常の明暗表示と名前付き scheme を保持する．画像・SVG 内部や研究図の色は変更しない．
+`--lab-table-header`，`--lab-table-stripe`，`--lab-table-border` は lab の表の色を生成 token から選ぶ局所変数．`--lab-callout-color` は各補足のラベル色に対応する罫線色．通常の明暗表示と名前付き scheme を保持する．画像・SVG 内部や研究図の色は変更しない．
 
-`section > .paper-header` を持つ paper は対象外．共通 `_base.css`，`_layouts.css`，`_typography.css`，paper，scroll のソースは変更しない．#55 の `.body`，`.figure-natural`，残余領域・header gap・列幅・図の収め方を改良版で再定義しない．`--body-top-gap`，`--body-bottom-safe`，`--body-gap`，`--col-gap`，`--figure-gap` は #55 の配置契約に属する．
+`section > .paper-header` を持つ paper は対象外．共通 `_base.css`，`_layouts.css`，`_typography.css`，paper，scroll のソースは変更しない．#55 の `.body`，`.figure-natural`，残余領域・header gap・列幅・図の収め方を lab 側で再定義しない．`--body-top-gap`，`--body-bottom-safe`，`--body-gap`，`--col-gap`，`--figure-gap` は #55 の配置契約に属する．
 
-## Comparison and font environment
+既存 lab は描画が変わる．本文のサイズを保っても，`normal` だった行高の明示，太さ，caption / footnote の拡大により，折返し・本文や図の縦位置・必要高さが変わり得る．原稿の明示 crop，局所 font や caption の上書きは保持し，実際の font で更新後の収まりを確認する．文字を小さくして欠けを隠したり，留保を省略したりしない．
+
+## Default change validation
+
+plain lab の太字700を期待するテストで，旧 CSS の実測500により RED を確認した．lab 専用 mapping を既定へ移して同じテストが GREEN となった．追加の選択用 class はテストにも原稿にも不要．
+
+- テーマ再生成，`design:lint`（全 design error / warning 0），`design:tokens:check` は成功．
+- 関連 unit 52件，rendered unit 22件，関連 browser 46件が成功し，skip 0．browser は共有 lock と同じ fontconfig で直列化した．
+- browser は plain lab の文字階層，invert・名前付き scheme，deck-local の font・行高・caption・脚注上書き，paper の独立した尺度，muji/toshiba，16:9 / 4:3 の `.body`，旧配置，HTML・PNG・PDF export を確認した．muji/toshiba の compiled CSS は変更前と hash が一致する．
+- rendered unit の脚注期待値は10.4pxから14pxへ更新した．小さすぎる脚注の負例には0.4emを明示し，端寄せの検査用原稿は行高を固定した．readability floor・overlap・clipping の閾値は変更しない．
+
+[既定 lab の新しい固定 font 比較](evidence/ISS-0049-lab-default/README.md) は `1f303a5` plain lab → 新しい plain lab を比較する．過去の variable font ではなく，#54 と同じ400/700の実ファイルを使い，hash・条件・使用 font・wrap と既知の欠けを別に保存する．full gate と最終統合は main が担当する．
+
+この条件で本文37/37ページ一致，caption の wrap 差2箇所．代表2組は旧 opt-in と画素一致した．新旧とも #54 の縦長図1ページの clipping は残り，その他の clipping / overlap / small text は0．追加 strict 4条件（typography，body 16:9 / 4:3，Core 5）はすべて measured / finding 0．既定を保った過去の23/23画素一致と，今回の既定更新を取り違えない．
+
+## Historical comparison and font environment
+
+以下は既定変更前の記録であり，現在の既定の互換性を示す結果ではない．当時の class の有無による比較と数値を保持する．旧証跡は変更せず，active fixture 改名前の revision から再現する．
 
 初回比較は現行の表紙・通常本文・図と説明・比較表・長い日本語と追加 smoke fixture を，同一 Markdown から描画する．旧 CSS，改良版を選ばない新 CSS，改良版を選ぶ新 CSS の3条件を分ける．スクリーンショットだけで収まりを保証せず，本文の同一性，行数，図と列の寸法も保存する．
 
@@ -53,7 +70,7 @@ font-family の computed style だけでは読込の証明にしない．browser
 
 初回比較の原稿・CSS hash・使用 font・行数・PNG は一時 run に保存した．この初回結果と，後述する安定した配置での比較結果を同一条件として混ぜない．参照用の代表画像と実行 harness は [保存した比較証跡](evidence/ISS-0049-lab-refinement/README.md) にある．
 
-## Validation and remaining integration
+## Historical validation and integration
 
 - `npm run marpx -- --theme lab`：再生成済み．
 - `npm run design:lint`：全 design で error 0 / warning 0．
@@ -65,8 +82,8 @@ font-family の computed style だけでは読込の証明にしない．browser
 
 上記は初回 checkpoint 時点の検証記録である．その後，main の許可により #54 `119fbbb` と #55 `6560cc4`，`44a841d`，`f397ea5` を取り込み，全テーマを再生成した．#57 の token と lab 固有 mapping は保持し，shared mechanics は取り込んだ #55 のものを使用する．
 
-## Stable layout integration
+## Historical stable layout integration
 
 [安定した配置での比較記録](lab-refinement-stable-review.md) に，同じ実 font を使った23ページの具体的な wrap / 寸法差，strict の診断差と調整台帳を記録した．[代表 before / after 3組・測定 summary・harness](evidence/ISS-0049-lab-refinement/README.md) を保存した．既定表示は23/23ページで画素一致し，改良版の本文も23/23ページで一致した．長い caption の行数は #54 の図説明で2→3行，#55 の二列で1→2行となり，`.body` の4構図は caption と media を収めた．
 
-既存の #54 縦長図の境界例は新旧とも clipping が残る．元原稿へ局所調整を加えず，この点は未解消として保持する．関連 unit 45件，browser 43件は pass．#56 `2eb7616` の committed collector でも公開 class を認識したが，その branch 全体は取り込んでいない．full strict gate と最終受入は main に引き渡す．既定 lab の置換を承認済みとは扱わない．
+既存の #54 縦長図の境界例は新旧とも clipping が残った．元原稿へ局所調整を加えず，この点は未解消として保持する．当時の関連 unit 45件，browser 43件は pass．#56 `2eb7616` の committed collector でも公開 class を認識したが，その branch 全体は取り込んでいなかった．当時の比較は既定 lab の置換を承認したものではない．今回の既定更新とその確認結果は，上の Default change validation と新証跡に分ける．
