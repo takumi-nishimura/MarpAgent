@@ -2,7 +2,7 @@
 id: XR-0005
 title: "Verify lab defaults without an extra selection class"
 type: exploration
-status: running
+status: adopted
 date: "2026-10-21"
 authors: [codex-main]
 scope: [themes, tests]
@@ -13,10 +13,16 @@ evaluates: [ADR-0010]
 supersedes: []
 issues: [ISS-0049]
 artifacts:
-  revisions: ["1f303a5"]
-  manifests: []
-  results: []
-  commands: []
+  revisions: ["1f303a5", "9bd58e1", "7b33018", "4029409"]
+  manifests:
+    - docs/evidence/integration-2026-10-21/lab-default-validation.json
+  results:
+    - docs/evidence/ISS-0049-lab-default/README.md
+    - docs/evidence/ISS-0049-lab-default/summary.json
+  commands:
+    - npm run quality:gate:strict
+    - npm run test:d2
+    - npm run test:zip:d2
 ---
 
 # Verify lab defaults without an extra selection class
@@ -43,11 +49,19 @@ lab-refinedで比較した外観を通常のlabへ取り込み，追加classな�
 
 ## Observed Results
 
-実行中．完了後に担当のRED/GREEN，固定fontの代表比較，mainの統合結果を追記する．
+plain labのstrongに700を要求するbrowser回帰で，変更前の実測500によるREDを確認し，同じ回帰が実装後にGREENとなった．担当の関連unit52件・rendered unit22件・browser46件はskipなしで成功した．paperの独立した文字寸法，muji/toshiba，名前付き色scheme，原稿の明示上書き，16:9/4:3のbody構図を含む．
+
+mainの初回gateはunit504件成功後，過密fixtureのedge-crowdingが出なくなり失敗した．既定行高の変化で文字が検査帯を外れたため，検査用原稿に行高normalを明示した．本文の欠け194pxと端から17pxの文字を再計測し，既存の20px閾値と期待する診断を保持した．検出条件を緩める修正はない．
+
+4029409で全体を再実行し，unit504件，strict fixture18件，browser113件が成功した．既存Firefox native touch1件は対象外skip．固定D2 0.9.0とNoto400による実D2 7件，D2入りZIP 2件はskipなしで成功した．ログhash・環境・コマンドはlab-default-validation.jsonに保存した．
+
+同じ400/700の日本語fontで，body4ページ，typography4ページ，baseline14ページ，example15ページの計37ページを比較した．本文37/37とpaginationが一致し，captionのwrap差は2箇所だった．本文・見出し・表セルのwrap差はなく，代表2組では旧選択式の外観とも画素一致した．bodyとtypographyのclippingは0．旧baselineのbodyなし縦長図1ページは新旧ともclippingが残り，最大86px→83pxだった．新規のclipping，overlap，small text，media/render errorはなかった．mainも代表4枚を目視し，captionの収まり，色付き強調，マーカーと留保の保持を確認した．
+
+比較用画像の番号をmainが読み違えたため，描画順を逆にしてpagination属性と表示文字列を照合した．37/37ページで一致し，代表4枚のhashも初回と一致した．実装・証跡の番号不整合はなかった．
 
 ## Conclusion
 
-未判定．通常labの既定動作と互換性を確認した結果から判断する．
+採用．追加classなしで改善済みのlab外観を使え，検査した構図・色scheme・明示上書き・paper・他テーマの条件を保持した．既存labの外観が旧版と画素一致する変更ではなく，captionと脚注の拡大・文字の行高と太さの変更を伴う．未検査の原稿や任意fontでの収まりを保証せず，旧baselineの欠けも解消済みとはしない．
 
 ## Reusable Findings
 

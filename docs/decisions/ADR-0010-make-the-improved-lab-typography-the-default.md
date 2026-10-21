@@ -11,9 +11,12 @@ depends_on: []
 supersedes: [ADR-0007]
 issues: [ISS-0047, ISS-0048, ISS-0049]
 artifacts:
-  revisions: []
-  manifests: []
-  results: []
+  revisions: ["7b33018", "4029409"]
+  manifests:
+    - docs/evidence/integration-2026-10-21/lab-default-validation.json
+  results:
+    - docs/lab-refinement.md
+    - docs/evidence/ISS-0049-lab-default/README.md
   commands: []
 ---
 
@@ -47,7 +50,7 @@ paperの独自の文字寸法，muji/toshiba，共通のbody/header-gapは今回
 
 ## Validation
 
-XR-0005で，追加classなしのlabが改善済みの文字・caption寸法を使うこと，色付き強調と上書きを保つこと，paperと他テーマの互換性，代表原稿の収まりを確認する．最初に既定表示を要求するbrowser回帰を失敗させ，実装後に成功させる．既定化に伴う差分は，新旧の固定font比較とmainの統合gateで確認する．
+XR-0005で，追加classなしのlabが改善済みの文字・caption寸法を使うこと，色付き強調と上書きを保つこと，paperと他テーマの互換性，代表原稿の収まりを確認した．既定表示を要求するbrowser回帰でRED→GREENを記録し，固定fontによる37ページ比較とmainの統合gateを実施した．captionの折返し差2箇所と旧baselineに残る欠けを明記し，未検査の原稿での収まりを保証しない．
 
 ## Related Records
 

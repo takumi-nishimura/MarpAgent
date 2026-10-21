@@ -20,10 +20,16 @@ artifacts:
     - "6560cc4"
     - "44a841d"
     - "f397ea5"
-  manifests: []
+    - "9bd58e1"
+    - "7b33018"
+    - "4029409"
+  manifests:
+    - docs/evidence/integration-2026-10-21/lab-default-validation.json
   results:
     - docs/lab-refinement.md
     - docs/lab-refinement-stable-review.md
+    - docs/evidence/ISS-0049-lab-default/README.md
+    - docs/evidence/ISS-0049-lab-default/summary.json
   commands:
     - npm run marpx -- --theme lab
     - npm run design:lint
@@ -49,11 +55,11 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/57
 
 **変更前の問題**：labの見出し・本文・caption・脚注の関係を整えたい一方，色付き太字やマーカー，既存原稿の構図は保持したかった．文字サイズの変更による折返しを，配置変更と分けて評価する作業である．
 
-**現在の方針**：比較用に設けたlab-refinedを常設せず，改善済みの文字階層・行間・caption・脚注をlabの既定へ取り込む．値はDESIGN.mdから生成するtokenへ集約し，色付き強調とマーカーを保持する．#55のbody領域やheader-gapは重複して定義しない．
+**変更内容**：比較用に設けたlab-refinedを廃止し，改善済みの文字階層・行間・caption・脚注をlabの既定へ取り込んだ．本文26pxを保ち，行高39px，strong 700，caption 19.5px，脚注14pxを適用する．値はDESIGN.mdから生成するtokenへ集約し，色付き強調とマーカーを保持する．#55のbody領域やheader-gapは重複して定義しない．
 
-**使い方・確認先**：theme: labと通常のclass: normalまたはtitleで使えるようにし，追加の外観classを不要にする．[利用・移行の説明](../lab-refinement.md)を正本とする．[初期の選択式比較](../evidence/ISS-0049-lab-refinement/README.md)は当時の証跡として保持し，既定化の結果を別に保存する．
+**使い方・確認先**：theme: labと通常のclass: normalまたはtitleで使え，追加の外観classは不要．[利用・移行の説明](../lab-refinement.md)を正本とする．[既定化の比較](../evidence/ISS-0049-lab-default/README.md)を保存し，[初期の選択式比較](../evidence/ISS-0049-lab-refinement/README.md)は当時の証跡として保持する．
 
-**確認したこと**：初期の選択式比較では，同じ実フォントと23ページで未選択の表示が旧版と画素一致し，有効時も本文は23/23ページで一致した．captionの折返し差2箇所と.bodyの4構図の収まりを記録した．この結果と，追加classを除いた既定化後の検証は区別し，新しい結果を追記する．
+**確認したこと**：通常labに改善値を要求する回帰でRED→GREENを確認した．既定化後の全体検証はunit504件，strict fixture18件，browser113件が成功し，既存Firefox native touch1件だけ対象外skip．実D2 7件とD2入りZIP 2件も成功した．初期の選択式比較の23ページ画素一致は旧条件の結果であり，今回の既定化後の外観が旧版と同じという意味ではない．
 
 **残る条件・対象外**：既存lab原稿も文字幅・行間・captionなどの表示が変わるため，再描画で確認する．paperの独自寸法，muji/toshiba，共通のbody/header-gapは変更しない．.bodyなしの縦長図の欠けを文字変更だけで解消したとは扱わない．比較画像・原稿差分・互換性の説明をPRから参照可能にし，レビューはローカルで行う．
 
@@ -107,7 +113,7 @@ my-decksではこれを基礎に，本文サイズ，見出し位置，補足欄
 ## 対象外
 
 構図の自動変更，新ブランドの大量追加，無彩色強調への置換，図内容の再着色，Pele導入，研究デッキの一括移行は対象外．
-具体的な色・太さ・フォント・寸法はまだ採用済みではない．
+採用した色・太さ・フォント・寸法の正本はdesigns/lab/DESIGN.mdとし，適用範囲はdocs/theme-contract.mdへ記録する．
 
 ## 実装の入口と順序
 
@@ -119,11 +125,11 @@ my-decksではこれを基礎に，本文サイズ，見出し位置，補足欄
 - [lab.css](https://github.com/takumi-nishimura/MarpAgent/blob/74f287d9b0c7ea3d7b6145c096c2fecef6ea2e16/themes/src/lab.css)，[typography](https://github.com/takumi-nishimura/MarpAgent/blob/74f287d9b0c7ea3d7b6145c096c2fecef6ea2e16/themes/src/_shared/_typography.css)．
 - [7月13日原稿の強調](https://github.com/takumi-nishimura/my-decks/blob/c7d1b4523375c35b42d12f7b84533fd0aa407bdb/decks/2026/07-13-lab-seminar-fuzzy-dpt/slide.md)，[7月6日原稿](https://github.com/takumi-nishimura/my-decks/blob/c7d1b4523375c35b42d12f7b84533fd0aa407bdb/decks/2026/07-06-fujitsu-interview/slide.md)．
 - 本人が色付き太字・マーカーを好み，構図は各ページで調整すると述べた[追加議論](https://github.com/takumi-nishimura/MarpAgent/pull/52#issuecomment-6251211532)．
-- 本Issueは#53に基づく改善案であり，視覚改善の効果は未測定．
+- 本Issueは#53に基づく改善であり，固定fontの描画・wrap・収まりを比較した．投影距離での可読性や理解度の効果は未測定．
 
 ## 正本記録
 
-repo内ISSは未起票．現行規約と既存記録を照合し，記録CLIで作成・validateし，本Issueへ正本リンクを追記する．既定の外観変更の採用判断は必要に応じてproposed ADRへ分け，自動accepted化しない．
+本ファイルISS-0049が正本．既定化の採用判断はADR-0010，検証結果と限界はXR-0005へ分け，GitHub PR #62から参照する．後続のNotesは各checkpoint時点の履歴であり，現在の利用方法は冒頭の説明とdocs/lab-refinement.mdを参照する．
 
 ## Notes
 

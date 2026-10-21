@@ -12,7 +12,7 @@
 
 既に組合せを検証した統合ブランチを，[Draft PR #62](https://github.com/takumi-nishimura/MarpAgent/pull/62)としてmainへ提示した．PR本文から各ISSの説明・代表画像・検証結果へ辿れるようにし，担当ごとの論理commitを保持する．GitHub上でreviewerを指定したり，GitHubレビュー承認を完了条件に加えたりしない．
 
-ローカルでは各担当の差分確認，mainの共有API・競合解消差分の確認，resolverおよびD2の限定レビュー，修正の回帰試験を実施済みである．既存結果を再利用し，今回の説明追記・公開方針変更はmainが差分とリンクを確認する．未完了だった独立再レビューを完了と読み替えない．テスト対象コードはbe3fc23から変わっていないため，説明だけの追記では全体gateを再実行せず，records検証とリンク・差分検査を行う．
+ローカルでは各担当の差分確認，mainの共有API・競合解消差分の確認，resolverおよびD2の限定レビュー，修正の回帰試験を実施済みである．未完了だった独立再レビューを完了と読み替えない．labの既定化では担当とmainが差分を確認し，mainが全体strict gateと実D2・ZIPの検証を再実行する．
 
 Draftを解除・mergeする前に，#55の一般的な指定数削減を確認できなかった条件をどう扱うかを明示する．既存Draft PR #52は別の調査記録であり，同PRのXR-0003と今回のXR-0003は異なる記録に同じIDを持つため，両方を取り込む場合は採番の整合が必要になる．本PRは#52をmerge・closeしたことにはしない．
 
@@ -40,7 +40,7 @@ D2は積極採用する．[10月20日の設計検討](https://github.com/takumi-
 | #54／marp-i54-lead | 14ページ7組の標準・境界fixture，3テーマの基準描画と調整試行 | [基準記録](../fixtures/layout-baselines/baseline-2026-10-21.md)，[ISS-0046](issues/ISS-0046-establish-representative-layout-regression-baselines.md) |
 | #55／marp-i55-lead | opt-inの.body，captionを確保したmedia fitting，旧配置互換 | [公開契約](theme-contract.md)，[代表比較](evidence/ISS-0047-body-layout/README.md)，[ISS-0047](issues/ISS-0047-improve-body-figure-and-caption-layout-defaults.md) |
 | #56／marp-i56-lead | classの未定義・独自定義・不明の判定と元行／ページ付き助言 | [調整手順](layout-adjustments.md)，[比較値](evidence/ISS-0048-body-adjustments/report.json)，[ISS-0048](issues/ISS-0048-clarify-layout-overrides-and-diagnose-undefined-classes.md) |
-| #57／marp-i57-lead | lab-refinedの明示選択，tokenによる文字階層と強調 | [移行方法](lab-refinement.md)，[同一構図比較](evidence/ISS-0049-lab-refinement/README.md)，[ISS-0049](issues/ISS-0049-refine-lab-typography-and-visual-hierarchy.md) |
+| #57／marp-i57-lead | labの既定の文字階層と強調，追加classは不要 | [利用方法](lab-refinement.md)，[既定化の比較](evidence/ISS-0049-lab-default/README.md)，[ISS-0049](issues/ISS-0049-refine-lab-typography-and-visual-hierarchy.md) |
 | #58／marp-i58-lead | 共通resolver，assets list/search/doctor/reuse，相対ファイルsymlink流用 | [API](media-reference-api.md)，[操作例](media-assets.md)，[ISS-0050](issues/ISS-0050-discover-and-reuse-repository-media-assets.md) |
 | #59／marp-i59-lead | 最終HTMLの資源収集・manifest・ZIP・dry-run・strict-offline | [README](../README.md)，[ISS-0051](issues/ISS-0051-export-portable-html-asset-bundles-as-zip.md) |
 | #60／marp-i60-lead | PORT未指定時の8080〜8089探索と明示PORTの尊重 | [ISS-0052](issues/ISS-0052-select-another-preview-port-when-the-default-is-occupied.md) |
@@ -48,7 +48,7 @@ D2は積極採用する．[10月20日の設計検討](https://github.com/takumi-
 
 ## 共有境界の確定
 
-.bodyは通常スライド直下の残余領域で，内部の.fillだけをネストした残余高さへ接続する．captionは非縮小とし，mediaはcontainで収める．.figure-naturalは明示寸法を保持する選択肢．旧.fill単独，表紙，paper，scroll，明示cropを保持する．#57はbody/header-gapを再定義せず，lab-refinedを選ばない表示は比較23ページで画素一致した．classの存在判定は親高さやcascadeの成立を保証しない．
+.bodyは通常スライド直下の残余領域で，内部の.fillだけをネストした残余高さへ接続する．captionは非縮小とし，mediaはcontainで収める．.figure-naturalは明示寸法を保持する選択肢．旧.fill単独，表紙，paper，scroll，明示cropを保持する．#57はbody/header-gapを再定義せず，labの文字と外観を既定で適用する．初期の選択式比較では未選択の23ページが旧版と画素一致したが，既定化後はその画素一致を保証しない．classの存在判定は親高さやcascadeの成立を保証しない．
 
 #58のresolveAssetReference／inspectAssetPathは参照の解決と診断を共有する．既定permissiveとbundleを区別し，ZIPはbundleを明示する．#59は最終HTML→CSS/SVGを辿り，private実体・絶対参照・file URL・欠落・循環等を拒否し，公開manifestから内部path/contextを除く．通常ファイルだけを収め，失敗時に元素材と既存出力を保持する．通常のvalidatorへZIPの厳格な収集policyを一律適用しない．
 
@@ -62,7 +62,9 @@ D2は積極採用する．[10月20日の設計検討](https://github.com/takumi-
 
 追加#59接続後のnpm run test:zip:d2は2件成功した．元repo・指定D2実体・font入力を除き，空PATHと通信遮断の条件でfile/HTTP表示を確認し，実D2構文エラーと未導入時に既存ZIPを保持した．
 
-最終コードrevision be3fc23でmainが再実行し，quality:gate:strictはunit504件，strict fixture18件，browser113件が成功した．既存Firefox native touch1件だけが対象外skipで，失敗はない．固定D2 0.9.0／Noto400のtest:d2は7件，test:zip:d2は2件成功し，いずれもskipはない．[検証manifest](evidence/integration-2026-10-21/validation.json)に条件・コマンド・ログhashと限定確認の範囲を保存した．
+lab既定化前のコードrevision be3fc23でmainが再実行し，quality:gate:strictはunit504件，strict fixture18件，browser113件が成功した．既存Firefox native touch1件だけが対象外skipで，失敗はない．固定D2 0.9.0／Noto400のtest:d2は7件，test:zip:d2は2件成功し，いずれもskipはない．[当時の検証manifest](evidence/integration-2026-10-21/validation.json)に条件・コマンド・ログhashと限定確認の範囲を保存した．
+
+lab既定化後の4029409で同じ全体gateを再実行し，unit504件・strict fixture18件・browser113件が成功した．対象外skipは同じFirefoxの1件で，実D2 7件・D2入りZIP 2件はskipなしで成功した．初回に過密fixtureのedge-crowdingが消えたため，fixtureの行高を固定し，従来の20px閾値と期待する診断を保持した．[既定化後の検証manifest](evidence/integration-2026-10-21/lab-default-validation.json)に修正前後とコマンド・条件・ログhashを分けて保存した．
 
 resolver b7fa592の限定レビューは固定POSIX treeと明示bundleで包含不具合なし，関連24件・追加8件成功．ZIP側で必要なpolicy明示，private実体判定，公開field選別，読取り時の交換対策を#59へ渡し，3f91136のunitと実CLI E2Eへ反映した．ZIP追加独立レビューはサービスの応答制限により静的読取り後に中断し，再現・ZIP実体の確認完了とは扱わない．担当の境界テストとmainの統合試験を確認の根拠とする．
 
@@ -70,12 +72,12 @@ D2の外部processとSVGを扱う具体的なリスクに対し，完了済み#6
 
 ## 判断記録と受け入れ範囲
 
-[ADR-0007](decisions/ADR-0007-adopt-opt-in-body-layout-and-lab-visual-refinement.md)は配置・外観，[ADR-0008](decisions/ADR-0008-share-media-resolution-and-export-resource-only-portable-zip-bundles.md)は素材・配布，[ADR-0009](decisions/ADR-0009-render-d2-fences-with-a-pinned-external-cli.md)はD2を扱う．[XR-0003](explorations/XR-0003-compare-representative-layouts-under-controlled-fonts.md)と[XR-0004](explorations/XR-0004-evaluate-fixed-d2-rendering-configuration-and-japanese-fonts.md)で試行結果と限界を分ける．mainが記録CLIで中央採番し，records検証は66件成功した．
+[ADR-0007](decisions/ADR-0007-adopt-opt-in-body-layout-and-lab-visual-refinement.md)は初期の配置・外観，[ADR-0008](decisions/ADR-0008-share-media-resolution-and-export-resource-only-portable-zip-bundles.md)は素材・配布，[ADR-0009](decisions/ADR-0009-render-d2-fences-with-a-pinned-external-cli.md)はD2を扱う．[XR-0003](explorations/XR-0003-compare-representative-layouts-under-controlled-fonts.md)と[XR-0004](explorations/XR-0004-evaluate-fixed-d2-rendering-configuration-and-japanese-fonts.md)で初期の試行結果と限界を分ける．labの既定化はADR-0010とXR-0005へ分け，過去の観測値を書き換えない．mainが記録CLIで中央採番した．
 
-縦長二列は旧版の高さ1宣言を新bodyの個別高さ0へ置換できたが，旧幅utilityでも修復できる．必要な個別高さが一律に減るという結論にはしない．lab-refinedはcaptionのwrapや自然幅を変え得るため，既定labの置換は行わない．
+縦長二列は旧版の高さ1宣言を新bodyの個別高さ0へ置換できたが，旧幅utilityでも修復できる．必要な個別高さが一律に減るという結論にはしない．labの既定更新はcaptionのwrapや自然幅を変え得るため，変更点を明示し，代表比較と原稿側の上書きの回帰で確認する．
 
 Linuxでの検証であり，Windows/macOS実機，投影距離での可読性，任意fontの計測精度，別PDF/PowerPoint viewerでの全ページ目視は未実施．D2は信頼済みの自己完結した原稿を対象とし，任意の悪意あるCLIや原稿のOS隔離を保証しない．[my-decks #2](https://github.com/takumi-nishimura/my-decks/issues/2)は別repo所有のままとする．
 
-mainはD2の3指摘解消と統合版のstrict gate・D2・ZIPの成功を確認し，ローカル統合を受け入れた．今回作成したADR-0007〜0009をaccepted，XR-0003〜0004をadoptedとする．既存記録の判断は置換しない．#55の個別指定数の一般的削減は達成済みとせず，#57の比較画像・移行説明はPR #62から参照可能にした．親・子ISSはmerge前のin-reviewを保つ．
+mainはD2の3指摘解消と統合版のstrict gate・D2・ZIPの成功を確認し，ローカル統合を受け入れた．当初はADR-0007〜0009をaccepted，XR-0003〜0004をadoptedとした．その後，labの既定化をADR-0010で採用し，ADR-0007は本文を残してsupersededへ変更した．#55の個別指定数の一般的削減は達成済みとせず，#57の比較画像・利用説明はPR #62から参照可能にする．親・子ISSはmerge前のin-reviewを保つ．
 
 ローカルで差分を辿る順序は，#60を独立単位とし，配置系列を#54→#55→#56→#57，素材系列を#58→#59，D2を#61とする．D2入りZIPの接続は#59と#61の両方を前提にし，最後に#53の横断確認へ進む．この順序はPRを分割する必須条件ではなく，今回の統合PR内の読み順として使う．各work branch，論理commit，元の作業worktreeを保持した．

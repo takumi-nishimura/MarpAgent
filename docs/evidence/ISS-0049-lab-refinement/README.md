@@ -30,6 +30,8 @@
 
 再実行する場合は，対応 Node と checkout の依存・Playwright Chromium・Linux fontconfig を用意し，上記 hash の font を別途用意する．リポジトリルートから新しい出力先を指定する．
 
+labの既定化後はactive fixture名が変わるため，この過去比較は入力を保存しているrevision `1f303a57c1a3dc4d013db7ce4a17e4361eb676fe` の別worktreeから実行する．保存harnessはcheckout内の入力hashを検査するので，最新の原稿で過去の観測値を再現したことにはしない．
+
 ```sh
 node docs/evidence/ISS-0049-lab-refinement/compare.cjs path/to/NotoSansJP.ttf out/ISS-0049-replay
 ```

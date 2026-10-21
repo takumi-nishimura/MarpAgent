@@ -52,6 +52,8 @@ plain lab の太字700を期待するテストで，旧 CSS の実測500によ�
 
 この条件で本文37/37ページ一致，caption の wrap 差2箇所．代表2組は旧 opt-in と画素一致した．新旧とも #54 の縦長図1ページの clipping は残り，その他の clipping / overlap / small text は0．追加 strict 4条件（typography，body 16:9 / 4:3，Core 5）はすべて measured / finding 0．既定を保った過去の23/23画素一致と，今回の既定更新を取り違えない．
 
+main は担当実装 `9bd58e1` を統合側 `7b33018` へ取り込み，過密検査用 fixture の行高を固定した `4029409` で全体を確認した．unit504件・strict fixture18件・browser113件が成功し，既存Firefox対象外1件だけskip．実D2 7件とD2入りZIP 2件はskipなしで成功した．[統合検証manifest](evidence/integration-2026-10-21/lab-default-validation.json) に修正前後・コマンド・環境・ログhashを保存した．
+
 ## Historical comparison and font environment
 
 以下は既定変更前の記録であり，現在の既定の互換性を示す結果ではない．当時の class の有無による比較と数値を保持する．旧証跡は変更せず，active fixture 改名前の revision から再現する．
