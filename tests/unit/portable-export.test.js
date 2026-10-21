@@ -40,6 +40,42 @@ test("dry-run compiles HTML once through the common config and writes no archive
     assert.equal(fs.existsSync(path.dirname(temporary)), false);
 });
 
+test("ZIP conversion retains the original D2 project context and requests strict rendering without mutating caller environment", (t) => {
+    const options = setup(t);
+    for (const project of [
+        undefined,
+        path.join(options.repoRoot, "explicit-project"),
+    ]) {
+        const env = {
+            UNRELATED: "preserved",
+            MARP_AGENT_D2_STRICT: "0",
+            ...(project ? { MARP_AGENT_D2_CWD: project } : {}),
+        };
+        const before = { ...env };
+        let conversions = 0;
+        exportPortableBundle({
+            ...options,
+            env,
+            dryRun: true,
+            convert(_command, args, context) {
+                conversions += 1;
+                assert.equal(
+                    context.env.MARP_AGENT_D2_CWD,
+                    project || path.dirname(options.deckPath),
+                );
+                assert.equal(context.env.MARP_AGENT_D2_STRICT, "1");
+                assert.equal(context.env.UNRELATED, "preserved");
+                fs.writeFileSync(
+                    args[args.indexOf("-o") + 1],
+                    "<section>public</section>",
+                );
+            },
+        });
+        assert.equal(conversions, 1);
+        assert.deepEqual(env, before);
+    }
+});
+
 test("conversion and configured-engine diagnostics preserve existing ZIP and clean the render stage", (t) => {
     const options = setup(t);
     fs.writeFileSync(options.outputPath, "existing ZIP");

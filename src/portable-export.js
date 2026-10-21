@@ -19,6 +19,7 @@ function exportPortableBundle({
     strictOffline = false,
     maxFiles,
     maxBytes,
+    env = process.env,
     assertRenderSucceeded,
     convert = runConversionSync,
 } = {}) {
@@ -43,7 +44,15 @@ function exportPortableBundle({
                 htmlPath,
                 deck,
             ],
-            { cwd: toolRoot },
+            {
+                cwd: toolRoot,
+                env: {
+                    ...env,
+                    MARP_AGENT_D2_CWD:
+                        env.MARP_AGENT_D2_CWD || path.dirname(deck),
+                    MARP_AGENT_D2_STRICT: "1",
+                },
+            },
         );
         const html = fs.readFileSync(htmlPath, "utf8");
         if (assertRenderSucceeded) assertRenderSucceeded(html);
