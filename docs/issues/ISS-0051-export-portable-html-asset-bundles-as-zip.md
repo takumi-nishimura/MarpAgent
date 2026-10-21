@@ -2,7 +2,7 @@
 id: ISS-0051
 title: "Export portable HTML asset bundles as ZIP"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -14,10 +14,14 @@ tags:
 depends_on: []
 supersedes: []
 artifacts:
-  revisions: []
+  revisions:
+    - 5cd7293
   manifests: []
   results: []
-  commands: []
+  commands:
+    - node --test tests/unit/bundle-references.test.js tests/unit/portable-bundle.test.js tests/unit/portable-export.test.js tests/unit/portable-cli.test.js tests/unit/cli-args.test.js tests/unit/media-assets.test.js tests/unit/hide-slides.test.js
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 npx playwright test tests/e2e/portable-bundle.spec.js tests/e2e/cli-smoke.spec.js --project=chromium --workers=1 --grep 'relocated bundle|Mermaid font dependencies|export smoke'
+    - uv run .github/records.py validate
 ---
 
 # Export portable HTML asset bundles as ZIP
@@ -108,3 +112,19 @@ ZIPライブラリやmanifest schemaは未選定．既存依存の再利用と�
 ## 正本記録
 
 repo内ISSは未起票．現行記録を照合し，実装開始時に記録CLIで作成・validateして本Issueと相互参照する．配布範囲・外部依存の扱い等の採用を，本Issue登録だけでaccepted ADRにしない．
+
+## Notes
+
+2026-10-21，marp-i59-leadによるローカル実装を開始した．上記「repo内ISSは未起票」は取り込んだGitHub起票時点の記述であり，本ファイルを作業の正本とする．
+
+最終HTMLを起点に，CSSのurlとimport，SVGの外部資源を辿るread-only計画と，通常ファイルだけを格納するZIP writerを分けた．全assetsのコピーは行わない．repo相対source，書換え前後のSHA-256，格納先，表示順の使用ページ，参照関係，通信依存，未対応項目と除外方針をmanifestへ記録する．CSSは未使用selectorを含めて保守的に収集する．コメントと話者ノートは最終HTMLから除外し，可視の引用リンクを保持する．
+
+ZIPは同一filesystem上の一時領域で完成させ，通常はhard linkによる非上書き確定，明示forceではrenameで確定する．既存出力，原稿と参照素材への上書きを防ぐ．パス・realpathの二重境界，通常ファイル確認，Windows形式を含むZIP traversal，symlink循環，欠落，読取不能，サイズ上限，staging書込失敗をテストした．圧縮にはfflate 0.8.2，CSS値にはpostcss-value-parser 4.2.0を追加し，既存transitiveのhtmlparser2 10.1.0を直接依存へ明示した．
+
+Devin fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-highを参照書換えに12分限定で使用したが，実装未作成のためleadが引き継いだ．その後，ZIP失敗テストだけの3分read-only分析を依頼し，Windowsパス，素材aliasのforce上書き，staging後I/O失敗の3件を追加した．OS sandboxはbubblewrap未導入で起動できず，accept-editsのworkspace編集権限を使い，無制限承認は使用していない．
+
+単体・CLI・既存media/hidden-slide回帰は61件成功した．移設して元repoを削除したChromiumのfile/HTTP・通信遮断E2Eが成功した．深いdeck，shared親symlink，別deck素材，空白・日本語名，画像，CSS→CSS→画像，SVG→画像，動画・poster・音声，非表示ページ，話者ノート除外，引用保持，数式，全表示ページの移動を確認した．追加のMermaid通信依存E2Eと，既存のPDF/PPTX/HTML/images export smokeを合わせた3件がstrict modeで成功した．Mermaidが生成するSVGにはGoogle Fonts Interへのimportがあり，strict-offlineで拒否することと，通常ZIPのmanifest/READMEで依存を列挙することを確認した．外部フォントを自動取得・除去しない．
+
+共通設定によるHTML変換は一度だけ実行し，失敗なら公開しない．#58のcommit済み解決APIと，#61のassertD2RenderSucceededの接続・複合受入はmainのrelayと統合確認を待つ．採用判断のADRを必要とする場合はmainが中央でIDを割り当てる．担当worktreeから新規record IDの採番，push，merge，GitHubコメント送信は行わない．
+
+mainへの統合確認待ちとしてin-reviewにした．上の受入チェックボックスは，並行Issueの共通APIとD2の統合をmainが確認してから更新する．最終HTMLと書換え資源に加えREADMEのハッシュもmanifestへ記録し，自己ハッシュを持てないmanifest.jsonはmetadataFilesへ明示する．

@@ -23,10 +23,15 @@ Options:
   --pdf                    Export to PDF
   --pptx                   Export to PPTX
   --html                   Export to standalone HTML
+  --zip                    Export a portable HTML resource bundle
+  --strict-offline          Reject remote/unsupported dependencies (for --zip)
+  --bundle-root <dir>       Allowed resource root (default: this repository)
+  --max-bundle-files <n>    Resource limit (default: 10000; for --zip)
+  --max-bundle-bytes <n>    Resource byte limit (default: 268435456; for --zip)
   --images [png|jpeg]      Export each slide as an image (default: png)
   --lint                   Deprecated alias of -v
   --autofix                Apply safe autofixes (for -v, --lint)
-  --dry-run                Show an --autofix diff without writing
+  --dry-run                Show an --autofix diff or --zip manifest without writing
   --doctor                 Run environment diagnostics
   --strict                 Require the rendered check (fail if it cannot run)
   --hints                  List source-heuristic hints (for -v, --lint)
@@ -40,7 +45,7 @@ Options:
   --theme [name]           Build theme(s) (all if name omitted)
   --theme-new              Scaffold a new theme
   --source-url <url>       Source URL note for --theme-new
-  --force                  Overwrite existing files (for --new, --theme-new, --outline)
+  --force                  Overwrite existing files (for --new, --theme-new, --outline, --zip)
   --no-build               Scaffold only; skip token/theme build for --theme-new
   -w, --watch              Watch mode (for --theme)
   -o, --output <path>      Output path (for --outline, exports, --screenshot)
@@ -61,6 +66,9 @@ Examples:
   marpx decks/2025/talk/slide.md --pdf      Export PDF
   marpx decks/2025/talk/slide.md --pptx     Export PPTX
   marpx decks/2025/talk/slide.md --html     Export standalone HTML
+  marpx decks/2025/talk/slide.md --zip --output out/talk.zip  Export a portable bundle
+  marpx decks/2025/talk/slide.md --zip --dry-run  Inspect the collection manifest
+  marpx decks/2025/talk/slide.md --zip --strict-offline  Require local dependencies
   marpx decks/2025/talk/slide.md --images jpeg --output out/slide.jpg  Export slide images
   marpx decks/2025/talk/slide.md --pdf --output out/talk.pdf  Export PDF to a chosen path
   marpx decks/2025/talk/slide.md --screenshot 5  Screenshot the slide showing page 5
@@ -98,6 +106,11 @@ try {
       pdf: { type: "boolean", default: false },
       pptx: { type: "boolean", default: false },
       html: { type: "boolean", default: false },
+      zip: { type: "boolean", default: false },
+      "strict-offline": { type: "boolean", default: false },
+      "bundle-root": { type: "string" },
+      "max-bundle-files": { type: "string" },
+      "max-bundle-bytes": { type: "string" },
       images: { type: "string" },
       screenshot: { type: "string" },
       lint: { type: "boolean", default: false },
@@ -146,6 +159,7 @@ const modes = [
   "pdf",
   "pptx",
   "html",
+  "zip",
   "images",
   "screenshot",
   "lint",
@@ -166,7 +180,7 @@ if (modes.length > 1) {
 
 const mode = modes[0] || "serve";
 
-const exportModes = new Set(["pdf", "pptx", "html", "images"]);
+const exportModes = new Set(["pdf", "pptx", "html", "images", "zip"]);
 const outputModes = new Set([...exportModes, "screenshot", "outline"]);
 
 if (values.images !== undefined && !["png", "jpeg"].includes(values.images)) {
@@ -176,7 +190,7 @@ if (values.images !== undefined && !["png", "jpeg"].includes(values.images)) {
 
 if (values.output && !outputModes.has(mode)) {
   console.error(
-    "Error: --output can only be used with --outline, --screenshot, --pdf, --pptx, --html, or --images",
+    "Error: --output can only be used with --outline, --screenshot, --pdf, --pptx, --html, --images, or --zip",
   );
   process.exit(1);
 }
@@ -186,9 +200,38 @@ if (values.autofix && mode !== "validate" && mode !== "lint") {
   process.exit(1);
 }
 
-if (values["dry-run"] && !values.autofix) {
-  console.error("Error: --dry-run requires --autofix");
+if (values["dry-run"] && !values.autofix && mode !== "zip") {
+  console.error("Error: --dry-run requires --autofix or --zip");
   process.exit(1);
+}
+
+for (const option of [
+  "strict-offline",
+  "bundle-root",
+  "max-bundle-files",
+  "max-bundle-bytes",
+]) {
+  if (
+    (values[option] === true || typeof values[option] === "string") &&
+    mode !== "zip"
+  ) {
+    console.error(`Error: --${option} can only be used with --zip`);
+    process.exit(1);
+  }
+}
+if (values["bundle-root"] !== undefined && values["bundle-root"].trim() === "") {
+  console.error("Error: --bundle-root requires a directory path");
+  process.exit(1);
+}
+for (const option of ["max-bundle-files", "max-bundle-bytes"]) {
+  if (
+    values[option] !== undefined &&
+    (!/^[1-9]\d*$/.test(values[option]) ||
+      !Number.isSafeInteger(Number(values[option])))
+  ) {
+    console.error(`Error: --${option} must be a positive safe integer`);
+    process.exit(1);
+  }
 }
 
 if (values.hints && mode !== "validate" && mode !== "lint") {
@@ -237,10 +280,11 @@ if (
   values.force &&
   mode !== "theme-new" &&
   mode !== "new" &&
-  mode !== "outline"
+  mode !== "outline" &&
+  mode !== "zip"
 ) {
   console.error(
-    "Error: --force can only be used with --new, --theme-new, or --outline",
+    "Error: --force can only be used with --new, --theme-new, --outline, or --zip",
   );
   process.exit(1);
 }
@@ -396,6 +440,43 @@ function runMarp(extraArgs, { timeoutMs = null } = {}) {
 }
 
 switch (mode) {
+  case "zip": {
+    if (positionals.length !== 1) {
+      console.error("Error: exactly one file path required for --zip");
+      process.exitCode = 1;
+      break;
+    }
+    try {
+      const { exportPortableBundle } = require("../src/portable-export");
+      const result = exportPortableBundle({
+        deckPath: positionals[0],
+        repoRoot: values["bundle-root"]
+          ? path.resolve(values["bundle-root"])
+          : repoRoot,
+        outputPath: values.output,
+        dryRun: values["dry-run"],
+        force: values.force,
+        strictOffline: values["strict-offline"],
+        maxFiles: values["max-bundle-files"] === undefined
+          ? undefined
+          : Number(values["max-bundle-files"]),
+        maxBytes: values["max-bundle-bytes"] === undefined
+          ? undefined
+          : Number(values["max-bundle-bytes"]),
+      });
+      if (values["dry-run"]) console.log(JSON.stringify(result.manifest, null, 2));
+      else if (result.errors.length)
+        console.error(JSON.stringify(result.errors, null, 2));
+      else console.log(`Portable HTML bundle: ${result.outputPath}`);
+      if (result.errors.length) process.exitCode = 1;
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+      if (error.code) console.error(error.code);
+      process.exitCode = 1;
+    }
+    break;
+  }
+
   case "serve":
     runScript("marp-serve.js", positionals);
     break;

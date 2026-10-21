@@ -121,6 +121,9 @@ The shorter new brief is not an input contract for that legacy generator.
 | `marpx <slide.md> --pdf` | Export to PDF |
 | `marpx <slide.md> --pptx` | Export to PPTX |
 | `marpx <slide.md> --html` | Export to standalone HTML |
+| `marpx <slide.md> --zip --output out/talk.zip` | Export portable HTML and referenced local resources |
+| `marpx <slide.md> --zip --dry-run` | Inspect the manifest without writing an archive |
+| `marpx <slide.md> --zip --strict-offline` | Reject remote and unsupported resource dependencies |
 | `marpx <slide.md> --images [png\|jpeg]` | Export each slide as an image (default: png) |
 | `marpx <slide.md> --pdf --output <path>` | Export to a chosen path (also `--pptx`, `--html`, `--images`) |
 | `marpx <slide.md> -v` | Validate (`--lint` is a deprecated alias) |
@@ -208,6 +211,50 @@ them. Open the HTML from the deck directory (the default output location)
 so `assets/` and `shared/` paths resolve; an `--output` path outside the
 deck breaks those references. PDF, PPTX, and image exports embed media and
 are not affected.
+
+For distribution, use `marpx <slide.md> --zip --output out/talk.zip`.
+The archive contains `index.html`, ordinary resource files, `manifest.json`,
+and a short `README.txt`. It materializes shared and cross-deck symlinks
+without copying whole asset directories. Collection starts from the rendered
+visible slides and follows local CSS imports, CSS URLs, and SVG resources.
+CSS rules are collected conservatively, including selectors that are unused.
+Speaker notes and production comments are excluded; visible citations remain.
+Source Markdown, briefs, dotfiles, editing files, and unrelated assets are
+excluded. The manifest records rewritten content hashes, repository-relative
+sources, reference relationships, and 1-based rendered slide positions.
+
+Run `--zip --dry-run` to inspect planned files, resource sizes, remote
+dependencies, exclusions, and errors as JSON without creating an archive.
+The command exits unsuccessfully when collection errors occur, including
+in dry-run mode. `--strict-offline` additionally rejects remote dependencies
+and unsupported custom JavaScript or embedded documents. Remote resources
+are listed in the manifest and archive README and are never downloaded.
+Static analysis supports the installed Marp runtime and presenter helpers;
+it does not execute custom scripts to discover their dependencies.
+
+Resources must remain within this repository after symlink resolution.
+For a deck in another repository, explicitly set `--bundle-root <repo>`.
+Absolute paths, `file:` URLs, missing files, symlink escapes, and dependency
+cycles fail collection. Only explicitly referenced repository font files
+are collected; publishers must have permission to redistribute those fonts.
+OS fonts are never collected. The default resource limits are 10,000 files
+and 256 MiB, configurable with `--max-bundle-files` and `--max-bundle-bytes`.
+ZIP compression is performed in memory within those limits.
+
+An existing ZIP requires `--force`. Preparation finishes before atomic
+publication, so conversion, collection, and archive failures preserve
+existing output and source files. Repeated exports of the same rendered
+HTML use stable entry order, paths, timestamps, modes, and content hashes;
+different renderer versions may produce different HTML.
+
+After extraction, open `index.html`. Relocated, network-blocked Chromium
+tests cover local images, nested CSS, SVG, video, audio, math, Mermaid, and
+navigation across all visible slides using both `file:` and local HTTP.
+Browser security rules and media codecs can limit direct `file:` viewing,
+fonts, and presenter synchronization. For consistent viewing, serve the
+extracted directory as a static HTTP root; with Python 3 installed, run
+`python3 -m http.server 8000 --bind 127.0.0.1` from that directory and open
+`http://127.0.0.1:8000/index.html`.
 
 Slide numbers come from one slide map computed with the configured Marp
 engine (`src/slide-map.js`), so hidden slides, empty slides, setext headings,

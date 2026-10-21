@@ -603,6 +603,21 @@ function planPortableBundle({
         },
         errors,
     };
+    const readme = {
+        path: "README.txt",
+        data: Buffer.from(bundleReadme(manifest)),
+    };
+    files.push(readme);
+    files.sort((a, b) => a.path.localeCompare(b.path, "en"));
+    manifest.files.push({
+        path: readme.path,
+        pages: [],
+        size: readme.data.length,
+        sha256: sha256(readme.data),
+    });
+    manifest.files.sort((a, b) => a.path.localeCompare(b.path, "en"));
+    manifest.totalBytes += readme.data.length;
+    manifest.metadataFiles = ["manifest.json"];
     return { manifest, files, errors, sourcePaths };
 }
 
@@ -638,7 +653,6 @@ function writePortableBundle(plan, { outputPath, force = false } = {}) {
             path: "manifest.json",
             data: Buffer.from(JSON.stringify(plan.manifest, null, 2) + "\n"),
         },
-        { path: "README.txt", data: Buffer.from(bundleReadme(plan.manifest)) },
     ]) {
         const name = file.path;
         if (
