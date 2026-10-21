@@ -35,6 +35,13 @@ section {
   --padding-bottom: 0;
   --header-height: 60px;
 
+  /* Opt-in remaining-area body; legacy slide flow keeps its own margins. */
+  --body-top-gap: 10px;
+  --body-bottom-safe: 48px;
+  --body-gap: 0.5em;
+  --col-gap: 1rem;
+  --figure-gap: 0.5em;
+
   /* Logo dimensions and spacing */
   --logo-title-size: 80px;
   --logo-title-background-size: auto 50px;
@@ -150,6 +157,24 @@ section:not(.title) {
 /* Add top margin to content to make space for header */
 section:not(.title) > header:not(.paper-header) + * {
   margin-top: 70px;
+}
+
+/* Use actual heading heights instead of subtracting a fixed heading size.
+   Title, paper, and scroll canvases retain their existing layout contracts. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--body-top-gap);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body):has(> header) {
+  padding-top: calc(var(--header-height) + var(--body-top-gap));
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :not(.body) {
+  flex-shrink: 0;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :first-child,
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header + * {
+  margin-top: 0;
 }
 
 /* Title slide - reduce padding since header is absolute positioned */

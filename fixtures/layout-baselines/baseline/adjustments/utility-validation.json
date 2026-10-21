@@ -1,0 +1,30 @@
+{
+  "deckPath": "baseline/adjustments/utility-slide.md.txt",
+  "slideCount": 14,
+  "visualCheck": {
+    "status": "measured"
+  },
+  "counts": {
+    "errors": 1,
+    "warnings": 0,
+    "hints": 0
+  },
+  "findings": [
+    {
+      "slide": 6,
+      "renderedSlide": 6,
+      "sectionId": "6",
+      "page": 6,
+      "line": 88,
+      "ruleId": "content-clipped",
+      "severity": "error",
+      "source": "render",
+      "title": "Visible content extends past the slide edge by up to 86px: \"同じデータを，図と近くの説明で読む．\" (bottom 86px), <img assets/img/comparison-portrait.svg> (bottom 56px).",
+      "suggestion": "Resize or move the listed elements, trim the slide, or split it so everything fits inside the canvas."
+    }
+  ],
+  "artifactErrors": [],
+  "screenshots": [
+    "../lab/trial-utility-portrait.png"
+  ]
+}

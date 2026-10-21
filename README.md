@@ -58,6 +58,12 @@ and [ADR-0004](docs/decisions/ADR-0004-adopt-marp-core-5-with-explicit-full-engi
 For runnable examples of code line highlighting (`js {2,4-5}`), diagram math,
 and native Mermaid, see [template/core5-components.md](template/core5-components.md).
 
+`d2` fences render self-contained static diagrams through the same engine.
+Install the pinned host D2 0.9.0 explicitly; the application never installs it
+at runtime. TALA is the project default, and source `vars.d2-config` can select
+ELK or Dagre. Japanese labels require an explicitly supplied suitable TTF font.
+See [D2 setup, scope, diagnostics and acceptance tests](docs/d2.md).
+
 ## Quick Start
 
 ```bash
@@ -121,6 +127,9 @@ The shorter new brief is not an input contract for that legacy generator.
 | `marpx <slide.md> --pdf` | Export to PDF |
 | `marpx <slide.md> --pptx` | Export to PPTX |
 | `marpx <slide.md> --html` | Export to standalone HTML |
+| `marpx <slide.md> --zip --output out/talk.zip` | Export portable HTML and referenced local resources |
+| `marpx <slide.md> --zip --dry-run` | Inspect the manifest without writing an archive |
+| `marpx <slide.md> --zip --strict-offline` | Reject remote and unsupported resource dependencies |
 | `marpx <slide.md> --images [png\|jpeg]` | Export each slide as an image (default: png) |
 | `marpx <slide.md> --pdf --output <path>` | Export to a chosen path (also `--pptx`, `--html`, `--images`) |
 | `marpx <slide.md> -v` | Validate (`--lint` is a deprecated alias) |
@@ -131,6 +140,10 @@ The shorter new brief is not an input contract for that legacy generator.
 | `marpx <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |
 | `marpx <slide.md> -v --report-dir out/<name>` | Validate with report |
 | `marpx --doctor` | Run environment diagnostics |
+| `marpx assets list --repo <path> --format json` | List media, metadata, aliases and source locations |
+| `marpx assets search "caption" --repo <path> --preview` | Search filenames/source context and write a local preview |
+| `marpx assets doctor --repo <path>` | Diagnose media and symlink conventions |
+| `marpx assets reuse <source> <dest> --repo <path> --dry-run` | Plan a named relative file symlink without writing |
 | `marpx --theme` | Build all themes |
 | `marpx --theme lab` | Build a single theme |
 | `marpx --theme-new <name> --source-url <url>` | Scaffold a new theme |
@@ -140,6 +153,19 @@ The shorter new brief is not an input contract for that legacy generator.
 | `npm run quality:gate:strict` | Run the quality gate with required visual checks and strict E2E policy |
 | `npm run audit:dependencies` | Compare the production dependency audit with the reviewed ISS-0042 baseline |
 | `npm run test:e2e` | Run Playwright browser and CLI E2E tests |
+
+Media discovery is read-only; `--preview` writes only temporary HTML. Private,
+hidden-path and Git-ignored media are excluded by default, including symlink
+targets. Use `--include-private` explicitly when those local results are needed.
+Hidden slides are labeled separately from displayed pages.
+
+Before changing or deleting a source asset, find its consumers with
+`marpx assets list --repo <path> --uses decks/owner/assets/img/figure.svg`.
+For reuse, inspect the `--dry-run` source/destination/relative target, then run
+the same command without `--dry-run` to create the selected file symlink.
+Existing paths are never overwritten; symlink failures never fall back to a
+copy. See [media discovery and reuse](docs/media-assets.md) for examples,
+visibility rules, preview behavior, and Windows checkout diagnostics.
 
 `npm test` requires a working Playwright Chromium installed as described above.
 Individual visual tests can skip when launch prerequisites are missing, but an
@@ -190,6 +216,14 @@ watch notifier. `MARP_AGENT_NO_OPEN=1` disables automatic browser opening;
 if an opener such as `xdg-open` is missing, the server keeps running and
 prints a URL that can be opened manually.
 
+Live serve starts on HTTP port 8080 when `PORT` is absent. If Marp reports
+that the port is already in use, it retries successive ports through 8089
+and exits with an error if all ten candidates fail. The startup URLs and
+automatically opened browser URL use the selected port and retain a requested
+displayed page. Setting `PORT` explicitly (for example,
+`PORT=8090 marpx <slide.md>`) disables this fallback, so an occupied explicit
+port produces Marp's original error. Overview keeps its existing port selection.
+
 `marpx --doctor` reports the CLI and configured Core versions and renders
 small Shiki, line-highlight, KaTeX, MathJax, diagram-math, and native-Mermaid
 probes through the same engine used for exports. A missing rendering feature
@@ -200,6 +234,67 @@ them. Open the HTML from the deck directory (the default output location)
 so `assets/` and `shared/` paths resolve; an `--output` path outside the
 deck breaks those references. PDF, PPTX, and image exports embed media and
 are not affected.
+
+For distribution, use `marpx <slide.md> --zip --output out/talk.zip`.
+The archive contains `index.html`, ordinary resource files, `manifest.json`,
+and a short `README.txt`. It materializes shared and cross-deck symlinks
+without copying whole asset directories. Collection starts from the rendered
+visible slides and follows local CSS imports, CSS URLs, and SVG resources.
+CSS rules are collected conservatively, including selectors that are unused.
+Speaker notes and production comments are excluded; visible citations remain.
+Source Markdown, briefs, dotfiles, editing files, and unrelated assets are
+excluded. The manifest records rewritten content hashes, repository-relative
+sources, reference relationships, and 1-based rendered slide positions.
+
+Run `--zip --dry-run` to inspect planned files, resource sizes, remote
+dependencies, exclusions, and errors as JSON without creating an archive.
+The command exits unsuccessfully when collection errors occur, including
+in dry-run mode. `--strict-offline` additionally rejects remote dependencies
+and unsupported custom JavaScript or embedded documents. Remote resources
+are listed in the manifest and archive README and are never downloaded.
+Static analysis supports the installed Marp runtime and presenter helpers;
+it does not execute custom scripts to discover their dependencies.
+
+Resources must remain within this repository after symlink resolution.
+For a deck in another repository, explicitly set `--bundle-root <repo>`.
+Absolute paths, `file:` URLs, missing files, symlink escapes, and dependency
+cycles fail collection. The shared bundle resolver also rejects absolute
+symlink targets, direct cross-deck paths, and directory-level reuse. Reuse
+other decks' resources through named relative file symlinks; the standard
+deck-local `shared -> repo/assets` directory link is supported. CSS/SVG URLs
+resolve relative to the resource URL while policy checks retain the original
+consuming deck's scope. Resolver diagnostics are reduced to stable error
+codes and repository-relative origins in the distribution manifest.
+Only explicitly referenced repository font files
+are collected; publishers must have permission to redistribute those fonts.
+OS fonts are never collected. The default resource limits are 10,000 files
+and 256 MiB, configurable with `--max-bundle-files` and `--max-bundle-bytes`.
+ZIP compression is performed in memory within those limits.
+
+An existing ZIP requires `--force`. Preparation finishes before atomic
+publication, so conversion, collection, and archive failures preserve
+existing output and source files. Repeated exports of the same rendered
+HTML use stable entry order, paths, timestamps, modes, and content hashes;
+different renderer versions may produce different HTML.
+
+After extraction, open `index.html`. Relocated, network-blocked Chromium
+tests cover local images, nested CSS, SVG, video, audio, math, Mermaid, and
+navigation across all visible slides using both `file:` and local HTTP.
+Browser security rules and media codecs can limit direct `file:` viewing,
+fonts, and presenter synchronization. For consistent viewing, serve the
+extracted directory as a static HTTP root; with Python 3 installed, run
+`python3 -m http.server 8000 --bind 127.0.0.1` from that directory and open
+`http://127.0.0.1:8000/index.html`.
+
+D2 ZIP acceptance is available separately as `npm run test:zip:d2` with
+`MARP_AGENT_D2_PATH` set to D2 0.9.0 and `MARP_AGENT_D2_FONT_PATH` set to an
+explicit Japanese TTF. The test deletes the source repository, compiler
+alias, and font input before opening the extracted ZIP through both `file:`
+and HTTP with remote networking blocked and an empty browser process PATH.
+It verifies embedded fonts, Japanese diagram labels, repeated diagram IDs,
+math, and all displayed pages. Actual D2 compile and missing-tool failures
+must preserve the existing ZIP. The recipient needs a browser to view the
+static bundle; D2 is used during export.
 
 Slide numbers come from one slide map computed with the configured Marp
 engine (`src/slide-map.js`), so hidden slides, empty slides, setext headings,

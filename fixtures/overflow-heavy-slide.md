@@ -3,6 +3,11 @@ marp: true
 theme: lab
 ---
 
+<!-- Keep the crowding probe independent of the theme's default leading. -->
+<style scoped>
+section, section h2 { line-height: normal; }
+</style>
+
 ## This Slide Has Way Too Much Content
 
 - Point one: Introduction to the topic at hand

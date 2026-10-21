@@ -56,11 +56,17 @@
     --color-on-surface: #202228;
     --color-accent-strong: #d97706;
     --color-emphasis: #d1c600;
+    --color-mark-fill: #d7b6003d;
+    --color-mark-fill-invert: #fadc5a33;
     --color-muted-invert: #aaaaaa;
     --color-highlight-invert: #fdba74;
     --color-table-border: #999999;
     --color-table-header: #f0f0f0;
     --color-table-stripe: #fafafa;
+    --color-strong-ink: #b45309;
+    --color-muted-ink: #626872;
+    --color-table-header-invert: #33363f;
+    --color-table-stripe-invert: #292c33;
     --color-cursor-orange: #ff5c31;
     --color-cursor-glow: #ff5c3180;
     --color-note: #316dca;
@@ -140,33 +146,56 @@
     --color-code-dark-tag: #e06c75;
     --color-code-dark-builtin: #e6c07b;
     --color-code-dark-meta: #56b6c2;
+    --color-table-border-invert: #626872;
     --font-display: "Noto Sans JP";
     --font-headline-lg: "Noto Sans JP";
     --font-headline-md: "Noto Sans JP";
+    --font-headline-sm: "Noto Sans JP";
+    --font-headline-xs: "Noto Sans JP";
     --font-body-md: "Noto Sans JP";
     --font-body-sm: "Noto Sans JP";
     --font-caption: "Noto Sans JP";
+    --font-footnote: "Noto Sans JP";
     --font-label-md: "Noto Sans JP";
     --text-display: 65px;
     --text-headline-lg: 58.5px;
     --text-headline-md: 39px;
+    --text-headline-sm: 32.5px;
+    --text-headline-xs: 29.25px;
     --text-body-md: 26px;
     --text-body-sm: 22.75px;
     --text-caption: 19.5px;
+    --text-footnote: 14px;
     --text-label-md: 26px;
+    --leading-display: 1.1;
+    --leading-headline-lg: 1.15;
+    --leading-headline-md: 1.2;
+    --leading-headline-sm: 1.3;
+    --leading-headline-xs: 1.35;
+    --leading-body-md: 1.5;
+    --leading-body-sm: 1.35;
+    --leading-caption: 1.3;
+    --leading-footnote: 1.4;
+    --leading-label-md: 1.2;
     --tracking-display: 0em;
     --tracking-headline-lg: 0em;
     --tracking-headline-md: 0em;
+    --tracking-headline-sm: 0em;
+    --tracking-headline-xs: 0em;
     --tracking-body-md: 0em;
     --tracking-body-sm: 0em;
     --tracking-caption: 0em;
+    --tracking-footnote: 0em;
     --tracking-label-md: 0em;
     --font-weight-display: 700;
     --font-weight-headline-lg: 700;
     --font-weight-headline-md: 700;
+    --font-weight-headline-sm: 700;
+    --font-weight-headline-xs: 700;
     --font-weight-body-md: 400;
     --font-weight-body-sm: 400;
     --font-weight-caption: 400;
+    --font-weight-footnote: 400;
     --font-weight-label-md: 700;
     --radius-none: 0px;
     --radius-full: 9999px;
@@ -179,6 +208,11 @@
     --spacing-header-height: 60px;
     --spacing-logo-title-size: 80px;
     --spacing-logo-header-size: 50px;
+    --spacing-rule-width: 1px;
+    --spacing-callout-rule-width: 3px;
+    --spacing-table-cell-x: 10px;
+    --spacing-table-cell-y: 6px;
+    --spacing-mark-inline: 0.08em;
     --color-deck-white: var(--color-neutral);
     --color-deck-black: var(--color-primary);
     --color-deck-gray: var(--color-secondary);
@@ -535,6 +569,11 @@ section {
   --padding-x: 40px;
   --padding-bottom: 0;
   --header-height: 60px;
+  --body-top-gap: 10px;
+  --body-bottom-safe: 48px;
+  --body-gap: 0.5em;
+  --col-gap: 1rem;
+  --figure-gap: 0.5em;
   --logo-title-size: 80px;
   --logo-title-background-size: auto 50px;
   --logo-title-spacing: 10px;
@@ -625,6 +664,20 @@ section:not(.title) {
 }
 section:not(.title) > header:not(.paper-header) + * {
   margin-top: 70px;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--body-top-gap);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body):has(> header) {
+  padding-top: calc(var(--header-height) + var(--body-top-gap));
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :not(.body) {
+  flex-shrink: 0;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :first-child, section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header + * {
+  margin-top: 0;
 }
 section.title {
   padding-top: 20px;
@@ -827,7 +880,7 @@ mjx-container[jax="SVG"]:not([display]) > svg {
   }
   .col {
     display: flex;
-    gap: 1rem;
+    gap: var(--col-gap, 1rem);
     align-items: flex-start;
   }
   .col > * {
@@ -1088,6 +1141,43 @@ mjx-container[jax="SVG"]:not([display]) > svg {
     --place-inline: flex-end;
   }
 }
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  margin-bottom: var(--body-bottom-safe);
+  gap: var(--body-gap);
+}
+.body.col {
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--col-gap);
+}
+.body.col.visual {
+  gap: var(--visual-gap, var(--col-gap));
+}
+.body .box, .body .col > div {
+  min-height: 0;
+  gap: var(--body-gap);
+}
+.body:is(.box.place-left, .box.place-center, .box.place-right) > :not(.self-start, .self-center, .self-end), .body :is(.box, .col > div):is(.place-left, .place-center, .place-right) > :not(.self-start, .self-center, .self-end) {
+  margin-inline: 0;
+}
+.body .fill {
+  flex: 1 1 0;
+  min-height: 0;
+}
+.body > :not(figure):not(.fill), .body .box > :not(figure):not(.fill), .body .col > div > :not(figure):not(.fill) {
+  flex-shrink: 0;
+}
+.body > :first-child, .body .box > :first-child, .body .col > div > :first-child {
+  margin-top: 0;
+}
+.body > :last-child, .body .box > :last-child, .body .col > div > :last-child {
+  margin-bottom: 0;
+}
 .author p {
   margin: 0;
   font-size: 1em;
@@ -1116,6 +1206,31 @@ figcaption {
   color: var(--fg-muted);
   width: 100%;
   flex-shrink: 0;
+}
+.body figure:not(.figure-natural) {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  gap: var(--figure-gap);
+}
+.body figure:not(.figure-natural) > :is(img, video, svg) {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.body figure:not(.figure-natural) > figcaption {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+.body figure.figure-natural, .body figure.figure-natural > :is(img, video, svg) {
+  flex: 0 0 auto;
 }
 figure.w-full img {
   width: 100%;
@@ -1655,8 +1770,130 @@ section[data-marpagent-scroll="true"] > .marpagent-scroll-body:focus-visible {
   outline: 2px solid var(--highlight);
   outline-offset: -2px;
 }
+section:where(:not(:has(> .paper-header))) {
+  --fg-muted: var(--color-muted-ink);
+  --color-strong: var(--color-strong-ink);
+  --lab-table-header: var(--color-table-header);
+  --lab-table-stripe: var(--color-table-stripe);
+  --lab-table-border: var(--color-table-border);
+  --lab-mark-fill: var(--color-mark-fill);
+  font-size: var(--text-body-md);
+  font-weight: var(--font-weight-body-md);
+  line-height: var(--leading-body-md);
+  letter-spacing: var(--tracking-body-md);
+}
+section.invert:where(:not(:has(> .paper-header))):where( :not(.dracula, .one-dark, .nord, .neogaia, .github-light) ) {
+  --color-strong: var(--color-highlight-invert);
+}
+section:where(:not(:has(> .paper-header))):where( .invert, .dracula, .one-dark, .nord, .neogaia ):where(:not(.github-light, .neogaia.invert)) {
+  --lab-table-header: var(--color-table-header-invert);
+  --lab-table-stripe: var(--color-table-stripe-invert);
+  --lab-table-border: var(--color-table-border-invert);
+  --lab-mark-fill: var(--color-mark-fill-invert);
+}
+section:where(:not(:has(> .paper-header))) h1 {
+  font-size: var(--text-headline-lg);
+  font-weight: var(--font-weight-headline-lg);
+  line-height: var(--leading-headline-lg);
+  letter-spacing: var(--tracking-headline-lg);
+}
+section.title:where(:not(:has(> .paper-header))) h1 {
+  font-size: var(--text-display);
+  font-weight: var(--font-weight-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+section:where(:not(:has(> .paper-header))) h2 {
+  font-size: var(--text-headline-md);
+  font-weight: var(--font-weight-headline-md);
+  line-height: var(--leading-headline-md);
+  letter-spacing: var(--tracking-headline-md);
+}
+section:where(:not(:has(> .paper-header))) h3 {
+  font-size: var(--text-headline-sm);
+  font-weight: var(--font-weight-headline-sm);
+  line-height: var(--leading-headline-sm);
+  letter-spacing: var(--tracking-headline-sm);
+}
+section:where(:not(:has(> .paper-header))) h4 {
+  font-size: var(--text-headline-xs);
+  font-weight: var(--font-weight-headline-xs);
+  line-height: var(--leading-headline-xs);
+  letter-spacing: var(--tracking-headline-xs);
+}
+section:where(:not(:has(> .paper-header))) strong {
+  font-weight: var(--font-weight-label-md);
+}
+section:where(:not(:has(> .paper-header))) :is(em, .marker, mark) {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+section:where(:not(:has(> .paper-header))) .marker {
+  background: linear-gradient( transparent 70%, color-mix(in srgb, #d1c600 40%, transparent) 70% );
+  @supports (color: color-mix(in lab, red, red)) {
+    background: linear-gradient( transparent 70%, color-mix(in srgb, var(--color-deck-yellow) 40%, transparent) 70% );
+  }
+}
+section:where(:not(:has(> .paper-header))) mark {
+  background: linear-gradient( transparent 10%, var(--lab-mark-fill) 10% 90%, transparent 90% );
+  color: inherit;
+  padding: 0 var(--spacing-mark-inline);
+}
+section:where(:not(:has(> .paper-header))) figcaption {
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-caption);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+  text-wrap-style: balance;
+}
+section:where(:not(:has(> .paper-header))) .footnote {
+  font-size: var(--text-footnote);
+  font-weight: var(--font-weight-footnote);
+  line-height: var(--leading-footnote);
+  letter-spacing: var(--tracking-footnote);
+}
+section:where(:not(:has(> .paper-header))) table {
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+  color: var(--fg);
+}
+section:where(:not(:has(> .paper-header))) :is(th, td) {
+  border-color: var(--lab-table-border);
+  border-width: var(--spacing-rule-width);
+  padding: var(--spacing-table-cell-y) var(--spacing-table-cell-x);
+}
+section:where(:not(:has(> .paper-header))) th {
+  font-weight: var(--font-weight-label-md);
+  background: var(--lab-table-header);
+}
+section:where(:not(:has(> .paper-header))) tbody tr:nth-child(even) {
+  background: var(--lab-table-stripe);
+}
+section:where(:not(:has(> .paper-header))) :is(.summary-box, .gap-box, .feature-card) {
+  border: var(--spacing-rule-width) solid var(--lab-table-border);
+  border-radius: var(--radius-sm);
+}
+section:where(:not(:has(> .paper-header))) :is(.note, .tip, .important, .warning, .caution) {
+  border-radius: var(--radius-sm);
+  border-inline-start: var(--spacing-callout-rule-width) solid var(--lab-callout-color);
+}
+section:where(:not(:has(> .paper-header))) .note {
+  --lab-callout-color: var(--color-note-strong);
+}
+section:where(:not(:has(> .paper-header))) .tip {
+  --lab-callout-color: var(--color-tip-strong);
+}
+section:where(:not(:has(> .paper-header))) .important {
+  --lab-callout-color: var(--color-important-strong);
+}
+section:where(:not(:has(> .paper-header))) .warning {
+  --lab-callout-color: var(--color-warning-strong);
+}
+section:where(:not(:has(> .paper-header))) .caution {
+  --lab-callout-color: var(--color-caution-strong);
+}
 section {
-  --font-body: "Noto Sans JP", sans-serif;
+  --font-body: var(--font-body-md), sans-serif;
   --font-display: var(--font-body);
   font-family: var(--font-body);
 }

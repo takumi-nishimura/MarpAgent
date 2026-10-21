@@ -153,8 +153,12 @@ run `marpx --theme`, document it here, and commit the rebuilt `themes/*.css`.
 no prose-derived utilities are present, that every design token and the full
 text scale are defined, and that every class and every `var(--...)` used in
 fixtures, example decks, templates, skills, and the README exists in every
-compiled theme. The validator does not yet warn when a deck uses a class that
-the compiled theme does not define.
+compiled theme. The validator reports undefined or statically unknown classes
+as non-blocking hints (`--hints`), including original source lines and slide/page
+identity. It inventories active compiled CSS and deck-local selectors; name
+presence does not establish computed applicability. See
+[layout adjustments and class diagnostics](layout-adjustments.md) for the
+adjustment vocabulary, override rules, diagnostic fields, and coverage limits.
 
 Before Tailwind runs, `marpx --theme <name>` regenerates
 `themes/src/_generated/<name>-design-tokens.css` from
@@ -192,6 +196,8 @@ Template layout labels such as `two-column` are not theme primitives. The
 | `.summary-box` | fit-to-content call-to-action or takeaway box |
 | `.box` | content-placement wrapper outside `.col` |
 | `.fill` | body-level layout fills remaining height above the footer safe area |
+| `.body` | opt-in remaining-area composition with caption-aware media sizing |
+| `.figure-natural` | keep authored media dimensions inside an opted-in `.body` |
 | `.place-*` | content placement inside `.col > div` or `.box` |
 | `.self-*` | self-placement for fit-to-content components |
 | `.col.with-summary` | column layout whose per-column `.gap-box` sits at the bottom |
@@ -203,6 +209,94 @@ Template layout labels such as `two-column` are not theme primitives. The
 
 These components should preserve the current `lab` visual style unless a
 separate visual redesign change explicitly updates it.
+
+### Remaining body area and figures
+
+Use one direct `.body` child on a regular slide to opt into remaining-area
+layout. The section reserves the actual header height, the top gap, all
+top-level headings and introductory text, and the bottom safe area. A heading
+that wraps to another line reduces the body by that line's height. This
+contract does not estimate a heading's height or change the composition at
+runtime. Title, paper, and `_scroll` slides keep their existing layout systems.
+
+```markdown
+## Result and interpretation
+
+<div class="body col visual" style="--visual-left: 2; --visual-right: 1">
+<div>
+<figure>
+<img src="assets/img/result.png" alt="Describe the result" />
+<figcaption>Source, conditions, and qualifications</figcaption>
+</figure>
+</div>
+<div class="place-middle">
+
+The figure supplies the evidence. Explain its implication here.
+
+</div>
+</div>
+```
+
+`.body` is a column flex container; `.body.col` is a row whose columns stretch
+to the available height. `.box` and `.col > div` keep the existing `.place-*`
+controls: top/middle/bottom/spread vertically and left/center/right horizontally.
+An explicit parent placement takes precedence over a `.fit` component's default
+auto margins; deliberate child `.self-*` placement still takes precedence.
+Use `.body.box` for one content area. Use a nested `.box.fill` or `.col.fill`
+when another block, such as a column heading, precedes the area that must grow.
+An anonymous nested wrapper does not establish the height needed by a figure
+or `h-full`. The height chain must run through the direct `.body`, stretching
+columns, and any nested `.fill` wrappers. Avoid `h-full` beside a heading or
+caption: it requests the parent's entire height before reserving those siblings.
+
+Within that chain, each `figure` shares available height with its sibling
+figures. Its direct `img`, `video`, or `svg` children share the height left after
+the natural caption height and gaps. Images and videos use `object-fit: contain`;
+SVG keeps its authored `viewBox` and `preserveAspectRatio`. A second caption line
+reduces the media area instead of pushing the caption below the body. Stacking
+media in one figure also reserves its final caption. Text keeps its font size
+and natural height. Oversized text/captions remain visible to rendered clipping
+and overlap diagnostics; the theme does not hide or scroll excess content.
+
+| Variable | Default | Scope |
+| :------- | :------ | :---- |
+| `--body-top-gap` | `10px` | space below a header, or above the first content without one |
+| `--body-bottom-safe` | `48px` | reserved space above the slide bottom/padding for footnotes, footer, and pagination |
+| `--body-gap` | `0.5em` | vertical gaps in the body and its column boxes |
+| `--col-gap` | `1rem` | column gaps; `.col.visual` accepts its existing `--visual-gap` override |
+| `--figure-gap` | `0.5em` | gaps between direct media and caption inside fitting figures |
+| `--visual-left`, `--visual-right` | `1.15`, `0.85` | existing first/last column width weights |
+
+Set ratios on the `.col.visual` wrapper and gaps on the smallest relevant
+wrapper. These controls are independent of `.place-*`. For more columns use
+explicit `style="flex: N"` weights on children, or the supported grid utilities
+inside a `.fill` wrapper. Do not combine competing `grid`/`flex` display utilities
+with `.col` or `.box` on the same element.
+
+When constraints compete, first establish that height chain, then choose the
+column ratio that gives the labels and caption enough width. Adjust the body
+or figure gap if needed. To allocate more height to one stacked figure, set its
+`style="flex: 2"` weight. To limit a whole media/caption group, set the figure's
+`style="flex: none; height: 280px"`; a bare media `height: 100%` would leave no
+caption allowance. Increase `--body-bottom-safe` for a taller footnote/footer.
+If the required text itself is too tall, revise or split the slide after a
+render; reducing the media cannot make that text fit.
+
+Existing `.fill`-only decks retain their header margins, bottom reserve, and
+natural figure behavior. No deck rewrite is required. Opt in one slide at a
+time by adding `.body` to its direct wrapper (for example,
+`class="box fill"` becomes `class="body box"`, or `class="col visual fill"`
+becomes `class="body col visual"`) and inspect the render. The new defaults
+change media height allocation and reserve `48px`, rather than the legacy
+`.fill` reserve of `1.25em`.
+
+For intentionally fixed media inside a new body, add `.figure-natural` to
+that figure. Its media keep their authored inline width/height and ordinary
+flow, so the author remains responsible for fitting the group. Explicit inline
+`object-fit: cover`, `object-position`, SVG viewport settings, and deliberate
+crop remain authored choices. A fitting figure still honors inline crop;
+`.figure-natural` is needed when the inline dimensions themselves must be fixed.
+These overrides do not erase source attribution or caption qualifications.
 
 ## Token Boundary
 
@@ -252,6 +346,62 @@ overrides and transforms. The source heuristic `typography-drift` names the
 escapes only when rendering is unavailable.
 
 ## Validation Contract
+
+### Lab slide typography
+
+`theme: lab` uses the typography, emphasis, caption, citation, table, and
+supplementary-surface mapping in `themes/src/lab/_visual.css`, backed by
+`designs/lab/DESIGN.md`. No additional class is required for normal, title, or
+invert slides. The former comparison class has no selector or compatibility
+alias; remove it from existing `class` and `_class` directives.
+
+This lab mapping preserves composition and does not define body-area,
+header-gap, or media-sizing mechanics. It excludes sections with a direct
+`.paper-header` and is not imported by muji/toshiba. Existing emphasis markup
+and deck-local overrides remain valid.
+Generated `--text-*`, `--leading-*`, `--font-weight-*`, and `--tracking-*` tokens
+set semantic type roles; `--lab-table-header`, `--lab-table-stripe`, and
+`--lab-table-border` select the table colors for the active lab surface.
+`--lab-callout-color` selects the rule color from its semantic label token.
+These variables belong to lab slides. The existing font-family overrides remain
+`--font-body` and `--font-display`; named color schemes retain their colors.
+
+Body size stays 26px with explicit line height 1.5 (39px). Strong weight changes
+from 500 to 700, captions from 15.6px to 19.5px with line height 1.3, and
+footnotes from 10.4px to 14px with line height 1.4. Tables use 22.75px type.
+The imported font weights are 400/700; family declarations alone do not prove
+that Japanese glyphs loaded. These default changes can alter wrapping and
+available space even though column order, grouping, and alignment are retained.
+Validate existing lab decks after updating. See [the lab typography guide](lab-refinement.md)
+for token mappings, fixed-font comparisons, known boundaries, and validation.
+
+New lab prose uses three roles: Markdown emphasis for stress, strong for
+importance, and HTML `mark` for the relevant passage being discussed.
+`em` retains its lower-30% band and `strong` retains colored bold type.
+`mark` paints a pale background over the central 80% of each inline fragment,
+leaving 10% clear above and below, with `0.08em` horizontal padding. It inherits
+the surrounding text color and clones its paint across natural line breaks.
+`--lab-mark-fill` selects the light or dark design token (`--color-mark-fill`
+or `--color-mark-fill-invert`); `--spacing-mark-inline` supplies the padding.
+These tokens apply to lab slides. Deck-local
+background, color, and padding overrides remain valid.
+
+The `.marker` utility remains a lower-30% band for existing decks, but is no
+longer recommended for new lab prose. There is no removal, automatic rewrite,
+or deprecation warning. Choose emphasis or `mark` according to the intended
+meaning when revising existing text. This treatment excludes paper and other
+themes. See [the authoring examples](../fixtures/lab-emphasis-slide.md) and
+[the adoption decision](decisions/ADR-0011-separate-lab-emphasis-from-contextual-highlighting.md).
+
+Japanese captions already receive BudouX phrase boundaries. Lab slide
+`figcaption` additionally uses `text-wrap-style: balance` to distribute short
+captions across lines. The longhand preserves authored `white-space: nowrap`
+and `.nobr` runs. Use `text-wrap-style: auto` on a caption to restore ordinary
+wrapping. This change does not apply balancing to body text, paper, or other
+themes. Line breaks still depend on the font, available width, and browser;
+see [the caption comparison](evidence/ISS-0049-caption-feedback/README.md).
+
+### Rendered checks
 
 An opted-in `<!-- _scroll: true -->` slide keeps its original canvas size and
 fixed header, first top-level heading, footer, and pagination. The plugin adds

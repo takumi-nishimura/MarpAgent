@@ -13,6 +13,7 @@ const {
   forwardChildSignals,
   forwardLines,
   getMarpBin,
+  isHttpPortConflict,
   isNotifierPortConflict,
   openBrowser,
   resolveRequestedSlide,
@@ -23,6 +24,9 @@ const configPath = path.join(repoRoot, "marp.config.js");
 
 const MAX_NOTIFIER_RETRIES = 5;
 const NOTIFIER_RETRY_DELAY_MS = 250;
+const DEFAULT_HTTP_PORT = 8080;
+const MAX_HTTP_PORT_ATTEMPTS = 10;
+const LAST_HTTP_PORT = DEFAULT_HTTP_PORT + MAX_HTTP_PORT_ATTEMPTS - 1;
 
 enforceSupportedNodeRuntime();
 
@@ -77,6 +81,11 @@ function main() {
   const marpArgs = ["--server", "--watch", "--config", configPath, deckDir];
   warnIfPublic(bindAddress);
 
+  // Only an absent PORT opts into the implicit-candidate fallback; explicit
+  // values, including empty or invalid ones, reach the child untouched.
+  const implicitPort = process.env.PORT === undefined;
+  let httpPort = DEFAULT_HTTP_PORT;
+
   let child;
   let opened = false;
   let notifierRetries = 0;
@@ -109,6 +118,7 @@ function main() {
       stdio: ["inherit", "pipe", "pipe"],
       env: {
         ...process.env,
+        ...(implicitPort ? { PORT: String(httpPort) } : {}),
         MARP_AGENT_BIND_ADDRESS: bindAddress,
         NODE_OPTIONS: `${process.env.NODE_OPTIONS || ""} --require ${JSON.stringify(path.join(repoRoot, "src/marp-bind-preload.js"))}`,
       },
@@ -129,11 +139,35 @@ function main() {
         return;
       }
 
+      // Retry actual HTTP bind failures, including races after startup. Handle
+      // mixed HTTP/notifier failures here without spending notifier retries.
+      if (
+        code !== 0 &&
+        implicitPort &&
+        isHttpPortConflict(outputTail, httpPort)
+      ) {
+        if (httpPort < LAST_HTTP_PORT) {
+          const tried = httpPort;
+          httpPort += 1;
+          opened = false;
+          process.stderr.write(
+            `[preview] HTTP port ${tried} is already in use; trying ${httpPort} (${httpPort - DEFAULT_HTTP_PORT + 1}/${MAX_HTTP_PORT_ATTEMPTS})\n`,
+          );
+          start();
+          return;
+        }
+        process.stderr.write(
+          `[preview] HTTP ports ${DEFAULT_HTTP_PORT}-${LAST_HTTP_PORT} are all in use; giving up after ${MAX_HTTP_PORT_ATTEMPTS} attempts\n`,
+        );
+        process.exit(code ?? 1);
+        return;
+      }
+
       // The watch notifier picks a free port and binds it later without an
       // error handler, so concurrent starts can lose the race and crash with
       // EADDRINUSE. Respawning re-probes the port and converges on a free
-      // one; if the serve listen port is genuinely taken, the retry exits
-      // with Marp's handled "Listen port" error instead.
+      // one; a taken HTTP listen port is handled by the candidate fallback
+      // above (or reported as-is when PORT was explicit) before this retry.
       if (
         code !== 0 &&
         isNotifierPortConflict(outputTail) &&

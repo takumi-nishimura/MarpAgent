@@ -20,6 +20,8 @@ Make the smallest coherent change that achieves the request. For a structural re
 
 Use [marp-slide-types](../marp-slide-types/SKILL.md) to choose the form that makes the evidence and reasoning easiest to follow, and [marp-components](../marp-components/SKILL.md) only as needed. Replace generic wording with concrete statements supported by the supplied material. Retain qualifications, units, comparison conditions, and sources when cutting text. Follow reference decks and the user's voice; do not impose equal bullet counts, a new card system, or layout variety as an end in itself.
 
+For layout adjustments, inspect the default behavior first, then try the existing small set of theme parameters and supported utilities, and use page-specific CSS for a concrete remaining need. Preserve explicit crop/scroll and colored bold/markers. Record why an inline size, wrapper or parameter is added or kept; fewer source lines alone do not establish an improvement. For a shared layout/theme comparison, reuse the [representative baselines and comparison record](../../../fixtures/layout-baselines/README.md) with matching browser and verified font conditions.
+
 Check transitions and cross-references after moving or splitting pages. Check local versus inherited directives, displayed page numbers, media paths, and presenter notes. Reuse owned media through the repository's file-symlink convention. Update the brief only for changed requirements or source context, not for a new slide order.
 
 If the requested cut would remove necessary evidence or violate a fixed constraint, make the tradeoff explicit. Ask for a decision only when it cannot be resolved from the user's priorities; continue independent edits where possible.

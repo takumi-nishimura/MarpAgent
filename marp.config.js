@@ -7,6 +7,8 @@ const { loadDefaultJapaneseParser } = require("budoux");
 const marpGithubAlertsPlugin = require("./scripts/github-alerts-plugin");
 const marpHideSlidesPlugin = require("./scripts/hide-slides-plugin");
 const marpMermaidPlugin = require("./scripts/mermaid-plugin");
+const marpD2Plugin = require("./scripts/d2-plugin");
+const { assertD2RenderSucceeded } = require("./src/d2-diagnostics");
 const marpScrollSlidesPlugin = require("./scripts/scroll-slides-plugin");
 
 const cursorScript = fs.readFileSync(
@@ -43,7 +45,8 @@ const VOID_TAGS = new Set([
     "track",
     "wbr",
 ]);
-const SELF_CLOSING_TAG_RE = /<([a-z][a-z0-9]*)\b((?:[^>"']|"[^"]*"|'[^']*')*?)\s*\/>/gi;
+const SELF_CLOSING_TAG_RE =
+    /<([a-z][a-z0-9]*)\b((?:[^>"']|"[^"]*"|'[^']*')*?)\s*\/>/gi;
 
 function expandSelfClosingNonVoidTags(html) {
     return html.replace(SELF_CLOSING_TAG_RE, (match, tagName, attrs) => {
@@ -58,7 +61,14 @@ function applyBudoux(html) {
     let prefix = "marpagent-raw";
     while (html.includes(prefix)) prefix += "_";
     const rawElements = [];
-    const protectedHtml = html.replace(
+    const protectedDiagrams = html.replace(
+        /<div class="d2-diagram" data-marpagent-d2="true">[\s\S]*?<\/div>/g,
+        (element) => {
+            rawElements.push(element);
+            return `<!--${prefix}-${rawElements.length - 1}-->`;
+        },
+    );
+    const protectedHtml = protectedDiagrams.replace(
         /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi,
         (element) => {
             rawElements.push(element);
@@ -95,20 +105,33 @@ module.exports = {
         const base = new Marp({ html: true, ...options })
             .use(marpHideSlidesPlugin)
             .use(marpMermaidPlugin)
+            .use(marpD2Plugin)
             .use(marpGithubAlertsPlugin)
             .use(marpScrollSlidesPlugin);
         // Normalize both rendering and direct markdown.parse calls (slide maps).
-        base.markdown.core.ruler.before("normalize", "marpagent_bom", (state) => {
-            state.src = normalizeMarkdown(state.src);
-        });
+        base.markdown.core.ruler.before(
+            "normalize",
+            "marpagent_bom",
+            (state) => {
+                state.src = normalizeMarkdown(state.src);
+            },
+        );
         const _render = base.render.bind(base);
         base.render = (markdown, env) => {
             ensureCustomSizesForMarkdown(base, markdown);
             const result = _render(markdown, env);
+            if (process.env.MARP_AGENT_D2_STRICT === "1") {
+                assertD2RenderSucceeded(result.html);
+            }
             const html =
                 applyBudoux(result.html) +
                 `\n<script>${cursorScript}</script>\n<script>${scrollScript}</script>`;
-            return { ...result, html };
+            return {
+                ...result,
+                html,
+                css: result.css + marpD2Plugin.D2_CSS,
+                d2Diagnostics: [...base.markdown.marpagentD2Diagnostics],
+            };
         };
         return base;
     },

@@ -13,11 +13,18 @@ colors:
   on-surface: "#202228"
   accent-strong: "#D97706"
   emphasis: "#D1C600"
+  mark-fill: "rgba(215, 182, 0, 0.24)"
+  mark-fill-invert: "rgba(250, 220, 90, 0.2)"
   muted-invert: "#AAAAAA"
   highlight-invert: "#FDBA74"
   table-border: "#999999"
   table-header: "#F0F0F0"
   table-stripe: "#FAFAFA"
+  strong-ink: "#B45309"
+  muted-ink: "#626872"
+  table-header-invert: "#33363F"
+  table-stripe-invert: "#292C33"
+  table-border-invert: "{colors.muted-ink}"
   cursor-orange: "#FF5C31"
   cursor-glow: "rgba(255, 92, 49, 0.5)"
   note: "#316DCA"
@@ -102,43 +109,61 @@ typography:
     fontFamily: Noto Sans JP
     fontSize: 65px
     fontWeight: 700
-    lineHeight: 1.1
+    lineHeight: "1.1"
     letterSpacing: 0em
   headline-lg:
     fontFamily: Noto Sans JP
     fontSize: 58.5px
     fontWeight: 700
-    lineHeight: 1.15
+    lineHeight: "1.15"
     letterSpacing: 0em
   headline-md:
     fontFamily: Noto Sans JP
     fontSize: 39px
     fontWeight: 700
-    lineHeight: 1.2
+    lineHeight: "1.2"
+    letterSpacing: 0em
+  headline-sm:
+    fontFamily: Noto Sans JP
+    fontSize: 32.5px
+    fontWeight: 700
+    lineHeight: "1.3"
+    letterSpacing: 0em
+  headline-xs:
+    fontFamily: Noto Sans JP
+    fontSize: 29.25px
+    fontWeight: 700
+    lineHeight: "1.35"
     letterSpacing: 0em
   body-md:
     fontFamily: Noto Sans JP
     fontSize: 26px
     fontWeight: 400
-    lineHeight: 1.4
+    lineHeight: "1.5"
     letterSpacing: 0em
   body-sm:
     fontFamily: Noto Sans JP
     fontSize: 22.75px
     fontWeight: 400
-    lineHeight: 1.35
+    lineHeight: "1.35"
     letterSpacing: 0em
   caption:
     fontFamily: Noto Sans JP
     fontSize: 19.5px
     fontWeight: 400
-    lineHeight: 1.3
+    lineHeight: "1.3"
+    letterSpacing: 0em
+  footnote:
+    fontFamily: Noto Sans JP
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: "1.4"
     letterSpacing: 0em
   label-md:
     fontFamily: Noto Sans JP
     fontSize: 26px
     fontWeight: 700
-    lineHeight: 1.2
+    lineHeight: "1.2"
     letterSpacing: 0em
 rounded:
   none: 0px
@@ -155,6 +180,11 @@ spacing:
   header-height: 60px
   logo-title-size: 80px
   logo-header-size: 50px
+  rule-width: 1px
+  callout-rule-width: 3px
+  table-cell-x: 10px
+  table-cell-y: 6px
+  mark-inline: 0.08em
 components:
   slide-canvas:
     backgroundColor: "{colors.neutral}"
@@ -198,9 +228,22 @@ components:
     backgroundColor: "{colors.emphasis}"
     textColor: "{colors.on-surface}"
     typography: "{typography.body-sm}"
+  reference-mark:
+    backgroundColor: "{colors.mark-fill}"
+    typography: "{typography.body-md}"
+  reference-mark-invert:
+    backgroundColor: "{colors.mark-fill-invert}"
+    typography: "{typography.body-md}"
   strong-emphasis:
-    textColor: "{colors.accent-strong}"
-    typography: "{typography.body-sm}"
+    textColor: "{colors.strong-ink}"
+    typography: "{typography.label-md}"
+  subheading:
+    typography: "{typography.headline-sm}"
+  minor-heading:
+    typography: "{typography.headline-xs}"
+  citation:
+    textColor: "{colors.muted-ink}"
+    typography: "{typography.footnote}"
   inverted-muted-text:
     textColor: "{colors.muted-invert}"
     typography: "{typography.caption}"
@@ -214,6 +257,7 @@ components:
     typography: "{typography.body-sm}"
   table-border:
     backgroundColor: "{colors.table-border}"
+    size: "{spacing.rule-width}"
   table-header:
     backgroundColor: "{colors.table-header}"
     textColor: "{colors.on-surface}"
@@ -222,6 +266,20 @@ components:
     backgroundColor: "{colors.table-stripe}"
     textColor: "{colors.on-surface}"
     typography: "{typography.body-sm}"
+  table-header-invert:
+    backgroundColor: "{colors.table-header-invert}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.body-sm}"
+  table-stripe-invert:
+    backgroundColor: "{colors.table-stripe-invert}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.body-sm}"
+  table-border-invert:
+    backgroundColor: "{colors.table-border-invert}"
+  table-cell-inline:
+    padding: "{spacing.table-cell-x}"
+  table-cell-block:
+    padding: "{spacing.table-cell-y}"
   presenter-cursor:
     backgroundColor: "{colors.cursor-orange}"
     typography: "{typography.body-sm}"
@@ -232,6 +290,8 @@ components:
     backgroundColor: "{colors.note}"
     textColor: "{colors.on-primary}"
     typography: "{typography.body-sm}"
+    rounded: "{rounded.sm}"
+    size: "{spacing.callout-rule-width}"
   callout-note-label:
     textColor: "{colors.note-strong}"
     typography: "{typography.body-sm}"
@@ -264,7 +324,7 @@ components:
     textColor: "{colors.caution-strong}"
     typography: "{typography.body-sm}"
   metadata-label:
-    textColor: "{colors.secondary}"
+    textColor: "{colors.muted-ink}"
     typography: "{typography.caption}"
   utility-red:
     textColor: "{colors.red}"
@@ -467,16 +527,17 @@ colors for callouts.
 
 - **Primary (#202228):** near-black ink for body text, title rules, and
   high-contrast labels.
-- **Secondary (#7F7F7F):** muted gray for metadata, captions, pagination, and
-  non-essential labels.
+- **Secondary (#7F7F7F):** the existing muted gray for paper and shared labels.
+- **Muted ink (#626872):** darker slide captions, citations, and metadata.
 - **Tertiary (#0969DA):** technical blue reserved for note-style highlights,
   links, and utility emphasis; it is not the default theme accent.
 - **Neutral / Surface (#FFFFFF):** white canvas for projection and PDF export.
 - **Surface muted (#F6F8FA):** subtle panel fill for summaries, feature cards,
   and compact explanatory blocks.
-- **Accent strong (#D97706):** warm emphasis for accent markers and `strong`
-  text. Header and title rules use a semi-transparent treatment of this color
-  so they support structure without dominating the slide.
+- **Accent strong (#D97706):** warm accent markers and paper emphasis. Header
+  and title rules use a semi-transparent treatment of this color so they
+  support structure without dominating the slide.
+- **Strong ink (#B45309):** darker warm emphasis for slide `strong` text.
 
 Utility colors preserve the existing lab theme vocabulary for inline emphasis:
 red, blue, light-blue, green, yellow, orange, cyan, pink, and purple.
@@ -500,6 +561,57 @@ The author-facing scale maps to existing MarpAgent utilities:
 - `body-md` is the base slide text.
 - `body-sm` maps to `.text-sm`.
 - `caption` maps to `.text-xs`, the smallest supported authoring size.
+
+The `lab` theme maps these tokens directly to semantic slide elements in
+`themes/src/lab/_visual.css`. No extra class is required. Paper keeps its
+existing independent scale. Composition remains in the shared layout styles.
+
+| Role | Generated tokens | Lab slide mapping |
+| :--- | :--------------- | :-------------- |
+| Body | `--text-body-md`, `--leading-body-md`, `--font-weight-body-md`, `--tracking-body-md` | slide text; body size retained |
+| Title | `--text-display`, `--leading-display`, `--font-weight-display`, `--tracking-display` | title-slide `h1` |
+| Heading | corresponding `headline-lg`, `headline-md`, `headline-sm`, `headline-xs` tokens | `h1`, `h2`, `h3`, `h4` |
+| Caption | corresponding `caption` tokens | `figcaption`; existing alignment and figure grouping retained |
+| Citation | corresponding `footnote` tokens | `.footnote`; existing placement retained |
+| Table | `--text-body-sm`, `--leading-body-sm` | table text; cell padding and rules use spacing tokens |
+| Strong | `--font-weight-label-md`, `--color-strong-ink` | `strong`; named schemes retain their own colors |
+
+Quoted unitless `lineHeight` values are intentional. The installed design.md
+exporter omits numeric YAML line heights but exports their quoted equivalents
+as `--leading-*`. Lab slides use a 26px body with line height 1.5 (39px),
+19.5px captions at 1.3, and 14px citations at 1.4. These replace the browser's
+`normal` slide line height, 15.6px captions, and 10.4px citations. Existing decks
+can wrap differently and need a rendered check; no compatibility class is kept.
+
+Strong text uses the darker warm accent on light surfaces and the
+existing inverted highlight on plain `invert` slides. It remains colored and
+uses the already requested bold font weight. `em` emphasizes part of a sentence
+with the existing translucent band in the lower 30% of the inline box.
+`.marker` retains that band for compatibility with existing decks.
+
+`mark` identifies a reference or attention range with a distinct, pale fill in
+the central 80% of its inline box. Its top and bottom 10% remain transparent;
+it stays inline and clones the background at line breaks. It inherits text
+color and weight and uses `spacing.mark-inline` (0.08em) on each horizontal side,
+with no vertical padding or line-height change. `colors.mark-fill` is
+rgba(215, 182, 0, 0.24) on light surfaces; `colors.mark-fill-invert` is
+rgba(250, 220, 90, 0.2) on dark surfaces. The lab mapping selects the effective
+surface using the same invert/named-scheme rules as tables, including light
+`neogaia invert` and `github-light` surfaces. Explicit deck-local background
+and text-color overrides remain valid. Paper and other themes keep their own
+existing treatment. No extra authoring class or migration warning is required.
+
+Captions and citations use the darker muted ink; named schemes keep
+their existing muted colors. Tables retain a visible cell grid and bold header,
+with explicit dark fills on dark schemes. Callouts retain their labels and icons
+and add a rule; neither tables nor callouts rely on color alone.
+
+The remote import requests weights 400 and 700. Slide strong text now uses 700;
+the previous CSS weight of 500 did not guarantee an installed 500 face. Font
+availability and fallback widths must be checked in the actual browser; declaring the family
+does not prove that Japanese glyphs loaded. See
+[`docs/lab-refinement.md`](../../docs/lab-refinement.md) for the comparison
+environment, known wrap changes, and migration checks.
 
 Letter spacing remains `0em`. Do not add negative tracking. Japanese line
 breaking is handled by BudouX; use `.nobr` only for short phrases that must

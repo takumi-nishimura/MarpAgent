@@ -1,0 +1,247 @@
+{
+  "baseline": "9836b76ece37b654259c408a47cf64ce5cd7436b",
+  "implementation": "94eb340",
+  "input": {
+    "file": "fixtures/body-layout-slide.md",
+    "sha256": "90dbb525fb4ab4d84712c61a6397dc28fdd2f12850303fe85a2a4699fe544557",
+    "japaneseReplacement": {
+      "before": "The caption stays with the evidence when it wraps to a second line with further necessary qualifications",
+      "after": "図1．同じ測定条件で比較した結果を示す．参加者や装置が異なる条件へ一般化できることは示していない．"
+    },
+    "artworkSha256": "b80039b0864c1a0a6bfd0b3e0963e89461e82151045e28ad9212154a518c8092"
+  },
+  "fonts": [
+    {
+      "weight": 400,
+      "file": "NotoSansJP-400.ttf",
+      "sha256": "f037d714109f22d57ce75fd9a6b9d23439c903061fb11106c070b2dcc03f2021"
+    },
+    {
+      "weight": 700,
+      "file": "NotoSansJP-700.ttf",
+      "sha256": "59bb5d2915bba3a256950116e7a48a810bd8cde63793d5111b9e5726eec1e799"
+    }
+  ],
+  "environment": {
+    "node": "v25.6.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "chromium": "145.0.7632.6",
+    "playwright": "1.58.2",
+    "viewport": [
+      1280,
+      720
+    ],
+    "deviceScaleFactor": 1
+  },
+  "captures": {
+    "before": {
+      "css": {
+        "file": "../ISS-0049-marker-feedback/styles/before.css.gz",
+        "sha256": "7df07730347204c56a4086c2a00005d8287d30d0716c43457503fadd1fd6550e"
+      },
+      "slides": {
+        "english": {
+          "text": "\nRemaining-area composition\nGive evidence more width than its explanation\n\n\n\n\nThe caption stays with the evidence when it wraps to a second line with further necessary qualifications\n\n\n\nThe column ratio expresses the intended reading order.\nThe figure keeps its source ratio and the text keeps its natural size.\n\n\nSynthetic layout examples\n",
+          "caption": "The caption stays with the evidence when it wraps to a second line with further necessary qualifications",
+          "phraseBreaks": 0,
+          "lines": [
+            {
+              "text": "Thecaptionstayswiththeevidencewhenitwrapstoasecondlinewithfurther",
+              "width": 707
+            },
+            {
+              "text": "necessaryqualifications",
+              "width": 219
+            }
+          ],
+          "lineWidthRatio": 0.30975954738330974,
+          "captionBox": {
+            "x": 40,
+            "y": 621.3125,
+            "width": 782.671875,
+            "height": 50.6875
+          },
+          "imageBox": {
+            "x": 40,
+            "y": 126.546875,
+            "width": 782.671875,
+            "height": 481.765625
+          },
+          "bodyBox": {
+            "x": 40,
+            "y": 126.546875,
+            "width": 1200,
+            "height": 545.453125
+          },
+          "textWrapStyle": "auto",
+          "fontUsage": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 102
+            }
+          ],
+          "image": {
+            "file": "english-before.png",
+            "sha256": "87accd1911e8fad0e9ba716ec55535c9ba074e670c3dc4002397d4325fd2af2f",
+            "bytes": 54629
+          }
+        },
+        "japanese": {
+          "text": "\nRemaining-area composition\nGive evidence more width than its explanation\n\n\n\n\n図1．​同じ​測定条件で​比較した​結果を​示す．​参加者や​装置が​異なる​条件へ​一般化できる​ことは​示していない．\n\n\n\nThe column ratio expresses the intended reading order.\nThe figure keeps its source ratio and the text keeps its natural size.\n\n\nSynthetic layout examples\n",
+          "caption": "図1．​同じ​測定条件で​比較した​結果を​示す．​参加者や​装置が​異なる​条件へ​一般化できる​ことは​示していない．",
+          "phraseBreaks": 12,
+          "lines": [
+            {
+              "text": "図1．同じ測定条件で比較した結果を示す．参加者や装置が異なる条件へ一般化できる",
+              "width": 770
+            },
+            {
+              "text": "ことは示していない．",
+              "width": 199
+            }
+          ],
+          "lineWidthRatio": 0.2584415584415584,
+          "captionBox": {
+            "x": 40,
+            "y": 621.3125,
+            "width": 782.671875,
+            "height": 50.6875
+          },
+          "imageBox": {
+            "x": 40,
+            "y": 126.546875,
+            "width": 782.671875,
+            "height": 481.765625
+          },
+          "bodyBox": {
+            "x": 40,
+            "y": 126.546875,
+            "width": 1200,
+            "height": 545.453125
+          },
+          "textWrapStyle": "auto",
+          "fontUsage": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 61
+            }
+          ],
+          "image": {
+            "file": "japanese-before.png",
+            "sha256": "be6bfd9abe16c599fec0a5557f411c2986672fbd7bb68462b6baf407b700e2d1",
+            "bytes": 64794
+          }
+        }
+      }
+    },
+    "after": {
+      "css": {
+        "file": "styles/after.css.gz",
+        "sha256": "533c9057f2f60e236748b9f4a3009a1acaea9ca4cb934987dd6c14b001ae82ce"
+      },
+      "slides": {
+        "english": {
+          "text": "\nRemaining-area composition\nGive evidence more width than its explanation\n\n\n\n\nThe caption stays with the evidence when it wraps to a second line with further necessary qualifications\n\n\n\nThe column ratio expresses the intended reading order.\nThe figure keeps its source ratio and the text keeps its natural size.\n\n\nSynthetic layout examples\n",
+          "caption": "The caption stays with the evidence when it wraps to a second line with further necessary qualifications",
+          "phraseBreaks": 0,
+          "lines": [
+            {
+              "text": "Thecaptionstayswiththeevidencewhenitwrapsto",
+              "width": 473
+            },
+            {
+              "text": "asecondlinewithfurthernecessaryqualifications",
+              "width": 453
+            }
+          ],
+          "lineWidthRatio": 0.9577167019027484,
+          "captionBox": {
+            "x": 40,
+            "y": 621.3125,
+            "width": 782.671875,
+            "height": 50.6875
+          },
+          "imageBox": {
+            "x": 40,
+            "y": 126.546875,
+            "width": 782.671875,
+            "height": 481.765625
+          },
+          "bodyBox": {
+            "x": 40,
+            "y": 126.546875,
+            "width": 1200,
+            "height": 545.453125
+          },
+          "textWrapStyle": "balance",
+          "fontUsage": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 102
+            }
+          ],
+          "image": {
+            "file": "english-after.png",
+            "sha256": "2c2fb69ce6c533899b0d07d76927182053c2ea9588e95840c66b93e153245350",
+            "bytes": 54852
+          }
+        },
+        "japanese": {
+          "text": "\nRemaining-area composition\nGive evidence more width than its explanation\n\n\n\n\n図1．​同じ​測定条件で​比較した​結果を​示す．​参加者や​装置が​異なる​条件へ​一般化できる​ことは​示していない．\n\n\n\nThe column ratio expresses the intended reading order.\nThe figure keeps its source ratio and the text keeps its natural size.\n\n\nSynthetic layout examples\n",
+          "caption": "図1．​同じ​測定条件で​比較した​結果を​示す．​参加者や​装置が​異なる​条件へ​一般化できる​ことは​示していない．",
+          "phraseBreaks": 12,
+          "lines": [
+            {
+              "text": "図1．同じ測定条件で比較した結果を示す．参加者や",
+              "width": 470
+            },
+            {
+              "text": "装置が異なる条件へ一般化できることは示していない．",
+              "width": 499
+            }
+          ],
+          "lineWidthRatio": 0.9418837675350702,
+          "captionBox": {
+            "x": 40,
+            "y": 621.3125,
+            "width": 782.671875,
+            "height": 50.6875
+          },
+          "imageBox": {
+            "x": 40,
+            "y": 126.546875,
+            "width": 782.671875,
+            "height": 481.765625
+          },
+          "bodyBox": {
+            "x": 40,
+            "y": 126.546875,
+            "width": 1200,
+            "height": 545.453125
+          },
+          "textWrapStyle": "balance",
+          "fontUsage": [
+            {
+              "familyName": "Noto Sans JP",
+              "postScriptName": "NotoSansJP-Regular",
+              "isCustomFont": true,
+              "glyphCount": 61
+            }
+          ],
+          "image": {
+            "file": "japanese-after.png",
+            "sha256": "476a42de92bc58d6502ae4da518e3d343b75fb6a806fca5b775ba86e192892f2",
+            "bytes": 65786
+          }
+        }
+      }
+    }
+  }
+}

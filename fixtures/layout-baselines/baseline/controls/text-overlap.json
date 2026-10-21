@@ -1,0 +1,30 @@
+{
+  "deckPath": "fixtures/text-overlap-slide.md",
+  "slideCount": 1,
+  "visualCheck": {
+    "status": "measured"
+  },
+  "counts": {
+    "errors": 1,
+    "warnings": 0,
+    "hints": 0
+  },
+  "findings": [
+    {
+      "slide": 1,
+      "renderedSlide": 1,
+      "sectionId": "1",
+      "page": null,
+      "line": 5,
+      "ruleId": "text-overlap",
+      "severity": "error",
+      "source": "render",
+      "title": "Text overlaps other content by up to 11px: \"and see their contribution is n…\" and \"[1] Ministry of Health, Labour …\" (11px).",
+      "suggestion": "Separate the colliding elements: trim or split the slide so the flow ends above the footnote or figure, or move the positioned element; do not shrink text or line spacing to make room."
+    }
+  ],
+  "artifactErrors": [],
+  "screenshots": [
+    "text-overlap.png"
+  ]
+}

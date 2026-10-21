@@ -13,7 +13,7 @@
   /* Column layout */
   .col {
     display: flex;
-    gap: 1rem;
+    gap: var(--col-gap, 1rem);
     align-items: flex-start;
   }
   .col > * {
@@ -309,6 +309,56 @@
   }
 }
 
+/* Remaining-area composition is explicitly selected with a direct .body.
+   Keep these rules unlayered so element resets cannot defeat sizing. */
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  margin-bottom: var(--body-bottom-safe);
+  gap: var(--body-gap);
+}
+.body.col {
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--col-gap);
+}
+.body.col.visual {
+  gap: var(--visual-gap, var(--col-gap));
+}
+.body .box,
+.body .col > div {
+  min-height: 0;
+  gap: var(--body-gap);
+}
+/* Fit-to-content components have auto margins in legacy flow. Let an explicit
+   parent placement control them, while retaining deliberate self-placement. */
+.body:is(.box.place-left, .box.place-center, .box.place-right) > :not(.self-start, .self-center, .self-end),
+.body :is(.box, .col > div):is(.place-left, .place-center, .place-right) > :not(.self-start, .self-center, .self-end) {
+  margin-inline: 0;
+}
+.body .fill {
+  flex: 1 1 0;
+  min-height: 0;
+}
+.body > :not(figure):not(.fill),
+.body .box > :not(figure):not(.fill),
+.body .col > div > :not(figure):not(.fill) {
+  flex-shrink: 0;
+}
+.body > :first-child,
+.body .box > :first-child,
+.body .col > div > :first-child {
+  margin-top: 0;
+}
+.body > :last-child,
+.body .box > :last-child,
+.body .col > div > :last-child {
+  margin-bottom: 0;
+}
+
 /* .author paragraph reset — outside @layer so it wins over unlayered section p rule */
 .author p {
   margin: 0;
@@ -343,6 +393,35 @@ figcaption {
   color: var(--fg-muted);
   width: 100%;
   flex-shrink: 0;
+}
+
+/* Captions keep their natural size; only media share the remaining height.
+   A natural figure preserves explicitly sized artwork within an opted-in body. */
+.body figure:not(.figure-natural) {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  gap: var(--figure-gap);
+}
+.body figure:not(.figure-natural) > :is(img, video, svg) {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.body figure:not(.figure-natural) > figcaption {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+.body figure.figure-natural,
+.body figure.figure-natural > :is(img, video, svg) {
+  flex: 0 0 auto;
 }
 
 /* Image size utilities */

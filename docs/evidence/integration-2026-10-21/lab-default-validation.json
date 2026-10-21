@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-21",
+  "codeRevision": "4029409c9a9e5271002402ec6ae4742d962501e7",
+  "branch": "coord/issues-53-61-20261021",
+  "performedBy": "codex-main",
+  "environment": {
+    "platform": "Linux x64",
+    "node": "25.6.0",
+    "marpCore": "5.0.2",
+    "marpCli": "4.5.1",
+    "playwright": "1.58.2",
+    "d2": "0.9.0",
+    "font": "Noto Sans JP Regular wght=400",
+    "fontSha256": "b54f9c22fb6cb1278aced23147992ffe5991a7b26c88c4866d17bed6cff7a30b"
+  },
+  "execution": {
+    "cwd": "/tmp/marpagent-parallel-20261021/integration",
+    "serializedWith": "flock /tmp/marpagent-parallel-20261021/browser-tests.lock",
+    "env": {
+      "FONTCONFIG_FILE": "/tmp/marp-i54-baseline/fonts.conf",
+      "MARP_AGENT_D2_PATH": "/tmp/marpagent-d2-0.9.0/d2-v0.9.0/bin/d2",
+      "MARP_AGENT_D2_FONT_PATH": "/tmp/marpagent-d2-NotoSansJP-Regular.ttf",
+      "CHROME_NO_SANDBOX": "1"
+    },
+    "zipArtifactEnv": {
+      "MARP_AGENT_ZIP_D2_ARTIFACT_DIR": "/tmp/marpagent-parallel-20261021/lab-default-zip-d2-artifacts"
+    }
+  },
+  "runs": [
+    {
+      "command": "npm run quality:gate:strict",
+      "unit": {
+        "passed": 504,
+        "failed": 0,
+        "skipped": 0
+      },
+      "fixtures": {
+        "passed": 18,
+        "failed": 0
+      },
+      "browser": {
+        "passed": 113,
+        "failed": 0,
+        "skipped": 1,
+        "skipReason": "Existing Firefox native touch capability exclusion"
+      },
+      "exitCode": 0,
+      "localLog": "/tmp/marpagent-parallel-20261021/lab-default-strict-gate.log",
+      "logSha256": "2c490e1d027dc068c655be944058038ab5b88f03828d325cf800c92a21e30785"
+    },
+    {
+      "command": "npm run test:d2",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "localLog": "/tmp/marpagent-parallel-20261021/lab-default-d2.log",
+      "logSha256": "7195a92c4308918f02e2740b7b8bf1470ebc68157269ed2d7034627714e2f312"
+    },
+    {
+      "command": "npm run test:zip:d2",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "localLog": "/tmp/marpagent-parallel-20261021/lab-default-zip-d2.log",
+      "logSha256": "70b12789e44074bb2426243f2bdbd8d1a5336145eff75814bb6c802244a005d6"
+    }
+  ],
+  "d2BoundaryFixes": [
+    {
+      "workerCommit": "5f7d501",
+      "integrationCommit": "d878c59",
+      "boundary": "Reject resource-bearing CSS functions in fresh and cached SVG"
+    },
+    {
+      "workerCommit": "5699ea4",
+      "integrationCommit": "6e6cb8b",
+      "boundary": "Reject inline and inconsistent block delimiters before invoking D2, including shared-cache use across cwd"
+    },
+    {
+      "workerCommit": "d7d077d",
+      "integrationCommit": "be3fc23",
+      "boundary": "Clean inherited-environment detached Linux children while preserving unrelated processes"
+    }
+  ],
+  "review": {
+    "main": "Inspected the typography, generated CSS, regression-test changes and fixture correction locally. Ran the full integration gates at the recorded revision. Existing resolver and D2 boundary review results are reused; no additional independent review was requested for this theme change.",
+    "historicalBoundaryReview": "Initial subprocess/SVG review reproduced three defects. Independent post-fix re-review was not completed because of a service response restriction. Additional ZIP review was also incomplete; no unperformed review is counted as passed."
+  },
+  "limits": [
+    "Linux execution only; macOS and Windows hosts were not tested.",
+    "PDF/PPTX generation passed; separate PDF/PowerPoint viewer inspection was not performed.",
+    "D2 process cleanup targets the trusted pinned CLI and identifiable children, not arbitrary hostile executables.",
+    "Body fitting improves the checked layouts; a general reduction in minimum per-page adjustment count is not established.",
+    "Log files and generated ZIP artifacts remain local temporary evidence; repository tests, workflow and recorded conditions provide the rerun procedure."
+  ],
+  "publication": {
+    "pullRequest": "https://github.com/takumi-nishimura/MarpAgent/pull/62",
+    "stateAtValidation": "draft",
+    "merged": false,
+    "remoteIssuesClosed": false
+  },
+  "change": "Apply improved lab typography by default without an extra selection class.",
+  "baselineRevision": "1f303a57c1a3dc4d013db7ce4a17e4361eb676fe",
+  "initialFailure": {
+    "codeRevision": "7b33018",
+    "command": "npm run quality:gate:strict",
+    "result": "504 unit tests passed; overflow-heavy fixture no longer exercised edge-crowding after the default leading changed.",
+    "localLog": "/tmp/marpagent-parallel-20261021/lab-default-strict-gate-initial.log",
+    "logSha256": "06a541f675e4d414cb7673e8fbae7e4517118752ea56b14ad0a76460293d03ce",
+    "fixCommit": "4029409c9a9e5271002402ec6ae4742d962501e7",
+    "fix": "Fix the fixture leading explicitly, retaining its content and the existing quality thresholds and expected findings.",
+    "measuredAfterFix": {
+      "contentClippedPx": 194,
+      "edgeCrowdingBottomPx": 17,
+      "safeMarginPx": 20
+    }
+  }
+}

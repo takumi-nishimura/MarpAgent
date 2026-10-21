@@ -1,6 +1,7 @@
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawn } = require("node:child_process");
+const { stripVTControlCharacters } = require("node:util");
 
 const { findSlideIdByDisplayedPage } = require("./marp-pagination");
 
@@ -102,21 +103,28 @@ function forwardChildSignals(child) {
   process.on("SIGTERM", () => forwardSignal("SIGTERM"));
 }
 
-// Marp CLI's watch notifier probes a free port from 37717 and binds it later
-// without error handling, so two watch/serve processes started together can
-// crash with an unhandled EADDRINUSE on the WebSocketServer. Marp's own listen
-// port failure is handled and reported as "Listen port ... is already used"
-// without printing EADDRINUSE, so the raw error text only appears when the
-// notifier crashed. Retrying is safe even when both appear: a retry that
-// still finds the listen port taken exits with the handled error anyway.
+// The watch notifier probes a port from 37717, then binds without an error
+// handler. Concurrent starts can crash with raw EADDRINUSE; HTTP listen
+// failures instead produce Marp's handled "Listen port" diagnostic.
 function isNotifierPortConflict(output) {
   return /EADDRINUSE/.test(output);
+}
+
+// Match the attempted HTTP port in Marp's handled bind-failure diagnostic,
+// allowing ANSI styling, forwarded line wraps, and continuation indentation.
+function isHttpPortConflict(output, attemptedPort) {
+  const plain = stripVTControlCharacters(output);
+  const pattern = new RegExp(
+    `\\bListen\\s+port\\s+${attemptedPort}\\s+is\\s+already\\s+used\\s+in\\s+the\\s+other\\s+process\\b`,
+  );
+  return pattern.test(plain);
 }
 
 module.exports = {
   forwardChildSignals,
   forwardLines,
   getMarpBin,
+  isHttpPortConflict,
   isNotifierPortConflict,
   openBrowser,
   resolveRequestedSlide,
