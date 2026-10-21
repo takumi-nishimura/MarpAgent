@@ -2,7 +2,7 @@
 id: ISS-0047
 title: "Improve body figure and caption layout defaults"
 type: issue
-status: in-review
+status: in-progress
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -46,7 +46,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
 
 **残る条件・対象外**：選択した.body内だけへ適用し，既存原稿を一括変換しない．長文を隠したり，内容を削って合格にしたりしない．旧width utilityでも縦長図を修復でき，wrapperは増えるため，個別指定の最小数が全体で減るという完了条件は未達として残している．
 
-実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+実装部分はPR #62の統合対象として受け入れた．一般的な個別指定数の削減は未立証のため，状態をin-progressとして追跡を続ける．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
 
 ## Execution update 2026-10-21
 
@@ -193,3 +193,9 @@ repo内ISSは未起票．実装開始時に現行記録を照合し，記録CLI�
 
 最終コードbe3fc23でmainがstrict gate（unit504件，fixture18件，browser113件成功，既存Firefox対象外1件skip），固定D2実CLI7件，D2入りZIP2件を実行し，失敗なしを確認した．条件と限定確認の範囲は[統合記録](../design-assets-integration.md)を参照する．ローカル統合の受け入れと公開レビューを区別し，状態はin-reviewを維持する．
 個別指定数の一般的な削減は未確認のため，最後の完了条件は未チェックとする．旧width utilityでも縦長図を修復でき，wrapper数は増える．captionを含む収まりと調整方法の明示を今回の実装効果とする．
+
+## Integration scope and remaining work 2026-10-21
+
+本人の統合作業指示を受け，確認済みの機能実装をPR #62から取り込む．[最終統合検証](../evidence/integration-2026-10-21/premerge-validation.json)でunit504件，strict fixture18件，browser119件成功＋既存Firefox対象外1件skip，固定D2実CLI7件とD2入りZIP2件の成功を確認した．
+
+一般的な個別指定数の削減は未達のまま残し，本ISSを閉じない．既存証跡で示せたのは，縦長列でcase固有の高さ・幅を選ばず収められることと，元から収まる例では調整数が減らないことまでである．続く作業では同じ内容・構図・フォントの複数の標準例で，既存utilityによる最少修復も対照にし，wrapper・class・寸法宣言を分けて数える．効果の一般化を確認できるまで，この受入項目を完了扱いにしない．PR #62のmergeによるGitHub #53・#55の自動閉鎖も設定しない．

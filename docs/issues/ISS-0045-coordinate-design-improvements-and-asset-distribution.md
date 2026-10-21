@@ -2,7 +2,7 @@
 id: ISS-0045
 title: "Coordinate design improvements and asset distribution"
 type: issue
-status: in-review
+status: in-progress
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -41,11 +41,11 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/53
 
 **使い方・確認先**：成果物の入口は[統合計画](../design-assets-integration.md)．子ISSの説明，利用方法，比較画像，実行コマンドへ辿れる．利用者が個々の担当ログを読み合わせなくても，実装と残る条件を区別できる構成にする．
 
-**確認したこと**：最終コードbe3fc23でunit504件，strict fixture18件，browser113件が成功した．browserの既存対象外1件はskip．固定D2実CLI7件とD2入りZIP2件も成功し，記録66件を検証した．
+**確認したこと**：最新版`0dc6a34`でunit504件，strict fixture18件，browser119件が成功した．browserの既存対象外1件はskip．固定D2実CLI7件とD2入りZIP2件も成功し，依存監査はfflate修正版への更新で既知残存14件の基準に戻った．
 
 **残る条件・対象外**：最新方針は「GitHubにPRを作り，レビューはローカルで済ませる」．既存の担当レビュー・mainの差分確認・回帰試験を再利用し，GitHub上のレビュー承認は完了条件にしない．#55の一般的な指定数削減は未立証で，独立再レビューの一部が未実施だった事実も残す．親の閉鎖とmergeは別に判断する．
 
-実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+実装部分はPR #62の統合対象として受け入れた．一般的な個別指定数の削減は未立証のため，状態をin-progressとして追跡を続ける．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
 
 ## Execution update 2026-10-21
 
@@ -155,3 +155,9 @@ D2の3指摘は5f7d501／5699ea4／d7d077dで解消し，mainが差分と回帰�
 ## PR publication 2026-10-21
 
 本人の最新方針に従い，[Draft PR #62](https://github.com/takumi-nishimura/MarpAgent/pull/62)を作成した．レビューはローカルで行い，既存の担当確認・mainの差分確認・回帰試験を根拠とする．GitHubのreviewerは指定せず，mergeとIssue閉鎖は実施していない．各子ISSへ問題・実装・使い方・検証・対象外の説明を追記し，records66件とリンク67箇所を検証した．#55の一般的な指定数削減と，別PR #52のXR-0003との採番整合を残る条件として明記した．
+
+## Integration scope and remaining work 2026-10-21
+
+本人の統合作業指示を受け，確認済みの機能実装をPR #62から取り込む．[最終統合検証](../evidence/integration-2026-10-21/premerge-validation.json)でunit504件，strict fixture18件，browser119件成功＋既存Firefox対象外1件skip，固定D2実CLI7件とD2入りZIP2件の成功を確認した．
+
+一般的な個別指定数の削減は未達のまま残し，本ISSを閉じない．既存証跡で示せたのは，縦長列でcase固有の高さ・幅を選ばず収められることと，元から収まる例では調整数が減らないことまでである．続く作業では同じ内容・構図・フォントの複数の標準例で，既存utilityによる最少修復も対照にし，wrapper・class・寸法宣言を分けて数える．効果の一般化を確認できるまで，この受入項目を完了扱いにしない．PR #62のmergeによるGitHub #53・#55の自動閉鎖も設定しない．

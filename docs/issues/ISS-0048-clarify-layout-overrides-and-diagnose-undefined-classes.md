@@ -2,7 +2,9 @@
 id: ISS-0048
 title: "Clarify layout overrides and diagnose undefined classes"
 type: issue
-status: in-review
+status: closed
+resolution: completed
+resolved: "2026-10-21"
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -46,7 +48,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/56
 
 **残る条件・対象外**：助言は自動修正や検証失敗の強制には使わない．classが存在しても，親高さやcascadeが意図どおりとは限らない．外部・動的な定義を未定義と断定せず，CSSレイヤーや既存文字サイズutilityの意味は変更していない．
 
-実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+実装とローカルレビューを完了し，PR #62の統合対象として受け入れた．状態はclosed／completedとする．GitHub IssueはPRのmerge時に閉じる．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
 
 ## Execution update 2026-10-21
 
@@ -233,3 +235,7 @@ hash が一致しない場合や Noto Sans JP を実使用できない場合に�
 独立診断実装時の139件の pass はその時点の証跡として保持し，現在の統合 full gate と読み替えない．
 main の指定どおり重複 full gate は実行せず，担当作業を完了して status を in-review にした．
 統合後の受入確認と閉鎖は main が行う．新たな helper／reviewer は使っていない．
+
+## Local acceptance for PR #62 integration 2026-10-21
+
+本人の統合作業指示を受け，既存の担当・mainのローカルレビュー結果と，修正版fflateを含むコード`0dc6a34`の全体検証を確認した．unit504件，strict fixture18件，browser119件成功＋既存Firefox対象外1件skip，固定D2実CLI7件とD2入りZIP2件が成功した．条件とログhashは[最終統合検証](../evidence/integration-2026-10-21/premerge-validation.json)を参照する．本ISSの受入条件は完了として閉じる．#55の一般的な指定数削減はこの完了判定に含めず，ISS-0047と親ISS-0045で継続する．

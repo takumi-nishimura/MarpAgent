@@ -1,0 +1,169 @@
+{
+  "date": "2026-10-21",
+  "codeRevision": "0dc6a34ddaa9d551f377096e2993c49dc46946e5",
+  "branch": "coord/issues-53-61-20261021",
+  "performedBy": "codex-main",
+  "environment": {
+    "platform": "Linux x64",
+    "node": "25.6.0",
+    "marpCore": "5.0.2",
+    "marpCli": "4.5.1",
+    "playwright": "1.58.2",
+    "fflate": "0.8.3",
+    "d2": "0.9.0"
+  },
+  "execution": {
+    "cwd": "/tmp/marpagent-parallel-20261021/integration",
+    "serializedWith": "flock /tmp/marpagent-parallel-20261021/browser-tests.lock",
+    "env": {
+      "FONTCONFIG_FILE": "/tmp/marp-i54-baseline/fonts.conf",
+      "MARP_AGENT_D2_PATH": "/tmp/marpagent-d2-0.9.0/d2-v0.9.0/bin/d2",
+      "MARP_AGENT_D2_FONT_PATH": "/tmp/marpagent-d2-NotoSansJP-Regular.ttf",
+      "CHROME_NO_SANDBOX": "1"
+    },
+    "zipArtifactEnv": {
+      "MARP_AGENT_ZIP_D2_ARTIFACT_DIR": "/tmp/marpagent-parallel-20261021/premerge-zip-d2-artifacts"
+    }
+  },
+  "checks": {
+    "strictGate": {
+      "command": "npm run quality:gate:strict",
+      "exitCode": 0,
+      "unit": {
+        "passed": 504,
+        "failed": 0,
+        "skipped": 0
+      },
+      "fixtures": {
+        "passed": 18,
+        "failed": 0
+      },
+      "browser": {
+        "passed": 119,
+        "failed": 0,
+        "skipped": 1,
+        "skipReason": "Existing Firefox native touch capability exclusion"
+      }
+    },
+    "d2": {
+      "command": "npm run test:d2",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "portableD2": {
+      "command": "npm run test:zip:d2",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "focusedZipAndAudit": {
+      "command": "node --test tests/unit/portable-bundle.test.js tests/unit/dependency-audit.test.js",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0
+    },
+    "audit": {
+      "advisory": "https://github.com/advisories/GHSA-px8p-9vwx-vf98",
+      "before": {
+        "affectedPackages": 15,
+        "fflate": "0.8.2",
+        "gateExitCode": 1
+      },
+      "after": {
+        "affectedPackages": 14,
+        "fflate": "0.8.3",
+        "gateExitCode": 0
+      },
+      "baselineChanged": false,
+      "command": "node scripts/audit-dependencies.js --report <saved-npm-audit-report.json>",
+      "liveCommand": "npm run audit:dependencies",
+      "liveExitCode": 0
+    },
+    "designLint": {
+      "command": "npm run design:lint",
+      "errors": 0,
+      "warnings": 0,
+      "themes": 3
+    },
+    "designTokens": {
+      "command": "npm run design:tokens:check",
+      "matched": true
+    },
+    "bodyEvidence": {
+      "command": "node docs/evidence/ISS-0047-body-layout/rerun.cjs --verify",
+      "pngHashes": 5,
+      "inputRecipes": 18,
+      "verified": true
+    },
+    "records": {
+      "command": "uv run .github/records.py validate --strict-relations",
+      "validated": 71,
+      "exitCode": 0
+    },
+    "documentLinks": {
+      "files": 10,
+      "checked": 68,
+      "missing": 0
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  },
+  "logs": [
+    {
+      "file": "premerge-strict-gate.log",
+      "sha256": "81cd87ed80d4be6b3b25b1fde0ce5947c7c8e43272afe99e1425002ebfb1bcf2"
+    },
+    {
+      "file": "premerge-d2.log",
+      "sha256": "cb0ee7fb3d62745e0950d965e0b8ef9f3b4d7550cfe4f8b25511076a62c2f15f"
+    },
+    {
+      "file": "premerge-zip-d2.log",
+      "sha256": "64051cb2e1fbf8879f8ef34f2c950d6aedda7bf713b6fe0e57de91312da2f6fc"
+    },
+    {
+      "file": "premerge-zip-unit.log",
+      "sha256": "cbce0cda886e4ec919da9f9ce16d733985e4714e10a37171e8908dad57026dd7"
+    },
+    {
+      "file": "premerge-audit-before.json",
+      "sha256": "50f0f54c1bb2ebbc8dbe7961194f47411229c1703e27419f4f159bf021dbcb31"
+    },
+    {
+      "file": "premerge-audit-after.json",
+      "sha256": "32724b21333cbecc5dd0bdcef2ba1c7ab4b33150cefafbbc860ecb0a22f1ca23"
+    }
+  ],
+  "review": {
+    "policy": "Local review; no GitHub reviewer request or new independent review.",
+    "basis": "Reused completed worker/main reviews and limited resolver/D2 reviews, inspected the fflate-only dependency change, and ran the recorded integration checks.",
+    "historicalLimits": "Independent post-fix D2 re-review and one additional ZIP review were not completed; those are not counted as passed."
+  },
+  "acceptance": {
+    "completedIssues": [
+      "ISS-0046",
+      "ISS-0048",
+      "ISS-0049",
+      "ISS-0050",
+      "ISS-0051",
+      "ISS-0052",
+      "ISS-0053"
+    ],
+    "remainingIssues": [
+      "ISS-0045",
+      "ISS-0047"
+    ],
+    "remainingCondition": "General reduction of per-slide authored adjustments is not established. The opt-in body feature is integrated, but the parent and body-effectiveness issues stay open."
+  },
+  "limits": [
+    "Linux only; no automated macOS or Windows host verification.",
+    "D2 cleanup covers the trusted pinned compiler and identifiable descendants, not arbitrary hostile executables.",
+    "The dependency audit still has 14 previously accepted findings; this is not a zero-vulnerability claim.",
+    "PR #52 is separate and has an XR-0003 ID collision to resolve if it is later integrated."
+  ]
+}

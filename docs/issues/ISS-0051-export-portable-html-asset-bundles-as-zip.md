@@ -2,7 +2,9 @@
 id: ISS-0051
 title: "Export portable HTML asset bundles as ZIP"
 type: issue
-status: in-review
+status: closed
+resolution: completed
+resolved: "2026-10-21"
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -54,7 +56,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/59
 
 **残る条件・対象外**：remote資源を自動取得しない．Mermaidの外部font importなどは依存として報告し，strict-offlineでは拒否する．任意JavaScriptによる動的読込みは収集対象外．brief・無関係な素材・非表示ページ専用素材等を含めず，話者ノートや出典の扱いはREADMEの公開仕様で確認する．
 
-実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+実装とローカルレビューを完了し，PR #62の統合対象として受け入れた．状態はclosed／completedとする．GitHub IssueはPRのmerge時に閉じる．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
 
 ## Execution update 2026-10-21
 
@@ -178,3 +180,7 @@ src/portable-export.jsは共通assertD2RenderSucceededを必須importし，単�
 ## Main final integration 2026-10-21
 
 最終コードbe3fc23でmainがstrict gate（unit504件，fixture18件，browser113件成功，既存Firefox対象外1件skip），固定D2実CLI7件，D2入りZIP2件を実行し，失敗なしを確認した．条件と限定確認の範囲は[統合記録](../design-assets-integration.md)を参照する．ローカル統合の受け入れと公開レビューを区別し，状態はin-reviewを維持する．
+
+## Local acceptance for PR #62 integration 2026-10-21
+
+本人の統合作業指示を受け，既存の担当・mainのローカルレビュー結果と，修正版fflateを含むコード`0dc6a34`の全体検証を確認した．unit504件，strict fixture18件，browser119件成功＋既存Firefox対象外1件skip，固定D2実CLI7件とD2入りZIP2件が成功した．条件とログhashは[最終統合検証](../evidence/integration-2026-10-21/premerge-validation.json)を参照する．本ISSの受入条件は完了として閉じる．#55の一般的な指定数削減はこの完了判定に含めず，ISS-0047と親ISS-0045で継続する．

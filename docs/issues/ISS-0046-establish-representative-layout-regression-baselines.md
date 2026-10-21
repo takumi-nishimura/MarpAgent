@@ -2,7 +2,9 @@
 id: ISS-0046
 title: "Establish representative layout regression baselines"
 type: issue
-status: in-review
+status: closed
+resolution: completed
+resolved: "2026-10-21"
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -49,7 +51,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/54
 
 **残る条件・対象外**：このISSが提供するのは比較の土台であり，それ自体でデザイン改善を証明するものではない．研究内容や写真は汎用fixtureへ転記していない．投影距離での可読性は未検証．新しい結果で変更前の観測値を上書きしない．
 
-実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+実装とローカルレビューを完了し，PR #62の統合対象として受け入れた．状態はclosed／completedとする．GitHub IssueはPRのmerge時に閉じる．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
 
 ## Execution update 2026-10-21
 
@@ -142,3 +144,7 @@ my-decksには図中心，不均等列，図の縦積み，結果図と説明な
 ## 正本記録
 
 repo内ISSは未起票．実装開始時に既存記録を照合し，必要なら `uv run .github/records.py new issue` と `validate` で起票・検証し，本Issueへ正本リンクを追記する．手動のISS番号付与，既存ADRの採用・置換は行わない．
+
+## Local acceptance for PR #62 integration 2026-10-21
+
+本人の統合作業指示を受け，既存の担当・mainのローカルレビュー結果と，修正版fflateを含むコード`0dc6a34`の全体検証を確認した．unit504件，strict fixture18件，browser119件成功＋既存Firefox対象外1件skip，固定D2実CLI7件とD2入りZIP2件が成功した．条件とログhashは[最終統合検証](../evidence/integration-2026-10-21/premerge-validation.json)を参照する．本ISSの受入条件は完了として閉じる．#55の一般的な指定数削減はこの完了判定に含めず，ISS-0047と親ISS-0045で継続する．

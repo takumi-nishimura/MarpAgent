@@ -2,7 +2,9 @@
 id: ISS-0052
 title: "Select another preview port when the default is occupied"
 type: issue
-status: in-review
+status: closed
+resolution: completed
+resolved: "2026-10-21"
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -41,7 +43,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/60
 
 **残る条件・対象外**：10候補がすべて使われていれば理由を示して終了する．ポート競合以外のエラーを再試行で隠さず，OSのポート転送や他プロセスの設定は変更しない．
 
-実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+実装とローカルレビューを完了し，PR #62の統合対象として受け入れた．状態はclosed／completedとする．GitHub IssueはPRのmerge時に閉じる．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
 
 ## Execution update 2026-10-21
 
@@ -102,3 +104,7 @@ WindowsやWSLの設定変更，使用中プロセスの終了，bindアドレス
 - 実装前の実CLI再現では，8080が空いている場合のHTTP 200と，8080占有時に終了コード3で停止するREDを確認した．実装後は専用loopback `127.0.0.60`で，空き8080，8080・8081の実bind競合から8082への切替とHTTP 200，ブラウザ起動コマンドへ渡す実URL，非表示・ページ番号スキップを含む表示ページ1→`#2`，明示`PORT=8080`と`PORT=`の終了コード3，10候補の探索打切りを確認した．SIGINT→130とSIGTERM→143，終了後のソケット解放も実CLIで確認した．一時デッキと待受プロセスは削除・終了済み．
 - 上記8ファイルの関連Nodeテストは72件成功，失敗・skipとも0件．起動後の実bind競合を再現するstub，複数競合，ANSI・折り返し，探索上限，明示値，別ポート・非ポートの失敗，notifierの競合・混合診断・予算，fallback後のURL/hash，両シグナルの現子プロセスへの転送とnotifier再試行待機中の終了を含む．
 - JavaScriptは既存の2-space書式を保ってPrettier確認し，`git diff --check`を実行した．Python変更はない．全体のstrict gateとmainへの統合確認はmain leaderが担当し，このISSは`in-review`で保持する．他issueへの依存・共有インターフェイス変更はない．
+
+## Local acceptance for PR #62 integration 2026-10-21
+
+本人の統合作業指示を受け，既存の担当・mainのローカルレビュー結果と，修正版fflateを含むコード`0dc6a34`の全体検証を確認した．unit504件，strict fixture18件，browser119件成功＋既存Firefox対象外1件skip，固定D2実CLI7件とD2入りZIP2件が成功した．条件とログhashは[最終統合検証](../evidence/integration-2026-10-21/premerge-validation.json)を参照する．本ISSの受入条件は完了として閉じる．#55の一般的な指定数削減はこの完了判定に含めず，ISS-0047と親ISS-0045で継続する．

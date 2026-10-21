@@ -2,7 +2,9 @@
 id: ISS-0050
 title: "Discover and reuse repository media assets"
 type: issue
-status: in-review
+status: closed
+resolution: completed
+resolved: "2026-10-21"
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -36,7 +38,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/58
 
 **残る条件・対象外**：素材の内容から意味検索するAIやOCRは導入していない．出典が原稿にない場合に推測して補わず，同一内容候補の自動削除や所有元の移動もしない．Windowsでsymlinkを利用できない場合は診断し，コピーへ自動変更しない．my-decks内の既存リンク修正は別repoの作業として残る．
 
-実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+実装とローカルレビューを完了し，PR #62の統合対象として受け入れた．状態はclosed／completedとする．GitHub IssueはPRのmerge時に閉じる．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
 
 ## Execution update 2026-10-21
 
@@ -140,3 +142,7 @@ git diff --check
 補助は `opencode/glm-5.3-flash-free` の読み取り専用テスト案を利用した．metadata実装を `devin --model fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-high --sandbox` に180秒上限で依頼したが，bubblewrap未導入で起動前に終了した．sandboxを解除せず，自分で実装・テストを完了した．workerによるpatchはない．
 
 mainから，#53の共通resolver限定レビューは固定POSIX tree・明示bundle policyの包含に不具合なしとの結果を受領した．この結果を再利用し，通常permissive既定・private除外・内容読取時のTOCTOUは呼出側責務という境界を維持した．catalog/reuseの追加分は自分で差分と関連チェックを確認した．Issueはlocal implementation完了・main統合確認待ちとしてin-reviewとし，mainのfull strict gateとmergeは未実施である．
+
+## Local acceptance for PR #62 integration 2026-10-21
+
+本人の統合作業指示を受け，既存の担当・mainのローカルレビュー結果と，修正版fflateを含むコード`0dc6a34`の全体検証を確認した．unit504件，strict fixture18件，browser119件成功＋既存Firefox対象外1件skip，固定D2実CLI7件とD2入りZIP2件が成功した．条件とログhashは[最終統合検証](../evidence/integration-2026-10-21/premerge-validation.json)を参照する．本ISSの受入条件は完了として閉じる．#55の一般的な指定数削減はこの完了判定に含めず，ISS-0047と親ISS-0045で継続する．

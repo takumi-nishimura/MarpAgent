@@ -2,7 +2,9 @@
 id: ISS-0049
 title: "Refine lab typography and visual hierarchy"
 type: issue
-status: in-review
+status: closed
+resolution: completed
+resolved: "2026-10-21"
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -76,7 +78,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/57
 
 **残る条件・対象外**：既存lab原稿も文字幅・行間・captionなどの表示が変わるため，再描画で確認する．paperの独自寸法，muji/toshiba，共通のbody/header-gapは変更しない．.bodyなしの縦長図の欠けを文字変更だけで解消したとは扱わない．比較画像・原稿差分・互換性の説明をPRから参照可能にし，レビューはローカルで行う．
 
-実装は統合ブランチに取り込み済みで，状態はin-reviewを維持する．レビューはローカルで行い，GitHubのPRには変更と検証結果を提示する．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
+実装とローカルレビューを完了し，PR #62の統合対象として受け入れた．状態はclosed／completedとする．GitHub IssueはPRのmerge時に閉じる．以下のcheckpointや起票時仕様は，その時点の履歴として読む．
 
 ## Execution update 2026-10-21
 
@@ -119,7 +121,7 @@ my-decksではこれを基礎に，本文サイズ，見出し位置，補足欄
 - [x] 通常の原稿で本文，図の説明，余白を毎回上書きしなくても使える例がある．特定の意図による個別指定は保持できる．
 - [x] DESIGN.mdのliteral値，生成token，テーマ内の対応が一致し，同じ値を複数箇所へ手で複製しない．新しい公開変数は契約に記載する．
 - [x] 原稿の左右・上下配置，列順，図と説明のgroupは変わらない．フォントや文字サイズによる折返し変化は別に点検し，収まりの保証を誇張しない．
-- [ ] shared CSSを変更する場合はmuji/toshiba，paper，scroll，数式・コード等への差を確認する．他テーマのブランド表現をlabに揃える変更は含めない．
+- [x] shared CSSを変更する場合はmuji/toshiba，paper，scroll，数式・コード等への差を確認する．他テーマのブランド表現をlabに揃える変更は含めない．
 - [x] 新旧の画像・原稿差分，既知の互換性差分，残した個別調整，移行方法をPRに添える．既存labの既定変更はレビューで明示的に確認する．
 - [x] `design:lint`，`design:tokens:check`，テーマ再生成，対象fixtureのstrict validationと関連テストを実行し，未実行項目を区別する．
 
@@ -179,3 +181,9 @@ my-decksではこれを基礎に，本文サイズ，見出し位置，補足欄
 ## Accepted emphasis roles 2026-10-21
 
 利用者が役割と見た目の案を確認して採用を承認したため，ADR-0011／XR-0007として実装と検証を保存した．markを中央80%の淡い背景へ変更し，emの細い帯，strongの色付き太字，互換用.markerを保持する．新規記法の説明をcomponents referenceとlab guideへ反映し，旧原稿と証跡は保持した．PR62はDraftのままローカルレビューを継続する．
+
+## Local acceptance for PR #62 integration 2026-10-21
+
+本人の統合作業指示を受け，既存の担当・mainのローカルレビュー結果と，修正版fflateを含むコード`0dc6a34`の全体検証を確認した．unit504件，strict fixture18件，browser119件成功＋既存Firefox対象外1件skip，固定D2実CLI7件とD2入りZIP2件が成功した．条件とログhashは[最終統合検証](../evidence/integration-2026-10-21/premerge-validation.json)を参照する．本ISSの受入条件は完了として閉じる．#55の一般的な指定数削減はこの完了判定に含めず，ISS-0047と親ISS-0045で継続する．
+
+#57固有の変更はlabのtoken・CSS内に限定した．共有CSSは#55の.body契約に限定され，muji/toshiba・paper・scroll・数式・コードの互換検査を統合gateで確認した．条件付き受入項目の確認漏れだったcheckboxをこの結果に合わせた．
