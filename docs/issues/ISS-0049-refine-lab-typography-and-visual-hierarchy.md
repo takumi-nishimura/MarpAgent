@@ -26,10 +26,13 @@ artifacts:
     - "38b554d"
     - "6f420fd"
     - "185084d"
+    - "8e18b1f"
   manifests:
+    - docs/evidence/integration-2026-10-21/emphasis-roles-validation.json
     - docs/evidence/integration-2026-10-21/lab-feedback-validation.json
     - docs/evidence/integration-2026-10-21/lab-default-validation.json
   results:
+    - docs/evidence/ISS-0049-emphasis-roles/README.md
     - docs/evidence/ISS-0049-marker-feedback/README.md
     - docs/evidence/ISS-0049-caption-feedback/README.md
     - docs/lab-refinement.md
@@ -61,11 +64,13 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/57
 
 **変更前の問題**：labの見出し・本文・caption・脚注の関係を整えたい一方，色付き太字やマーカー，既存原稿の構図は保持したかった．文字サイズの変更による折返しを，配置変更と分けて評価する作業である．
 
-**変更内容**：比較用に設けたlab-refinedを廃止し，改善済みの文字階層・行間・caption・脚注をlabの既定へ取り込んだ．本文26pxを保ち，行高39px，strong 700，caption 19.5px，脚注14pxを適用する．値はDESIGN.mdから生成するtokenへ集約し，色付き強調を保持し，マーカーの帯を下30%へ統一する．captionは既存の日本語文節区切りに加えて行長も均す．#55のbody領域やheader-gapは重複して定義しない．
+**変更内容**：比較用に設けたlab-refinedを廃止し，改善済みの文字階層・行間・caption・脚注をlabの既定へ取り込んだ．本文26pxを保ち，行高39px，strong 700，caption 19.5px，脚注14pxを適用する．値はDESIGN.mdから生成するtokenへ集約し，色付き強調を保持し，emと互換用.markerは下30%の帯，markは上下に隙間のある淡い背景へ分ける．captionは既存の日本語文節区切りに加えて行長も均す．#55のbody領域やheader-gapは重複して定義しない．
 
 **使い方・確認先**：theme: labと通常のclass: normalまたはtitleで使え，追加の外観classは不要．[利用・移行の説明](../lab-refinement.md)を正本とする．[既定化の比較](../evidence/ISS-0049-lab-default/README.md)を保存し，[初期の選択式比較](../evidence/ISS-0049-lab-refinement/README.md)は当時の証跡として保持する．
 
-**最新の見た目フィードバック**：マーカーは文字weightではなく背景帯の差が原因だったため，em／.marker／markの帯を揃えた．captionはtext-wrap-style: balanceで行長を均し，.nobrを維持する．[新しい比較と検証](../explorations/XR-0006-verify-marker-consistency-and-balanced-captions-after-user-review.md)ではunit504件，strict fixture18件，browser119件成功＋既存skip1件，captionのChromium／Firefox8件成功．
+**現在の強調の使い方**：新規原稿は`*強調*`・`**重要**`・`<mark>注目範囲</mark>`を使い分ける．.markerは互換用として保持し，新規では推奨しない．利用者が確認した明暗・複数行の案を採用した．[現在の例](../../fixtures/lab-emphasis-slide.md)と[検証結果](../explorations/XR-0007-verify-accepted-lab-emphasis-and-contextual-highlight-styles.md)を参照する．関連unit27件，統合browser119件成功＋既存skip1件，新しい2ページのstrict描画finding0．
+
+**初回の見た目フィードバック**：マーカーは文字weightではなく背景帯の差が原因だったため，em／.marker／markの帯を揃えた．captionはtext-wrap-style: balanceで行長を均し，.nobrを維持する．[新しい比較と検証](../explorations/XR-0006-verify-marker-consistency-and-balanced-captions-after-user-review.md)ではunit504件，strict fixture18件，browser119件成功＋既存skip1件，captionのChromium／Firefox8件成功．
 
 **既定化時に確認したこと**：通常labに改善値を要求する回帰でRED→GREENを確認した．既定化後の全体検証はunit504件，strict fixture18件，browser113件が成功し，既存Firefox native touch1件だけ対象外skip．実D2 7件とD2入りZIP 2件も成功した．初期の選択式比較の23ページ画素一致は旧条件の結果であり，今回の既定化後の外観が旧版と同じという意味ではない．
 
@@ -170,3 +175,7 @@ my-decksではこれを基礎に，本文サイズ，見出し位置，補足欄
 ## Visual feedback 2026-10-21
 
 利用者の指摘と「行の長さも均したい」という希望に対応した．固定fontの新旧比較を別フォルダーへ保存し，XR-0006へ結果と限界を記録した．マーカーの背景の隙間は2px→27.9px，captionの短い行／長い行の幅は英語0.310→0.958，日本語0.258→0.942．全文・文節境界を保持した．GitHubのDraft PR62とMac用の比較ページへ反映し，ローカルレビューを継続する．
+
+## Accepted emphasis roles 2026-10-21
+
+利用者が役割と見た目の案を確認して採用を承認したため，ADR-0011／XR-0007として実装と検証を保存した．markを中央80%の淡い背景へ変更し，emの細い帯，strongの色付き太字，互換用.markerを保持する．新規記法の説明をcomponents referenceとlab guideへ反映し，旧原稿と証跡は保持した．PR62はDraftのままローカルレビューを継続する．

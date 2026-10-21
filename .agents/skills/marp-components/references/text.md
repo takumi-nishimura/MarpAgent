@@ -76,6 +76,27 @@ The key takeaway.
 
 `summary-box` fits its content; add `self-center` only when centering the box itself is useful. Use Markdown strong, emphasis, and code for their intended meaning. Theme color/size treatments supplement that meaning rather than replacing it.
 
+For new lab slides, choose among three text treatments:
+
+| Purpose | Markup | Lab appearance |
+| :------ | :----- | :------------- |
+| Stress a phrase within a sentence | `*emphasis*` or `_emphasis_` | narrow band below the text |
+| Signal importance or a consequential caution | `**important**` | colored bold text |
+| Identify the part being discussed, such as a passage in a quotation | `<mark>reference</mark>` | pale background behind the text, with space above and below |
+
+Use `mark` to identify a relevant passage, not to assign a review status or
+create another level of importance. It keeps the surrounding text color and
+clones its background across natural line breaks. Do not add manual breaks or
+wrap it in a no-break container just to keep the highlight together.
+
+The `.marker` class remains supported for existing decks. Do not introduce it
+in new lab prose: it adds a second spelling for a narrow-band treatment without
+expressing which of the three roles is intended. Preserve existing markup when
+editing another author's deck; replace it only when the intended role is clear.
+Paper and other themes retain their own appearance. See
+[`fixtures/lab-emphasis-slide.md`](../../../../fixtures/lab-emphasis-slide.md)
+for the light and dark lab examples.
+
 ## Japanese wrapping and scoped CSS
 
 BudouX adds phrase-boundary break opportunities at render time and skips code/pre/style/script content. A short `<span class="nobr">…</span>` keeps a run together; avoid enclosing long prose that then cannot fit. Reserve `<br>` for semantic breaks such as address lines. Source newlines and rendered forced breaks are different decisions.

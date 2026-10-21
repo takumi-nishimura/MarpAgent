@@ -10,7 +10,19 @@ class: normal
 ---
 ```
 
-表紙は `<!-- _class: title -->`，暗い背景は `<!-- _class: normal invert -->` のままでよい．旧比較用の `lab-refined` がある原稿では，その語を `class` / `_class` から除く．その selector・別名・新しい opt-out は設けない．元の `**strong**`，`*em*`，`_em_`，`.marker`，`mark` はそのまま使う．
+表紙は `<!-- _class: title -->`，暗い背景は `<!-- _class: normal invert -->` のままでよい．旧比較用の `lab-refined` がある原稿では，その語を `class` / `_class` から除く．その selector・別名・新しい opt-out は設けない．新規原稿の強調は次の3種類から選ぶ．既存の `.marker` も互換用として保持する．
+
+## Emphasis and contextual highlighting
+
+| 役割 | 記法 | labの表示 |
+| :--- | :--- | :--- |
+| 文中の語句に力点を置く | `*強調*`／`_強調_` | 文字の下30%に細い帯 |
+| 結論や注意の重要性を示す | `**重要**` | 色付きの太字 |
+| 引用・説明で取り上げる範囲を示す | `<mark>注目範囲</mark>` | 淡い背景塗り，上下に透明な隙間 |
+
+markの例は，原文「結果は`<mark>同じ測定条件に限り有効</mark>`である」のように，説明が指している範囲を示すものとする．「要確認」という状態ラベルや重要性の段階はmarkの用途に含めない．文字色・自然な改行を保ち，複数行では各行に背景を描く．背景の中央80%を塗り，上下10%ずつは透明にする．左右paddingは0.08em．行高やfont weightをmark側で変更しない．
+
+新しい明暗例は[lab-emphasis-slide.md](../fixtures/lab-emphasis-slide.md)．採用判断は[ADR-0011](decisions/ADR-0011-separate-lab-emphasis-from-contextual-highlighting.md)へ記録した．`.marker`は既存の細い帯として動作するが，新規原稿では導入しない．旧原稿を編集する場合は意図を確認してemまたはmarkを選び，自動置換や警告は行わない．旧typography fixtureの.marker／「要確認」は過去の比較と互換性確認用に保持する．
 
 ## Inventory
 
@@ -21,7 +33,7 @@ class: normal
 | 本文 | `_base.css` の 26px，描画時は line-height `normal` | `body-md` の 26px / 1.5 / 400 |
 | 見出し | `_base.css` の em 倍率と browser の行間 | `display` / `headline-*` の size・weight・leading・tracking |
 | 太字 | `_typography.css` の着色と weight 500 | 着色を維持し，要求済みの 700 を使用 |
-| マーカー | `em` の背景，`.marker` の下線状背景，`mark` の塗り | 意味と位置を保持し，改行ごとに背景を描画．`.marker` の帯は既存の em と同じ透過率へ調整 |
+| 強調と注目 | `em` の背景，`.marker` の下線状背景，`mark` の塗り | emは細い帯，markは上下に隙間のある淡い背景．`.marker`は既存原稿向けの細い帯 |
 | 図説明 | `_layouts.css` の 0.6em = 15.6px | `caption` の 19.5px / 1.3 |
 | 脚注 | `_base.css` の 0.4em = 10.4px | `footnote` の 14px / 1.4 |
 | 表 | 本文サイズと共通セル罫線 | `body-sm` の 22.75px / 1.35，既存セル寸法を token に対応 |
@@ -35,11 +47,15 @@ class: normal
 
 `--lab-table-header`，`--lab-table-stripe`，`--lab-table-border` は lab の表の色を生成 token から選ぶ局所変数．`--lab-callout-color` は各補足のラベル色に対応する罫線色．通常の明暗表示と名前付き scheme を保持する．画像・SVG 内部や研究図の色は変更しない．
 
+`--lab-mark-fill`は明暗に応じて`--color-mark-fill`／`--color-mark-fill-invert`を選ぶ．`--spacing-mark-inline`はmarkの左右paddingであり，DESIGN.mdの`spacing.mark-inline`から生成する．局所的な背景色や余白の上書きも可能である．
+
 `section > .paper-header` を持つ paper は対象外．共通 `_base.css`，`_layouts.css`，`_typography.css`，paper，scroll のソースは変更しない．#55 の `.body`，`.figure-natural`，残余領域・header gap・列幅・図の収め方を lab 側で再定義しない．`--body-top-gap`，`--body-bottom-safe`，`--body-gap`，`--col-gap`，`--figure-gap` は #55 の配置契約に属する．
 
 既存 lab は描画が変わる．本文のサイズを保っても，`normal` だった行高の明示，太さ，caption / footnote の拡大により，折返し・本文や図の縦位置・必要高さが変わり得る．原稿の明示 crop，局所 font や caption の上書きは保持し，実際の font で更新後の収まりを確認する．文字を小さくして欠けを隠したり，留保を省略したりしない．
 
-## Marker feedback
+## Historical marker feedback
+
+以下はすべての帯を揃えた時点の記録である．現在のmarkは上のEmphasis and contextual highlightingに従い，emと異なる背景塗りを使う．
 
 表示1枚目（原稿2枚目）の「一行と〜」が太く，「要確認」の塗りが上の行へ重なるように見える指摘を，固定400/700 font で確認した．文字は `em` / `.marker` / `mark` とも Regular・weight 400であり，強調の太さの差ではなかった．変更前の背景帯は11.1px / 14.8px / 37pxで，隣接行の帯と `mark` の隙間は2px．実際の重なりは0だが，厚さと全面塗りの差が目立つ状態だった．
 

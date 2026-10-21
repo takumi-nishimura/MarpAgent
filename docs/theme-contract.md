@@ -375,9 +375,23 @@ available space even though column order, grouping, and alignment are retained.
 Validate existing lab decks after updating. See [the lab typography guide](lab-refinement.md)
 for token mappings, fixed-font comparisons, known boundaries, and validation.
 
-Lab slide `em`, `.marker`, and `mark` use matching lower-30% marker bands;
-the yellow band for `.marker` and `mark` has 40% color opacity. `mark`
-inherits the surrounding text color. Deck-local paint overrides remain valid.
+New lab prose uses three roles: Markdown emphasis for stress, strong for
+importance, and HTML `mark` for the relevant passage being discussed.
+`em` retains its lower-30% band and `strong` retains colored bold type.
+`mark` paints a pale background over the central 80% of each inline fragment,
+leaving 10% clear above and below, with `0.08em` horizontal padding. It inherits
+the surrounding text color and clones its paint across natural line breaks.
+`--lab-mark-fill` selects the light or dark design token (`--color-mark-fill`
+or `--color-mark-fill-invert`); `--spacing-mark-inline` supplies the padding.
+These tokens apply to lab slides. Deck-local
+background, color, and padding overrides remain valid.
+
+The `.marker` utility remains a lower-30% band for existing decks, but is no
+longer recommended for new lab prose. There is no removal, automatic rewrite,
+or deprecation warning. Choose emphasis or `mark` according to the intended
+meaning when revising existing text. This treatment excludes paper and other
+themes. See [the authoring examples](../fixtures/lab-emphasis-slide.md) and
+[the adoption decision](decisions/ADR-0011-separate-lab-emphasis-from-contextual-highlighting.md).
 
 Japanese captions already receive BudouX phrase boundaries. Lab slide
 `figcaption` additionally uses `text-wrap-style: balance` to distribute short
