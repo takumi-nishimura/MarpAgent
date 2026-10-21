@@ -6,6 +6,23 @@ const fontkit = require("fontkit");
 const SVG_NS = "http://www.w3.org/2000/svg";
 const FONT_DATA =
     /^data:(?:application\/(?:font-woff|x-font-ttf|octet-stream)|font\/(?:woff2?|ttf|otf));base64,[A-Za-z0-9+/=]+$/;
+// Restrict functions to static values. Resource functions such as image-set()
+// accept String nodes as URLs, so checking only CSS Url nodes is insufficient.
+const STATIC_CSS_FUNCTIONS = new Set([
+    "rgb",
+    "rgba",
+    "hsl",
+    "hsla",
+    "hwb",
+    "lab",
+    "lch",
+    "oklab",
+    "oklch",
+    "color",
+    "color-mix",
+    "format",
+    "tech",
+]);
 const FORBIDDEN_ELEMENTS = new Set([
     "script",
     "foreignobject",
@@ -234,9 +251,11 @@ function prepareD2Svg(source, salt) {
             }
             if (
                 node.type === "Function" &&
-                ["expression", "local"].includes(node.name.toLowerCase())
+                !STATIC_CSS_FUNCTIONS.has(
+                    css.ident.decode(node.name).toLowerCase(),
+                )
             )
-                invalid("active CSS or external font");
+                invalid(`unsupported CSS function ${node.name}`);
             if (node.type === "IdSelector")
                 node.name = reference(`#${node.name}`).slice(1);
             if (this.declaration?.property.toLowerCase() === "font-family") {

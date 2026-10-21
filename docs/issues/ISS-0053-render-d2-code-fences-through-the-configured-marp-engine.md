@@ -238,3 +238,7 @@ D2の一般tourの一部は旧版説明が残り，0.9.0のrelease notesではMa
 ### Central record allocation request
 
 main に ADR（固定 host CLI／TALA 前置き／静的自己完結図の採用）と XR（固定版の設定優先順位・null・font slot 障害・日本語／数式・cache／process の試行結果）の採番を依頼した．この worktree では新しい ISS／ADR／XR 番号を割り当てていない．根拠と制約は上記 Notes と `docs/d2.md` を引き継ぐ．
+
+### Boundary corrections after main review
+
+- #60 の限定確認で，CSS `image-set()` の文字列 URL が `Url` node の検査から漏れ，cache hit でも通ることが判明した．静的な色・font 形式以外の function を拒否する方式へ変更した．通常・vendor prefix・escape・大文字表記・custom property・style 要素／属性と改変 cache の回帰を追加し，修正前の失敗を確認した．`node --test tests/unit/d2-svg.test.js tests/unit/d2-render.test.js` は 16 passed，skip なし．通常の固定 D2 原稿から当該 CSS を生成できることは確認されておらず，供給 SVG と改変 cache の境界を修正した結果である．

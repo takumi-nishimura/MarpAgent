@@ -163,6 +163,24 @@ test("D2 cache detects changed font bytes and repairs corrupted SVG entries", (t
     assert.equal(w.calls().filter((args) => args[0] !== "--version").length, 3);
 });
 
+test("D2 cache rechecks CSS string resources before returning a cached SVG", (t) => {
+    const w = workspace(t);
+    const options = { env: w.env, cwd: w.root, salt: "external-css" };
+    const expected = renderD2Sync("a", options);
+    const entries = fs
+        .readdirSync(w.env.MARP_AGENT_D2_CACHE_DIR)
+        .filter((name) => name.endsWith(".svg"));
+    assert.equal(entries.length, 1);
+    fs.writeFileSync(
+        path.join(w.env.MARP_AGENT_D2_CACHE_DIR, entries[0]),
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50" style='background-image:image-set("http://127.0.0.1:9/image.png" 1x)'/>`,
+    );
+    assert.equal(renderD2Sync("a", options), expected);
+    assert.equal(w.calls().filter((args) => args[0] !== "--version").length, 2);
+    assert.equal(renderD2Sync("a", options), expected);
+    assert.equal(w.calls().filter((args) => args[0] !== "--version").length, 2);
+});
+
 test("D2 malformed success is never cached and optional cache failures do not fail a valid render", (t) => {
     const malformed = workspace(
         t,

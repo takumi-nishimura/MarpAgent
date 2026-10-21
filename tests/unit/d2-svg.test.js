@@ -55,6 +55,39 @@ test("D2 SVG refuses active content and external resources in XML and CSS", () =
     }
 });
 
+test("D2 SVG rejects CSS image functions with string resource arguments", () => {
+    for (const value of [
+        'image-set("http://127.0.0.1:9/image.png" 1x)',
+        '-webkit-image-set("https://example.com/image.png" 1x)',
+        'im\\61 ge-set("https://example.com/image.png" 1x)',
+        'IMAGE-SET("https://example.com/image.png" 1x)',
+        'image("file:///tmp/image.png")',
+        'src("https://example.com/image.png")',
+    ]) {
+        for (const input of [
+            svg(`<style>.shape{background-image:${value}}</style>`),
+            svg("", `style='background-image:${value}'`),
+            svg(
+                `<style>.shape{--image:${value};background-image:var(--image)}</style>`,
+            ),
+        ])
+            assert.throws(() => prepareD2Svg(input, "resource"), {
+                code: "D2_SVG_INVALID",
+            });
+    }
+});
+
+test("D2 SVG retains static color functions and quoted font families", () => {
+    const result = prepareD2Svg(
+        svg(
+            '<style>.shape{fill:rgb(10,20,30);stroke:rgba(10,20,30,.5);font-family:"Example Font"}</style>',
+        ),
+        "color",
+    );
+    assert.match(result, /fill:rgb\(10,20,30\)/);
+    assert.match(result, /font-family:"Example Font"/);
+});
+
 test("D2 SVG permits embedded font data and protects font family names", () => {
     const data = fs
         .readFileSync(
