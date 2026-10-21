@@ -276,3 +276,29 @@ test("unsupported asset formats remain listable and kind filters distinguish the
     assert.match(eps.hash, /^[a-f0-9]{64}$/);
     assert.ok(eps.dimensions.reason);
 });
+
+test("top-level assets/decks directory symlinks never enumerate external names", (t) => {
+    const f = fixture(t);
+    const outside = fs.mkdtempSync(
+        path.join(os.tmpdir(), "media-external-tree-"),
+    );
+    t.after(() => fs.rmSync(outside, { recursive: true, force: true }));
+    fs.writeFileSync(
+        path.join(outside, "unpublished-study-name.svg"),
+        "UNPUBLISHED-CONTENT",
+    );
+    fs.writeFileSync(path.join(outside, "slide.md"), "UNPUBLISHED-CAPTION");
+    fs.symlinkSync(outside, path.join(f.repoRoot, "assets"));
+    fs.symlinkSync(outside, path.join(f.repoRoot, "decks"));
+    const catalog = buildMediaCatalog({ repoRoot: f.repoRoot });
+    assert.doesNotMatch(
+        JSON.stringify(catalog),
+        /unpublished-study-name|UNPUBLISHED/,
+    );
+    assert.ok(catalog.assets.every((asset) => asset.hash === null));
+    assert.ok(
+        catalog.assets.some((asset) =>
+            asset.diagnostics.some((item) => item.code === "outside-repo"),
+        ),
+    );
+});

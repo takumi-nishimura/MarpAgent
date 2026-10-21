@@ -62,6 +62,10 @@ function buildMediaCatalog({
         if (!isVisible(dir)) return;
         let entries;
         try {
+            if (fs.lstatSync(dir).isSymbolicLink()) {
+                discovered.add(dir);
+                return;
+            }
             entries = fs.readdirSync(dir, { withFileTypes: true });
         } catch (error) {
             if (error.code !== "ENOENT")
