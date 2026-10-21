@@ -64,6 +64,12 @@ at runtime. TALA is the project default, and source `vars.d2-config` can select
 ELK or Dagre. Japanese labels require an explicitly supplied suitable TTF font.
 See [D2 setup, scope, diagnostics and acceptance tests](docs/d2.md).
 
+The [example deck](decks/example/slide.md) uses D2 for its authoring workflow
+diagram. `mise install` installs the pinned D2 alongside Node.js. If you manage
+tools separately, install D2 0.9.0 and put it on `PATH` or set
+`MARP_AGENT_D2_PATH` before rendering the example or running fixture validation.
+Its diagram labels use Latin characters, so no custom D2 font is required.
+
 ## Quick Start
 
 ```bash

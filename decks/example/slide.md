@@ -63,14 +63,17 @@ VS Code 拡張やCLIで使える OSS ツール
 
 重要な図を早めに置き，描画結果を見ながら構成を見直す
 
-<div style="width: 65%">
+<div style="width: 90%">
 
-```mermaid
-graph LR
-    A["brief.md"] --> B["slide.md"]
-    B --> C["Preview"]
-    C --> B
-    C --> D["HTML / PDF / PPTX"]
+```d2
+direction: right
+*.style.font-size: 28
+brief: brief.md
+slide: slide.md
+preview: Preview
+output: HTML / PDF / PPTX
+brief -> slide -> preview -> output
+preview -> slide
 ```
 
 </div>
@@ -101,7 +104,7 @@ title / content / multi-column / visual col / metric-grid / timeline / placement
 **組み込みコンポーネント**
 
 - コールアウト (note / tip / warning ...)
-- Mermaid ダイアグラム & MathJax 数式
+- D2 / Mermaid ダイアグラム & MathJax 数式
 - コードハイライト
 
 </div>
