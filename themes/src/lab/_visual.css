@@ -88,6 +88,7 @@ section:where(:not(:has(> .paper-header))) figcaption {
     font-weight: var(--font-weight-caption);
     line-height: var(--leading-caption);
     letter-spacing: var(--tracking-caption);
+    text-wrap-style: balance;
 }
 
 section:where(:not(:has(> .paper-header))) .footnote {
