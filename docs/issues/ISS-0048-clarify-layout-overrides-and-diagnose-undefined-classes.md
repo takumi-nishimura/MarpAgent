@@ -17,6 +17,10 @@ artifacts:
   revisions:
     - 2eb7616
     - e3bd772
+    - f46c231
+    - 6560cc4
+    - 44a841d
+    - f397ea5
   manifests: []
   results: []
   commands: []
@@ -68,7 +72,7 @@ GitHub IssueとISSの対応: #53 = ISS-0045，#54 = ISS-0046，#55 = ISS-0047，
 - [x] 動的または外部CSSなど，静的解析で判定できないものは「不明」とし，機械的に削除・改名しない．使われていないCSS marker classも即不合格にしない．
 - [x] 診断は既存validatorの助言として始め，実際の描画欠陥のerrorと分ける．元ファイル・行・描画ページを既存slide mapへ対応付ける．
 - [x] `h-full` の親高さなど，検出範囲と限界を文書化する．診断がないことを配置の適切さの保証にしない．
-- [ ] 全配布テーマで公開クラスと変数が存在し，デッキを追加しても共通CSS生成結果が変化しない．生成済みthemesの鮮度テストも通る．
+- [x] 全配布テーマで公開クラスと変数が存在し，デッキを追加しても共通CSS生成結果が変化しない．生成済みthemesの鮮度テストも通る．
 - [ ] 既存原稿の明示指定を保持し，互換性差分と移行例を確認できる．美観変更はlabの別Issueへ分ける．
 
 ## 対象外
@@ -141,3 +145,34 @@ sandbox 内で `spawnSync` に EPERM が付く一方で status 0・空 stdout �
 残る受入項目は #54 の比較例と #55 の mechanics を統合した後の調整量・明示指定の保持の確認である．
 `src/deck-validator.js` の接点は import，`validateDeckMarkdown` の診断追加，SARIF properties に限定し，
 #61 の renderer error builder は変更していない．main が統合確認するまで status は in-progress のまま維持する．
+
+### #55 取り込みと class 契約の確認 2026-10-21
+
+前節は #55 取り込み前の独立実装 checkpoint である．main の明示的な許可により，
+`6560cc4`，`44a841d`，`f397ea5` だけをこの worktree に cherry-pick した．
+ローカルの対応 commit はそれぞれ `71a7657`，`4381090`，`dfe11b4` である．
+既存 #56 commit は保持され，重複ファイル `docs/theme-contract.md` は別の節の追記として自動 merge できた．
+衝突や内容の破棄はなく，診断の節と #55 の本文・図配置の節が両方残っている．
+
+`tests/unit/body-class-contract.test.js` を追加した．取り込み前には全3テーマで
+`.body`／`.figure-natural` が未定義になることを確認し，取り込み後には以下を確認した．
+
+- 全3テーマで両 class を正しく認識する．診断本体や class の allowlist を追加変更する必要はなかった．
+- `boddy`／`figure-natual` には `undefined-class` の非 blocking hint が出て，新部品名を候補に含む．
+- 元行16，Markdown slide 2，rendered slide 2，表示 page 2 が一致し，終了コードは0を保つ．
+- 公開 body／column／figure 変数と既存列比率変数が生成 CSS にあり，#55 の実 fixture は全3テーマで class 指摘0件になる．
+
+`docs/layout-adjustments.md` を，全配布テーマで新部品を利用できる状態に更新した．
+名前の存在と，通常スライド直下の `.body`／その内部の figure という適用条件の成立は分けて説明している．
+#56 独自の CSS 変更や `src/deck-validator.js` の追加変更はない．
+
+今回のチェック：
+
+- `node --test tests/unit/body-class-contract.test.js tests/unit/class-diagnostics.test.js tests/unit/class-validation.test.js tests/unit/theme-css.test.js`：53件 pass，fail／skip 0件．
+- `flock /tmp/marpagent-parallel-20261021/browser-tests.lock node scripts/validate-deck.js fixtures/body-layout-slide.md --strict-visual --format json`：終了0，4ページすべて `measured`，findings 0件．JSON は `/tmp/marp-i56-body-integration-validation.json`．
+- `flock /tmp/marpagent-parallel-20261021/browser-tests.lock env MARP_AGENT_STRICT_E2E=1 node_modules/.bin/playwright test tests/e2e/body-layout.spec.js tests/e2e/layout-compatibility.spec.js --project=chromium --workers=1 --grep 'natural figures|nested fill|explicitly sized'`：7件 pass，skip なし．配置軸，全3テーマの既存明示サイズ／crop，新 figure-natural の inline 寸法を含む．
+- `119fbbb:fixtures/layout-baselines/slide.md` を `git show` で読み出し，active theme を lab／muji／toshiba に替えて `findClassFindings` を実行した．全3テーマで class 指摘0件．この基準 commit は取り込んでおらず，描画比較や全受入条件の完了を主張する検査ではない．
+- `uv run .github/records.py validate`：61記録を検証．Node subprocess を含むチェックは sandbox 外で実行した．
+
+新たな helper／reviewer は使っていない．前節の無料 OpenCode の境界例検証を再利用した．
+残る項目は #54 の比較方式による調整量・全体の互換性確認であり，main の統合前なので status は in-progress を維持する．

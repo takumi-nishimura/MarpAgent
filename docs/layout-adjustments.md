@@ -3,7 +3,8 @@
 共通配置の標準動作は [theme contract](theme-contract.md) と
 [ISS-0047](issues/ISS-0047-improve-body-figure-and-caption-layout-defaults.md)
 で管理する．この文書は，標準動作から少し調整するときの指定と，その確認方法を定義する．
-`.body`，`.figure-natural`，body／column／figure の新しい変数は #55 の共通契約を前提とする．
+`.body`，`.figure-natural`，body／column／figure の調整変数は全配布テーマで使える．
+適用対象と既定値は [共通の本文・図配置契約](theme-contract.md#remaining-body-area-and-figures)を参照する．
 
 ## 調整語彙と指定先
 
@@ -104,6 +105,9 @@ selector，CSS の escape，`[class~="name"]` も名前として認識する．
 CSS コメント，宣言中の文字列・URL，コード例，speaker notes のタグは定義や使用に数えない．
 Marp，diagram，math が描画時に追加する class は検査しない．
 scaffold の section marker `normal` は CSS 規則がないことを意図した指定として扱う．
+`.body`／`.figure-natural` も active theme の生成 CSS から認識する．
+通常スライド直下の `.body`，その内部の `figure.figure-natural` という
+適用条件は，名前の照合だけでは保証しない．
 
 外部 stylesheet，deck CSS の `@import`，script，動的 class binding，
 class 名を列挙できない属性 selector，壊れた CSS は不明の理由になる．
