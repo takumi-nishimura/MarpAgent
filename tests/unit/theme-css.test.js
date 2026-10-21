@@ -239,7 +239,7 @@ test("lab default highlight follows the warm accent token", () => {
 test("lab font defaults remain overridable after theme compilation", () => {
   for (const relativePath of ["themes/src/lab.css", "themes/lab.css"]) {
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
-    assert.match(css, /--font-body:\s*"Noto Sans JP",\s*sans-serif/);
+    assert.match(css, /--font-body:\s*var\(--font-body-md\),\s*sans-serif/);
     assert.match(css, /--font-display:\s*var\(--font-body\)/);
     assert.match(css, /font-family:\s*var\(--font-body\)/);
     assert.match(

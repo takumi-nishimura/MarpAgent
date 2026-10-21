@@ -347,6 +347,32 @@ escapes only when rendering is unavailable.
 
 ## Validation Contract
 
+### Optional lab visual refinement
+
+`lab-refined` is a lab-only slide class, used with `theme: lab`. It selects the
+typography, emphasis, caption, citation, table, and supplementary-surface mapping
+in `themes/src/lab/_refined.css`, backed by `designs/lab/DESIGN.md`. Existing lab
+decks keep their default appearance. A per-slide `_class` replaces the inherited
+class list; include `lab-refined` there when the visual choice should continue.
+
+The class preserves composition and does not define body-area or media-sizing
+mechanics. It has no effect on sections with a direct `.paper-header` or on
+muji/toshiba. Existing emphasis markup and deck-local overrides remain valid.
+Generated `--text-*`, `--leading-*`, `--font-weight-*`, and `--tracking-*` tokens
+set semantic type roles; `--lab-table-header`, `--lab-table-stripe`, and
+`--lab-table-border` select the table colors for the active lab surface.
+`--lab-callout-color` selects the rule color from its semantic label token.
+These variables are local to opted-in slides. The existing font-family overrides remain
+`--font-body` and `--font-display`.
+
+Font weight, line height, and caption size can change wrapping and available
+space, even though column order, grouping, and alignment are retained. Validate
+the actual deck after opting in. See [the lab refinement comparison](lab-refinement.md)
+for token mappings, font availability, compatibility evidence, and pending
+integration checks.
+
+### Rendered checks
+
 An opted-in `<!-- _scroll: true -->` slide keeps its original canvas size and
 fixed header, first top-level heading, footer, and pagination. The plugin adds
 `data-marpagent-scroll="true"` to the slide and one direct

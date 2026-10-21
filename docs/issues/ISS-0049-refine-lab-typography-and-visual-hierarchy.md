@@ -16,8 +16,17 @@ supersedes: []
 artifacts:
   revisions: []
   manifests: []
-  results: []
-  commands: []
+  results:
+    - docs/lab-refinement.md
+  commands:
+    - npm run marpx -- --theme lab
+    - npm run design:lint
+    - npm run design:tokens:check
+    - node --test tests/unit/theme-css.test.js tests/unit/design-cli.test.js
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock node_modules/.bin/playwright test tests/e2e/lab-refinement.spec.js --project chromium --workers 1
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i57-compare.cjs /tmp/marp-i57-review-v2-20261021
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i57-strict.cjs
+    - uv run .github/records.py validate
 ---
 
 # Refine lab typography and visual hierarchy
@@ -89,3 +98,19 @@ my-decksではこれを基礎に，本文サイズ，見出し位置，補足欄
 ## 正本記録
 
 repo内ISSは未起票．現行規約と既存記録を照合し，記録CLIで作成・validateし，本Issueへ正本リンクを追記する．既定の外観変更の採用判断は必要に応じてproposed ADRへ分け，自動accepted化しない．
+
+## Notes
+
+2026-10-21 interface checkpoint：`theme: lab` の任意 class `lab-refined` として実装し，既定 lab の切替を避ける．別の Marp theme や DESIGN.md の複製は作らない．改良版は `themes/src/lab/_refined.css` に隔離し，文字階層，色付き太字，複数行のマーカー，図説明，脚注，表，補足欄を lab の token へ対応させる．paper，muji/toshiba，共通 layout mechanics は変更しない．#55 の `.body` / `.figure-natural`，header gap，列幅，図の収め方とその公開変数を再定義しない．
+
+現行 exporter は YAML の数値 lineHeight を出力せず，文字列なら `--leading-*` を出力する．lab の DESIGN.md だけを対応する表記へ直し，共通 generator は変更しない．既定描画の body line-height は browser 実測で `normal`．候補版は body 26px / 1.5，strong 700，caption 19.5px，footnote 14px とし，列順や group の保持と折返し差を分けて調べる．
+
+日本語 font が環境に存在しないため，初回の視覚比較では公式 Google Fonts の Noto Sans JP を一時取得し，400/700 の face を実際に読み込んだ条件と fallback 条件を分ける．font hash，browser の platform font 情報，画像，行数の差は比較結果へ保存する．fallback の日本語表示を受入根拠にはしない．
+
+`docs/lab-refinement.md` に token inventory と公開方法，検証済みのコマンドを記録した．初回の unit 27 件と browser 3 件は pass，design lint / token check / theme 再生成も実行済み．sandbox の子プロセス・browser 制限で失敗したコマンドは許可された環境で再実行し，実行結果を確認した．#54 committed fixture，#55/#56 の確定契約による統合比較と strict validation は引き続き必要であり，受入完了や既定変更の採用とは扱わない．
+
+新しい ADR/XR は並行採番せず，既定への採用判断が必要なら main が中央で作成する．
+
+初回の最終候補では，対象5 fixture の実 font を指定した一時コピーがすべて strict validation で実測され，error 0．source hint は保持した．同一内容11ページ×2 font 条件では既定表示の画素が旧 CSS と22条件すべて一致し，改良版は本文を保持し，観測した文字 block の行数差はなかった．字体の太さと文字階層の画像は Codex が確認した．行間や caption の寸法による縦位置の変化はあり，収まりを一般化しない．画像から判明した暗色表の文字色を本文色へ合わせ，`.marker` の帯を em と同じ透過率へ調整した．
+
+#54 `119fbbb`，#55 `6560cc4`，#56 `2eb7616` は committed と確認済み．共有契約と `:where()` の class 収集をコードで確認したが，これらとの組合せ描画・診断は未実行．この checkpoint では branch に peer commit を取り込んでいない．helper model は使用せず，Codex が実装と視覚確認を担当した．
