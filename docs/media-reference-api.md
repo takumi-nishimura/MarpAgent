@@ -65,3 +65,15 @@ bundle は repo root とファイルの実体を比較し，親ディレクト�
 診断 code: `missing`，`broken-symlink`，`symlink-cycle`，`unreadable`，`outside-repo`，`absolute-symlink`，`directory-reuse`，`cross-deck-reference`，`not-file`．通常 validator は引き続き既存の `findMissingAssets` を使用するため，この API の strict 判定を適用しない．
 
 この API は検査時点のメタデータを返す．bundle が後で内容を読む際のファイル交換や出力側の安全性は呼出側で確認する．source rewrite，CSS 内再帰参照，HTML 内の非 media 資源を扱う場合も，その抽出・書換えは呼出側が担当する．
+
+## Catalog visibility policy
+
+`src/media-visibility.js` の `createMediaVisibility(repoRoot, { includePrivate: false })` はresolverの外側で用いる読出し範囲のpolicyである．`classify(absolutePath)` は `{ visible, reason }` を返し，`prime(paths)` はGit ignore検査をまとめる．`checkoutLinks` はGit index上のmode 120000のパス集合，`contextVisible(text)` はprivate/除外パスの語を含む原稿抜粋を保守的に判定する．repoRootは呼出側でcanonicalizeする．
+
+既定ではprivate / .private / _privateおよびそれらに `-` / `_`/`.` で接尾辞が続くパス，隠しパス，Git ignore対象を除外する．Git ignoreはtrackedファイルにも適用する．Git管理でないディレクトリはpath-only判定となり，`ignoreSource` がその状態を示す．`.git` があるのにGit policyを取得できない場合は処理を中止する．`includePrivate: true` はprivate・隠しパス・ignoreの除外を明示的に解除するが，`.git`/`.ssh`/`.aws`/`.env` / node_modulesは常に対象外とする．最終実体とsymlink途中のrepo内パスにも同じ検査を適用する．repo外の内容は読まない．
+
+`src/media-catalog.js` の `buildMediaCatalog({ repoRoot, includePrivate?, includeHidden?, metadata? })` は `{ schemaVersion: 1, repoRoot, privacy, excluded, assets, diagnostics }` を返す．assets要素は `{ path, realPath, kind, format, bytes, hash, dimensions, metadataError, location, symlinks, diagnostics, references, aliases, identical }`．パスはrepo相対，hashはSHA256 hex，dimensionsは `{ width, height, unit?, reason }`，referencesは `{ reference, origin }`．aliasesは同一実体，identicalは同一hashの別実体の候補である．locationは配置から分かるscope/deckのみであり，所有者を選定しない．`metadata: false` では素材内容の読取を省略する．
+
+private・ignore対象を参照する原稿，またはそれらのパスの語を抜粋に含む原稿では，既定出力のcontextを空文字にする．hiddenを表示対象から外してもprivacy判定にはhidden参照を含める．抜粋は最大4096文字で，埋込data URLは伏せる．除外対象のパス・caption・hashは出力せず，`excluded.private` には走査中に除外したパスの件数だけを記録する．これは未走査のprivate配下の全ファイル数を意味しない．repo外の実体パスや絶対リンクtargetはcatalog出力で伏せ，修正元のrepo内リンク・原稿行を示す．
+
+Git indexがsymlinkを示すのにcheckout結果が通常ファイルの場合，catalogは `symlink-checkout` を追加診断し，そのテキストを素材としてhash化しない．これは通常validatorへ追加する規則ではない．
