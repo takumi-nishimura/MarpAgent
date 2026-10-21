@@ -2,23 +2,35 @@
 id: ISS-0046
 title: "Establish representative layout regression baselines"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
   - codex-main-leader
 scope:
   - fixtures
+  - tests
+  - .agents/skills
 tags:
   - test
 depends_on: []
 supersedes: []
 artifacts:
-  revisions: []
+  revisions:
+    - 119fbbbedb7076394de166af783fd8e10dc23b58
+    - 950742d
   manifests:
     - fixtures/layout-baselines/cases.json
-  results: []
-  commands: []
+    - fixtures/layout-baselines/baseline/conditions.json
+  results:
+    - fixtures/layout-baselines/baseline/
+    - fixtures/layout-baselines/baseline-2026-10-21.md
+    - fixtures/layout-baselines/source-structures.md
+  commands:
+    - node --test --test-reporter=spec tests/unit/layout-baselines.test.js tests/unit/theme-css.test.js tests/unit/marp-engine.test.js
+    - FONTCONFIG_FILE=/tmp/marp-i54-baseline/fonts.conf flock /tmp/marpagent-parallel-20261021/browser-tests.lock npm run test:e2e -- tests/e2e/composition-utilities.spec.js --project=chromium --workers=1
+    - FONTCONFIG_FILE=/tmp/marp-i54-baseline/fonts.conf flock /tmp/marpagent-parallel-20261021/browser-tests.lock npm run marpx -- fixtures/layout-baselines/slide.md -v --strict --report-dir out/layout-baseline-20261021/validation
+    - uv run .github/records.py validate
 ---
 
 # Establish representative layout regression baselines
@@ -47,6 +59,24 @@ GitHub IssueとISSの対応: #53 = ISS-0045，#54 = ISS-0046，#55 = ISS-0047，
 
 OpenCode `opencode/glm-5.3-flash-free` への読み取り専用 inventory 委譲は，自動承認レビューにより外部モデルへの具体的な送信承認が不足するとして起動前に拒否された．補助による変更・評価はなく，担当 lead が調査と視覚解釈・テストを行う．新しい XR が必要なら番号の割当は main に委ねる．
 
+## Implementation completion 2026-10-21
+
+固定 commit の元原稿3本と template 2本を GitHub 接続で取得し，図のみ，不均等二列，図の縦積み，結果図と補足の構造をページ・行番号と blob SHA で照合した．`source-structures.md` と manifest に対応を記載した．脚注・長さ・縦横比の境界は，元原稿に実在する指定と合成条件を区別した．研究内容・写真・元原稿の画像を fixture に移していない．
+
+取得済み Noto Sans JP v57 の400／700を run 専用 Fontconfig で設定した．3テーマとも Chromium CDP で見出し Bold／本文 Regular の実使用を確認した．基準14枚×3テーマ，寸法調整試行2枚×3テーマ，原稿・テーマのコピー，hash・版・通信条件・既存 audit を `baseline/` に保存した．lead は lab 全14枚と2試行を視覚確認し，未確認の投影可読性や他テーマの全ページ視覚確認を分けて記録した．
+
+基準の縦長図には `content-clipped` が残る．既存 utility `max-h-full` の試行は改善せず，画像一要素の `max-height:480px` で欠けが解消したが，図内文字の縮小を伴う．原稿・差分・画像・対象と隣接ページの観測を保存し，基準自体は調整していない．caption の幅と細かい脚注を，validator の失敗とは別の visual concern とした．共有 CSS は変更していない．
+
+既存 CLI の `renderDeck`／`buildOverviewDocument` 経路による14ページの overview も保存し，順序を確認した．既存の overflow／text-overlap 対照例は strict validator でそれぞれ期待した警告・失敗を実測し，画像と report JSON を分けて保存した．
+
+既存 composition E2E は configured engine と同じ fixture を使い，素材の読み込み・表示，8:4列，縦の読み順，強調・marker・caption・脚注・数式・図の保持を検査する．Toshiba の既存の単色太字も尊重する．最終9件は成功した．unit／theme CSS／Marp engine の対象32件も成功した．skill 2本に既定→既存の少数指定→ページ固有 CSS，内容保持，隣接ページ確認と領域別レビューを反映した．
+
+skill-creator の `quick_validate.py` は既存の `argument-hint` キーを拒否し，変更前でも同じ拒否を確認した．frontmatterは変更せず，このチェックは成功扱いしていない．ローカルリンク検査と対象コードの format check は成功した．統合 full strict gate と受入の最終確認は main に委ねるため，本ISSは in-review とする．
+
+## Notes for main
+
+これは benchmark scaffold の完成であり，#55／#57 の共有 CSS・デザインの改善効果や採用を認定するものではない．後続比較では `baseline-2026-10-21.md` の条件を固定し，基準入力を短縮せず，追加・撤去した指定と理由を新しい run へ記録する．初回測定・寸法試行を独立XRへ索引化する場合は main が中央で採番する．本担当では新しいISS／ADR／XRを作成していない．
+
 親計画：#53．このIssueは評価用原稿・既存テスト・制作スキルの整備であり，構図の自動選択器や新しい評価サービスを導入する作業ではない．
 
 ## Problem
@@ -70,13 +100,13 @@ my-decksには図中心，不均等列，図の縦積み，結果図と説明な
 
 ## Acceptance criteria
 
-- [ ] 上記の代表的な内容関係を覆う実行可能なケースと，対応する元原稿のパーマリンクがある．素材はMarpAgentへ掲載可能なものだけを使う．
-- [ ] 現状の原稿・描画・個別指定を基準として保存し，標準版の未達項目と例外版の調整手順を記載する．座標合わせ等を不要にする目標の達成は#55/#56側で確認し，本Issueの完了条件には後続実装の完了を含めない．既存の意図的な演出は評価から分離する．
-- [ ] 文字・図の欠落，強調の消失，情報の削除，見出しと根拠の不一致を，原稿短縮による改善として数えない．
-- [ ] 図内ラベル・凡例の可読性を画像で確認し，既存validatorが測定できない範囲を明記する．「エラー0＝デザイン良好」としない．
-- [ ] 人またはエージェントによる視覚指摘を，ページ・対象領域・理由・修正候補の形で残せる．未確認事項や好みの指摘は機械的な不合格へ昇格しない．
-- [ ] 対象テーマ・ブラウザ・フォントの取得条件を記録し，フォントfallbackや未実行検査を成功扱いしない．
-- [ ] 既存の画像出力・overview・validator・テスト経路を利用し，CIや評価基盤を無断で増やさない．共通CSS変更時は既存paper/scroll等の回帰も確認する．
+- [x] 上記の代表的な内容関係を覆う実行可能なケースと，対応する元原稿のパーマリンクがある．素材はMarpAgentへ掲載可能なものだけを使う．
+- [x] 現状の原稿・描画・個別指定を基準として保存し，標準版の未達項目と例外版の調整手順を記載する．座標合わせ等を不要にする目標の達成は#55/#56側で確認し，本Issueの完了条件には後続実装の完了を含めない．既存の意図的な演出は評価から分離する．
+- [x] 文字・図の欠落，強調の消失，情報の削除，見出しと根拠の不一致を，原稿短縮による改善として数えない．
+- [x] 図内ラベル・凡例の可読性を画像で確認し，既存validatorが測定できない範囲を明記する．「エラー0＝デザイン良好」としない．
+- [x] 人またはエージェントによる視覚指摘を，ページ・対象領域・理由・修正候補の形で残せる．未確認事項や好みの指摘は機械的な不合格へ昇格しない．
+- [x] 対象テーマ・ブラウザ・フォントの取得条件を記録し，フォントfallbackや未実行検査を成功扱いしない．
+- [x] 既存の画像出力・overview・validator・テスト経路を利用し，CIや評価基盤を無断で増やさない．共通CSS変更時は既存paper/scroll等の回帰も確認する．
 
 ## 対象外
 

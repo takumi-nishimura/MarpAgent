@@ -1,0 +1,15 @@
+{
+  "deckPath": "baseline/adjustments/inline-slide.md.txt",
+  "slideCount": 14,
+  "visualCheck": {
+    "status": "measured"
+  },
+  "counts": {
+    "errors": 0,
+    "warnings": 0,
+    "hints": 0
+  },
+  "findings": [],
+  "artifactErrors": [],
+  "screenshots": []
+}

@@ -1,0 +1,249 @@
+---
+marp: true
+theme: lab
+paginate: true
+style: |
+  section {
+    --logos-dark: none;
+    --logos-light: none;
+  }
+---
+
+<!-- case: body-standard -->
+<!-- _header: 本文と見出し -->
+
+## 重要なページを先に描画する
+
+目的と資料を確認し，slide.mdに見出しと要点を置く．
+
+重要な図や表を入れて描画し，読み取れる大きさかを確かめる．**比較条件を保つ**ことを優先する．
+
+残りの本文を加え，前後のつながり，出典，収まりを点検する．
+
+---
+
+<!-- case: body-heading-wrap -->
+<!-- _header: 本文と見出し -->
+
+## 本文をすべて仕上げる前に，重要な図や表を含むページを実際の素材で先に描画する
+
+目的と資料を確認し，slide.mdに見出しと要点を置く．
+
+重要な図や表を入れて描画し，読み取れる大きさかを確かめる．**比較条件を保つ**ことを優先する．
+
+残りの本文を加え，前後のつながり，出典，収まりを点検する．
+
+---
+
+<!-- case: figure-standard -->
+<!-- _header: 図とキャプション -->
+
+## 同じ条件で二つの値を比較する
+
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じ入力条件で比較した架空の値．単位は任意単位．</figcaption>
+</figure>
+
+---
+
+<!-- case: figure-caption-wrap -->
+<!-- _header: 図とキャプション -->
+
+## 同じ条件で二つの値を比較する
+
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じ入力条件で比較した架空の値．単位は任意単位．この例は図と説明の配置確認用であり，実験結果を示すものではない．条件Aと条件Bには同じ入力を与え，表示された値の差だけを比較する．条件の違いに関する推論や，実際の装置・利用者への一般化は行わない．</figcaption>
+</figure>
+
+---
+
+<!-- case: columns-standard -->
+<!-- _header: 主資料と補足 -->
+
+## 比較の根拠に広い列を割り当てる
+
+<div class="grid grid-cols-12 gap-6 items-start" data-region="columns">
+<div class="col-span-8 min-w-0" data-region="evidence">
+
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じデータを，図と近くの説明で読む．</figcaption>
+</figure>
+
+</div>
+<div class="col-span-4 min-w-0" data-region="interpretation">
+
+### 読み取れること
+
+条件Bの値は条件Aより大きい．**同じ入力条件**であることが比較の前提になる．
+
+この架空の値から，別の条件での性能は判断しない．
+
+</div>
+</div>
+
+---
+
+<!-- case: columns-portrait -->
+<!-- _header: 主資料と補足 -->
+
+## 比較の根拠に広い列を割り当てる
+
+<div class="grid grid-cols-12 gap-6 items-start" data-region="columns">
+<div class="col-span-8 min-w-0" data-region="evidence">
+
+<figure>
+<img src="assets/img/comparison-portrait.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じデータを，図と近くの説明で読む．</figcaption>
+</figure>
+
+</div>
+<div class="col-span-4 min-w-0" data-region="interpretation">
+
+### 読み取れること
+
+条件Bの値は条件Aより大きい．**同じ入力条件**であることが比較の前提になる．
+
+この架空の値から，別の条件での性能は判断しない．
+
+</div>
+</div>
+
+---
+
+<!-- case: stack-standard -->
+<!-- _header: 図を縦に読む -->
+
+## 入力と出力の順序を保つ
+
+<div class="flex flex-col gap-4" data-region="stack">
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>上段：入力から出力までの流れ．</figcaption>
+</figure>
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>下段：同じ流れを繰り返して確認する．</figcaption>
+</figure>
+</div>
+
+---
+
+<!-- case: stack-taller-media -->
+<!-- _header: 図を縦に読む -->
+
+## 入力と出力の順序を保つ
+
+<div class="flex flex-col gap-4" data-region="stack">
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>上段：入力から出力までの流れ．</figcaption>
+</figure>
+<figure>
+<img src="assets/img/stage-tall.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>下段：同じ流れを繰り返して確認する．</figcaption>
+</figure>
+</div>
+
+---
+
+<!-- case: results-standard -->
+<!-- _header: 結果と条件 -->
+
+## 値の差と比較条件を一緒に示す
+
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>条件Aは52，条件Bは68．いずれも架空の値．</figcaption>
+</figure>
+
+差は16任意単位である．<mark>入力条件は共通</mark>であり，別条件への一般化は行わない．
+
+<div class="footnote">出典：配置確認のために作成した架空のデータ．実測値ではない．</div>
+
+---
+
+<!-- case: results-footnote-wrap -->
+<!-- _header: 結果と条件 -->
+
+## 値の差と比較条件を一緒に示す
+
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>条件Aは52，条件Bは68．いずれも架空の値．</figcaption>
+</figure>
+
+差は16任意単位である．<mark>入力条件は共通</mark>であり，別条件への一般化は行わない．
+
+<div class="footnote">出典：配置確認のために作成した架空のデータ．実測値ではない．この資料の図と数値は部品の配置，文字の読みやすさ，出典と本文の距離を確認するためだけに作成した．実際の研究参加者，実験装置，測定条件との対応はなく，精度や有効性に関する根拠として使うことはできない．境界例ではこの注記だけを長くして，本文と脚注の干渉を確認する．</div>
+
+---
+
+<!-- case: table-standard -->
+<!-- _header: 比較表 -->
+
+## 閲覧にはPDF，共同編集にはMarkdownを渡す
+
+同じ判断軸を行に置くと，配布方法ごとの違いを追いやすい．
+
+| 判断軸 | PDF | Markdownと素材一式 |
+| :----- | :-- | :---------------- |
+| 主な用途 | 完成した資料の閲覧 | 内容や構成の共同編集 |
+| 受け手の準備 | PDFを開ける環境 | MarpAgentの実行環境 |
+| 更新時の作業 | 原稿を修正して再出力 | 同じ原稿を直接修正 |
+| 渡す範囲 | 出力したファイル | 原稿，テーマ，参照する素材 |
+
+図の出典や数値の条件は，どちらの形式でも資料内に残す．
+
+---
+
+<!-- case: table-extra-row -->
+<!-- _header: 比較表 -->
+
+## 閲覧にはPDF，共同編集にはMarkdownを渡す
+
+同じ判断軸を行に置くと，配布方法ごとの違いを追いやすい．
+
+| 判断軸 | PDF | Markdownと素材一式 |
+| :----- | :-- | :---------------- |
+| 主な用途 | 完成した資料の閲覧 | 内容や構成の共同編集 |
+| 受け手の準備 | PDFを開ける環境 | MarpAgentの実行環境 |
+| 更新時の作業 | 原稿を修正して再出力 | 同じ原稿を直接修正 |
+| 渡す範囲 | 出力したファイル | 原稿，テーマ，参照する素材 |
+| 参照の保存 | 資料内に出典を記す | 原稿と素材の対応も記す |
+
+図の出典や数値の条件は，どちらの形式でも資料内に残す．
+
+---
+
+<!-- case: diagram-standard -->
+<!-- _header: 数式と処理の流れ -->
+
+## 入力の平均を出力として記録する
+
+入力$x_1,\ldots,x_n$に対し，出力は$y=\frac{1}{n}\sum_{i=1}^{n}x_i$とする．
+
+```mermaid
+flowchart LR
+    A[入力] --> B[平均を計算] --> C[出力を記録]
+```
+
+これは描画確認用の処理例であり，実装の速度や精度は評価しない．
+
+---
+
+<!-- case: diagram-label-wrap -->
+<!-- _header: 数式と処理の流れ -->
+
+## 入力の平均を出力として記録する
+
+入力$x_1,\ldots,x_n$に対し，出力は$y=\frac{1}{n}\sum_{i=1}^{n}x_i$とする．
+
+```mermaid
+flowchart LR
+    A[入力] --> B["入力条件を確認して<br/>平均を計算"] --> C[出力を記録]
+```
+
+これは描画確認用の処理例であり，実装の速度や精度は評価しない．
