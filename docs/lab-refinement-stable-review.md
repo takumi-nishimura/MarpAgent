@@ -19,7 +19,7 @@
 
 Google Fonts のネットワーク要求は止めた．font ファイルは比較結果の `fonts/` にコピーし，その比較用 browser にだけ `FONTCONFIG_FILE` を設定した．これにより本文の Web face に加え，SVG 内の日本語にも同じ font を利用できる．ユーザーやシステムの font 設定は変更しない．`fc-match sans-serif:lang=ja` はこのファイルを示し，browser の platform font 情報にも custom Noto の使用を保存した．variable font の内部名は `Noto Sans JP Thin` であり，この名称を実際の CSS weight と取り違えない．
 
-元原稿，参照素材，旧新 CSS のコピーと hash，font，使用版，測定値，PNG は `/tmp/marp-i57-stable-review-20261021/` にある．比較画面は同ディレクトリの `review.html`，機械可読な結果は `comparison.json`．初回の `/tmp/marp-i57-review-v2-20261021/` と条件が異なるため，数値は混ぜない．
+元原稿，参照素材，旧新 CSS，font，使用版，測定値と全量 PNG は当時の一時 run に保存した．その既存結果から [代表画像3組・font / CSS / 入力 hash・測定 summary・harness](evidence/ISS-0049-lab-refinement/README.md) を参照可能な証跡として保存した．font 本体と全量画像は同梱しない．初回比較とは条件が異なるため，数値は混ぜない．
 
 ## ケースごとの観測
 
@@ -53,7 +53,7 @@ Codex が本文，図，caption，脚注，強調と読み順を画像で確認�
 
 ## 実行と結果
 
-全 browser 実行は `flock /tmp/marpagent-parallel-20261021/browser-tests.lock` の下で直列化した．
+全 browser 実行は共有 `flock <browser-lock>` の下で直列化した．下記の一時パスは一般化している．
 
 | コマンド | 結果 |
 | :--- | :--- |
@@ -61,11 +61,11 @@ Codex が本文，図，caption，脚注，強調と読み順を画像で確認�
 | `npm run design:lint`，`npm run design:tokens:check` | 全 design error 0 / warning 0，token 一致 |
 | `node --test tests/unit/theme-css.test.js tests/unit/design-cli.test.js tests/unit/layout-baselines.test.js tests/unit/canvas-size.test.js tests/unit/scroll-slides.test.js` | 45 pass，skip 0．theme freshness，原稿・素材，canvas，scroll を確認 |
 | `node_modules/.bin/playwright test tests/e2e/lab-refinement.spec.js tests/e2e/body-layout.spec.js tests/e2e/layout-compatibility.spec.js tests/e2e/body-exports.spec.js tests/e2e/composition-utilities.spec.js --project chromium --workers 1` | 43 pass，skip 0．追加した16:9 / 4:3の併用テスト2件を含む．export テストは既定の `.body` 原稿の HTML・PNG・PDFを確認 |
-| `node /tmp/marp-i57-stable-compare.cjs` | 上記23ページ×3条件の実 font 比較．既定表示は23/23画素一致，改良版は本文23/23一致，wrap 差2件 |
-| `node /tmp/marp-i57-stable-strict.cjs` | 同じ font と配置で7条件を `-v --strict --format json --report-dir ...` により実測．詳細は下記 |
-| `node /tmp/marp-i57-check-classes.cjs` | #56 `2eb7616` の committed collector を読込専用で使用．`lab-refined` / `.body` / `.figure-natural` を認識，unknown reason 0 |
+| `node <comparison-harness>` | 上記23ページ×3条件の実 font 比較．既定表示は23/23画素一致，改良版は本文23/23一致，wrap 差2件．[保存版](evidence/ISS-0049-lab-refinement/compare.cjs) |
+| `node <strict-harness>` | 同じ font と配置で7条件を `-v --strict --format json --report-dir ...` により実測．詳細は下記 |
+| `node <class-interface-harness>` | #56 `2eb7616` の committed collector を読込専用で使用．`lab-refined` / `.body` / `.figure-natural` を認識，unknown reason 0 |
 
-strict の全条件が `visualCheck.status: measured` だった．#54 以外の5条件は finding 0 / 終了0である：`.body` の既定と改良版，改良版の4:3，lab smoke，数式・コード・Mermaid を含む Core 5 fixture．#54 の既定と改良版はともにページ6だけ `content-clipped` error / 終了1で，最大値は86px→83px．小さな数値差を欠陥の解消として数えない．ルール・ページ・重大度が新たに増えたケースはなかった．結果は `/tmp/marp-i57-stable-strict-20261021/results.json`．
+strict の全条件が `visualCheck.status: measured` だった．#54 以外の5条件は finding 0 / 終了0である：`.body` の既定と改良版，改良版の4:3，lab smoke，数式・コード・Mermaid を含む Core 5 fixture．#54 の既定と改良版はともにページ6だけ `content-clipped` error / 終了1で，最大値は86px→83px．小さな数値差を欠陥の解消として数えない．ルール・ページ・重大度が新たに増えたケースはなかった．[保存した summary](evidence/ISS-0049-lab-refinement/summary.json) の `strict` に7条件の結果がある．
 
 ## 引渡し範囲
 
@@ -73,4 +73,4 @@ strict の全条件が `visualCheck.status: measured` だった．#54 以外の5
 
 #56 の branch 自体は取り込んでいない．ここで確認したのは committed selector collector との公開 class の整合であり，main での最終的な validator 統合確認は残る．同様に full strict gate，Firefox 全回帰，改良版 PDF の別レンダラーによる pixel 比較，実際の研究デッキの移行は未実行．理解度の改善，科学的な内容の正しさ，あらゆる原稿の収まりをこの比較から主張しない．
 
-一時成果物を恒久的な XR 等へ移す場合の採番・保存先と，PR への画像添付は main が担当する．新しい record ID は割り当てていない．helper model は使用せず，Codex が実装差分・測定・画像を確認した．
+main から #57 の統合済み・配置関連 unit 60件 / browser 46件成功の報告を受け，既存結果の代表抜粋を [docs/evidence](evidence/ISS-0049-lab-refinement/README.md) へ保存した．保存時の再描画・テスト再実行はない．main 採番の XR-0003（controlled layouts）から参照し，新しい record ID は割り当てない．helper model は使用せず，Codex が保存データの整合を確認した．

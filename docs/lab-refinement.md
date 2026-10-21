@@ -51,7 +51,7 @@ font-family の computed style だけでは読込の証明にしない．browser
 
 太字の実 weight と caption / footnote の大きさを既定にすると，利用者の既存調整へ影響する可能性がある．この比較だけでは一般の互換性を証明できないため，単一 class による明示選択を採った．既定を維持した条件の画素一致と，選択時の寸法差がその根拠である．
 
-比較原稿・CSS hash・使用 font・行数・PNG は `/tmp/marp-i57-review-v2-20261021/comparison.json` と同ディレクトリの画像に保存した．並列比較画面は `/tmp/marp-i57-review-v2-20261021/review.html`．初回条件を再現する一時スクリプトは `/tmp/marp-i57-compare.cjs` であり，#54 の正式比較への移行時にこの一時結果を同一条件として混ぜない．
+初回比較の原稿・CSS hash・使用 font・行数・PNG は一時 run に保存した．この初回結果と，後述する安定した配置での比較結果を同一条件として混ぜない．参照用の代表画像と実行 harness は [保存した比較証跡](evidence/ISS-0049-lab-refinement/README.md) にある．
 
 ## Validation and remaining integration
 
@@ -59,14 +59,14 @@ font-family の computed style だけでは読込の証明にしない．browser
 - `npm run design:lint`：全 design で error 0 / warning 0．
 - `npm run design:tokens:check`：全 design 一致．
 - `node --test tests/unit/theme-css.test.js tests/unit/design-cli.test.js`：27 pass．
-- `flock /tmp/marpagent-parallel-20261021/browser-tests.lock node_modules/.bin/playwright test tests/e2e/lab-refinement.spec.js --project chromium --workers 1`：3 pass．既定値，名前付き scheme，原稿の上書き，paper，muji/toshiba を確認．
-- `flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i57-strict.cjs`：対象5 fixture の font 指定コピーを `-v --strict --format json --report-dir ...` で検査し，すべて `visualCheck.status: measured`，error 0．追加 smoke は finding 0，comparison / figure-heavy / long-japanese の source hint は維持．結果は `/tmp/marp-i57-strict-20261021/results.json`．
+- `flock <browser-lock> node_modules/.bin/playwright test tests/e2e/lab-refinement.spec.js --project chromium --workers 1`：3 pass．既定値，名前付き scheme，原稿の上書き，paper，muji/toshiba を確認．
+- `flock <browser-lock> node <initial-validation-harness>`：対象5 fixture の font 指定コピーを `-v --strict --format json --report-dir ...` で検査し，すべて `visualCheck.status: measured`，error 0．追加 smoke は finding 0，comparison / figure-heavy / long-japanese の source hint は維持．一時 run 名は一般化した．
 - `uv run .github/records.py validate`：61 records validated．
 
 上記は初回 checkpoint 時点の検証記録である．その後，main の許可により #54 `119fbbb` と #55 `6560cc4`，`44a841d`，`f397ea5` を取り込み，全テーマを再生成した．#57 の token と lab 固有 mapping は保持し，shared mechanics は取り込んだ #55 のものを使用する．
 
 ## Stable layout integration
 
-[安定した配置での比較記録](lab-refinement-stable-review.md) に，同じ実 font を使った23ページの新旧画像，具体的な wrap / 寸法差，strict の診断差と調整台帳を記録した．既定表示は23/23ページで画素一致し，改良版の本文も23/23ページで一致した．長い caption の行数は #54 の図説明で2→3行，#55 の二列で1→2行となり，`.body` の4構図は caption と media を収めた．
+[安定した配置での比較記録](lab-refinement-stable-review.md) に，同じ実 font を使った23ページの具体的な wrap / 寸法差，strict の診断差と調整台帳を記録した．[代表 before / after 3組・測定 summary・harness](evidence/ISS-0049-lab-refinement/README.md) を保存した．既定表示は23/23ページで画素一致し，改良版の本文も23/23ページで一致した．長い caption の行数は #54 の図説明で2→3行，#55 の二列で1→2行となり，`.body` の4構図は caption と media を収めた．
 
 既存の #54 縦長図の境界例は新旧とも clipping が残る．元原稿へ局所調整を加えず，この点は未解消として保持する．関連 unit 45件，browser 43件は pass．#56 `2eb7616` の committed collector でも公開 class を認識したが，その branch 全体は取り込んでいない．full strict gate と最終受入は main に引き渡す．既定 lab の置換を承認済みとは扱わない．
