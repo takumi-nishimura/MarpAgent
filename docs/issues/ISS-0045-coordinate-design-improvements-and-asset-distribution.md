@@ -7,17 +7,26 @@ date: "2026-10-21"
 updated: "2026-10-21"
 authors:
   - codex-main-leader
+  - marp-i53-lead
 scope:
   - coordination
 tags:
   - docs
-depends_on: []
+depends_on:
+  - ISS-0046
+  - ISS-0047
+  - ISS-0048
+  - ISS-0049
+  - ISS-0050
+  - ISS-0051
+  - ISS-0053
 supersedes: []
 artifacts:
   revisions: []
   manifests: []
   results: []
-  commands: []
+  commands:
+    - uv run .github/records.py validate
 ---
 
 # Coordinate design improvements and asset distribution
@@ -35,6 +44,18 @@ D2を積極的に採用する最新方針を反映し，#61は採用を進める
 Main coordination branch: coord/issues-53-61-20261021．
 GitHub IssueとISSの対応: #53 = ISS-0045，#54 = ISS-0046，#55 = ISS-0047，#56 = ISS-0048，#57 = ISS-0049，#58 = ISS-0050，#59 = ISS-0051，#60 = ISS-0052，#61 = ISS-0053．
 #56の診断と#57の比較案は先行可能だが，CSS契約は#55と整合させる．#59は#58の参照解決部分だけを先行依存とし，検索UIの完了待ちにしない．#61は独立着手する．
+
+## Notes
+
+2026-10-21の依存関係・受け入れ追跡は[デザイン・アセット・D2の統合文書](../design-assets-integration.md)で管理する．基準revisionは`1711332cdf3fcd30182dba16e9b5b4cb77324837`．取り込み済み`issues.json`のPR #52コメント3件と#53コメント3件，子ISSと共有COORDINATIONを照合し，観測・本人方針・助手の設計案を区別した．過去コメントは書き換えない．
+
+初回checkpointとして，#55/#56/#57のCSS競合，#58 resolver→#59 ZIPの境界，#61のMermaid専用selector拡張と共通engine接続をmain向け端末応答で共有した．続くmain更新で#55の`.body`契約案と#59のplan/write API案を受領し，追跡文書へ反映した．checkpoint提出・検証報告・mainによる機能受け入れを分け，文書整備を実装の待ち条件にはしない．
+
+親の`depends_on`は#54〜#59と，今回採用を進める#61の統合確認を表す．#60は独立した隣接修正として追跡し，my-decks #2は別repo所有を維持する．親は`in-progress`を維持し，子の実装・検証とmainの統合受け入れが揃うまで閉じない．
+
+担当変更は本追跡文書と本ISSに限定する．production code，peer ISS，既存ADR/XRは変更しない．必要な採用記録は，D2の実行・外部参照境界，公開CSS契約，ZIP配布ポリシー等の実装判断が揃った時点でmainが中央で採番する候補とし，本作業では新IDの割当やADRのaccepted化を行わない．ZIPのprivacy/pathとD2のsubprocess/SVGの限定レビューは，mainから割り当てられた場合に実施する．
+
+文書検証：`uv run .github/records.py validate`で61件成功．Nodeによる本書と追跡文書のローカルリンク検査は10件中欠落0件，`git diff --check`も成功した．補助モデルは使用していない．機能テスト・実描画・ZIP展開・D2実行は本担当では未実施であり，子の検証報告とmainの受け入れを待つ．
 
 ## Problem
 
@@ -87,6 +108,7 @@ ZIPの具体的なCLI名，収集方式，CSSクラス名，実装順序は助�
 - [ ] 標準ケースの調整量と例外時の指定手順を，変更前後の原稿と描画で比較できる．必要な留保・出典・図内可読性は別に確認する．
 - [ ] テーマと配置の変更を一度に混ぜず，効果・回帰を個別に判定する．
 - [ ] ZIPは収集範囲と外部依存を説明でき，欠落や危険な参照を隠したまま配布成功としない．
+- [ ] 最新方針に基づくD2コードブロック描画を#61で実装・検証し，共通engine，失敗伝達，既存Mermaidの回帰，配布物の閲覧をmainが統合確認する．
 - [ ] 各作業の実装・検証・レビューを子Issueで確認した後に，親Issueの完了を判断する．Issue登録だけでは機能完了にしない．
 
 ## 記録の扱い
