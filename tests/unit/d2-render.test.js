@@ -120,6 +120,13 @@ test("missing CLI, unsupported version and input overflow are explicit failures"
             }),
         /D2.*(?:not found|executable)/i,
     );
+    if (process.platform !== "win32") {
+        fs.chmodSync(w.executable, 0o644);
+        assert.throws(() => renderD2Sync("a", { env: w.env }), {
+            code: "D2_NOT_EXECUTABLE",
+        });
+        fs.chmodSync(w.executable, 0o755);
+    }
     fs.writeFileSync(
         w.executable,
         `#!${process.execPath}\nconsole.log('v0.8.2')\n`,

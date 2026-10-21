@@ -178,12 +178,21 @@ function executableOnPath(name, env, cwd) {
                       ? [candidate, `${candidate}.exe`]
                       : [candidate];
               });
+    let inaccessible;
     for (const candidate of candidates) {
         try {
             fs.accessSync(candidate, fs.constants.X_OK);
             if (fs.statSync(candidate).isFile()) return candidate;
-        } catch {}
+        } catch (error) {
+            if (["EACCES", "EPERM"].includes(error.code))
+                inaccessible = candidate;
+        }
     }
+    if (inaccessible)
+        throw failure(
+            "D2_NOT_EXECUTABLE",
+            `D2 executable is not executable: ${inaccessible}. Check its execute permission.`,
+        );
     throw failure(
         "D2_NOT_FOUND",
         `D2 executable not found: ${name}. Install D2 ${D2_VERSION} explicitly, then set MARP_AGENT_D2_PATH or PATH.`,
