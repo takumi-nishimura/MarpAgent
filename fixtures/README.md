@@ -20,3 +20,14 @@ rendering is unavailable.
 ## Brief fixtures (outline generation)
 
 - `good-brief.md`: A compact, well-structured input brief for `src/outline.js` tests.
+
+## Representative layout baselines
+
+[`layout-baselines/slide.md`](layout-baselines/slide.md) is a generic 14-slide
+benchmark scaffold for #54 / ISS-0046. Stable case IDs and single-condition
+boundary pairs are in [`cases.json`](layout-baselines/cases.json); conditions,
+review records and comparison instructions are in
+[`README.md`](layout-baselines/README.md). It reuses `template/layouts.md` and
+the existing composition E2E test. These are current defaults to inspect, not
+an already improved design or a new visual quality score. Existing deliberate
+overflow/overlap fixtures remain the negative controls.

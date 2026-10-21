@@ -15,7 +15,8 @@ depends_on: []
 supersedes: []
 artifacts:
   revisions: []
-  manifests: []
+  manifests:
+    - fixtures/layout-baselines/cases.json
   results: []
   commands: []
 ---
@@ -35,6 +36,16 @@ D2を積極的に採用する最新方針を反映し，#61は採用を進める
 Main coordination branch: coord/issues-53-61-20261021．
 GitHub IssueとISSの対応: #53 = ISS-0045，#54 = ISS-0046，#55 = ISS-0047，#56 = ISS-0048，#57 = ISS-0049，#58 = ISS-0050，#59 = ISS-0051，#60 = ISS-0052，#61 = ISS-0053．
 #56の診断と#57の比較案は先行可能だが，CSS契約は#55と整合させる．#59は#58の参照解決部分だけを先行依存とし，検索UIの完了待ちにしない．#61は独立着手する．
+
+## Implementation checkpoint 2026-10-21
+
+#55／#57 向けの入口を `fixtures/layout-baselines/slide.md` と `fixtures/layout-baselines/cases.json` に固定した．14ページ・7組の stable case ID は同ディレクトリの README に記載した．本文，図のみ，不均等8:4列，図の縦積み，結果と脚注，表，数式と Mermaid を含み，境界版は一条件だけを変える．既存の overflow／text-overlap fixture を意図した失敗の対照に使う．
+
+`template/layouts.md` の先頭ページ本文を再利用し，その内容が変わった場合に比較元も確認する unit test を追加した．ID・素材参照・一条件変更の検査3件は成功した．この段階では描画結果の検証は未完了であり，改善済みデザインとは扱わない．共有 CSS は変更していない．
+
+初期環境には日本語フォントがなく，`fc-match 'Noto Sans JP'` は DejaVu Sans を返した．そのままの可読性評価は行わず，テーマが参照する Google Fonts の Noto Sans JP 400／700 を今回専用の `/tmp` に取得し，描画条件を固定して続行する．元原稿の commit 固定リンクは manifest に保存したが，my-decks の個別ページとの対応は未確認である．
+
+OpenCode `opencode/glm-5.3-flash-free` への読み取り専用 inventory 委譲は，自動承認レビューにより外部モデルへの具体的な送信承認が不足するとして起動前に拒否された．補助による変更・評価はなく，担当 lead が調査と視覚解釈・テストを行う．新しい XR が必要なら番号の割当は main に委ねる．
 
 親計画：#53．このIssueは評価用原稿・既存テスト・制作スキルの整備であり，構図の自動選択器や新しい評価サービスを導入する作業ではない．
 

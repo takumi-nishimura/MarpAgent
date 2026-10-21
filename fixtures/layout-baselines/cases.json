@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "deck": "fixtures/layout-baselines/slide.md",
+  "themes": ["lab", "muji", "toshiba"],
+  "sources": {
+    "template": {
+      "path": "template/layouts.md",
+      "permalink": "https://github.com/takumi-nishimura/MarpAgent/blob/74f287d9b0c7ea3d7b6145c096c2fecef6ea2e16/template/layouts.md",
+      "verification": "Local source read; table copied, body/process wording and 8:4 composition reused."
+    },
+    "components": {
+      "path": "template/core5-components.md",
+      "permalink": "https://github.com/takumi-nishimura/MarpAgent/blob/74f287d9b0c7ea3d7b6145c096c2fecef6ea2e16/template/core5-components.md",
+      "verification": "Existing formula/diagram fixture is a reference; this baseline uses newly authored generic content."
+    },
+    "seminar": {
+      "permalink": "https://github.com/takumi-nishimura/my-decks/blob/c7d1b4523375c35b42d12f7b84533fd0aa407bdb/decks/2026/06-22-lab-seminar/slide.md",
+      "verification": "Structural provenance supplied by ISS-0046; remote source unavailable during this run. No research content or media copied."
+    },
+    "seminar-fuzzy": {
+      "permalink": "https://github.com/takumi-nishimura/my-decks/blob/c7d1b4523375c35b42d12f7b84533fd0aa407bdb/decks/2026/07-13-lab-seminar-fuzzy-dpt/slide.md",
+      "verification": "Structural provenance supplied by ISS-0046; individual source pages not independently mapped. No research content or media copied."
+    },
+    "introduction": {
+      "permalink": "https://github.com/takumi-nishimura/my-decks/blob/c7d1b4523375c35b42d12f7b84533fd0aa407bdb/decks/2026/08-24-toshiba-research-introduction/slide.md",
+      "verification": "Structural provenance supplied by ISS-0046; individual source pages not independently mapped. No research content or media copied."
+    }
+  },
+  "pairs": [
+    {
+      "id": "body",
+      "standard": "body-standard",
+      "boundary": "body-heading-wrap",
+      "slides": [1, 2],
+      "mutation": "heading",
+      "changedCondition": "Only the Japanese heading becomes longer; no manual line breaks.",
+      "sources": ["template"],
+      "review": "Heading lines, body clearance, retained bold emphasis and meaning."
+    },
+    {
+      "id": "figure",
+      "standard": "figure-standard",
+      "boundary": "figure-caption-wrap",
+      "slides": [3, 4],
+      "mutation": "caption",
+      "changedCondition": "Only the caption becomes longer.",
+      "sources": ["seminar", "introduction"],
+      "review": "Figure area, label/legend readability, caption wrapping and distance."
+    },
+    {
+      "id": "columns",
+      "standard": "columns-standard",
+      "boundary": "columns-portrait",
+      "slides": [5, 6],
+      "mutation": "image",
+      "changedCondition": "Only the figure asset changes from landscape to portrait; numbers, labels and column split are retained.",
+      "sources": ["template", "seminar-fuzzy"],
+      "review": "8:4 columns, vertical media containment, nearby interpretation and qualifiers."
+    },
+    {
+      "id": "stack",
+      "standard": "stack-standard",
+      "boundary": "stack-taller-media",
+      "slides": [7, 8],
+      "mutation": "image",
+      "changedCondition": "Only the second asset canvas height doubles; labels and diagram stay the same size.",
+      "sources": ["seminar", "seminar-fuzzy"],
+      "review": "Top-to-bottom reading order, two captions, media-to-media collision and remaining space."
+    },
+    {
+      "id": "results",
+      "standard": "results-standard",
+      "boundary": "results-footnote-wrap",
+      "slides": [9, 10],
+      "mutation": "footnote",
+      "changedCondition": "Only the source footnote becomes longer.",
+      "sources": ["seminar-fuzzy", "introduction"],
+      "review": "Result/evidence agreement, retained marker, source visibility and body/footnote clearance."
+    },
+    {
+      "id": "table",
+      "standard": "table-standard",
+      "boundary": "table-extra-row",
+      "slides": [11, 12],
+      "mutation": "table-row",
+      "changedCondition": "Only one comparison row is added to template/layouts.md page 1.",
+      "sources": ["template"],
+      "review": "All shared criteria visible, column alignment and closing sentence clearance."
+    },
+    {
+      "id": "diagram",
+      "standard": "diagram-standard",
+      "boundary": "diagram-label-wrap",
+      "slides": [13, 14],
+      "mutation": "diagram-label",
+      "changedCondition": "Only one Mermaid node label changes to two semantic lines; formula and other nodes remain unchanged.",
+      "sources": ["components"],
+      "review": "Formula integrity, node/label size, arrows and diagram/body clearance."
+    }
+  ],
+  "controls": [
+    {
+      "deck": "fixtures/overflow-heavy-slide.md",
+      "purpose": "Intentional crowded failure, kept in the existing fixture gate.",
+      "errors": ["content-clipped"],
+      "warnings": ["edge-crowding"]
+    },
+    {
+      "deck": "fixtures/text-overlap-slide.md",
+      "purpose": "Intentional body/footnote collision, kept in the existing fixture gate.",
+      "errors": ["text-overlap"]
+    },
+    {
+      "deck": "template/layouts.md",
+      "purpose": "Unmodified canonical table, unequal columns and process rows."
+    }
+  ]
+}
