@@ -39,6 +39,14 @@ class: normal
 
 既存 lab は描画が変わる．本文のサイズを保っても，`normal` だった行高の明示，太さ，caption / footnote の拡大により，折返し・本文や図の縦位置・必要高さが変わり得る．原稿の明示 crop，局所 font や caption の上書きは保持し，実際の font で更新後の収まりを確認する．文字を小さくして欠けを隠したり，留保を省略したりしない．
 
+## Marker feedback
+
+表示1枚目（原稿2枚目）の「一行と〜」が太く，「要確認」の塗りが上の行へ重なるように見える指摘を，固定400/700 font で確認した．文字は `em` / `.marker` / `mark` とも Regular・weight 400であり，強調の太さの差ではなかった．変更前の背景帯は11.1px / 14.8px / 37pxで，隣接行の帯と `mark` の隙間は2px．実際の重なりは0だが，厚さと全面塗りの差が目立つ状態だった．
+
+lab の `.marker` と `mark` を，既存 `em` と同じ下30%・色の不透明度40%の帯へ揃えた．`mark` の文字色は本文を継承し，暗い背景でも読めるようにする．文字 weight・行高・padding・`box-decoration-break: clone` は変更しない．この font 条件では帯がすべて11.1px，行間の背景の隙間は27.9pxになり，本文・折返し・文字の fragment 座標は変わらなかった．帯の数値は inline box の実測と computed 背景から計算した CSS px である．
+
+`background` / `color` による局所上書き，色付き strong，paper，muji/toshiba と名前付き明暗 scheme を確認した．共通 CSS や caption の処理は変更しない．[今回の明暗 before / after・font / CSS / 入力 hash・測定条件](evidence/ISS-0049-marker-feedback/README.md) を別に保存し，過去の証跡は保持する．
+
 ## Default change validation
 
 plain lab の太字700を期待するテストで，旧 CSS の実測500により RED を確認した．lab 専用 mapping を既定へ移して同じテストが GREEN となった．追加の選択用 class はテストにも原稿にも不要．
