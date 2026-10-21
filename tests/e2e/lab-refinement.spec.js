@@ -27,10 +27,7 @@ Body text with **colored strong** and *a marker*.
 <div class="footnote">[1] A source and its qualification.</div>
 `;
 
-async function render(
-    page,
-    { theme = "lab", classes = "", paper = false, style = "" } = {},
-) {
+async function mount(page, markdown, theme = "lab") {
     const marp = config.engine({});
     marp.themeSet.add(
         fs.readFileSync(
@@ -38,17 +35,26 @@ async function render(
             "utf8",
         ),
     );
-    const { html, css } = marp.render(
+    const { html, css } = marp.render(markdown);
+    await page.route("https://fonts.googleapis.com/**", (route) =>
+        route.abort(),
+    );
+    await page.setContent(`<style>body { margin: 0; } ${css}</style>${html}`);
+}
+
+async function render(
+    page,
+    { theme = "lab", classes = "", paper = false, style = "" } = {},
+) {
+    await mount(
+        page,
         `---\ntheme: ${theme}\nclass: ${classes}\nstyle: |\n  ${style}\n---\n` +
             (paper
                 ? '<header class="paper-header">Paper title</header>\n\n'
                 : "") +
             content,
+        theme,
     );
-    await page.route("https://fonts.googleapis.com/**", (route) =>
-        route.abort(),
-    );
-    await page.setContent(`<style>body { margin: 0; } ${css}</style>${html}`);
     return page.evaluate(() => {
         const style = (selector) => {
             const value = getComputedStyle(document.querySelector(selector));
@@ -139,3 +145,95 @@ test("lab refinement preserves deck overrides and leaves paper and other themes 
     await expect(page.locator("h2")).toHaveCSS("font-size", "44px");
     await expect(page.locator("section")).toHaveCSS("font-family", "serif");
 });
+
+for (const size of ["16:9", "4:3"]) {
+    test(`lab refinement ${size}: body reserves larger captions and preserves figure groups`, async ({
+        page,
+    }) => {
+        const artwork = fs.readFileSync(
+            path.join(__dirname, "../../fixtures/body-layout-media.svg"),
+            "utf8",
+        );
+        const source = fs
+            .readFileSync(
+                path.join(__dirname, "../../fixtures/body-layout-slide.md"),
+                "utf8",
+            )
+            .replace("size: 16:9", `size: ${size}`)
+            .replaceAll(
+                "body-layout-media.svg",
+                `data:image/svg+xml,${encodeURIComponent(artwork)}`,
+            );
+        for (const classes of ["", "lab-refined"]) {
+            await mount(
+                page,
+                source.replace("theme: lab", `theme: lab\nclass: ${classes}`),
+            );
+            await page
+                .locator("img")
+                .evaluateAll((images) =>
+                    Promise.all(images.map((image) => image.decode())),
+                );
+            const layouts = await page
+                .locator("section")
+                .evaluateAll((sections) =>
+                    sections.map((section) => {
+                        const body = section
+                            .querySelector(".body")
+                            .getBoundingClientRect();
+                        const heading = section
+                            .querySelector("h2")
+                            .getBoundingClientRect();
+                        const footer = section
+                            .querySelector("footer")
+                            .getBoundingClientRect();
+                        const rect = (element) => {
+                            const { top, bottom, width, height } =
+                                element.getBoundingClientRect();
+                            return { top, bottom, width, height };
+                        };
+                        return {
+                            topClearance: body.top - heading.bottom,
+                            bottomClearance: footer.top - body.bottom,
+                            figures: [
+                                ...section.querySelectorAll("figure"),
+                            ].map((figure) => ({
+                                figure: rect(figure),
+                                media: rect(figure.querySelector("img")),
+                                caption: rect(
+                                    figure.querySelector("figcaption"),
+                                ),
+                                captionSize: parseFloat(
+                                    getComputedStyle(
+                                        figure.querySelector("figcaption"),
+                                    ).fontSize,
+                                ),
+                                availableBottom: body.bottom,
+                            })),
+                        };
+                    }),
+                );
+            expect(layouts).toHaveLength(4);
+            for (const layout of layouts) {
+                expect(layout.topClearance).toBeGreaterThanOrEqual(-1);
+                expect(layout.bottomClearance).toBeGreaterThan(0);
+                for (const figure of layout.figures) {
+                    expect(figure.media.height).toBeGreaterThan(20);
+                    expect(figure.media.bottom).toBeLessThan(
+                        figure.caption.top,
+                    );
+                    expect(figure.caption.bottom).toBeLessThanOrEqual(
+                        figure.figure.bottom + 1,
+                    );
+                    expect(figure.figure.bottom).toBeLessThanOrEqual(
+                        figure.availableBottom + 1,
+                    );
+                    expect(figure.captionSize).toBeCloseTo(
+                        classes ? 19.5 : 15.6,
+                        1,
+                    );
+                }
+            }
+        }
+    });
+}

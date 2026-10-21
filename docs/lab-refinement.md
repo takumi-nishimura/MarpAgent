@@ -63,4 +63,10 @@ font-family の computed style だけでは読込の証明にしない．browser
 - `flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i57-strict.cjs`：対象5 fixture の font 指定コピーを `-v --strict --format json --report-dir ...` で検査し，すべて `visualCheck.status: measured`，error 0．追加 smoke は finding 0，comparison / figure-heavy / long-japanese の source hint は維持．結果は `/tmp/marp-i57-strict-20261021/results.json`．
 - `uv run .github/records.py validate`：61 records validated．
 
-上記は初回 checkpoint．#54 `119fbbb` の代表 fixture，#55 `6560cc4` の `.body` mechanics，#56 `2eb7616` の class 診断が committed と確認した．#55 は typography / theme entry を変更せず，#56 は selector parser で `:where(.lab-refined)` を認識できる実装であることをコードで確認した．これらを組み合わせた描画は未実行であり，最終統合時に #54 の同一構図比較と厳密な診断差を確認する．既定 lab の置換を承認済みとは扱わない．
+上記は初回 checkpoint 時点の検証記録である．その後，main の許可により #54 `119fbbb` と #55 `6560cc4`，`44a841d`，`f397ea5` を取り込み，全テーマを再生成した．#57 の token と lab 固有 mapping は保持し，shared mechanics は取り込んだ #55 のものを使用する．
+
+## Stable layout integration
+
+[安定した配置での比較記録](lab-refinement-stable-review.md) に，同じ実 font を使った23ページの新旧画像，具体的な wrap / 寸法差，strict の診断差と調整台帳を記録した．既定表示は23/23ページで画素一致し，改良版の本文も23/23ページで一致した．長い caption の行数は #54 の図説明で2→3行，#55 の二列で1→2行となり，`.body` の4構図は caption と media を収めた．
+
+既存の #54 縦長図の境界例は新旧とも clipping が残る．元原稿へ局所調整を加えず，この点は未解消として保持する．関連 unit 45件，browser 43件は pass．#56 `2eb7616` の committed collector でも公開 class を認識したが，その branch 全体は取り込んでいない．full strict gate と最終受入は main に引き渡す．既定 lab の置換を承認済みとは扱わない．

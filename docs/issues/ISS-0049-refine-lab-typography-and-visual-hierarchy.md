@@ -2,7 +2,7 @@
 id: ISS-0049
 title: "Refine lab typography and visual hierarchy"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -14,10 +14,16 @@ tags:
 depends_on: ["ISS-0046"]
 supersedes: []
 artifacts:
-  revisions: []
+  revisions:
+    - "0375662"
+    - "119fbbb"
+    - "6560cc4"
+    - "44a841d"
+    - "f397ea5"
   manifests: []
   results:
     - docs/lab-refinement.md
+    - docs/lab-refinement-stable-review.md
   commands:
     - npm run marpx -- --theme lab
     - npm run design:lint
@@ -27,6 +33,12 @@ artifacts:
     - flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i57-compare.cjs /tmp/marp-i57-review-v2-20261021
     - flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i57-strict.cjs
     - uv run .github/records.py validate
+    - npm run marpx -- --theme
+    - node --test tests/unit/theme-css.test.js tests/unit/design-cli.test.js tests/unit/layout-baselines.test.js tests/unit/canvas-size.test.js tests/unit/scroll-slides.test.js
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock node_modules/.bin/playwright test tests/e2e/lab-refinement.spec.js tests/e2e/body-layout.spec.js tests/e2e/layout-compatibility.spec.js tests/e2e/body-exports.spec.js tests/e2e/composition-utilities.spec.js --project chromium --workers 1
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i57-stable-compare.cjs
+    - flock /tmp/marpagent-parallel-20261021/browser-tests.lock node /tmp/marp-i57-stable-strict.cjs
+    - node /tmp/marp-i57-check-classes.cjs
 ---
 
 # Refine lab typography and visual hierarchy
@@ -68,15 +80,15 @@ my-decksではこれを基礎に，本文サイズ，見出し位置，補足欄
 
 ## Acceptance criteria
 
-- [ ] labで色付き太字とマーカーが維持され，無彩色の太字への一括置換や強調の削除がない．既存原稿の記法変更を必須にしない．
-- [ ] 実際に読み込んだ日本語フォントで本文と強調の太さの差を確認し，マーカーは一行・複数行・明暗背景で文字を隠さない．フォントfallback時の限界も報告する．
-- [ ] 見出し・本文・補足の階層，図とキャプションの対応を，#54の同一構図の画像比較で確認できる．色のみの識別が必要な情報には文字・線等の手掛かりを残す．
-- [ ] 通常の原稿で本文，図の説明，余白を毎回上書きしなくても使える例がある．特定の意図による個別指定は保持できる．
-- [ ] DESIGN.mdのliteral値，生成token，テーマ内の対応が一致し，同じ値を複数箇所へ手で複製しない．新しい公開変数は契約に記載する．
-- [ ] 原稿の左右・上下配置，列順，図と説明のgroupは変わらない．フォントや文字サイズによる折返し変化は別に点検し，収まりの保証を誇張しない．
+- [x] labで色付き太字とマーカーが維持され，無彩色の太字への一括置換や強調の削除がない．既存原稿の記法変更を必須にしない．
+- [x] 実際に読み込んだ日本語フォントで本文と強調の太さの差を確認し，マーカーは一行・複数行・明暗背景で文字を隠さない．フォントfallback時の限界も報告する．
+- [x] 見出し・本文・補足の階層，図とキャプションの対応を，#54の同一構図の画像比較で確認できる．色のみの識別が必要な情報には文字・線等の手掛かりを残す．
+- [x] 通常の原稿で本文，図の説明，余白を毎回上書きしなくても使える例がある．特定の意図による個別指定は保持できる．
+- [x] DESIGN.mdのliteral値，生成token，テーマ内の対応が一致し，同じ値を複数箇所へ手で複製しない．新しい公開変数は契約に記載する．
+- [x] 原稿の左右・上下配置，列順，図と説明のgroupは変わらない．フォントや文字サイズによる折返し変化は別に点検し，収まりの保証を誇張しない．
 - [ ] shared CSSを変更する場合はmuji/toshiba，paper，scroll，数式・コード等への差を確認する．他テーマのブランド表現をlabに揃える変更は含めない．
 - [ ] 新旧の画像・原稿差分，既知の互換性差分，残した個別調整，移行方法をPRに添える．既存labの既定変更はレビューで明示的に確認する．
-- [ ] `design:lint`，`design:tokens:check`，テーマ再生成，対象fixtureのstrict validationと関連テストを実行し，未実行項目を区別する．
+- [x] `design:lint`，`design:tokens:check`，テーマ再生成，対象fixtureのstrict validationと関連テストを実行し，未実行項目を区別する．
 
 ## 対象外
 
@@ -114,3 +126,11 @@ repo内ISSは未起票．現行規約と既存記録を照合し，記録CLIで�
 初回の最終候補では，対象5 fixture の実 font を指定した一時コピーがすべて strict validation で実測され，error 0．source hint は保持した．同一内容11ページ×2 font 条件では既定表示の画素が旧 CSS と22条件すべて一致し，改良版は本文を保持し，観測した文字 block の行数差はなかった．字体の太さと文字階層の画像は Codex が確認した．行間や caption の寸法による縦位置の変化はあり，収まりを一般化しない．画像から判明した暗色表の文字色を本文色へ合わせ，`.marker` の帯を em と同じ透過率へ調整した．
 
 #54 `119fbbb`，#55 `6560cc4`，#56 `2eb7616` は committed と確認済み．共有契約と `:where()` の class 収集をコードで確認したが，これらとの組合せ描画・診断は未実行．この checkpoint では branch に peer commit を取り込んでいない．helper model は使用せず，Codex が実装と視覚確認を担当した．
+
+2026-10-21 stable integration：main の追加許可により `119fbbb`，`6560cc4`，`44a841d`，`f397ea5` を順に cherry-pick した．local revision はそれぞれ `8d0c472`，`a58852c`，`b08a0c1`，`ef0e8db`．競合はなく，生成 CSS は全テーマを再生成して確認した．#57 の DESIGN.md / mapping は保持し，#54 の原稿・素材は変更しない．
+
+安定した旧 CSS を `f397ea5:themes/lab.css` に固定し，23ページを同じ Noto Sans JP ファイルの400/700 faceと同じ native fallback 設定で比較した．既定表示は23/23ページで画素一致，改良版の本文は23/23ページ一致．caption の行数差は #54 ページ4の2→3行と #55 ページ2の1→2行．portrait 図の caption は自然幅を288px→360pxへ広げるが，列幅と画像の横位置・280×640pxの寸法は保持した．これらを新旧画像と測定値で区別した．
+
+関連 unit 45件，browser 43件が pass．strict は7条件すべて実測され，5条件は finding 0 / 終了0．残る #54 の既定と改良版はともにページ6だけ `content-clipped` / 終了1で，最大86px→83px．既存の境界例を token 変更で直したとは扱わず，情報削除や局所 CSS で比較入力を変えない．#55 `.body` の4構図，4:3，lab smoke，Core 5 の数式・コード・Mermaid は error 0．#56 `2eb7616` の committed collector も `lab-refined`，`.body`，`.figure-natural` を unknown reason なしで認識した．#56 branch 全体は未取込．
+
+詳細は `docs/lab-refinement-stable-review.md`．main の最終統合・full strict gate・画像添付と受入を残して in-review とする．新規 ADR/XR の採番，push，merge，公開は行っていない．
