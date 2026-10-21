@@ -535,6 +535,11 @@ section {
   --padding-x: 40px;
   --padding-bottom: 0;
   --header-height: 60px;
+  --body-top-gap: 10px;
+  --body-bottom-safe: 48px;
+  --body-gap: 0.5em;
+  --col-gap: 1rem;
+  --figure-gap: 0.5em;
   --logo-title-size: 80px;
   --logo-title-background-size: auto 50px;
   --logo-title-spacing: 10px;
@@ -625,6 +630,20 @@ section:not(.title) {
 }
 section:not(.title) > header:not(.paper-header) + * {
   margin-top: 70px;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--body-top-gap);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body):has(> header) {
+  padding-top: calc(var(--header-height) + var(--body-top-gap));
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :not(.body) {
+  flex-shrink: 0;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :first-child, section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header + * {
+  margin-top: 0;
 }
 section.title {
   padding-top: 20px;
@@ -827,7 +846,7 @@ mjx-container[jax="SVG"]:not([display]) > svg {
   }
   .col {
     display: flex;
-    gap: 1rem;
+    gap: var(--col-gap, 1rem);
     align-items: flex-start;
   }
   .col > * {
@@ -1088,6 +1107,40 @@ mjx-container[jax="SVG"]:not([display]) > svg {
     --place-inline: flex-end;
   }
 }
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  margin-bottom: var(--body-bottom-safe);
+  gap: var(--body-gap);
+}
+.body.col {
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--col-gap);
+}
+.body.col.visual {
+  gap: var(--visual-gap, var(--col-gap));
+}
+.body .box, .body .col > div {
+  min-height: 0;
+  gap: var(--body-gap);
+}
+.body .fill {
+  flex: 1 1 0;
+  min-height: 0;
+}
+.body > :not(figure):not(.fill), .body .box > :not(figure):not(.fill), .body .col > div > :not(figure):not(.fill) {
+  flex-shrink: 0;
+}
+.body > :first-child, .body .box > :first-child, .body .col > div > :first-child {
+  margin-top: 0;
+}
+.body > :last-child, .body .box > :last-child, .body .col > div > :last-child {
+  margin-bottom: 0;
+}
 .author p {
   margin: 0;
   font-size: 1em;
@@ -1116,6 +1169,31 @@ figcaption {
   color: var(--fg-muted);
   width: 100%;
   flex-shrink: 0;
+}
+.body figure:not(.figure-natural) {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  gap: var(--figure-gap);
+}
+.body figure:not(.figure-natural) > :is(img, video, svg) {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.body figure:not(.figure-natural) > figcaption {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+.body figure.figure-natural, .body figure.figure-natural > :is(img, video, svg) {
+  flex: 0 0 auto;
 }
 figure.w-full img {
   width: 100%;
