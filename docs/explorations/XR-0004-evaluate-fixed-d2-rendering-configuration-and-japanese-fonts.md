@@ -61,7 +61,7 @@ workerのD2 unit31件と実CLI6件はskipなしで成功した．HTML/overview�
 
 ## Artifacts
 
-[利用と再現条件](../d2.md)，[原稿](../../fixtures/d2-components.md)，ISS-0053の詳細コマンドを参照．一時成果物は/tmp/marpagent-parallel-20261021/issue61-artifacts/．mplus-counterexample.htmlとmplus-negative-test.logは不成立条件を残す．
+[利用と再現条件](../d2.md)，[原稿](../../fixtures/d2-components.md)，ISS-0053の詳細コマンドを参照．[代表画像3枚と環境・hash](../evidence/ISS-0053-d2/README.md)を保存し，mainも全3枚を確認した．統合版c3b6f5dの実CLI受入は6件成功，失敗・skipなしだった．一時成果物は/tmp/marpagent-parallel-20261021/issue61-artifacts/．mplus-counterexample.htmlとmplus-negative-test.logは不成立条件を残す．
 
 ## Revisit Conditions
 

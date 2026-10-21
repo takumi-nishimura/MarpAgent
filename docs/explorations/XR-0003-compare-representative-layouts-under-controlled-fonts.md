@@ -61,7 +61,7 @@ font-familyの指定だけでは描画条件を保証しない．画像内の日
 
 ## Artifacts
 
-[旧基準と調整記録](../../fixtures/layout-baselines/baseline-2026-10-21.md)，[安定配置でのlab比較](../lab-refinement-stable-review.md)，各ISSの検証コマンドを参照する．代表の新旧証跡はdocs/evidence/へ集約する．
+[旧基準と調整記録](../../fixtures/layout-baselines/baseline-2026-10-21.md)，[安定配置でのlab比較](../lab-refinement-stable-review.md)，各ISSの検証コマンドを参照する．代表の新旧画像・条件・hash・再実行harnessを[body配置](../evidence/ISS-0047-body-layout/README.md)，[調整量](../evidence/ISS-0048-body-adjustments/report.json)，[lab外観](../evidence/ISS-0049-lab-refinement/README.md)へ保存した．font本体は同梱していない．
 
 ## Revisit Conditions
 

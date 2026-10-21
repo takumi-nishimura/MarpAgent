@@ -2,7 +2,7 @@
 id: ISS-0045
 title: "Coordinate design improvements and asset distribution"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -126,3 +126,9 @@ ZIPの具体的なCLI名，収集方式，CSSクラス名，実装順序は助�
 - [AGENTS.md](https://github.com/takumi-nishimura/MarpAgent/blob/74f287d9b0c7ea3d7b6145c096c2fecef6ea2e16/AGENTS.md)，[記録規約](https://github.com/takumi-nishimura/MarpAgent/blob/74f287d9b0c7ea3d7b6145c096c2fecef6ea2e16/docs/records/README.md)．
 - [参考スライド](https://www.slideshare.net/slideshow/ss-41321443/41321443)，[当初の参考記事](https://note.com/sust_science/n/n8399bda76d71)．デザイン原則の参考であり，効果の実証として扱わない．
 - 今回の出典発言：本会話の「個別の調整が，必要になる場面が少なく，あったとしてもしやすくなると良いな．」「必要なアセットを収集してzipで出力する機能」「より詳細を詰めて，GitHubのイシューに登録してください．」．会話URL・conversation/turn/message IDと正確な発言時刻は取得していない．
+
+## Main integration checkpoint 2026-10-21
+
+main leaderが8機能担当のcommitted変更を統合し，配置・素材・D2の共有境界を接続した．全体strict gateの初回結果はunit493件・browser111件成功，既存Firefox native touch1件は対象外skip．固定D2実CLI6件とD2入りZIP2件も成功した．比較画像・条件・hash・harness，ADR-0007〜0009とXR-0003〜0004を保存し，記録66件を検証した．
+
+D2の限定確認で得た3指摘の修正と最終統合検査を追跡文書で管理する．機能のローカル検証とGitHubへの公開を区別し，親・子はin-reviewに揃えた．GitHubのIssue閉鎖・push・PR・mergeは実施していない．

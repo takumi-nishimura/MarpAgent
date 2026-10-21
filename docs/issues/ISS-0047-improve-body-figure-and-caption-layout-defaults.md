@@ -2,7 +2,7 @@
 id: ISS-0047
 title: "Improve body figure and caption layout defaults"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
