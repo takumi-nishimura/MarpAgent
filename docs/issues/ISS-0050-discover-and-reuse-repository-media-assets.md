@@ -2,7 +2,7 @@
 id: ISS-0050
 title: "Discover and reuse repository media assets"
 type: issue
-status: in-progress
+status: in-review
 date: "2026-10-21"
 updated: "2026-10-21"
 authors:
@@ -59,15 +59,15 @@ my-decksには，共有assets，デッキ所有ファイル，相対symlink，�
 
 ## Acceptance criteria
 
-- [ ] deck-local，`shared`，別デッキの相対ファイルリンクを同じ一覧から辿れ，利用原稿・元行・描画ページへ対応付けられる．非表示ページは別表示し，公開ページと混同しない．
-- [ ] ファイル名・原稿内のcaption/周辺記述・種類で検索できる．プレビューがなくても一覧とJSONは利用できる．埋め込みモデルやOCRを必須にしない．
-- [ ] 同じ内容の候補を表示できるが，自動重複除去，所有元の移動，改名をしない．派生画像と原図は内容一致だけで統合しない．
-- [ ] 一覧・検索・診断では原稿と素材を変更しない．生成preview/cacheは既存の一時出力規則に従い，Git管理対象へ無断追加しない．
-- [ ] 流用操作はrepo内の既知のファイルだけを対象とし，相対symlinkのtargetを検証する．同名の既存ファイル・リンクを黙って上書きしない．
-- [ ] 日本語・空白・URLエンコードされたファイル名，親ディレクトリのsymlink，欠落，循環，repo外参照をテストする．エラーは参照元と修正対象を識別できる．
-- [ ] Windows等でsymlinkの作成・checkoutが利用できない場合は明確に報告し，黙って複製へ切り替えない．配布用ZIPの通常ファイル化とは区別する．
-- [ ] 元ファイルを変更・削除する前に利用先を一覧でき，READMEとagent向けmedia referenceに安全な操作例がある．
-- [ ] my-decksの個別リンク修正はmy-decks側のIssueで扱い，本Issueだけを根拠に元素材を移動しない．
+- [x] deck-local，`shared`，別デッキの相対ファイルリンクを同じ一覧から辿れ，利用原稿・元行・描画ページへ対応付けられる．非表示ページは別表示し，公開ページと混同しない．
+- [x] ファイル名・原稿内のcaption/周辺記述・種類で検索できる．プレビューがなくても一覧とJSONは利用できる．埋め込みモデルやOCRを必須にしない．
+- [x] 同じ内容の候補を表示できるが，自動重複除去，所有元の移動，改名をしない．派生画像と原図は内容一致だけで統合しない．
+- [x] 一覧・検索・診断では原稿と素材を変更しない．生成preview/cacheは既存の一時出力規則に従い，Git管理対象へ無断追加しない．
+- [x] 流用操作はrepo内の既知のファイルだけを対象とし，相対symlinkのtargetを検証する．同名の既存ファイル・リンクを黙って上書きしない．
+- [x] 日本語・空白・URLエンコードされたファイル名，親ディレクトリのsymlink，欠落，循環，repo外参照をテストする．エラーは参照元と修正対象を識別できる．
+- [x] Windows等でsymlinkの作成・checkoutが利用できない場合は明確に報告し，黙って複製へ切り替えない．配布用ZIPの通常ファイル化とは区別する．
+- [x] 元ファイルを変更・削除する前に利用先を一覧でき，READMEとagent向けmedia referenceに安全な操作例がある．
+- [x] my-decksの個別リンク修正はmy-decks側のIssueで扱い，本Issueだけを根拠に元素材を移動しない．
 
 ## 対象外
 
@@ -99,3 +99,30 @@ repo内ISSは未起票．実装開始時に既存記録を照合し，記録CLI�
 テストは一時的な一般fixtureのみを使用し，実デッキや個人素材を変更していない．`node --test tests/unit/media-reference-graph.test.js tests/unit/media-assets.test.js tests/unit/markdown-source.test.js tests/unit/slide-map.test.js` は4ファイル通過した．`opencode/glm-5.3-flash-free` に180秒上限・読み取り専用で境界テスト案を依頼し，返却案を既存規約と照合した．相対ファイル流用を拒否する案や所有元の選定など，規約に反する提案は採用していない．
 
 一覧・検索・メタデータ・preview・明示的流用・CLI・利用例は後続実装であり，本checkpointはIssue全体の完了を意味しない．bin/marpx.jsはmainの調整対象としてこの段階では変更していない．API採用判断のADRが必要であれば，並行ID採番を避けてmainで作成する．
+
+## Local implementation completed 2026-10-21
+
+一覧・検索・metadata・alias/同一hash候補・ローカルpreview・明示的reuse・CLI・README/agent向け利用例まで実装した．`marpx assets list/search/doctor/reuse` と `node scripts/media-assets.js` が同じ結果とpolicyを用いる．bin/marpx.jsへの追加はassets用dispatchとhelpの10行に限定した．mainが#59 ZIP / #61 D2の変更と統合する．通常validatorのpermissive挙動は変更していない．
+
+catalogは `src/media-catalog.js`，metadataは `src/media-metadata.js`，private/ignore判定は `src/media-visibility.js`，流用は `src/media-reuse.js`，CLIは `src/assets-cli.js` に分離した．API契約は `docs/media-reference-api.md`，利用例は `docs/media-assets.md` に記載した．画像headerから寸法を得て，非対応形式も理由・bytes・SHA256とともに一覧へ残す．同一実体と同一hashの別実体を区別し，配置以外の所有元を決定しない．
+
+private・隠し・Git ignore対象と，それらを指すsymlinkを既定で除外する．原稿context経由のprivate caption混入も保守的に伏せ，hidden参照を表示しない場合もprivacy判定には含める．外部実体や絶対targetは出力で伏せる．ディレクトリsymlinkはrepo直下のassets/decksを含めて展開せず，外部ディレクトリ名も列挙しない．Git symlinkが通常ファイルとしてcheckoutされた場合は `symlink-checkout` と診断する．Git管理でない場所のignoreSourceはpath-onlyとなる．この方針は本文・画像内容から機密性を推測する仕組みではない．
+
+reuseは既知の安全なsourceを利用者が選び，source/destination/relative targetをdry-runで確認できる．既存ファイルとdangling linkを上書きせず，destination親symlink・repo外経路・sourceの交換を拒否する．symlink不能時のコピーfallbackは行わず，失敗時は新規の空ディレクトリだけを片付ける．日本語・空白・URL encodeしたMarkdown referenceと，既存の安全なfile alias経由の流用を確認した．my-decksを含む実素材の修正・移動・削除は行っていない．
+
+### Validation
+
+```bash
+node --test tests/unit/assets-cli.test.js tests/unit/cli-args.test.js tests/unit/media-catalog.test.js tests/unit/media-metadata.test.js tests/unit/media-reuse.test.js tests/unit/media-reference-graph.test.js tests/unit/media-assets.test.js tests/unit/markdown-source.test.js tests/unit/slide-map.test.js
+node_modules/.bin/prettier --check src/assets-cli.js src/media-catalog.js src/media-visibility.js src/media-metadata.js src/media-reuse.js src/media-reference-graph.js scripts/media-assets.js tests/unit/assets-cli.test.js tests/unit/media-catalog.test.js tests/unit/media-metadata.test.js tests/unit/media-reuse.test.js tests/unit/media-reference-graph.test.js docs/media-assets.md docs/media-reference-api.md
+uv run .github/records.py validate
+git diff --check
+```
+
+上記Node検証は75 passed，0 failed，0 skipped．formatチェックも通過した．元のMarkdown抽出・slide map・CLI引数の回帰を含む．Windows実機は未検証で，作成権限不足はEPERMを返すfilesystem境界で確認し，checkout問題はGit index mode 120000と通常ファイルの一時fixtureで確認した．
+
+一般fixtureだけを使うChromiumのローカルpreview確認を，`flock /tmp/marpagent-parallel-20261021/browser-tests.lock` 下で実行した．画像のnaturalWidth=120，script実行なし，外部HTTP(S)request=0を確認し，画面も検査した．previewとscreenshotはsystem temporary directoryのみへ出力した．
+
+補助は `opencode/glm-5.3-flash-free` の読み取り専用テスト案を利用した．metadata実装を `devin --model fusion-gpt-6-1-sol-xhigh-sidekick-swe-2-high --sandbox` に180秒上限で依頼したが，bubblewrap未導入で起動前に終了した．sandboxを解除せず，自分で実装・テストを完了した．workerによるpatchはない．
+
+mainから，#53の共通resolver限定レビューは固定POSIX tree・明示bundle policyの包含に不具合なしとの結果を受領した．この結果を再利用し，通常permissive既定・private除外・内容読取時のTOCTOUは呼出側責務という境界を維持した．catalog/reuseの追加分は自分で差分と関連チェックを確認した．Issueはlocal implementation完了・main統合確認待ちとしてin-reviewとし，mainのfull strict gateとmergeは未実施である．

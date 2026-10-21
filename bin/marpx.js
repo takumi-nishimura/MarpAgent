@@ -10,12 +10,19 @@ const { conversionTimeout, runConversion } = require("../src/conversion-runtime"
 
 enforceSupportedNodeRuntime();
 
+// Asset subcommands have their own options and do not start a render process.
+if (process.argv[2] === "assets") {
+  require("../src/assets-cli").runAssetsCli(process.argv.slice(3));
+  return;
+}
+
 const repoRoot = path.resolve(__dirname, "..");
 const scriptsDir = path.join(repoRoot, "scripts");
 const configPath = path.join(repoRoot, "marp.config.js");
 
 function printUsage() {
   console.log(`Usage: marpx [options] <file> [page]
+       marpx assets <list|search|doctor|reuse> [options]
 
 Options:
   -p, --preview            Single-shot preview (like marp --preview)
@@ -59,6 +66,9 @@ page number shown on the slide. Decks that show no page numbers take the
 position among rendered slides instead. Hidden slides cannot be addressed.
 
 Examples:
+  marpx assets list --repo . --format json  List repository media
+  marpx assets search "figure" --preview    Search and write a local preview
+  marpx assets --help                     Asset reuse and diagnostic options
   marpx decks/2025/talk/slide.md            Serve with live reload (default)
   marpx decks/2025/talk/slide.md 5          Serve, open at displayed page 5
   marpx decks/2025/talk/slide.md -p         Single-shot preview

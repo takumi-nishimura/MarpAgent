@@ -2,6 +2,35 @@
 
 Keep media ownership and per-file cross-deck symlinks consistent with repository AGENTS.md. Verify local paths, captions, and source attribution. For PDF output, check a useful static representation of video when the user needs printable content.
 
+## Discover and reuse existing media
+
+Search existing media before creating a replacement. The catalog reads
+repository shared assets, deck assets, and source references without editing
+them. Keep hidden slide identities separate from displayed pages. Private and
+Git-ignored paths are excluded by default, including symlink targets; include
+them only through an explicit local `--include-private` request.
+
+```bash
+marpx assets search "caption or filename" --repo /path/to/repo --format json
+marpx assets list --repo /path/to/repo --used-by decks/talk/slide.md --preview
+
+# List consumers before changing or deleting an owned source.
+marpx assets list --repo /path/to/repo --uses decks/owner/assets/img/figure.svg
+
+# Inspect the planned relative file link before creating it.
+marpx assets reuse decks/owner/assets/img/figure.svg \
+  decks/talk/assets/img/from-owner-figure.svg --repo /path/to/repo --dry-run
+```
+
+When the user has selected symlink reuse, run the same reuse command without
+`--dry-run`. Preserve the selected source, use a named destination file, and
+never replace an existing file or link. Report symlink/platform failures rather
+than copying silently. Hash matches are candidates, not ownership decisions or
+permission to deduplicate. Use `assets doctor` for broken/absolute/cyclic links,
+repo escapes, directory reuse, and symlinks checked out as regular text files.
+Preview output stays in the system temporary directory. See
+`docs/media-assets.md` and `docs/media-reference-api.md` for the full contract.
+
 ## Figures and Media
 
 ```markdown

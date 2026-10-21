@@ -140,6 +140,10 @@ The shorter new brief is not an input contract for that legacy generator.
 | `marpx <slide.md> -v --format sarif` | Emit SARIF JSON for code-scanning pipelines |
 | `marpx <slide.md> -v --report-dir out/<name>` | Validate with report |
 | `marpx --doctor` | Run environment diagnostics |
+| `marpx assets list --repo <path> --format json` | List media, metadata, aliases and source locations |
+| `marpx assets search "caption" --repo <path> --preview` | Search filenames/source context and write a local preview |
+| `marpx assets doctor --repo <path>` | Diagnose media and symlink conventions |
+| `marpx assets reuse <source> <dest> --repo <path> --dry-run` | Plan a named relative file symlink without writing |
 | `marpx --theme` | Build all themes |
 | `marpx --theme lab` | Build a single theme |
 | `marpx --theme-new <name> --source-url <url>` | Scaffold a new theme |
@@ -149,6 +153,19 @@ The shorter new brief is not an input contract for that legacy generator.
 | `npm run quality:gate:strict` | Run the quality gate with required visual checks and strict E2E policy |
 | `npm run audit:dependencies` | Compare the production dependency audit with the reviewed ISS-0042 baseline |
 | `npm run test:e2e` | Run Playwright browser and CLI E2E tests |
+
+Media discovery is read-only; `--preview` writes only temporary HTML. Private,
+hidden-path and Git-ignored media are excluded by default, including symlink
+targets. Use `--include-private` explicitly when those local results are needed.
+Hidden slides are labeled separately from displayed pages.
+
+Before changing or deleting a source asset, find its consumers with
+`marpx assets list --repo <path> --uses decks/owner/assets/img/figure.svg`.
+For reuse, inspect the `--dry-run` source/destination/relative target, then run
+the same command without `--dry-run` to create the selected file symlink.
+Existing paths are never overwritten; symlink failures never fall back to a
+copy. See [media discovery and reuse](docs/media-assets.md) for examples,
+visibility rules, preview behavior, and Windows checkout diagnostics.
 
 `npm test` requires a working Playwright Chromium installed as described above.
 Individual visual tests can skip when launch prerequisites are missing, but an
