@@ -5,7 +5,7 @@ type: issue
 status: closed
 resolution: completed
 resolved: "2026-10-18"
-updated: "2026-10-18"
+updated: "2026-10-21"
 date: "2026-10-17"
 authors:
   - opencode-glm
@@ -87,3 +87,9 @@ artifacts:
 `npm run audit:dependencies`は本issueの調査結果を`.github/dependency-audit-baseline.json`と比較する．新しいaffected package／advisory／依存パス，重要度上昇，新たな互換修正の提示で失敗し，監査通信失敗・不正JSONも成功扱いしない．解消したpackageはbaseline除去候補として表示する．依存変更PRとmain反映時，毎週月曜02:00 UTC，手動実行で`.github/workflows/dependency-audit.yml`が実行する．baseline更新PRは本issueを参照し，新規項目の経路・修正可否・採用方針をNotesへ追記する．件数の据え置きだけで許可しない．
 
 検証：比較ロジック5件（同件数の別advisory，severity上昇，新依存パス，新修正，通信異常を含む）が成功し，実レジストリを使った`npm run audit:dependencies`も14件の既知残存として成功した．
+
+### PR #62 integration audit 2026-10-21
+
+PR #62のDependency Auditが，新たに直接依存へ加えたfflate 0.8.2を検出して失敗した．[GHSA-px8p-9vwx-vf98](https://github.com/advisories/GHSA-px8p-9vwx-vf98)は不正なZIP64を`unzipSync`で読む際の無限ループで，0.8.3が修正版である．productionの配布処理は`zipSync`による作成だけで，`unzipSync`は生成したZIPを検査するテストで使用している．この利用範囲を理由にbaselineへ追加せず，直接依存を互換修正版0.8.3へ固定した．package-lockの変更もfflateだけである．
+
+更新前の実レジストリ結果を既存監査に与えると，`fflate: new vulnerable package (moderate)`でexit 1となることを確認した．更新後は15件から既知残存14件へ戻り，同じ監査がexit 0となった．監査baselineは変更していない．ZIPと監査の既存unit21件も成功し，失敗・skipなし．統合全体と実D2入りZIPはmainの最終検証で確認する．
