@@ -2,9 +2,18 @@ name: Quality Gate
 
 on:
   pull_request:
+  # Manual dispatch retains the complete strict acceptance suite.
+  workflow_dispatch:
   push:
     branches:
       - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'workflow_dispatch' }}
 
 jobs:
   quality-gate:
@@ -14,25 +23,67 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      # Keep a completed check on content-only PRs, without installing the engine.
+      - name: Select engine checks
+        id: changes
+        shell: bash
+        env:
+          CI_EVENT: ${{ github.event_name }}
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [[ "$CI_EVENT" == workflow_dispatch || -z "$CI_BASE" || "$CI_BASE" =~ ^0+$ ]]; then
+            echo 'engine=true' >> "$GITHUB_OUTPUT"
+          else
+            # Fetch only missing endpoints for multi-commit pushes or older bases.
+            for revision in "$CI_BASE" "$CI_HEAD"; do
+              if ! git cat-file -e "$revision^{commit}" 2>/dev/null; then
+                git fetch --no-tags --depth=1 origin "$revision"
+              fi
+            done
+            if git diff --quiet "$CI_BASE" "$CI_HEAD" -- . ':!decks/**' ':!docs/**'; then
+              echo 'engine=false' >> "$GITHUB_OUTPUT"
+            else
+              status=$?
+              if [[ "$status" != 1 ]]; then exit "$status"; fi
+              echo 'engine=true' >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Report content-only validation scope
+        if: steps.changes.outputs.engine == 'false'
+        run: echo 'Deck/docs-only change; engine checks not selected. Run this workflow manually for full strict acceptance.' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Setup Node.js
+        if: steps.changes.outputs.engine == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 25.6.0
           cache: npm
 
       - name: Install dependencies
+        if: steps.changes.outputs.engine == 'true'
         run: npm ci
 
+      - name: Run lightweight engine checks
+        if: github.event_name != 'workflow_dispatch' && steps.changes.outputs.engine == 'true'
+        run: npm run test:ci
+
       - name: Install Playwright browsers
+        if: github.event_name == 'workflow_dispatch'
         run: npx playwright install --with-deps chromium firefox
 
       - name: Setup pinned uv for test font preparation
+        if: github.event_name == 'workflow_dispatch'
         uses: astral-sh/setup-uv@v6
         with:
           version: "0.13.1"
 
       - name: Install pinned D2 acceptance tools explicitly
+        if: github.event_name == 'workflow_dispatch'
         shell: bash
         run: |
           curl --fail --location --retry 3 https://github.com/terrastruct/d2/releases/download/v0.9.0/d2-v0.9.0-linux-amd64.tar.gz -o "$RUNNER_TEMP/d2.tar.gz"
@@ -43,6 +94,7 @@ jobs:
           uv run --no-project --with fonttools==4.60.1 python -m fontTools.varLib.instancer "$RUNNER_TEMP/NotoSansJP-variable.ttf" wght=400 --output "$RUNNER_TEMP/NotoSansJP-Regular.ttf"
 
       - name: Run fixed-version D2 acceptance
+        if: github.event_name == 'workflow_dispatch'
         env:
           MARP_AGENT_D2_PATH: ${{ runner.temp }}/d2-v0.9.0/bin/d2
           MARP_AGENT_D2_FONT_PATH: ${{ runner.temp }}/NotoSansJP-Regular.ttf
@@ -50,6 +102,7 @@ jobs:
         run: npm run test:d2
 
       - name: Verify portable D2 bundles without source or network
+        if: github.event_name == 'workflow_dispatch'
         env:
           MARP_AGENT_D2_PATH: ${{ runner.temp }}/d2-v0.9.0/bin/d2
           MARP_AGENT_D2_FONT_PATH: ${{ runner.temp }}/NotoSansJP-Regular.ttf
@@ -57,6 +110,7 @@ jobs:
         run: npm run test:zip:d2
 
       - name: Run strict quality gate
+        if: github.event_name == 'workflow_dispatch'
         env:
           MARP_AGENT_D2_PATH: ${{ runner.temp }}/d2-v0.9.0/bin/d2
           MARP_AGENT_D2_FONT_PATH: ${{ runner.temp }}/NotoSansJP-Regular.ttf
