@@ -18,6 +18,8 @@
 
 既存Draft PR #52は別の調査記録であり，同PRのXR-0003と今回のXR-0003は異なる記録に同じIDを持つ．#52を後から取り込む場合は採番の整合が必要になるが，現在のmainとPR #62にはその衝突はない．本PRで#52をmerge・closeしない．
 
+2026-10-29追記：PR #52の歴史的本文と3件のコメントを，中央の記録CLIで割当済みの[XR-0008](explorations/XR-0008-preserve-the-october-18-design-capability-audit.md)へ保存し，記録IDの衝突を避けて取り込める形にした．元headと各コメントの出典，10月18日の`inconclusive`，未実施事項を保持し，後日の採用判断は遡及注記で分ける．mainのXR-0003は変更せず，PR #52のmerge・closeと親ISSのlifecycle更新は別の作業として残す．
+
 依存監査は，追加したfflate 0.8.2のZIP64読取り問題を検出して失敗した．互換修正版0.8.3へ固定し，baselineを緩めず既知残存14件の状態へ戻した．更新と利用経路は[ISS-0042](issues/ISS-0042-track-production-dependency-audit-findings.md)に記録した．
 
 ## 方針と並行作業
