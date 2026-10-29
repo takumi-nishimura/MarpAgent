@@ -1,0 +1,2 @@
+# Unified diffs encode empty context lines with a literal space.
+docs/evidence/ISS-0047-layout-comparison-2026-10-30/run/inputs/*.patch whitespace=-blank-at-eol
