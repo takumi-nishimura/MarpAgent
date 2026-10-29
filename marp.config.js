@@ -19,6 +19,10 @@ const scrollScript = fs.readFileSync(
     path.join(__dirname, "scripts/presenter-scroll.js"),
     "utf8",
 );
+const bodyFootnoteScript = fs.readFileSync(
+    path.join(__dirname, "scripts/body-footnotes.js"),
+    "utf8",
+);
 
 // BudouX inserts ZWSP (U+200B) at Japanese phrase boundaries and adds
 // word-break:keep-all;overflow-wrap:anywhere as inline styles.
@@ -125,7 +129,7 @@ module.exports = {
             }
             const html =
                 applyBudoux(result.html) +
-                `\n<script>${cursorScript}</script>\n<script>${scrollScript}</script>`;
+                `\n<script>${cursorScript}</script>\n<script>${scrollScript}</script>\n<script>${bodyFootnoteScript}</script>`;
             return {
                 ...result,
                 html,
