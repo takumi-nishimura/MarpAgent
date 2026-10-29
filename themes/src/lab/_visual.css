@@ -1,0 +1,165 @@
+/* Lab slide typography and visual treatment. Shared geometry stays in
+   _shared; the paper canvas retains its own type scale. Low specificity lets
+   deck-local styles and named color schemes keep their intended overrides. */
+section:where(:not(:has(> .paper-header))) {
+    --fg-muted: var(--color-muted-ink);
+    --color-strong: var(--color-strong-ink);
+    --lab-table-header: var(--color-table-header);
+    --lab-table-stripe: var(--color-table-stripe);
+    --lab-table-border: var(--color-table-border);
+    --lab-mark-fill: var(--color-mark-fill);
+
+    font-size: var(--text-body-md);
+    font-weight: var(--font-weight-body-md);
+    line-height: var(--leading-body-md);
+    letter-spacing: var(--tracking-body-md);
+}
+
+section.invert:where(:not(:has(> .paper-header))):where(
+        :not(.dracula, .one-dark, .nord, .neogaia, .github-light)
+    ) {
+    --color-strong: var(--color-highlight-invert);
+}
+
+section:where(:not(:has(> .paper-header))):where(
+        .invert,
+        .dracula,
+        .one-dark,
+        .nord,
+        .neogaia
+    ):where(:not(.github-light, .neogaia.invert)) {
+    --lab-table-header: var(--color-table-header-invert);
+    --lab-table-stripe: var(--color-table-stripe-invert);
+    --lab-table-border: var(--color-table-border-invert);
+    --lab-mark-fill: var(--color-mark-fill-invert);
+}
+
+section:where(:not(:has(> .paper-header))) h1 {
+    font-size: var(--text-headline-lg);
+    font-weight: var(--font-weight-headline-lg);
+    line-height: var(--leading-headline-lg);
+    letter-spacing: var(--tracking-headline-lg);
+}
+
+section.title:where(:not(:has(> .paper-header))) h1 {
+    font-size: var(--text-display);
+    font-weight: var(--font-weight-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+}
+
+section:where(:not(:has(> .paper-header))) h2 {
+    font-size: var(--text-headline-md);
+    font-weight: var(--font-weight-headline-md);
+    line-height: var(--leading-headline-md);
+    letter-spacing: var(--tracking-headline-md);
+}
+
+section:where(:not(:has(> .paper-header))) h3 {
+    font-size: var(--text-headline-sm);
+    font-weight: var(--font-weight-headline-sm);
+    line-height: var(--leading-headline-sm);
+    letter-spacing: var(--tracking-headline-sm);
+}
+
+section:where(:not(:has(> .paper-header))) h4 {
+    font-size: var(--text-headline-xs);
+    font-weight: var(--font-weight-headline-xs);
+    line-height: var(--leading-headline-xs);
+    letter-spacing: var(--tracking-headline-xs);
+}
+
+section:where(:not(:has(> .paper-header))) strong {
+    font-weight: var(--font-weight-label-md);
+}
+
+section:where(:not(:has(> .paper-header))) :is(em, .marker, mark) {
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+section:where(:not(:has(> .paper-header))) .marker {
+    background: linear-gradient(
+        transparent 70%,
+        color-mix(in srgb, var(--color-deck-yellow) 40%, transparent) 70%
+    );
+}
+
+section:where(:not(:has(> .paper-header))) mark {
+    background: linear-gradient(
+        transparent 10%,
+        var(--lab-mark-fill) 10% 90%,
+        transparent 90%
+    );
+    color: inherit;
+    padding: 0 var(--spacing-mark-inline);
+}
+
+section:where(:not(:has(> .paper-header))) figcaption {
+    font-size: var(--text-caption);
+    font-weight: var(--font-weight-caption);
+    line-height: var(--leading-caption);
+    letter-spacing: var(--tracking-caption);
+    text-wrap-style: balance;
+}
+
+section:where(:not(:has(> .paper-header))) .footnote {
+    font-size: var(--text-footnote);
+    font-weight: var(--font-weight-footnote);
+    line-height: var(--leading-footnote);
+    letter-spacing: var(--tracking-footnote);
+}
+
+section:where(:not(:has(> .paper-header))) table {
+    font-size: var(--text-body-sm);
+    line-height: var(--leading-body-sm);
+    color: var(--fg);
+}
+
+section:where(:not(:has(> .paper-header))) :is(th, td) {
+    border-color: var(--lab-table-border);
+    border-width: var(--spacing-rule-width);
+    padding: var(--spacing-table-cell-y) var(--spacing-table-cell-x);
+}
+
+section:where(:not(:has(> .paper-header))) th {
+    font-weight: var(--font-weight-label-md);
+    background: var(--lab-table-header);
+}
+
+section:where(:not(:has(> .paper-header))) tbody tr:nth-child(even) {
+    background: var(--lab-table-stripe);
+}
+
+section:where(:not(:has(> .paper-header)))
+    :is(.summary-box, .gap-box, .feature-card) {
+    border: var(--spacing-rule-width) solid var(--lab-table-border);
+    border-radius: var(--radius-sm);
+}
+
+section:where(:not(:has(> .paper-header)))
+    :is(.note, .tip, .important, .warning, .caution) {
+    border-radius: var(--radius-sm);
+    border-inline-start: var(--spacing-callout-rule-width) solid
+        var(--lab-callout-color);
+}
+
+section:where(:not(:has(> .paper-header))) .note {
+    --lab-callout-color: var(--color-note-strong);
+}
+
+section:where(:not(:has(> .paper-header))) .tip {
+    --lab-callout-color: var(--color-tip-strong);
+}
+
+section:where(:not(:has(> .paper-header))) .important {
+    --lab-callout-color: var(--color-important-strong);
+}
+
+section:where(:not(:has(> .paper-header))) .warning {
+    --lab-callout-color: var(--color-warning-strong);
+}
+
+section:where(:not(:has(> .paper-header))) .caution {
+    --lab-callout-color: var(--color-caution-strong);
+}

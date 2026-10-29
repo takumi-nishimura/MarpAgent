@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-21",
+  "implementation": "8e18b1f76e4e422c5f202e41937bb693184ada8d",
+  "workerCommit": "dd1367cbceab4ded28b7f96fce9378624e8bda09",
+  "checks": {
+    "worker": {
+      "unit": {
+        "passed": 27,
+        "failed": 0,
+        "skipped": 0
+      },
+      "browser": {
+        "passed": 16,
+        "skipped": 0
+      },
+      "tdd": {
+        "red": "mark background height 11.1px instead of expected 29.6px",
+        "green": "1 focused test passed"
+      },
+      "designLint": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "designTokens": "matched"
+    },
+    "main": {
+      "browser": {
+        "passed": 119,
+        "skipped": 1,
+        "skipReason": "Existing Firefox native touch case"
+      },
+      "strictFixture": {
+        "file": "fixtures/lab-emphasis-slide.md",
+        "slides": 2,
+        "visualCheck": "measured",
+        "findings": 0
+      },
+      "comparison": {
+        "surfaces": 2,
+        "sourceTextAndPagination": "identical",
+        "actualFonts": [
+          "NotoSansJP-Regular",
+          "NotoSansJP-Bold"
+        ],
+        "viewedBy": "main"
+      },
+      "themeRebuild": "no diff",
+      "previewHtmlRepair": {
+        "captionImages": 4,
+        "pngHashesAndMeasurements": "identical to archived results"
+      }
+    }
+  },
+  "priorResultsNotRerun": {
+    "revision": "4029409",
+    "realD2": 7,
+    "realD2Zip": 2,
+    "reason": "No D2, ZIP, resolver or runtime dependency changes."
+  },
+  "commands": [
+    "npm run marpx -- --theme lab",
+    "MARP_AGENT_STRICT_E2E=1 npm run test:e2e",
+    "npm run marpx -- fixtures/lab-emphasis-slide.md -v --strict --format json",
+    "node --test tests/unit/theme-css.test.js tests/unit/design-cli.test.js",
+    "npm run design:lint",
+    "npm run design:tokens:check"
+  ],
+  "logs": [
+    {
+      "file": "emphasis-roles-browser.log",
+      "sha256": "db77723c8a8cfc98b1c9dd516d66498a030343d43e3f9889e9c391ae509c379e"
+    },
+    {
+      "file": "emphasis-roles-strict.log",
+      "sha256": "77652527170b59eab5debc5136a558340c319d0cb81e419c61fbdf9f9f6b7381"
+    },
+    {
+      "file": "emphasis-roles-before.log",
+      "sha256": "8a1a8e1442b453a79d08cc0883cfd096bbb147b442a87d4ec2f6896a1fa11a50"
+    },
+    {
+      "file": "emphasis-roles-after.log",
+      "sha256": "6d9c17bdc2948996eb78b4c3be050ae3980460713e7236913fd1bf9e50ecb2c5"
+    },
+    {
+      "file": "caption-feedback-html-fixed.log",
+      "sha256": "bd4116b8ecd56fd04a806b48f9aaf73e95bff66b3564dfb4a255214b13e793e6"
+    },
+    {
+      "file": "issue57-mark-semantics-result.md",
+      "sha256": "60fd1995fc32e8a7aa81b43a81234af90038062f99da1536cb71707bc4b8b182"
+    }
+  ]
+}

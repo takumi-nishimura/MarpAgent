@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="130" viewBox="0 0 640 130">
+  <title>Input, processing, output</title>
+  <rect width="640" height="130" fill="#fff"/>
+  <g fill="#f1f3f5" stroke="#37577b" stroke-width="2">
+    <rect x="20" y="28" width="150" height="74"/><rect x="245" y="28" width="150" height="74"/><rect x="470" y="28" width="150" height="74"/>
+  </g>
+  <path d="M180 65H230L219 55M230 65L219 75M405 65H455L444 55M455 65L444 75" fill="none" stroke="#202228" stroke-width="3"/>
+  <g font-family="Noto Sans JP, sans-serif" font-size="28" fill="#202228" text-anchor="middle">
+    <text x="95" y="76">入力</text><text x="320" y="76">処理</text><text x="545" y="76">出力</text>
+  </g>
+</svg>

@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "issue": "ISS-0047",
+  "captureDate": "2026-10-21",
+  "conditions": {
+    "node": "25.6.0",
+    "marpCore": "5.0.2",
+    "playwright": "1.58.2",
+    "chromium": "145.0.7632.6",
+    "platform": "linux",
+    "architecture": "x64",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "deviceScaleFactor": 1,
+    "safeBodyBottom": 672,
+    "remoteFonts": "blocked",
+    "font": {
+      "name": "Noto Sans JP variable",
+      "sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf"
+    },
+    "svgFont": {
+      "sha256": "86fe6d5d8ebd71a87280cebfe32b6e200a73d22c5b5a496cc26bc3fd68c72d8b",
+      "format": "woff2",
+      "labels": "svg-labels.txt",
+      "fonttools": "4.67.0",
+      "brotli": "1.2.0"
+    }
+  },
+  "sources": {
+    "fixture": {
+      "path": "fixtures/layout-baselines/slide.md",
+      "revision": "119fbbbedb7076394de166af783fd8e10dc23b58",
+      "blob": "0b01274a085813574b77e310b4ce2b5472d8fbc6",
+      "sha256": "623961a6398fdb21ce7c99b3f81fd1bed4c6b42b75eb1aed457215495545f01a"
+    },
+    "assets": {
+      "comparison.svg": {
+        "path": "fixtures/layout-baselines/assets/img/comparison.svg",
+        "revision": "119fbbbedb7076394de166af783fd8e10dc23b58",
+        "blob": "a6d9042fff5992c49c0656428a0f88f9c03439bf",
+        "sha256": "1369f6868d3278c26e6d9da185faceb94f4de9417dda25852b4f2de46070f6d9"
+      },
+      "comparison-portrait.svg": {
+        "path": "fixtures/layout-baselines/assets/img/comparison-portrait.svg",
+        "revision": "119fbbbedb7076394de166af783fd8e10dc23b58",
+        "blob": "07efd04b89b6eb742dcadaa6d20d1c223f731f96",
+        "sha256": "5766e575d071177b007ac55d9ff30b635fa66973b9a4f38a2b6bc305f07ec4cf"
+      },
+      "stage.svg": {
+        "path": "fixtures/layout-baselines/assets/img/stage.svg",
+        "revision": "119fbbbedb7076394de166af783fd8e10dc23b58",
+        "blob": "74f3e3e49c33db66f2366d2ac9b2c1fa6782b3f7",
+        "sha256": "185288e59b0148dfcdebb3151e914a3285f96759038cc5d6802a0cbdcd096f90"
+      },
+      "stage-tall.svg": {
+        "path": "fixtures/layout-baselines/assets/img/stage-tall.svg",
+        "revision": "119fbbbedb7076394de166af783fd8e10dc23b58",
+        "blob": "b50d6e97de32188846a48edbf9bd4980a0f0a847",
+        "sha256": "8a70b898631b16070a164e1c7352835f93c07f232a452c608d37f8efd26acd7e"
+      }
+    },
+    "css": {
+      "lab": {
+        "before": {
+          "path": "themes/lab.css",
+          "revision": "1711332cdf3fcd30182dba16e9b5b4cb77324837",
+          "blob": "97a7e77c142349ec76ee50a8f63157939cf5e0ad",
+          "sha256": "c4558c1dfc0f0cd52098a737f1ddc3da79c7e641830d23877fc698cdc7d1cb2b"
+        },
+        "after": {
+          "path": "themes/lab.css",
+          "revision": "44a841da0bd2a80ed37151b685a3c23fc07a8ff5",
+          "blob": "80837d02ec00ae8865d1a7de858523dfcf03aeff",
+          "sha256": "469896df4f2a52878f8e5a838923532a688e0841d61ec7b1133474181d517846"
+        }
+      },
+      "muji": {
+        "before": {
+          "path": "themes/muji.css",
+          "revision": "1711332cdf3fcd30182dba16e9b5b4cb77324837",
+          "blob": "927297a4be6e65a9130f2d159b7b598dbb92d542",
+          "sha256": "9f9cd41ddd66db994f18414c5771b4bdddfc6c5e006351886a90b50fe4edead5"
+        },
+        "after": {
+          "path": "themes/muji.css",
+          "revision": "44a841da0bd2a80ed37151b685a3c23fc07a8ff5",
+          "blob": "4b0ec2bf2b19e8045ffc9d04a26820ca46f060b9",
+          "sha256": "fd2b7db670488622ff7787f53dae5227c496bd360b01794c2aebf79625129bb2"
+        }
+      },
+      "toshiba": {
+        "before": {
+          "path": "themes/toshiba.css",
+          "revision": "1711332cdf3fcd30182dba16e9b5b4cb77324837",
+          "blob": "3ce26ece750a8dca5dac1c29b9e9a0dca6088a61",
+          "sha256": "f36fc1a7b784e455b2fc09ddce9a0cea965a3ed513820feae7d05819eb678afa"
+        },
+        "after": {
+          "path": "themes/toshiba.css",
+          "revision": "44a841da0bd2a80ed37151b685a3c23fc07a8ff5",
+          "blob": "ecf87cf88ca4ee4fc50c216e0de6bb6a9a17020c",
+          "sha256": "6285b67f8ca8ad9e9a439cdd7771b691d5070444bb2c4e4f4b616388b4745a78"
+        }
+      }
+    },
+    "packageLock": {
+      "path": "package-lock.json",
+      "revision": "44a841da0bd2a80ed37151b685a3c23fc07a8ff5",
+      "blob": "aa881c882cc45f00f1dcf6505111d2a6ec297850",
+      "sha256": "1e858fda43b86c6b6606ebb95179c7df13bab71ff58f90f2c9a05c6a4b1e3998"
+    }
+  },
+  "inputSha256": {
+    "repair": {
+      "lab": {
+        "original": "c56c5de72797076bf8680d88f52fdb62a1c058ccf89429f8a607564237fc6a4e",
+        "repaired": "13f7b66a919db0132faac8ed87b7143c362c43dc0266c1a678be4c5bfcb92897",
+        "utility": "e21711476b490fd0d6ef89ff009dc0d3ecc2a682fd2121b5ecbf7bc6fbff09d5",
+        "body": "beae0fdb291d488dc9f1d8971f9be0f6d4249b3ba621ee26dd35d38073cea5ef"
+      },
+      "muji": {
+        "original": "45614cd76cf747450de8ac225ead0ae40fd8188865261e48d155dac309cbaf01",
+        "repaired": "7e24212d168e9f0dd5129f8c301de370dd1d0353a6f8509814d0575e4c9fb827",
+        "utility": "16f16fb68b5432a2e6b14c3cf71474e979872ce576dfb6d0579a942af9f7294e",
+        "body": "69dd1e22d1a8897b8e5bf4a31c1a7012cef0fc145fd6ce5892cf732efdc7c89d"
+      },
+      "toshiba": {
+        "original": "a38a89491f02a5a3431f6f5c7335fada3864cfaa69e3f5b2cd849353eb18ad6e",
+        "repaired": "d30204884b5efc41d2ed95a2a3396bb9d31286e0bd6cc1a178e8cad23493d20d",
+        "utility": "134a1109415bb29aaf56c8816306f1cb0b7d472ed70b34e170021ad273638e92",
+        "body": "9f33f68c5b864441bf2004a189e490f20e61608599982e8cd47149d0673ff554"
+      }
+    },
+    "caption": {
+      "lab": {
+        "before": "dd5481da7a0047af71c3b38a9110ca758806dc118aea5a3c06a43e46dd68561f",
+        "after": "e2aa01e81bdde4159cba53225daae02a8247ab844160535f36944748b1198278"
+      },
+      "muji": {
+        "before": "119a5dc470a61c7cc4766b843457d3f9118ecc3e30c2d8bbd4be3d156f2de25c",
+        "after": "d3a8bcf54753b06afcba1beab8e4da09401a52aee152b8180b12de9ef111b990"
+      },
+      "toshiba": {
+        "before": "95c5a78798b469a4ec9049241dd04497a89b1224db2e405fa77f6edc2cdcb8e7",
+        "after": "70f82d3b36aa92f26dbef06633eddee78a8fa5547672817e1c3d9ca6da7d4f71"
+      }
+    }
+  },
+  "images": [
+    {
+      "file": "figures/columns-before.png",
+      "suite": "repair",
+      "id": "columns-portrait",
+      "variant": "original",
+      "theme": "lab",
+      "sha256": "8fef1d3e4400e8ad344e6bcc501c58967e06ceaa747cffadae1c4f938696c8ae",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "figures/columns-after.png",
+      "suite": "repair",
+      "id": "columns-portrait",
+      "variant": "body",
+      "theme": "lab",
+      "sha256": "f9464076c980a22fcb501917bd7a4a3f18a1c878a0ae929710fc9bc155d10937",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "figures/columns-width-utility.png",
+      "suite": "repair",
+      "id": "columns-portrait",
+      "variant": "utility",
+      "theme": "lab",
+      "sha256": "a0cd65325c58c7ff5acbdc131ce5e0a43cad3938a05928a24214d2c18718738e",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "figures/caption-before.png",
+      "suite": "caption",
+      "id": "figure-caption-wrap",
+      "variant": "before",
+      "theme": "lab",
+      "sha256": "dba0a99494905141f838340ecee2fe3b4539badd654927384b216d52913ffda3",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "figures/caption-after.png",
+      "suite": "caption",
+      "id": "figure-caption-wrap",
+      "variant": "after",
+      "theme": "lab",
+      "sha256": "3f4bae6db674dc75bd448600bdf6d0ebef46dc173be4d49e03794d54d40672dc",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "files": [
+    {
+      "file": "summary.json",
+      "sha256": "dde1d838fe9244988e167cb54767f80c7ba09714eb08c52775ea0a3f35ab0eb5"
+    },
+    {
+      "file": "svg-labels.txt",
+      "sha256": "0bac7026ed221edf834792f6c48b26d98dbd55baf38001931a718c49801bb770"
+    }
+  ],
+  "reuse": "PNG bytes and dimensions are copied from existing captures; no new render is represented as an old result. Full CSS, Markdown, and font binaries are omitted; historical inputs are recovered by Git blob ID, independent of cherry-pick commit IDs."
+}

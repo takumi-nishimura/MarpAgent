@@ -1,0 +1,1231 @@
+{
+  "theme": "lab",
+  "browser": "145.0.7632.6",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "dpr": 1,
+  "fontPolicy": "Google Fonts blocked; actual platform fonts recorded below",
+  "screenshots": [
+    "body-standard.png",
+    "body-heading-wrap.png",
+    "figure-standard.png",
+    "figure-caption-wrap.png",
+    "columns-standard.png",
+    "columns-portrait.png",
+    "stack-standard.png",
+    "stack-taller-media.png",
+    "results-standard.png",
+    "results-footnote-wrap.png",
+    "table-standard.png",
+    "table-extra-row.png",
+    "diagram-standard.png",
+    "diagram-label-wrap.png"
+  ],
+  "headingFonts": [
+    {
+      "familyName": "Noto Sans JP",
+      "postScriptName": "NotoSansJP-Bold",
+      "isCustomFont": false,
+      "glyphCount": 16
+    }
+  ],
+  "bodyFonts": [
+    {
+      "familyName": "Noto Sans JP",
+      "postScriptName": "NotoSansJP-Regular",
+      "isCustomFont": false,
+      "glyphCount": 35
+    }
+  ],
+  "trials": [
+    {
+      "name": "utility",
+      "attribute": "class",
+      "value": "max-h-full",
+      "screenshot": "trial-utility-portrait.png",
+      "case": "columns-portrait",
+      "audit": {
+        "slideIndex": 5,
+        "width": 1280,
+        "height": 720,
+        "clipped": [
+          {
+            "label": "\"同じデータを，図と近くの説明で読む．\"",
+            "edge": "bottom",
+            "overflowPx": 86
+          },
+          {
+            "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+            "edge": "bottom",
+            "overflowPx": 56
+          }
+        ],
+        "maxOverflowPx": 86,
+        "crowded": [],
+        "safeMarginPx": 20,
+        "textRuns": [
+          {
+            "label": "\"主資料と補足\"",
+            "fontPx": 26,
+            "secondary": true
+          },
+          {
+            "label": "\"比較の根拠に広い列を割り当てる\"",
+            "fontPx": 39,
+            "secondary": false
+          },
+          {
+            "label": "\"同じデータを，図と近くの説明で読む．\"",
+            "fontPx": 15.6,
+            "secondary": true
+          },
+          {
+            "label": "\"読み取れること\"",
+            "fontPx": 32.5,
+            "secondary": false
+          },
+          {
+            "label": "\"条件Bの値は条件Aより大きい．\"",
+            "fontPx": 26,
+            "secondary": false
+          },
+          {
+            "label": "\"同じ入力条件\"",
+            "fontPx": 26,
+            "secondary": false
+          },
+          {
+            "label": "\"であることが比較の前提になる．\"",
+            "fontPx": 26,
+            "secondary": false
+          },
+          {
+            "label": "\"この架空の値から，別の条件での性能は判断しない．\"",
+            "fontPx": 26,
+            "secondary": false
+          }
+        ],
+        "smallText": [],
+        "textFloorPx": {
+          "body": 12,
+          "secondary": 8
+        },
+        "overlaps": [],
+        "maxOverlapPx": 0
+      },
+      "neighborAudits": [
+        {
+          "case": "columns-standard",
+          "slideIndex": 4,
+          "width": 1280,
+          "height": 720,
+          "clipped": [],
+          "maxOverflowPx": 0,
+          "crowded": [],
+          "safeMarginPx": 20,
+          "textRuns": [
+            {
+              "label": "\"主資料と補足\"",
+              "fontPx": 26,
+              "secondary": true
+            },
+            {
+              "label": "\"比較の根拠に広い列を割り当てる\"",
+              "fontPx": 39,
+              "secondary": false
+            },
+            {
+              "label": "\"同じデータを，図と近くの説明で読む．\"",
+              "fontPx": 15.6,
+              "secondary": true
+            },
+            {
+              "label": "\"読み取れること\"",
+              "fontPx": 32.5,
+              "secondary": false
+            },
+            {
+              "label": "\"条件Bの値は条件Aより大きい．\"",
+              "fontPx": 26,
+              "secondary": false
+            },
+            {
+              "label": "\"同じ入力条件\"",
+              "fontPx": 26,
+              "secondary": false
+            },
+            {
+              "label": "\"であることが比較の前提になる．\"",
+              "fontPx": 26,
+              "secondary": false
+            },
+            {
+              "label": "\"この架空の値から，別の条件での性能は判断しない．\"",
+              "fontPx": 26,
+              "secondary": false
+            }
+          ],
+          "smallText": [],
+          "textFloorPx": {
+            "body": 12,
+            "secondary": 8
+          },
+          "overlaps": [],
+          "maxOverlapPx": 0
+        },
+        {
+          "case": "stack-standard",
+          "slideIndex": 6,
+          "width": 1280,
+          "height": 720,
+          "clipped": [],
+          "maxOverflowPx": 0,
+          "crowded": [],
+          "safeMarginPx": 20,
+          "textRuns": [
+            {
+              "label": "\"図を縦に読む\"",
+              "fontPx": 26,
+              "secondary": true
+            },
+            {
+              "label": "\"入力と出力の順序を保つ\"",
+              "fontPx": 39,
+              "secondary": false
+            },
+            {
+              "label": "\"上段：入力から出力までの流れ．\"",
+              "fontPx": 15.6,
+              "secondary": true
+            },
+            {
+              "label": "\"下段：同じ流れを繰り返して確認する．\"",
+              "fontPx": 15.6,
+              "secondary": true
+            }
+          ],
+          "smallText": [],
+          "textFloorPx": {
+            "body": 12,
+            "secondary": 8
+          },
+          "overlaps": [],
+          "maxOverlapPx": 0
+        }
+      ],
+      "imageBox": {
+        "width": 280,
+        "height": 640,
+        "naturalWidth": 280,
+        "naturalHeight": 640
+      }
+    },
+    {
+      "name": "inline",
+      "attribute": "style",
+      "value": "max-height: 480px;",
+      "screenshot": "trial-inline-portrait.png",
+      "case": "columns-portrait",
+      "audit": {
+        "slideIndex": 5,
+        "width": 1280,
+        "height": 720,
+        "clipped": [],
+        "maxOverflowPx": 0,
+        "crowded": [],
+        "safeMarginPx": 20,
+        "textRuns": [
+          {
+            "label": "\"主資料と補足\"",
+            "fontPx": 26,
+            "secondary": true
+          },
+          {
+            "label": "\"比較の根拠に広い列を割り当てる\"",
+            "fontPx": 39,
+            "secondary": false
+          },
+          {
+            "label": "\"同じデータを，図と近くの説明で読む．\"",
+            "fontPx": 15.6,
+            "secondary": true
+          },
+          {
+            "label": "\"読み取れること\"",
+            "fontPx": 32.5,
+            "secondary": false
+          },
+          {
+            "label": "\"条件Bの値は条件Aより大きい．\"",
+            "fontPx": 26,
+            "secondary": false
+          },
+          {
+            "label": "\"同じ入力条件\"",
+            "fontPx": 26,
+            "secondary": false
+          },
+          {
+            "label": "\"であることが比較の前提になる．\"",
+            "fontPx": 26,
+            "secondary": false
+          },
+          {
+            "label": "\"この架空の値から，別の条件での性能は判断しない．\"",
+            "fontPx": 26,
+            "secondary": false
+          }
+        ],
+        "smallText": [],
+        "textFloorPx": {
+          "body": 12,
+          "secondary": 8
+        },
+        "overlaps": [],
+        "maxOverlapPx": 0
+      },
+      "neighborAudits": [
+        {
+          "case": "columns-standard",
+          "slideIndex": 4,
+          "width": 1280,
+          "height": 720,
+          "clipped": [],
+          "maxOverflowPx": 0,
+          "crowded": [],
+          "safeMarginPx": 20,
+          "textRuns": [
+            {
+              "label": "\"主資料と補足\"",
+              "fontPx": 26,
+              "secondary": true
+            },
+            {
+              "label": "\"比較の根拠に広い列を割り当てる\"",
+              "fontPx": 39,
+              "secondary": false
+            },
+            {
+              "label": "\"同じデータを，図と近くの説明で読む．\"",
+              "fontPx": 15.6,
+              "secondary": true
+            },
+            {
+              "label": "\"読み取れること\"",
+              "fontPx": 32.5,
+              "secondary": false
+            },
+            {
+              "label": "\"条件Bの値は条件Aより大きい．\"",
+              "fontPx": 26,
+              "secondary": false
+            },
+            {
+              "label": "\"同じ入力条件\"",
+              "fontPx": 26,
+              "secondary": false
+            },
+            {
+              "label": "\"であることが比較の前提になる．\"",
+              "fontPx": 26,
+              "secondary": false
+            },
+            {
+              "label": "\"この架空の値から，別の条件での性能は判断しない．\"",
+              "fontPx": 26,
+              "secondary": false
+            }
+          ],
+          "smallText": [],
+          "textFloorPx": {
+            "body": 12,
+            "secondary": 8
+          },
+          "overlaps": [],
+          "maxOverlapPx": 0
+        },
+        {
+          "case": "stack-standard",
+          "slideIndex": 6,
+          "width": 1280,
+          "height": 720,
+          "clipped": [],
+          "maxOverflowPx": 0,
+          "crowded": [],
+          "safeMarginPx": 20,
+          "textRuns": [
+            {
+              "label": "\"図を縦に読む\"",
+              "fontPx": 26,
+              "secondary": true
+            },
+            {
+              "label": "\"入力と出力の順序を保つ\"",
+              "fontPx": 39,
+              "secondary": false
+            },
+            {
+              "label": "\"上段：入力から出力までの流れ．\"",
+              "fontPx": 15.6,
+              "secondary": true
+            },
+            {
+              "label": "\"下段：同じ流れを繰り返して確認する．\"",
+              "fontPx": 15.6,
+              "secondary": true
+            }
+          ],
+          "smallText": [],
+          "textFloorPx": {
+            "body": 12,
+            "secondary": 8
+          },
+          "overlaps": [],
+          "maxOverlapPx": 0
+        }
+      ],
+      "imageBox": {
+        "width": 210,
+        "height": 480,
+        "naturalWidth": 280,
+        "naturalHeight": 640
+      }
+    }
+  ],
+  "audits": [
+    {
+      "case": "body-standard",
+      "slideIndex": 0,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"本文と見出し\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"重要なページを先に描画する\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"目的と資料を確認し，slide.mdに見出しと要点を置く．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"重要な図や表を入れて描画し，読み取れる大きさかを確かめる．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"比較条件を保つ\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"ことを優先する．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"残りの本文を加え，前後のつながり，出典，収まりを点検する．\"",
+          "fontPx": 26,
+          "secondary": false
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "body-heading-wrap",
+      "slideIndex": 1,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"本文と見出し\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"本文をすべて仕上げる前に，重要な図や表を含むページを実際の素材…\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"目的と資料を確認し，slide.mdに見出しと要点を置く．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"重要な図や表を入れて描画し，読み取れる大きさかを確かめる．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"比較条件を保つ\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"ことを優先する．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"残りの本文を加え，前後のつながり，出典，収まりを点検する．\"",
+          "fontPx": 26,
+          "secondary": false
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "figure-standard",
+      "slideIndex": 2,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"図とキャプション\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"同じ条件で二つの値を比較する\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"同じ入力条件で比較した架空の値．単位は任意単位．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "figure-caption-wrap",
+      "slideIndex": 3,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"図とキャプション\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"同じ条件で二つの値を比較する\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"同じ入力条件で比較した架空の値．単位は任意単位．この例は図と説…\"",
+          "fontPx": 15.6,
+          "secondary": true
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "columns-standard",
+      "slideIndex": 4,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"主資料と補足\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"比較の根拠に広い列を割り当てる\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"同じデータを，図と近くの説明で読む．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        },
+        {
+          "label": "\"読み取れること\"",
+          "fontPx": 32.5,
+          "secondary": false
+        },
+        {
+          "label": "\"条件Bの値は条件Aより大きい．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"同じ入力条件\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"であることが比較の前提になる．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"この架空の値から，別の条件での性能は判断しない．\"",
+          "fontPx": 26,
+          "secondary": false
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "columns-portrait",
+      "slideIndex": 5,
+      "width": 1280,
+      "height": 720,
+      "clipped": [
+        {
+          "label": "\"同じデータを，図と近くの説明で読む．\"",
+          "edge": "bottom",
+          "overflowPx": 86
+        },
+        {
+          "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+          "edge": "bottom",
+          "overflowPx": 56
+        }
+      ],
+      "maxOverflowPx": 86,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"主資料と補足\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"比較の根拠に広い列を割り当てる\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"同じデータを，図と近くの説明で読む．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        },
+        {
+          "label": "\"読み取れること\"",
+          "fontPx": 32.5,
+          "secondary": false
+        },
+        {
+          "label": "\"条件Bの値は条件Aより大きい．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"同じ入力条件\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"であることが比較の前提になる．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"この架空の値から，別の条件での性能は判断しない．\"",
+          "fontPx": 26,
+          "secondary": false
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "stack-standard",
+      "slideIndex": 6,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"図を縦に読む\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"入力と出力の順序を保つ\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"上段：入力から出力までの流れ．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        },
+        {
+          "label": "\"下段：同じ流れを繰り返して確認する．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "stack-taller-media",
+      "slideIndex": 7,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"図を縦に読む\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"入力と出力の順序を保つ\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"上段：入力から出力までの流れ．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        },
+        {
+          "label": "\"下段：同じ流れを繰り返して確認する．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "results-standard",
+      "slideIndex": 8,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"結果と条件\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"値の差と比較条件を一緒に示す\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"条件Aは52，条件Bは68．いずれも架空の値．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        },
+        {
+          "label": "\"差は16任意単位である．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"入力条件は共通\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"であり，別条件への一般化は行わない．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"出典：配置確認のために作成した架空のデータ．実測値ではない．\"",
+          "fontPx": 10.4,
+          "secondary": true
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "results-footnote-wrap",
+      "slideIndex": 9,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"結果と条件\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"値の差と比較条件を一緒に示す\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"条件Aは52，条件Bは68．いずれも架空の値．\"",
+          "fontPx": 15.6,
+          "secondary": true
+        },
+        {
+          "label": "\"差は16任意単位である．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"入力条件は共通\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"であり，別条件への一般化は行わない．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"出典：配置確認のために作成した架空のデータ．実測値ではない．こ…\"",
+          "fontPx": 10.4,
+          "secondary": true
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "table-standard",
+      "slideIndex": 10,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"比較表\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"閲覧にはPDF，共同編集にはMarkdownを渡す\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"同じ判断軸を行に置くと，配布方法ごとの違いを追いやすい．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"判断軸\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"PDF\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"Markdownと素材一式\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"主な用途\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"完成した資料の閲覧\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"内容や構成の共同編集\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"受け手の準備\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"PDFを開ける環境\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"MarpAgentの実行環境\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"更新時の作業\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"原稿を修正して再出力\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"同じ原稿を直接修正\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"渡す範囲\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"出力したファイル\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"原稿，テーマ，参照する素材\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"図の出典や数値の条件は，どちらの形式でも資料内に残す．\"",
+          "fontPx": 26,
+          "secondary": false
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "table-extra-row",
+      "slideIndex": 11,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"比較表\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"閲覧にはPDF，共同編集にはMarkdownを渡す\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"同じ判断軸を行に置くと，配布方法ごとの違いを追いやすい．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"判断軸\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"PDF\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"Markdownと素材一式\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"主な用途\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"完成した資料の閲覧\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"内容や構成の共同編集\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"受け手の準備\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"PDFを開ける環境\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"MarpAgentの実行環境\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"更新時の作業\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"原稿を修正して再出力\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"同じ原稿を直接修正\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"渡す範囲\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"出力したファイル\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"原稿，テーマ，参照する素材\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"参照の保存\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"資料内に出典を記す\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"原稿と素材の対応も記す\"",
+          "fontPx": 16,
+          "secondary": false
+        },
+        {
+          "label": "\"図の出典や数値の条件は，どちらの形式でも資料内に残す．\"",
+          "fontPx": 26,
+          "secondary": false
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "diagram-standard",
+      "slideIndex": 12,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"数式と処理の流れ\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"入力の平均を出力として記録する\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"入力\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"に対し，出力は\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"とする．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"これは描画確認用の処理例であり，実装の速度や精度は評価しない．\"",
+          "fontPx": 26,
+          "secondary": false
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    },
+    {
+      "case": "diagram-label-wrap",
+      "slideIndex": 13,
+      "width": 1280,
+      "height": 720,
+      "clipped": [],
+      "maxOverflowPx": 0,
+      "crowded": [],
+      "safeMarginPx": 20,
+      "textRuns": [
+        {
+          "label": "\"数式と処理の流れ\"",
+          "fontPx": 26,
+          "secondary": true
+        },
+        {
+          "label": "\"入力の平均を出力として記録する\"",
+          "fontPx": 39,
+          "secondary": false
+        },
+        {
+          "label": "\"入力\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"に対し，出力は\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"とする．\"",
+          "fontPx": 26,
+          "secondary": false
+        },
+        {
+          "label": "\"これは描画確認用の処理例であり，実装の速度や精度は評価しない．\"",
+          "fontPx": 26,
+          "secondary": false
+        }
+      ],
+      "smallText": [],
+      "textFloorPx": {
+        "body": 12,
+        "secondary": 8
+      },
+      "overlaps": [],
+      "maxOverlapPx": 0
+    }
+  ]
+}

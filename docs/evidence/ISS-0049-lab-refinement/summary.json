@@ -1,0 +1,726 @@
+{
+  "schemaVersion": 1,
+  "issue": "ISS-0049",
+  "capturedDate": "2026-10-21",
+  "archive": {
+    "existingResultsReused": true,
+    "rerendered": false,
+    "fontBinaryIncluded": false,
+    "retainedPairs": 3
+  },
+  "sourceDigests": {
+    "comparisonJsonSha256": "56fd9be1ef9806c3b3fa123945f49fefe66517e01c43ff9157d81e8fd33362ba",
+    "strictResultsJsonSha256": "2900582a827361ca3279169edfa69998d0a55e05b661542e62e2753853829c1d",
+    "originalHarnessSha256": "6519f0943e52c52b4e8e2b0e2eb8e953198594639dfd3040f233bbbb1e25c196"
+  },
+  "environment": {
+    "os": "Linux 5.15.167.4-microsoft-standard-WSL2 x64",
+    "node": "v25.6.0",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "dpr": 1,
+    "fontConfig": "<run-dir>/fonts/fonts.conf",
+    "nativeJapaneseMatch": "Noto Sans JP,Noto Sans JP Thin: <run-dir>/fonts/NotoSansJP.ttf",
+    "versions": {
+      "@marp-team/marp-core": "5.0.2",
+      "@marp-team/marp-cli": "4.5.1",
+      "playwright": "1.58.2"
+    },
+    "browser": "145.0.7632.6"
+  },
+  "font": {
+    "family": "Noto Sans JP",
+    "source": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
+    "sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+    "weights": [
+      400,
+      700
+    ],
+    "usageMeasurementScope": "CDP CSS.getPlatformFontsForNode on the first section of each input and variant; capture-level, not per-slide",
+    "bundled": false
+  },
+  "styles": {
+    "before": {
+      "file": "styles/before.css.gz",
+      "cssSha256": "469896df4f2a52878f8e5a838923532a688e0841d61ec7b1133474181d517846",
+      "archiveSha256": "6074e22dbe280f8f5774784c9c375f566315db694615acb1d1bfd8a65c1ad572",
+      "cssBytes": 49861,
+      "archiveBytes": 10589,
+      "provenance": {
+        "revision": "f397ea5",
+        "layoutCommits": [
+          "6560cc4",
+          "44a841d",
+          "f397ea5"
+        ],
+        "fixtureCommit": "119fbbb",
+        "sha256": "469896df4f2a52878f8e5a838923532a688e0841d61ec7b1133474181d517846"
+      }
+    },
+    "after": {
+      "file": "styles/after.css.gz",
+      "cssSha256": "ad440d77ab874f8538dd449b9bed931609ac377f5a99a0b3fdbf4814f2e53f8e",
+      "archiveSha256": "8c1fb7ff1282e713997ecf7df3b0a531b129ba37c98e3ca0976eaba5ee051bfc",
+      "cssBytes": 55806,
+      "archiveBytes": 11384,
+      "provenance": {
+        "revision": "ef0e8db09590cbdaeec8d6812ba85a470847e1fe",
+        "ownImplementation": "0375662",
+        "sha256": "ad440d77ab874f8538dd449b9bed931609ac377f5a99a0b3fdbf4814f2e53f8e"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "path": "fixtures/layout-baselines/slide.md",
+      "sha256": "623961a6398fdb21ce7c99b3f81fd1bed4c6b42b75eb1aed457215495545f01a",
+      "slides": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "path": "fixtures/body-layout-slide.md",
+      "sha256": "90dbb525fb4ab4d84712c61a6397dc28fdd2f12850303fe85a2a4699fe544557",
+      "slides": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "path": "fixtures/lab-refined-slide.md",
+      "sha256": "58b9fae34dd538c4a241a5799ed79bf4ab18c7595082787265aed7e0275adec9",
+      "slides": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "path": "decks/example/slide.md",
+      "sha256": "815b0546e2ef75a8791fcc871133354ecd7a529c4d41a496feef069bea627fda",
+      "slides": [
+        1
+      ]
+    }
+  ],
+  "measurements": {
+    "comparedPages": 23,
+    "defaultPixelsEqual": 23,
+    "refinedTextEqual": 23,
+    "wrapChanges": [
+      {
+        "input": "fixtures/layout-baselines/slide.md",
+        "slide": 4,
+        "tag": "FIGCAPTION",
+        "text": "同じ​入力条件で​比較した​架​空の​値．​単位は​任意単位．​この​例は​図と​説明の​配置確認用であり，​実験結果を​示すものではない．​条件Aと​条件Bには​同じ​入力を​与え，​表示された​値の​差だけを​比較する．​条件の​違いに​関する​推論や，​実際の​装置・利用者への​一般化は​行わない．",
+        "before": 2,
+        "after": 3
+      },
+      {
+        "input": "fixtures/body-layout-slide.md",
+        "slide": 2,
+        "tag": "FIGCAPTION",
+        "text": "The caption stays with the evidence when it wraps to a second line with further necessary qualifications",
+        "before": 1,
+        "after": 2
+      }
+    ],
+    "refinedBody": {
+      "pages": 4,
+      "clippedRuns": 0,
+      "overlaps": 0,
+      "smallTextRuns": 0
+    },
+    "portraitBoundary": {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 6,
+      "columnWidthsPx": [
+        787,
+        374
+      ],
+      "mediaSizePx": [
+        280,
+        640
+      ],
+      "figureWidthBeforePx": 288,
+      "figureWidthAfterPx": 360,
+      "maxOverflowBeforePx": 86,
+      "maxOverflowAfterPx": 83,
+      "resolution": "unresolved-before-and-after"
+    }
+  },
+  "perPageComparison": [
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 1,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 2,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 3,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 4,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 1
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 5,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 6,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 7,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 8,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 9,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 10,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 11,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 12,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 13,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 14,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/body-layout-slide.md",
+      "slide": 1,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/body-layout-slide.md",
+      "slide": 2,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 1
+    },
+    {
+      "input": "fixtures/body-layout-slide.md",
+      "slide": 3,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/body-layout-slide.md",
+      "slide": 4,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/lab-refined-slide.md",
+      "slide": 1,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/lab-refined-slide.md",
+      "slide": 2,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/lab-refined-slide.md",
+      "slide": 3,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "fixtures/lab-refined-slide.md",
+      "slide": 4,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    },
+    {
+      "input": "decks/example/slide.md",
+      "slide": 1,
+      "compatiblePixelsEqual": true,
+      "sourceTextEqual": true,
+      "wrapChanges": 0
+    }
+  ],
+  "pairs": [
+    {
+      "id": "caption-wrap",
+      "input": "fixtures/layout-baselines/slide.md",
+      "slide": 4,
+      "sourceSha256": "623961a6398fdb21ce7c99b3f81fd1bed4c6b42b75eb1aed457215495545f01a",
+      "before": {
+        "image": "caption-wrap-before.png",
+        "sha256": "46853a865f062c5e06c5d079646f0d14fbb6876afecdad6e27c993942c0c1f1b",
+        "bytes": 59703,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "normal",
+          "family": "\"Noto Sans JP\", sans-serif",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [
+          {
+            "lines": 2,
+            "widthPx": 1200,
+            "heightPx": 44,
+            "style": {
+              "size": "15.6px",
+              "weight": "400",
+              "leading": "normal",
+              "family": "\"Noto Sans JP\", sans-serif",
+              "color": "rgb(127, 127, 127)"
+            }
+          }
+        ],
+        "strong": [],
+        "markerTags": [],
+        "media": [
+          {
+            "tag": "IMG",
+            "source": "assets/img/comparison.svg",
+            "widthPx": 640,
+            "heightPx": 280,
+            "fit": "contain",
+            "position": "50% 50%"
+          }
+        ],
+        "fontUsage": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 138
+          }
+        ]
+      },
+      "after": {
+        "image": "caption-wrap-after.png",
+        "sha256": "a80d91bb4d00aab60f71df53bc1f182ae8a64620c79f33dc9135e3a5436dd9e6",
+        "bytes": 74603,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "39px",
+          "family": "\"Noto Sans JP\", sans-serif",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [
+          {
+            "lines": 3,
+            "widthPx": 1200,
+            "heightPx": 76.03125,
+            "style": {
+              "size": "19.5px",
+              "weight": "400",
+              "leading": "25.35px",
+              "family": "\"Noto Sans JP\", sans-serif",
+              "color": "rgb(98, 104, 114)"
+            }
+          }
+        ],
+        "strong": [],
+        "markerTags": [],
+        "media": [
+          {
+            "tag": "IMG",
+            "source": "assets/img/comparison.svg",
+            "widthPx": 640,
+            "heightPx": 280,
+            "fit": "contain",
+            "position": "50% 50%"
+          }
+        ],
+        "fontUsage": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 138
+          }
+        ]
+      }
+    },
+    {
+      "id": "body-caption",
+      "input": "fixtures/body-layout-slide.md",
+      "slide": 2,
+      "sourceSha256": "90dbb525fb4ab4d84712c61a6397dc28fdd2f12850303fe85a2a4699fe544557",
+      "before": {
+        "image": "body-caption-before.png",
+        "sha256": "0bcf2734d58d4737a424f52eb6d2b637a972a56a15bc15f0b209057cd155b8b2",
+        "bytes": 50794,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "normal",
+          "family": "\"Noto Sans JP\", sans-serif",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [
+          {
+            "lines": 1,
+            "widthPx": 782.671875,
+            "heightPx": 22,
+            "style": {
+              "size": "15.6px",
+              "weight": "400",
+              "leading": "normal",
+              "family": "\"Noto Sans JP\", sans-serif",
+              "color": "rgb(127, 127, 127)"
+            }
+          }
+        ],
+        "strong": [],
+        "markerTags": [],
+        "media": [
+          {
+            "tag": "IMG",
+            "source": "body-layout-media.svg",
+            "widthPx": 782.671875,
+            "heightPx": 501.25,
+            "fit": "contain",
+            "position": "50% 50%"
+          }
+        ],
+        "fontUsage": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 73
+          }
+        ]
+      },
+      "after": {
+        "image": "body-caption-after.png",
+        "sha256": "9e9aa302009f57938e7b32bc937cb4b3f5703672c1417d696ce3dc5f9837f5b0",
+        "bytes": 54680,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "39px",
+          "family": "\"Noto Sans JP\", sans-serif",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [
+          {
+            "lines": 2,
+            "widthPx": 782.671875,
+            "heightPx": 50.6875,
+            "style": {
+              "size": "19.5px",
+              "weight": "400",
+              "leading": "25.35px",
+              "family": "\"Noto Sans JP\", sans-serif",
+              "color": "rgb(98, 104, 114)"
+            }
+          }
+        ],
+        "strong": [],
+        "markerTags": [],
+        "media": [
+          {
+            "tag": "IMG",
+            "source": "body-layout-media.svg",
+            "widthPx": 782.671875,
+            "heightPx": 481.765625,
+            "fit": "contain",
+            "position": "50% 50%"
+          }
+        ],
+        "fontUsage": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 73
+          }
+        ]
+      }
+    },
+    {
+      "id": "emphasis",
+      "input": "fixtures/lab-refined-slide.md",
+      "slide": 2,
+      "sourceSha256": "58b9fae34dd538c4a241a5799ed79bf4ab18c7595082787265aed7e0275adec9",
+      "before": {
+        "image": "emphasis-before.png",
+        "sha256": "49e08d8eac16842a8466a64636c1e9f099bb9578951aeae6ecedce57db790210",
+        "bytes": 118987,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "normal",
+          "family": "\"Noto Sans JP\", sans-serif",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [],
+        "strong": [
+          {
+            "style": {
+              "size": "26px",
+              "weight": "500",
+              "leading": "normal",
+              "family": "\"Noto Sans JP\", sans-serif",
+              "color": "rgb(217, 119, 6)"
+            },
+            "widthPx": 156
+          }
+        ],
+        "markerTags": [
+          "EM",
+          "EM",
+          "SPAN",
+          "MARK"
+        ],
+        "media": [],
+        "fontUsage": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 33
+          }
+        ]
+      },
+      "after": {
+        "image": "emphasis-after.png",
+        "sha256": "be29758617f91b9afe8fea71946c5fd4423e59181f204c606d8751e676f638d4",
+        "bytes": 123332,
+        "body": {
+          "size": "26px",
+          "weight": "400",
+          "leading": "39px",
+          "family": "\"Noto Sans JP\", sans-serif",
+          "color": "rgb(32, 34, 40)"
+        },
+        "captions": [],
+        "strong": [
+          {
+            "style": {
+              "size": "26px",
+              "weight": "700",
+              "leading": "39px",
+              "family": "\"Noto Sans JP\", sans-serif",
+              "color": "rgb(180, 83, 9)"
+            },
+            "widthPx": 156
+          }
+        ],
+        "markerTags": [
+          "EM",
+          "EM",
+          "SPAN",
+          "MARK"
+        ],
+        "media": [],
+        "fontUsage": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 33
+          }
+        ]
+      }
+    }
+  ],
+  "strict": [
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "variant": "compatible",
+      "size": "16:9",
+      "status": 1,
+      "visualCheck": {
+        "status": "measured"
+      },
+      "findings": [
+        {
+          "slide": 6,
+          "page": 6,
+          "ruleId": "content-clipped",
+          "severity": "error",
+          "source": "render",
+          "title": "Visible content extends past the slide edge by up to 86px: \"同じデータを，図と近くの説明で読む．\" (bottom 86px), <img assets/img/comparison-portrait.svg> (bottom 56px)."
+        }
+      ]
+    },
+    {
+      "input": "fixtures/layout-baselines/slide.md",
+      "variant": "refined",
+      "size": "16:9",
+      "status": 1,
+      "visualCheck": {
+        "status": "measured"
+      },
+      "findings": [
+        {
+          "slide": 6,
+          "page": 6,
+          "ruleId": "content-clipped",
+          "severity": "error",
+          "source": "render",
+          "title": "Visible content extends past the slide edge by up to 83px: \"同じデータを，図と近くの説明で読む．\" (bottom 83px), <img assets/img/comparison-portrait.svg> (bottom 47px)."
+        }
+      ]
+    },
+    {
+      "input": "fixtures/body-layout-slide.md",
+      "variant": "compatible",
+      "size": "16:9",
+      "status": 0,
+      "visualCheck": {
+        "status": "measured"
+      },
+      "findings": []
+    },
+    {
+      "input": "fixtures/body-layout-slide.md",
+      "variant": "refined",
+      "size": "16:9",
+      "status": 0,
+      "visualCheck": {
+        "status": "measured"
+      },
+      "findings": []
+    },
+    {
+      "input": "fixtures/body-layout-slide.md",
+      "variant": "refined",
+      "size": "4:3",
+      "status": 0,
+      "visualCheck": {
+        "status": "measured"
+      },
+      "findings": []
+    },
+    {
+      "input": "fixtures/lab-refined-slide.md",
+      "variant": "refined",
+      "size": "16:9",
+      "status": 0,
+      "visualCheck": {
+        "status": "measured"
+      },
+      "findings": []
+    },
+    {
+      "input": "fixtures/core5-slide.md",
+      "variant": "refined",
+      "size": "16:9",
+      "status": 0,
+      "visualCheck": {
+        "status": "measured"
+      },
+      "findings": []
+    }
+  ],
+  "classInterface": {
+    "peer": "2eb7616",
+    "labRefined": true,
+    "body": true,
+    "figureNatural": true,
+    "unknownReasons": []
+  },
+  "priorChecks": {
+    "issueScope": {
+      "unitPassed": 45,
+      "browserPassed": 43
+    },
+    "mainReportedIntegration": {
+      "unitPassed": 60,
+      "browserPassed": 46,
+      "source": "Main coordination message",
+      "rerunForArchival": false
+    }
+  }
+}

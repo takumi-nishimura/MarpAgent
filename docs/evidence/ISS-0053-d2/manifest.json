@@ -1,0 +1,39 @@
+{
+  "revision": "34f8d9f1e90020bc12fbecf3c590c44c7b3d93c2",
+  "source": "fixtures/d2-components.md",
+  "sourceSha256": "c9248678ba01c229fb02d7c4b1c35cbb101313860f9713759281f6189c750175",
+  "environment": {
+    "node": "25.6.0",
+    "d2": "0.9.0",
+    "platform": "Linux x64",
+    "marpCore": "5.0.2",
+    "marpCli": "4.5.1",
+    "playwright": "1.58.2",
+    "font": "Noto Sans JP Regular wght=400",
+    "fontSha256": "b54f9c22fb6cb1278aced23147992ffe5991a7b26c88c4866d17bed6cff7a30b",
+    "inputFontSha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+    "fontTools": "4.60.1"
+  },
+  "files": [
+    {
+      "path": "d2.001.png",
+      "sha256": "e51884215c2ff2d5540811c3f9108f5f7e2322fcfb8ccc0ab2f7c22e42dbcf14"
+    },
+    {
+      "path": "d2.002.png",
+      "sha256": "ed0a344d1e190718f97b99d03c4e6273c5114bed2b5959ce79f6dcc6d1f20a38"
+    },
+    {
+      "path": "d2.003.png",
+      "sha256": "bdd2d8f105c638ee3cc977791deddb44d7781a8807fe7886a4416b5dbff4f809"
+    }
+  ],
+  "review": "Main inspected all three PNGs for Japanese glyphs, groups, math, labels, and preserved content. PDF/PPTX generated but separate viewers were not inspected.",
+  "integration": {
+    "revision": "c3b6f5d",
+    "command": "npm run test:d2",
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0
+  }
+}

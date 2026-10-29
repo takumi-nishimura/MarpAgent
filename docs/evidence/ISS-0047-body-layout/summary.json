@@ -1,0 +1,950 @@
+{
+  "repair": {
+    "selection": [
+      "columns-portrait",
+      "results-footnote-wrap"
+    ],
+    "heightRepair": {
+      "target": "figure",
+      "property": "height",
+      "valuePx": 520,
+      "available": [
+        {
+          "theme": "lab",
+          "height": 536.25
+        },
+        {
+          "theme": "muji",
+          "height": 534.0625
+        },
+        {
+          "theme": "toshiba",
+          "height": 524.25
+        }
+      ],
+      "rule": "Floor the smallest available figure height to a 20px step, once; keep the already-fitting result case unchanged."
+    },
+    "individualHeightDeclarations": {
+      "original": 0,
+      "repaired": 1,
+      "utility": 0,
+      "body": 0
+    },
+    "caveat": "The old width utility also repairs the portrait case. A general reduction in necessary individual heights or in total authoring adjustments is not established. The result/footnote control already fits and has no size repair.",
+    "fonts": [
+      {
+        "theme": "lab",
+        "nodeFonts": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 18
+          }
+        ],
+        "heading": "39px",
+        "caption": "15.6px"
+      },
+      {
+        "theme": "muji",
+        "nodeFonts": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 18
+          }
+        ],
+        "heading": "32.4px",
+        "caption": "14.4px"
+      },
+      {
+        "theme": "toshiba",
+        "nodeFonts": [
+          {
+            "familyName": "Noto Sans JP Thin",
+            "postScriptName": "NotoSansJP-Thin",
+            "isCustomFont": true,
+            "glyphCount": 18
+          }
+        ],
+        "heading": "39px",
+        "caption": "15.6px"
+      }
+    ],
+    "contentDigests": [
+      {
+        "id": "columns-portrait",
+        "textSha256": "9c9d85c96b30fb982d2d2b0765b17f03f61827cb9e9f68482b50c61e69654a7e",
+        "altSha256": "1a053b55042c09a307edc8f04581035504780986c4a8896e1ba49b60200b7af1"
+      },
+      {
+        "id": "results-footnote-wrap",
+        "textSha256": "4a3589d7c62c20f8724d18d1acba8f00c66f19b7825f02d5c24c7dad8d146952",
+        "altSha256": "1a053b55042c09a307edc8f04581035504780986c4a8896e1ba49b60200b7af1"
+      }
+    ],
+    "runs": [
+      {
+        "theme": "lab",
+        "variant": "original",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 135.75,
+            "figureHeight": 669.796875,
+            "captionBottom": 805.546875,
+            "captionLines": 1,
+            "mediaWidth": 280,
+            "mediaHeight": 640,
+            "label24pxPainted": 24,
+            "contentBottom": 805.546875,
+            "footnoteTop": null,
+            "evidenceWidth": 787,
+            "interpretationWidth": 374,
+            "interpretationLeft": 866,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 2,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 135.75,
+            "figureHeight": 309.796875,
+            "captionBottom": 445.546875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 495.546875,
+            "footnoteTop": 677,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "muji",
+        "variant": "original",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 137.9375,
+            "figureHeight": 670.234375,
+            "captionBottom": 808.171875,
+            "captionLines": 1,
+            "mediaWidth": 280,
+            "mediaHeight": 640,
+            "label24pxPainted": 24,
+            "contentBottom": 808.171875,
+            "footnoteTop": null,
+            "evidenceWidth": 766.65625,
+            "interpretationWidth": 365.34375,
+            "interpretationLeft": 858.65625,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 2,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 137.9375,
+            "figureHeight": 310.234375,
+            "captionBottom": 448.171875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 498.5625,
+            "footnoteTop": 677.3125,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "toshiba",
+        "variant": "original",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 147.75,
+            "figureHeight": 669.796875,
+            "captionBottom": 817.546875,
+            "captionLines": 1,
+            "mediaWidth": 280,
+            "mediaHeight": 640,
+            "label24pxPainted": 24,
+            "contentBottom": 817.546875,
+            "footnoteTop": null,
+            "evidenceWidth": 765.65625,
+            "interpretationWidth": 363.328125,
+            "interpretationLeft": 860.65625,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 2,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 147.75,
+            "figureHeight": 309.796875,
+            "captionBottom": 457.546875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 507.546875,
+            "footnoteTop": 677,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "lab",
+        "variant": "repaired",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 135.75,
+            "figureHeight": 520,
+            "captionBottom": 655.75,
+            "captionLines": 1,
+            "mediaWidth": 214.453125,
+            "mediaHeight": 490.203125,
+            "label24pxPainted": 18.38169642857143,
+            "contentBottom": 655.75,
+            "footnoteTop": null,
+            "evidenceWidth": 787,
+            "interpretationWidth": 374,
+            "interpretationLeft": 866,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 135.75,
+            "figureHeight": 309.796875,
+            "captionBottom": 445.546875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 495.546875,
+            "footnoteTop": 677,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "lab",
+        "variant": "utility",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 135.75,
+            "figureHeight": 523.5,
+            "captionBottom": 659.25,
+            "captionLines": 1,
+            "mediaWidth": 216,
+            "mediaHeight": 493.703125,
+            "label24pxPainted": 18.513867187499997,
+            "contentBottom": 659.25,
+            "footnoteTop": null,
+            "evidenceWidth": 787,
+            "interpretationWidth": 374,
+            "interpretationLeft": 866,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 135.75,
+            "figureHeight": 309.796875,
+            "captionBottom": 445.546875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 495.546875,
+            "footnoteTop": 677,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "lab",
+        "variant": "body",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 135.75,
+            "figureHeight": 536.25,
+            "captionBottom": 672,
+            "captionLines": 1,
+            "mediaWidth": 787,
+            "mediaHeight": 501.25,
+            "label24pxPainted": 18.796875,
+            "contentBottom": 672,
+            "footnoteTop": null,
+            "evidenceWidth": 787,
+            "interpretationWidth": 374,
+            "interpretationLeft": 866,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 135.75,
+            "figureHeight": 473.25,
+            "captionBottom": 609,
+            "captionLines": 1,
+            "mediaWidth": 1200,
+            "mediaHeight": 438.25,
+            "label24pxPainted": 37.56428571428572,
+            "contentBottom": 672,
+            "footnoteTop": 677,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "muji",
+        "variant": "repaired",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 137.9375,
+            "figureHeight": 520,
+            "captionBottom": 657.9375,
+            "captionLines": 1,
+            "mediaWidth": 214.265625,
+            "mediaHeight": 489.765625,
+            "label24pxPainted": 18.365625,
+            "contentBottom": 657.9375,
+            "footnoteTop": null,
+            "evidenceWidth": 766.65625,
+            "interpretationWidth": 365.34375,
+            "interpretationLeft": 858.65625,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 137.9375,
+            "figureHeight": 310.234375,
+            "captionBottom": 448.171875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 498.5625,
+            "footnoteTop": 677.3125,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "muji",
+        "variant": "utility",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 137.9375,
+            "figureHeight": 510.234375,
+            "captionBottom": 648.171875,
+            "captionLines": 1,
+            "mediaWidth": 210,
+            "mediaHeight": 480,
+            "label24pxPainted": 18,
+            "contentBottom": 648.171875,
+            "footnoteTop": null,
+            "evidenceWidth": 766.65625,
+            "interpretationWidth": 365.34375,
+            "interpretationLeft": 858.65625,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 137.9375,
+            "figureHeight": 310.234375,
+            "captionBottom": 448.171875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 498.5625,
+            "footnoteTop": 677.3125,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "muji",
+        "variant": "body",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 125.9375,
+            "figureHeight": 546.0625,
+            "captionBottom": 672,
+            "captionLines": 1,
+            "mediaWidth": 766.65625,
+            "mediaHeight": 511.015625,
+            "label24pxPainted": 19.1630859375,
+            "contentBottom": 672,
+            "footnoteTop": null,
+            "evidenceWidth": 766.65625,
+            "interpretationWidth": 365.34375,
+            "interpretationLeft": 858.65625,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 125.9375,
+            "figureHeight": 483.671875,
+            "captionBottom": 609.609375,
+            "captionLines": 1,
+            "mediaWidth": 1168,
+            "mediaHeight": 448.625,
+            "label24pxPainted": 38.45357142857143,
+            "contentBottom": 672,
+            "footnoteTop": 677.3125,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "toshiba",
+        "variant": "repaired",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 147.75,
+            "figureHeight": 520,
+            "captionBottom": 667.75,
+            "captionLines": 1,
+            "mediaWidth": 214.453125,
+            "mediaHeight": 490.203125,
+            "label24pxPainted": 18.38169642857143,
+            "contentBottom": 667.75,
+            "footnoteTop": null,
+            "evidenceWidth": 765.65625,
+            "interpretationWidth": 363.328125,
+            "interpretationLeft": 860.65625,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 147.75,
+            "figureHeight": 309.796875,
+            "captionBottom": 457.546875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 507.546875,
+            "footnoteTop": 677,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "toshiba",
+        "variant": "utility",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 147.75,
+            "figureHeight": 523.5,
+            "captionBottom": 671.25,
+            "captionLines": 1,
+            "mediaWidth": 216,
+            "mediaHeight": 493.703125,
+            "label24pxPainted": 18.513867187499997,
+            "contentBottom": 671.25,
+            "footnoteTop": null,
+            "evidenceWidth": 765.65625,
+            "interpretationWidth": 363.328125,
+            "interpretationLeft": 860.65625,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 147.75,
+            "figureHeight": 309.796875,
+            "captionBottom": 457.546875,
+            "captionLines": 1,
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "label24pxPainted": 24,
+            "contentBottom": 507.546875,
+            "footnoteTop": 677,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "toshiba",
+        "variant": "body",
+        "cases": [
+          {
+            "id": "columns-portrait",
+            "figureTop": 139.75,
+            "figureHeight": 532.25,
+            "captionBottom": 672,
+            "captionLines": 1,
+            "mediaWidth": 765.65625,
+            "mediaHeight": 497.25,
+            "label24pxPainted": 18.646875,
+            "contentBottom": 672,
+            "footnoteTop": null,
+            "evidenceWidth": 765.65625,
+            "interpretationWidth": 363.328125,
+            "interpretationLeft": 860.65625,
+            "bold": 1,
+            "markers": 0,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "results-footnote-wrap",
+            "figureTop": 139.75,
+            "figureHeight": 469.25,
+            "captionBottom": 609,
+            "captionLines": 1,
+            "mediaWidth": 1168,
+            "mediaHeight": 434.25,
+            "label24pxPainted": 37.22142857142857,
+            "contentBottom": 672,
+            "footnoteTop": 677,
+            "evidenceWidth": null,
+            "interpretationWidth": null,
+            "interpretationLeft": null,
+            "bold": 0,
+            "markers": 1,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "caption": {
+    "selection": [
+      "figure-standard",
+      "figure-caption-wrap"
+    ],
+    "runs": [
+      {
+        "theme": "lab",
+        "variant": "before",
+        "cases": [
+          {
+            "id": "figure-standard",
+            "fontLoaded": true,
+            "captionLines": [
+              1
+            ],
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "figureBottom": 445.546875,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "figure-caption-wrap",
+            "fontLoaded": true,
+            "captionLines": [
+              2
+            ],
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "figureBottom": 467.546875,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "lab",
+        "variant": "after",
+        "cases": [
+          {
+            "id": "figure-standard",
+            "fontLoaded": true,
+            "captionLines": [
+              1
+            ],
+            "mediaWidth": 1200,
+            "mediaHeight": 501.25,
+            "figureBottom": 672,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "figure-caption-wrap",
+            "fontLoaded": true,
+            "captionLines": [
+              2
+            ],
+            "mediaWidth": 1200,
+            "mediaHeight": 479.25,
+            "figureBottom": 672,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "muji",
+        "variant": "before",
+        "cases": [
+          {
+            "id": "figure-standard",
+            "fontLoaded": true,
+            "captionLines": [
+              1
+            ],
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "figureBottom": 448.171875,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "figure-caption-wrap",
+            "fontLoaded": true,
+            "captionLines": [
+              2
+            ],
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "figureBottom": 471.21875,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "muji",
+        "variant": "after",
+        "cases": [
+          {
+            "id": "figure-standard",
+            "fontLoaded": true,
+            "captionLines": [
+              1
+            ],
+            "mediaWidth": 1168,
+            "mediaHeight": 511.015625,
+            "figureBottom": 672,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "figure-caption-wrap",
+            "fontLoaded": true,
+            "captionLines": [
+              2
+            ],
+            "mediaWidth": 1168,
+            "mediaHeight": 487.96875,
+            "figureBottom": 672,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "toshiba",
+        "variant": "before",
+        "cases": [
+          {
+            "id": "figure-standard",
+            "fontLoaded": true,
+            "captionLines": [
+              1
+            ],
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "figureBottom": 457.546875,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "figure-caption-wrap",
+            "fontLoaded": true,
+            "captionLines": [
+              2
+            ],
+            "mediaWidth": 640,
+            "mediaHeight": 280,
+            "figureBottom": 479.546875,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      },
+      {
+        "theme": "toshiba",
+        "variant": "after",
+        "cases": [
+          {
+            "id": "figure-standard",
+            "fontLoaded": true,
+            "captionLines": [
+              1
+            ],
+            "mediaWidth": 1168,
+            "mediaHeight": 497.25,
+            "figureBottom": 672,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          },
+          {
+            "id": "figure-caption-wrap",
+            "fontLoaded": true,
+            "captionLines": [
+              2
+            ],
+            "mediaWidth": 1168,
+            "mediaHeight": 475.25,
+            "figureBottom": 672,
+            "findings": {
+              "clipped": 0,
+              "overlaps": 0,
+              "crowded": 0,
+              "smallText": 0
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

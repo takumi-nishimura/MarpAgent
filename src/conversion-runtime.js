@@ -74,11 +74,12 @@ function killProcessTree(pid, signal = "SIGKILL") {
 function runConversion(
   command,
   args,
-  { cwd, timeoutMs = conversionTimeout(), stdio = "inherit" } = {},
+  { cwd, env, timeoutMs = conversionTimeout(), stdio = "inherit" } = {},
 ) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       cwd,
+      env,
       stdio,
       detached: process.platform !== "win32",
     });
@@ -123,7 +124,7 @@ function runConversion(
 function runConversionSync(
   command,
   args,
-  { cwd, timeoutMs = conversionTimeout() } = {},
+  { cwd, env, timeoutMs = conversionTimeout() } = {},
 ) {
   return execFileSync(
     process.execPath,
@@ -133,6 +134,7 @@ function runConversionSync(
     ],
     {
       encoding: "utf8",
+      env,
       stdio: "pipe",
       maxBuffer: 32 * 1024 * 1024,
     },

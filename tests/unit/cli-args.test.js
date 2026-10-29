@@ -43,6 +43,7 @@ test("marpx export modes are mutually exclusive", () => {
     ["fixtures/clean-slide.md", "--pptx", "--images", "png"],
     ["fixtures/clean-slide.md", "--html", "--screenshot", "1"],
     ["fixtures/clean-slide.md", "--images", "png", "--lint"],
+    ["fixtures/clean-slide.md", "--zip", "--html"],
   ]) {
     const result = runNodeScript("bin/marpx.js", args);
 
@@ -150,13 +151,13 @@ test("marpx theme scaffold options require --theme-new", () => {
   }
 });
 
-test("marpx --force requires --new, --theme-new, or --outline", () => {
+test("marpx --force requires a mode supporting explicit overwrite", () => {
   const result = runNodeScript("bin/marpx.js", ["--force"]);
 
   assert.equal(result.status, 1);
   assert.match(
     result.stderr,
-    /--force can only be used with --new, --theme-new, or --outline/,
+    /--force can only be used with --new, --theme-new, --outline, or --zip/,
   );
 });
 

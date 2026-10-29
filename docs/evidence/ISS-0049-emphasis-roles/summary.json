@@ -1,0 +1,713 @@
+{
+  "baseline": "27c537094b2d47efdc8a751529515a2fb706df73",
+  "workerCommit": "dd1367cbceab4ded28b7f96fce9378624e8bda09",
+  "implementation": "8e18b1f76e4e422c5f202e41937bb693184ada8d",
+  "captures": {
+    "before": {
+      "label": "before",
+      "input": {
+        "file": "fixtures/lab-emphasis-slide.md",
+        "sha256": "966f4cb86a7d8de2bc2f2a7b2f4d4964637c7c772aec63417cffcf098553c512"
+      },
+      "css": {
+        "file": "styles/before.css.gz",
+        "sha256": "533c9057f2f60e236748b9f4a3009a1acaea9ca4cb934987dd6c14b001ae82ce"
+      },
+      "fonts": [
+        {
+          "weight": 400,
+          "file": "NotoSansJP-400.ttf",
+          "sha256": "f037d714109f22d57ce75fd9a6b9d23439c903061fb11106c070b2dcc03f2021"
+        },
+        {
+          "weight": 700,
+          "file": "NotoSansJP-700.ttf",
+          "sha256": "59bb5d2915bba3a256950116e7a48a810bd8cde63793d5111b9e5726eec1e799"
+        }
+      ],
+      "fontUsage": {
+        "em": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 13
+          }
+        ],
+        "strong": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Bold",
+            "isCustomFont": true,
+            "glyphCount": 18
+          }
+        ],
+        "mark": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 15
+          }
+        ]
+      },
+      "environment": {
+        "node": "v25.6.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "chromium": "145.0.7632.6",
+        "playwright": "1.58.2",
+        "viewport": [
+          1280,
+          720
+        ],
+        "deviceScaleFactor": 1
+      },
+      "slides": [
+        {
+          "text": "\nEmphasis / importance / reference\n\n強調・重要・注目を​使い分ける\n\n\n強調：文の​中で​力点を​置く\n今回比較するのは，​同じ​測定条件での​結果です．\n*emphasis*\n重要：結論や​注意の​重み\n別の​条件への​一般化は​未検証です．\n**important**\n\n\n注目：説明で​取り上げる​範囲\n原文​「結果は​同じ​測定条件に​限り​有効である」\n<mark>reference</mark>\n複数行でも​注目範囲を​保つ\n原文​「同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件への​一般化は​示していない」\n\n\nText treatment examples\n",
+          "class": "normal",
+          "pagination": [
+            "1",
+            "2"
+          ],
+          "items": [
+            {
+              "tag": "EM",
+              "text": "​同じ​測定条件での​結果",
+              "weight": "400",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 274,
+                  "y": 190.921875,
+                  "width": 260,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 216.821875,
+                  "bottom": 227.921875,
+                  "height": 11.100000000000001
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "STRONG",
+              "text": "別の​条件への​一般化は​未検証です",
+              "weight": "700",
+              "color": "rgb(180, 83, 9)",
+              "background": "none",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px",
+              "decoration": "slice",
+              "boxes": [
+                {
+                  "x": 40,
+                  "y": 363.484375,
+                  "width": 390,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 363.484375,
+                  "bottom": 400.484375,
+                  "height": 37
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "MARK",
+              "text": "​同じ​測定条件に​限り​有効",
+              "weight": "400",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px 5.2px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 809,
+                  "y": 190.921875,
+                  "width": 296.375,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 216.821875,
+                  "bottom": 227.921875,
+                  "height": 11.100000000000001
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "MARK",
+              "text": "同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件への​一般化は​示していない",
+              "weight": "400",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px 5.2px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 731,
+                  "y": 363.484375,
+                  "width": 450.375,
+                  "height": 37
+                },
+                {
+                  "x": 653,
+                  "y": 402.484375,
+                  "width": 478.375,
+                  "height": 37
+                },
+                {
+                  "x": 653,
+                  "y": 441.484375,
+                  "width": 165.375,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 389.384375,
+                  "bottom": 400.484375,
+                  "height": 11.100000000000001
+                },
+                {
+                  "top": 428.384375,
+                  "bottom": 439.484375,
+                  "height": 11.100000000000001
+                },
+                {
+                  "top": 467.384375,
+                  "bottom": 478.484375,
+                  "height": 11.100000000000001
+                }
+              ],
+              "gaps": [
+                27.899999999999977,
+                27.899999999999977
+              ]
+            }
+          ]
+        },
+        {
+          "text": "\nEmphasis / importance / reference\n\n暗い​背景でも​役割を​区別する\n\n\n強調：文の​中で​力点を​置く\n今回比較するのは，​同じ​測定条件での​結果です．\n*emphasis*\n重要：結論や​注意の​重み\n別の​条件への​一般化は​未検証です．\n**important**\n\n\n注目：説明で​取り上げる​範囲\n原文​「結果は​同じ​測定条件に​限り​有効である」\n<mark>reference</mark>\n複数行でも​注目範囲を​保つ\n原文​「同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件への​一般化は​示していない」\n\n\nText treatment examples\n",
+          "class": "normal invert",
+          "pagination": [
+            "2",
+            "2"
+          ],
+          "items": [
+            {
+              "tag": "EM",
+              "text": "​同じ​測定条件での​結果",
+              "weight": "400",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 274,
+                  "y": 190.921875,
+                  "width": 260,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 216.821875,
+                  "bottom": 227.921875,
+                  "height": 11.100000000000001
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "STRONG",
+              "text": "別の​条件への​一般化は​未検証です",
+              "weight": "700",
+              "color": "rgb(253, 186, 116)",
+              "background": "none",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px",
+              "decoration": "slice",
+              "boxes": [
+                {
+                  "x": 40,
+                  "y": 363.484375,
+                  "width": 390,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 363.484375,
+                  "bottom": 400.484375,
+                  "height": 37
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "MARK",
+              "text": "​同じ​測定条件に​限り​有効",
+              "weight": "400",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px 5.2px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 809,
+                  "y": 190.921875,
+                  "width": 296.375,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 216.821875,
+                  "bottom": 227.921875,
+                  "height": 11.100000000000001
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "MARK",
+              "text": "同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件への​一般化は​示していない",
+              "weight": "400",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px 5.2px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 731,
+                  "y": 363.484375,
+                  "width": 450.375,
+                  "height": 37
+                },
+                {
+                  "x": 653,
+                  "y": 402.484375,
+                  "width": 478.375,
+                  "height": 37
+                },
+                {
+                  "x": 653,
+                  "y": 441.484375,
+                  "width": 165.375,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 389.384375,
+                  "bottom": 400.484375,
+                  "height": 11.100000000000001
+                },
+                {
+                  "top": 428.384375,
+                  "bottom": 439.484375,
+                  "height": 11.100000000000001
+                },
+                {
+                  "top": 467.384375,
+                  "bottom": 478.484375,
+                  "height": 11.100000000000001
+                }
+              ],
+              "gaps": [
+                27.899999999999977,
+                27.899999999999977
+              ]
+            }
+          ]
+        }
+      ],
+      "images": [
+        {
+          "file": "before-light.png",
+          "sha256": "f38477e097d7554e26dd383b27a6cad3fc9053f314e388a95a12fd3c92f3fef2",
+          "bytes": 124181
+        },
+        {
+          "file": "before-dark.png",
+          "sha256": "b8b7977f918bc9742820255f2802d3778f8787962460b850040d017ee0b75404",
+          "bytes": 125888
+        }
+      ]
+    },
+    "after": {
+      "label": "after",
+      "input": {
+        "file": "fixtures/lab-emphasis-slide.md",
+        "sha256": "966f4cb86a7d8de2bc2f2a7b2f4d4964637c7c772aec63417cffcf098553c512"
+      },
+      "css": {
+        "file": "styles/after.css.gz",
+        "sha256": "047746a7162717bcf83157a7ab1cbd02841aa2947df01706128c5a0e9696f84e"
+      },
+      "fonts": [
+        {
+          "weight": 400,
+          "file": "NotoSansJP-400.ttf",
+          "sha256": "f037d714109f22d57ce75fd9a6b9d23439c903061fb11106c070b2dcc03f2021"
+        },
+        {
+          "weight": 700,
+          "file": "NotoSansJP-700.ttf",
+          "sha256": "59bb5d2915bba3a256950116e7a48a810bd8cde63793d5111b9e5726eec1e799"
+        }
+      ],
+      "fontUsage": {
+        "em": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 13
+          }
+        ],
+        "strong": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Bold",
+            "isCustomFont": true,
+            "glyphCount": 18
+          }
+        ],
+        "mark": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 15
+          }
+        ]
+      },
+      "environment": {
+        "node": "v25.6.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "chromium": "145.0.7632.6",
+        "playwright": "1.58.2",
+        "viewport": [
+          1280,
+          720
+        ],
+        "deviceScaleFactor": 1
+      },
+      "slides": [
+        {
+          "text": "\nEmphasis / importance / reference\n\n強調・重要・注目を​使い分ける\n\n\n強調：文の​中で​力点を​置く\n今回比較するのは，​同じ​測定条件での​結果です．\n*emphasis*\n重要：結論や​注意の​重み\n別の​条件への​一般化は​未検証です．\n**important**\n\n\n注目：説明で​取り上げる​範囲\n原文​「結果は​同じ​測定条件に​限り​有効である」\n<mark>reference</mark>\n複数行でも​注目範囲を​保つ\n原文​「同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件への​一般化は​示していない」\n\n\nText treatment examples\n",
+          "class": "normal",
+          "pagination": [
+            "1",
+            "2"
+          ],
+          "items": [
+            {
+              "tag": "EM",
+              "text": "​同じ​測定条件での​結果",
+              "weight": "400",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 274,
+                  "y": 190.921875,
+                  "width": 260,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 216.821875,
+                  "bottom": 227.921875,
+                  "height": 11.100000000000001
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "STRONG",
+              "text": "別の​条件への​一般化は​未検証です",
+              "weight": "700",
+              "color": "rgb(180, 83, 9)",
+              "background": "none",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px",
+              "decoration": "slice",
+              "boxes": [
+                {
+                  "x": 40,
+                  "y": 363.484375,
+                  "width": 390,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 363.484375,
+                  "bottom": 400.484375,
+                  "height": 37
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "MARK",
+              "text": "​同じ​測定条件に​限り​有効",
+              "weight": "400",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 10%, rgba(215, 182, 0, 0.24) 10%, rgba(215, 182, 0, 0.24) 90%, rgba(0, 0, 0, 0) 90%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px 2.08px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 809,
+                  "y": 190.921875,
+                  "width": 290.15625,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 194.621875,
+                  "bottom": 224.221875,
+                  "height": 29.6
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "MARK",
+              "text": "同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件への​一般化は​示していない",
+              "weight": "400",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 10%, rgba(215, 182, 0, 0.24) 10%, rgba(215, 182, 0, 0.24) 90%, rgba(0, 0, 0, 0) 90%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px 2.08px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 731,
+                  "y": 363.484375,
+                  "width": 444.15625,
+                  "height": 37
+                },
+                {
+                  "x": 653,
+                  "y": 402.484375,
+                  "width": 472.15625,
+                  "height": 37
+                },
+                {
+                  "x": 653,
+                  "y": 441.484375,
+                  "width": 159.15625,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 367.184375,
+                  "bottom": 396.784375,
+                  "height": 29.6
+                },
+                {
+                  "top": 406.184375,
+                  "bottom": 435.784375,
+                  "height": 29.6
+                },
+                {
+                  "top": 445.184375,
+                  "bottom": 474.784375,
+                  "height": 29.6
+                }
+              ],
+              "gaps": [
+                9.399999999999977,
+                9.399999999999977
+              ]
+            }
+          ]
+        },
+        {
+          "text": "\nEmphasis / importance / reference\n\n暗い​背景でも​役割を​区別する\n\n\n強調：文の​中で​力点を​置く\n今回比較するのは，​同じ​測定条件での​結果です．\n*emphasis*\n重要：結論や​注意の​重み\n別の​条件への​一般化は​未検証です．\n**important**\n\n\n注目：説明で​取り上げる​範囲\n原文​「結果は​同じ​測定条件に​限り​有効である」\n<mark>reference</mark>\n複数行でも​注目範囲を​保つ\n原文​「同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件への​一般化は​示していない」\n\n\nText treatment examples\n",
+          "class": "normal invert",
+          "pagination": [
+            "2",
+            "2"
+          ],
+          "items": [
+            {
+              "tag": "EM",
+              "text": "​同じ​測定条件での​結果",
+              "weight": "400",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 274,
+                  "y": 190.921875,
+                  "width": 260,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 216.821875,
+                  "bottom": 227.921875,
+                  "height": 11.100000000000001
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "STRONG",
+              "text": "別の​条件への​一般化は​未検証です",
+              "weight": "700",
+              "color": "rgb(253, 186, 116)",
+              "background": "none",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px",
+              "decoration": "slice",
+              "boxes": [
+                {
+                  "x": 40,
+                  "y": 363.484375,
+                  "width": 390,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 363.484375,
+                  "bottom": 400.484375,
+                  "height": 37
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "MARK",
+              "text": "​同じ​測定条件に​限り​有効",
+              "weight": "400",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 10%, rgba(250, 220, 90, 0.2) 10%, rgba(250, 220, 90, 0.2) 90%, rgba(0, 0, 0, 0) 90%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px 2.08px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 809,
+                  "y": 190.921875,
+                  "width": 290.15625,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 194.621875,
+                  "bottom": 224.221875,
+                  "height": 29.6
+                }
+              ],
+              "gaps": []
+            },
+            {
+              "tag": "MARK",
+              "text": "同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件への​一般化は​示していない",
+              "weight": "400",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 10%, rgba(250, 220, 90, 0.2) 10%, rgba(250, 220, 90, 0.2) 90%, rgba(0, 0, 0, 0) 90%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "padding": "0px 2.08px",
+              "decoration": "clone",
+              "boxes": [
+                {
+                  "x": 731,
+                  "y": 363.484375,
+                  "width": 444.15625,
+                  "height": 37
+                },
+                {
+                  "x": 653,
+                  "y": 402.484375,
+                  "width": 472.15625,
+                  "height": 37
+                },
+                {
+                  "x": 653,
+                  "y": 441.484375,
+                  "width": 159.15625,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "top": 367.184375,
+                  "bottom": 396.784375,
+                  "height": 29.6
+                },
+                {
+                  "top": 406.184375,
+                  "bottom": 435.784375,
+                  "height": 29.6
+                },
+                {
+                  "top": 445.184375,
+                  "bottom": 474.784375,
+                  "height": 29.6
+                }
+              ],
+              "gaps": [
+                9.399999999999977,
+                9.399999999999977
+              ]
+            }
+          ]
+        }
+      ],
+      "images": [
+        {
+          "file": "after-light.png",
+          "sha256": "e0e7918274d192e156f462b67e349ac9898d017cb5d9ae60eb76551c31fbf035",
+          "bytes": 132344
+        },
+        {
+          "file": "after-dark.png",
+          "sha256": "03dafcf8b3fc27e466753d115ba60298993229c619161df4963f13c2e3054e7d",
+          "bytes": 135081
+        }
+      ]
+    }
+  }
+}

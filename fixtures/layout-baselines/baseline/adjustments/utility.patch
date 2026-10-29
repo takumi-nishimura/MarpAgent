@@ -1,0 +1,5 @@
+--- a/fixtures/layout-baselines/slide.md
++++ b/fixtures/layout-baselines/slide.md
+@@ -98,1 +98,1 @@
+-<img src="assets/img/comparison-portrait.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
++<img src="assets/img/comparison-portrait.svg" class="max-h-full" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />

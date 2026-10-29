@@ -1,0 +1,959 @@
+{
+  "schemaVersion": 1,
+  "issue": "ISS-0049",
+  "capturedDate": "2026-10-21",
+  "input": {
+    "path": "fixtures/lab-typography-slide.md",
+    "sha256": "335257b06119520e5b6afcb2bff5c149bdc113912b362cf522729cfa09f55be3"
+  },
+  "environment": {
+    "node": "v25.6.0",
+    "chromium": "145.0.7632.6",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "dpr": 1,
+    "os": "Linux 5.15.167.4-microsoft-standard-WSL2 x64",
+    "versions": {
+      "@marp-team/marp-core": "5.0.2",
+      "@marp-team/marp-cli": "4.5.1",
+      "playwright": "1.58.2"
+    },
+    "remoteFonts": "blocked; fixed local 400/700 faces",
+    "fontconfigSha256": "89348d4038370edf287b3c555c4507da96fb821560c2029c273e9f777be6e28d"
+  },
+  "fonts": [
+    {
+      "weight": 400,
+      "file": "NotoSansJP-400.ttf",
+      "sha256": "f037d714109f22d57ce75fd9a6b9d23439c903061fb11106c070b2dcc03f2021",
+      "family": "Noto Sans JP",
+      "source": "https://fonts.gstatic.com/s/notosansjp/v57/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEj75s.ttf",
+      "bundled": false
+    },
+    {
+      "weight": 700,
+      "file": "NotoSansJP-700.ttf",
+      "sha256": "59bb5d2915bba3a256950116e7a48a810bd8cde63793d5111b9e5726eec1e799",
+      "family": "Noto Sans JP",
+      "source": "https://fonts.gstatic.com/s/notosansjp/v57/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFPYk75s.ttf",
+      "bundled": false
+    }
+  ],
+  "measurementMethod": "Inline getClientRects and computed background stops, in CSS px; band height is calculated from measured fragment height, not raster pixel counting.",
+  "captures": {
+    "before": {
+      "revision": "9836b76ece37b654259c408a47cf64ce5cd7436b",
+      "css": {
+        "file": "styles/before.css.gz",
+        "sha256": "7df07730347204c56a4086c2a00005d8287d30d0716c43457503fadd1fd6550e",
+        "archiveSha256": "5daa42c94f22687da755d1c344c49e6449486399fdb9cd6d59bccf1fe123fbb9"
+      },
+      "images": [
+        {
+          "file": "before-light.png",
+          "sha256": "e330c7a5db54700da279649f25e834739b0285bae18a9fdd663a9bffe237ebda",
+          "bytes": 131134
+        },
+        {
+          "file": "before-dark.png",
+          "sha256": "17c044e90780b348a5ed65b22943a1ca62b2ba31b2ca26fa9328673d0032a636",
+          "bytes": 98947
+        }
+      ],
+      "fontUsageOnLightSlide": {
+        "em": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 30
+          }
+        ],
+        ".marker": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 40
+          }
+        ],
+        "mark": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 4
+          }
+        ],
+        "strong": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Bold",
+            "isCustomFont": true,
+            "glyphCount": 8
+          }
+        ]
+      },
+      "slides": [
+        {
+          "slide": 2,
+          "text": "\nEvidence and qualification\n\n本文と​強調の​階層\n通常の​本文と​ 色​付きの​太字 を​同じ​文章で​比較する．​測定条件と​留保は​マーカーで​示し，​説明を​省略しない．\n\n\n同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件へ​そのまま​一般化できる​ことを​示してはいない．\n\n\n一行と​複数行の​マーカーを​，文字の​形と​区切りが​読める​状態で​維持する．​要確認 の​箇所は​本文でも​説明する．\n\n\n\n補足には​ラベルと​罫線を​残し，​色だけに​意味を​依存させない．\n\n\n[1] Generic fixture．​数値は​説明用であり，​研究結果を​表さない．\n\n",
+          "pagination": [
+            "1",
+            "3"
+          ],
+          "elements": [
+            {
+              "tag": "STRONG",
+              "class": "",
+              "text": "色​付きの​太字",
+              "weight": "700",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(180, 83, 9)",
+              "background": "none",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "slice",
+              "rects": [
+                {
+                  "left": 202,
+                  "top": 130.796875,
+                  "width": 156,
+                  "height": 37
+                }
+              ]
+            },
+            {
+              "tag": "EM",
+              "class": "",
+              "text": "​測定条件と​留保は​マーカーで​示し，​説明を​省略しない",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 650,
+                  "top": 130.796875,
+                  "width": 492,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 169.796875,
+                  "width": 130,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 650,
+                  "top": 156.696875,
+                  "width": 492,
+                  "height": 11.100000000000001,
+                  "bottom": 167.796875
+                },
+                {
+                  "left": 40,
+                  "top": 195.696875,
+                  "width": 130,
+                  "height": 11.100000000000001,
+                  "bottom": 206.796875
+                }
+              ]
+            },
+            {
+              "tag": "EM",
+              "class": "",
+              "text": "同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件へ​そのまま​一般化できる​ことを​示してはいない",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 40,
+                  "top": 234.796875,
+                  "width": 544,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 273.796875,
+                  "width": 571,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 312.796875,
+                  "width": 180,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 40,
+                  "top": 260.696875,
+                  "width": 544,
+                  "height": 11.100000000000001,
+                  "bottom": 271.796875
+                },
+                {
+                  "left": 40,
+                  "top": 299.696875,
+                  "width": 571,
+                  "height": 11.100000000000001,
+                  "bottom": 310.796875
+                },
+                {
+                  "left": 40,
+                  "top": 338.696875,
+                  "width": 180,
+                  "height": 11.100000000000001,
+                  "bottom": 349.796875
+                }
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "class": "marker",
+              "text": "一行と​複数行の​マーカーを​，文字の​形と​区切りが​読める​状態で​維持する",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 60%, color(srgb 0.819608 0.776471 0 / 0.4) 60%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 653,
+                  "top": 234.796875,
+                  "width": 572,
+                  "height": 37
+                },
+                {
+                  "left": 653,
+                  "top": 273.796875,
+                  "width": 260,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 653,
+                  "top": 256.996875,
+                  "width": 572,
+                  "height": 14.8,
+                  "bottom": 271.796875
+                },
+                {
+                  "left": 653,
+                  "top": 295.996875,
+                  "width": 260,
+                  "height": 14.8,
+                  "bottom": 310.796875
+                }
+              ]
+            },
+            {
+              "tag": "MARK",
+              "class": "",
+              "text": "​要確認",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "none",
+              "fill": "rgb(209, 198, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 939,
+                  "top": 273.796875,
+                  "width": 88.375,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 939,
+                  "top": 273.796875,
+                  "width": 88.375,
+                  "height": 37,
+                  "bottom": 310.796875
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slide": 4,
+          "text": "\nDark surface\n\n暗い​背景でも​強調を​読める\n通常の​本文と​ 色​付きの​太字 を​並べる．​測定条件と​留保を​示すマーカー と​ 要確認 を​保つ．\n\n\n複数行に​わたる​場合でも，​測定条件と​留保を​削らず，​同じ​文章を​同じ​順序で​読めるように​する．\n\n\n明るい​背景と​同じ​記法で​マーカーを​使い，​文字の​形を​維持する．\n\n\n\n\n\n条件\n観測値\n留保\n\n\n\n\nA\n12\n同一装置\n\n\nB\n15\n再測定が​必要\n\n\n\n",
+          "pagination": [
+            "3",
+            "3"
+          ],
+          "elements": [
+            {
+              "tag": "STRONG",
+              "class": "",
+              "text": "色​付きの​太字",
+              "weight": "700",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(253, 186, 116)",
+              "background": "none",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "slice",
+              "rects": [
+                {
+                  "left": 202,
+                  "top": 130.796875,
+                  "width": 156,
+                  "height": 37
+                }
+              ]
+            },
+            {
+              "tag": "EM",
+              "class": "",
+              "text": "​測定条件と​留保を​示すマーカー",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 494,
+                  "top": 130.796875,
+                  "width": 364,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 494,
+                  "top": 156.696875,
+                  "width": 364,
+                  "height": 11.100000000000001,
+                  "bottom": 167.796875
+                }
+              ]
+            },
+            {
+              "tag": "MARK",
+              "class": "",
+              "text": "要確認",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "none",
+              "fill": "rgb(209, 198, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 896,
+                  "top": 130.796875,
+                  "width": 88.375,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 896,
+                  "top": 130.796875,
+                  "width": 88.375,
+                  "height": 37,
+                  "bottom": 167.796875
+                }
+              ]
+            },
+            {
+              "tag": "EM",
+              "class": "",
+              "text": "複数行に​わたる​場合でも，​測定条件と​留保を​削らず，​同じ​文章を​同じ​順序で​読めるように​する",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 40,
+                  "top": 195.796875,
+                  "width": 519,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 234.796875,
+                  "width": 518,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 273.796875,
+                  "width": 52,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 40,
+                  "top": 221.696875,
+                  "width": 519,
+                  "height": 11.100000000000001,
+                  "bottom": 232.796875
+                },
+                {
+                  "left": 40,
+                  "top": 260.696875,
+                  "width": 518,
+                  "height": 11.100000000000001,
+                  "bottom": 271.796875
+                },
+                {
+                  "left": 40,
+                  "top": 299.696875,
+                  "width": 52,
+                  "height": 11.100000000000001,
+                  "bottom": 310.796875
+                }
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "class": "marker",
+              "text": "明るい​背景と​同じ​記法で​マーカーを​使い，​文字の​形を​維持する",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 60%, color(srgb 0.819608 0.776471 0 / 0.4) 60%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 653,
+                  "top": 195.796875,
+                  "width": 572,
+                  "height": 37
+                },
+                {
+                  "left": 653,
+                  "top": 234.796875,
+                  "width": 156,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 653,
+                  "top": 217.996875,
+                  "width": 572,
+                  "height": 14.8,
+                  "bottom": 232.796875
+                },
+                {
+                  "left": 653,
+                  "top": 256.996875,
+                  "width": 156,
+                  "height": 14.8,
+                  "bottom": 271.796875
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "runtimeReportSha256": "c439032092182dac4479bdb4d86f1c73517d9a36a20dc91aaae77f5ad9b4ca35"
+    },
+    "after": {
+      "revision": "b4938ca18176184b231b5e5e4d4ff1a0b521ce89",
+      "css": {
+        "file": "styles/after.css.gz",
+        "sha256": "e2bcf855df158db4293963f6a863c583355a4025df0ff43d173f484c8a94adae",
+        "archiveSha256": "56c2d410f9a291e854a1328bfffd87f5c082452088342db5c6aac70b497a2f38"
+      },
+      "images": [
+        {
+          "file": "after-light.png",
+          "sha256": "d99801a7b2d470edc165d108f5c6ba8cd08dd137e8487c554d71fff1af6eb84d",
+          "bytes": 129716
+        },
+        {
+          "file": "after-dark.png",
+          "sha256": "228b2ec1a077d1e0cf66eecbec8c1c81dbe19aba9f1e6d3d6d370e7d34ecd023",
+          "bytes": 97134
+        }
+      ],
+      "fontUsageOnLightSlide": {
+        "em": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 30
+          }
+        ],
+        ".marker": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 40
+          }
+        ],
+        "mark": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Regular",
+            "isCustomFont": true,
+            "glyphCount": 4
+          }
+        ],
+        "strong": [
+          {
+            "familyName": "Noto Sans JP",
+            "postScriptName": "NotoSansJP-Bold",
+            "isCustomFont": true,
+            "glyphCount": 8
+          }
+        ]
+      },
+      "slides": [
+        {
+          "slide": 2,
+          "text": "\nEvidence and qualification\n\n本文と​強調の​階層\n通常の​本文と​ 色​付きの​太字 を​同じ​文章で​比較する．​測定条件と​留保は​マーカーで​示し，​説明を​省略しない．\n\n\n同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件へ​そのまま​一般化できる​ことを​示してはいない．\n\n\n一行と​複数行の​マーカーを​，文字の​形と​区切りが​読める​状態で​維持する．​要確認 の​箇所は​本文でも​説明する．\n\n\n\n補足には​ラベルと​罫線を​残し，​色だけに​意味を​依存させない．\n\n\n[1] Generic fixture．​数値は​説明用であり，​研究結果を​表さない．\n\n",
+          "pagination": [
+            "1",
+            "3"
+          ],
+          "elements": [
+            {
+              "tag": "STRONG",
+              "class": "",
+              "text": "色​付きの​太字",
+              "weight": "700",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(180, 83, 9)",
+              "background": "none",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "slice",
+              "rects": [
+                {
+                  "left": 202,
+                  "top": 130.796875,
+                  "width": 156,
+                  "height": 37
+                }
+              ]
+            },
+            {
+              "tag": "EM",
+              "class": "",
+              "text": "​測定条件と​留保は​マーカーで​示し，​説明を​省略しない",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 650,
+                  "top": 130.796875,
+                  "width": 492,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 169.796875,
+                  "width": 130,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 650,
+                  "top": 156.696875,
+                  "width": 492,
+                  "height": 11.100000000000001,
+                  "bottom": 167.796875
+                },
+                {
+                  "left": 40,
+                  "top": 195.696875,
+                  "width": 130,
+                  "height": 11.100000000000001,
+                  "bottom": 206.796875
+                }
+              ]
+            },
+            {
+              "tag": "EM",
+              "class": "",
+              "text": "同じ​測定条件で​比較した​結果で​あり，​参加者や​装置が​異なる​条件へ​そのまま​一般化できる​ことを​示してはいない",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 40,
+                  "top": 234.796875,
+                  "width": 544,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 273.796875,
+                  "width": 571,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 312.796875,
+                  "width": 180,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 40,
+                  "top": 260.696875,
+                  "width": 544,
+                  "height": 11.100000000000001,
+                  "bottom": 271.796875
+                },
+                {
+                  "left": 40,
+                  "top": 299.696875,
+                  "width": 571,
+                  "height": 11.100000000000001,
+                  "bottom": 310.796875
+                },
+                {
+                  "left": 40,
+                  "top": 338.696875,
+                  "width": 180,
+                  "height": 11.100000000000001,
+                  "bottom": 349.796875
+                }
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "class": "marker",
+              "text": "一行と​複数行の​マーカーを​，文字の​形と​区切りが​読める​状態で​維持する",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 653,
+                  "top": 234.796875,
+                  "width": 572,
+                  "height": 37
+                },
+                {
+                  "left": 653,
+                  "top": 273.796875,
+                  "width": 260,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 653,
+                  "top": 260.696875,
+                  "width": 572,
+                  "height": 11.100000000000001,
+                  "bottom": 271.796875
+                },
+                {
+                  "left": 653,
+                  "top": 299.696875,
+                  "width": 260,
+                  "height": 11.100000000000001,
+                  "bottom": 310.796875
+                }
+              ]
+            },
+            {
+              "tag": "MARK",
+              "class": "",
+              "text": "​要確認",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(32, 34, 40)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 939,
+                  "top": 273.796875,
+                  "width": 88.375,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 939,
+                  "top": 299.696875,
+                  "width": 88.375,
+                  "height": 11.100000000000001,
+                  "bottom": 310.796875
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slide": 4,
+          "text": "\nDark surface\n\n暗い​背景でも​強調を​読める\n通常の​本文と​ 色​付きの​太字 を​並べる．​測定条件と​留保を​示すマーカー と​ 要確認 を​保つ．\n\n\n複数行に​わたる​場合でも，​測定条件と​留保を​削らず，​同じ​文章を​同じ​順序で​読めるように​する．\n\n\n明るい​背景と​同じ​記法で​マーカーを​使い，​文字の​形を​維持する．\n\n\n\n\n\n条件\n観測値\n留保\n\n\n\n\nA\n12\n同一装置\n\n\nB\n15\n再測定が​必要\n\n\n\n",
+          "pagination": [
+            "3",
+            "3"
+          ],
+          "elements": [
+            {
+              "tag": "STRONG",
+              "class": "",
+              "text": "色​付きの​太字",
+              "weight": "700",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(253, 186, 116)",
+              "background": "none",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "slice",
+              "rects": [
+                {
+                  "left": 202,
+                  "top": 130.796875,
+                  "width": 156,
+                  "height": 37
+                }
+              ]
+            },
+            {
+              "tag": "EM",
+              "class": "",
+              "text": "​測定条件と​留保を​示すマーカー",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 494,
+                  "top": 130.796875,
+                  "width": 364,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 494,
+                  "top": 156.696875,
+                  "width": 364,
+                  "height": 11.100000000000001,
+                  "bottom": 167.796875
+                }
+              ]
+            },
+            {
+              "tag": "MARK",
+              "class": "",
+              "text": "要確認",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 896,
+                  "top": 130.796875,
+                  "width": 88.375,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 896,
+                  "top": 156.696875,
+                  "width": 88.375,
+                  "height": 11.100000000000001,
+                  "bottom": 167.796875
+                }
+              ]
+            },
+            {
+              "tag": "EM",
+              "class": "",
+              "text": "複数行に​わたる​場合でも，​測定条件と​留保を​削らず，​同じ​文章を​同じ​順序で​読めるように​する",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 40,
+                  "top": 195.796875,
+                  "width": 519,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 234.796875,
+                  "width": 518,
+                  "height": 37
+                },
+                {
+                  "left": 40,
+                  "top": 273.796875,
+                  "width": 52,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 40,
+                  "top": 221.696875,
+                  "width": 519,
+                  "height": 11.100000000000001,
+                  "bottom": 232.796875
+                },
+                {
+                  "left": 40,
+                  "top": 260.696875,
+                  "width": 518,
+                  "height": 11.100000000000001,
+                  "bottom": 271.796875
+                },
+                {
+                  "left": 40,
+                  "top": 299.696875,
+                  "width": 52,
+                  "height": 11.100000000000001,
+                  "bottom": 310.796875
+                }
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "class": "marker",
+              "text": "明るい​背景と​同じ​記法で​マーカーを​使い，​文字の​形を​維持する",
+              "weight": "400",
+              "size": "26px",
+              "leading": "39px",
+              "color": "rgb(255, 255, 255)",
+              "background": "linear-gradient(rgba(0, 0, 0, 0) 70%, color(srgb 0.819608 0.776471 0 / 0.4) 70%)",
+              "fill": "rgba(0, 0, 0, 0)",
+              "decoration": "clone",
+              "rects": [
+                {
+                  "left": 653,
+                  "top": 195.796875,
+                  "width": 572,
+                  "height": 37
+                },
+                {
+                  "left": 653,
+                  "top": 234.796875,
+                  "width": 156,
+                  "height": 37
+                }
+              ],
+              "bands": [
+                {
+                  "left": 653,
+                  "top": 221.696875,
+                  "width": 572,
+                  "height": 11.100000000000001,
+                  "bottom": 232.796875
+                },
+                {
+                  "left": 653,
+                  "top": 260.696875,
+                  "width": 156,
+                  "height": 11.100000000000001,
+                  "bottom": 271.796875
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "runtimeReportSha256": "46338882f58f1653973c8240a6dff3edec57a8251980ff49f89b576dbf3a1764"
+    }
+  },
+  "comparison": {
+    "inputTextEqual": true,
+    "fragmentRectsEqual": true,
+    "fontUsageEqual": true,
+    "strongStyleAndRectsEqual": true,
+    "markerWeightBefore": "400",
+    "markerWeightAfter": "400",
+    "clearanceBeforePx": 2,
+    "clearanceAfterPx": 27.899999999999977,
+    "literalBackgroundOverlapBeforePx": 0
+  },
+  "checks": {
+    "red": {
+      "expectedBandHeightPx": 11.1,
+      "observedBandHeightPx": 14.8,
+      "failed": 1
+    },
+    "green": {
+      "browserPassed": 7,
+      "unitPassed": 27,
+      "skipped": 0,
+      "designErrors": 0,
+      "designWarnings": 0,
+      "tokensMatch": true
+    }
+  },
+  "archive": {
+    "representativePairs": 2,
+    "fontBinaryIncluded": false,
+    "originalHarnessSha256": "bfaaeea52766c6886cdc33759d91cba762ed9789526acf3d1a86b7adec969982",
+    "savedHarnessSha256": "3e28f5206bb80452aa172909b4c6a5d089a9f77517047e4e4f9357cb45e0e820"
+  }
+}

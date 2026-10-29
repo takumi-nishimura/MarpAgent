@@ -1,0 +1,54 @@
+{
+  "deckPath": "fixtures/overflow-heavy-slide.md",
+  "slideCount": 1,
+  "visualCheck": {
+    "status": "measured"
+  },
+  "counts": {
+    "errors": 1,
+    "warnings": 1,
+    "hints": 1
+  },
+  "findings": [
+    {
+      "slide": 1,
+      "renderedSlide": 1,
+      "sectionId": "1",
+      "page": null,
+      "line": 5,
+      "ruleId": "dense-bullets",
+      "severity": "info",
+      "source": "heuristic",
+      "title": "Slide contains 20 top-level bullet items.",
+      "suggestion": "Split the list into multiple slides or group the bullets into a smaller number of takeaways."
+    },
+    {
+      "slide": 1,
+      "renderedSlide": 1,
+      "sectionId": "1",
+      "page": null,
+      "line": 5,
+      "ruleId": "content-clipped",
+      "severity": "error",
+      "source": "render",
+      "title": "Visible content extends past the slide edge by up to 194px: \"Point twenty: Closing remarks a…\" (bottom 194px), \"Point nineteen: Risk assessment…\" (bottom 152px), \"Point eighteen: Budget consider…\" (bottom 110px) and 2 more.",
+      "suggestion": "Resize or move the listed elements, trim the slide, or split it so everything fits inside the canvas."
+    },
+    {
+      "slide": 1,
+      "renderedSlide": 1,
+      "sectionId": "1",
+      "page": null,
+      "line": 5,
+      "ruleId": "edge-crowding",
+      "severity": "warning",
+      "source": "render",
+      "title": "Content sits within the 20px safe margin of the slide edge: \"Point fifteen: Questions for th…\" (bottom 17px).",
+      "suggestion": "Leave breathing room at the edge: trim or rebalance the content, or move the element inward."
+    }
+  ],
+  "artifactErrors": [],
+  "screenshots": [
+    "overflow.png"
+  ]
+}

@@ -2,6 +2,35 @@
 
 Keep media ownership and per-file cross-deck symlinks consistent with repository AGENTS.md. Verify local paths, captions, and source attribution. For PDF output, check a useful static representation of video when the user needs printable content.
 
+## Discover and reuse existing media
+
+Search existing media before creating a replacement. The catalog reads
+repository shared assets, deck assets, and source references without editing
+them. Keep hidden slide identities separate from displayed pages. Private and
+Git-ignored paths are excluded by default, including symlink targets; include
+them only through an explicit local `--include-private` request.
+
+```bash
+marpx assets search "caption or filename" --repo /path/to/repo --format json
+marpx assets list --repo /path/to/repo --used-by decks/talk/slide.md --preview
+
+# List consumers before changing or deleting an owned source.
+marpx assets list --repo /path/to/repo --uses decks/owner/assets/img/figure.svg
+
+# Inspect the planned relative file link before creating it.
+marpx assets reuse decks/owner/assets/img/figure.svg \
+  decks/talk/assets/img/from-owner-figure.svg --repo /path/to/repo --dry-run
+```
+
+When the user has selected symlink reuse, run the same reuse command without
+`--dry-run`. Preserve the selected source, use a named destination file, and
+never replace an existing file or link. Report symlink/platform failures rather
+than copying silently. Hash matches are candidates, not ownership decisions or
+permission to deduplicate. Use `assets doctor` for broken/absolute/cyclic links,
+repo escapes, directory reuse, and symlinks checked out as regular text files.
+Preview output stays in the system temporary directory. See
+`docs/media-assets.md` and `docs/media-reference-api.md` for the full contract.
+
 ## Figures and Media
 
 ```markdown
@@ -28,6 +57,48 @@ Video:
 <figcaption>Demo video</figcaption>
 </figure>
 ```
+
+### Fit media and its caption to the remaining body
+
+On a regular slide, select the caption-aware defaults with one direct `.body`
+wrapper. `.body.box` is a single area; `.body.col.visual` supports a figure
+beside its interpretation. A multiline heading above the body or a multiline
+caption reduces the media area while keeping the text's natural height.
+
+```markdown
+## Result under the tested condition
+
+<div class="body box">
+<figure>
+<img src="assets/img/result.png" alt="Describe the result" />
+<figcaption>Source and conditions needed to interpret the figure</figcaption>
+</figure>
+</div>
+```
+
+Direct image, video, and SVG children of a figure share the remaining media
+height with `contain` defaults. Multiple figures in a `.box` or column share
+the column's remaining height and keep their own captions. Keep a continuous
+height chain: use `.box.fill` or `.col.fill` for a nested growing area instead
+of an anonymous wrapper or `height: 100%` beside a caption.
+
+Choose the column ratio with `--visual-left/right` first, then adjust
+`--body-gap` or `--figure-gap` on the relevant wrapper. `--visual-gap` sets
+the visual column gap. A whole fixed-height figure may use
+`style="flex: none; height: 280px"`; its caption is included in that height.
+Use `style="flex: 2"` to allocate more height to one stacked figure. Allow
+extra `--body-bottom-safe` for a tall footnote/footer.
+
+To keep an intentionally fixed inline image/video size inside the new body,
+use `<figure class="figure-natural">`. Existing `.fill`-only slides keep their
+current behavior without migration. Explicit inline crop (`object-fit: cover`,
+`object-position`) still works in a fitting figure; preserve authored SVG
+viewport settings. Do not add crop to solve overflow. If text itself cannot
+fit, revise or split after rendering. The body leaves excess content visible
+to diagnostics instead of shrinking text or enabling scroll.
+
+Title, paper, and `_scroll` slides use their existing layout contracts. Full
+defaults and migration examples are in `docs/theme-contract.md`.
 
 ## Mermaid Diagrams
 

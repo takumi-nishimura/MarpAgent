@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="280" viewBox="0 0 640 280">
+  <title>Fictional comparison: A 52, B 68, arbitrary units</title>
+  <rect width="640" height="280" fill="#fff"/>
+  <g font-family="Noto Sans JP, sans-serif" font-size="24" fill="#202228">
+    <text x="28" y="36">架空の比較（任意単位）</text>
+    <text x="28" y="105">条件A</text><text x="28" y="185">条件B</text>
+    <text x="466" y="105">52</text><text x="562" y="185">68</text>
+    <text x="28" y="256">入力条件：共通</text>
+  </g>
+  <path d="M140 50V214H610" fill="none" stroke="#202228" stroke-width="2"/>
+  <path d="M140 72H452V114H140Z" fill="#37577b"/>
+  <path d="M140 152H548V194H140Z" fill="#9c4a20"/>
+</svg>
