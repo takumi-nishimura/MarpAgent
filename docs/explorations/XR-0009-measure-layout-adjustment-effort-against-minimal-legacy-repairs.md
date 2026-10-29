@@ -21,20 +21,29 @@ issues: ["ISS-0047"]
 artifacts:
   revisions:
     - 6a6c9433cc0f893b20d5f40fbfa52d990591d103
+    - c8dece4
+    - 62cfcab2a9a17b2c51669496548f68c59a00c8e8
   manifests:
+    - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/manifest.json
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/manifest.json
   results:
+    - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/README.md
+    - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/run/summary.json
+    - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/review.md
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/README.md
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/run/summary.json
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/run/all-trials.json.gz
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/review.md
   commands:
+    - node docs/evidence/ISS-0047-footnote-reserve-2026-10-30/compare.cjs --verify
     - node docs/evidence/ISS-0047-layout-comparison-2026-10-30/rerun.cjs --verify
     - node --test tests/unit/theme-css.test.js tests/unit/body-class-contract.test.js tests/unit/canvas-size.test.js tests/unit/layout-baselines.test.js tests/unit/scroll-slides.test.js
     - npm run test:e2e -- tests/e2e/body-layout.spec.js tests/e2e/layout-compatibility.spec.js tests/e2e/body-exports.spec.js tests/e2e/composition-utilities.spec.js --project=chromium --workers=1
 ---
 
 # Measure layout adjustment effort against minimal legacy repairs
+
+このXRは2段階を分けて記録する．ContextからObserved Resultsまでは，実装変更前に `c8dece4` で固定したPhase 1の比較である．その証跡は不変とし，後段のPhase 2に本人が続けて指示した直下脚注reserveの限定修正を記録する．広い完了条件が未達という結論とinconclusive状態は両段階を通して維持する．
 
 ## Context and Question
 
@@ -95,20 +104,36 @@ PNG22枚を直接確認し，ラベル・数値・矢印・caption・強調・�
 
 図が大きくなることと読みやすさは同義ではない．このfixtureは架空の低密度図であり，実際の研究図や投影距離への一般化，作業時間の短縮は測っていない．選択規則は有限候補に対するもので，すべてのlegacy構造やCSSに対する最小性は主張しない．
 
+## Phase 2：直下脚注の実測reserve（2026-10-30）
+
+本人の追加指示を受け，Phase 1を固定した後にlab長脚注の個別reserveを不要にする限定修正を行った．[別の証跡](../evidence/ISS-0047-footnote-reserve-2026-10-30/README.md)と実装commit `62cfcab` を参照する．新しいIDは採番していない．
+
+4行脚注でbody下端672pxが脚注上端628.625pxに侵入する回帰テストを先に失敗させた．脚注の絶対位置とbodyローカルのbottom-safeを保持するため，flowへ移さず既存の描画script経路で境界を測る．実測reserveと著者指定の最低値の大きい方を使い，source order・文字設定・paginationを変えない．JSが動くMarpAgent描画が条件であり，CSS単独／JS無効では手動reserveが必要である．native footer，入れ子脚注，legacy，title，paper，scrollを自動測定対象に広げていない．
+
+固定font・同じrecipeの63ケースを再測定した．beforeはPhase 1のbody既定全metricと一致した．afterでは54ケースが不変で，長脚注9ケースのbodyだけが縮んだ．body下端はlab654.8125px，muji665.3125px，toshiba664pxとなり，脚注との離隔は各13／12／13pxである．脚注自身の境界・文字設定，内容・typography hash，行数，列幅，gap，source order，paginationを保持し，全63ケースが境界とauditの条件を満たした．
+
+lab長脚注familyの著者が選ぶreserve値1つ（3caseの宣言出現数3件）が不要になった．見出し／caption増加時の再調整は前後とも0件であり，旧方式との標準36組の指定負担も変わらない．wrapper／class／gap parameterを減らしたわけではない．runtimeは直下脚注のある18caseにprivate計算値を1つずつ生成するため，著者が選ぶ固定寸法0件と実行時宣言18件を区別する．
+
+unit85件，strict Chromium79件が成功しskip0．後者は共有browser.lock下で，3テーマ×16:9／4:3，見出し・caption増加，動的脚注，縮尺・非表示復帰，明示crop，legacy／title／paper／scroll，portableを含む．別のEnglish入力のHTML／PNG12枚／PDF6本12ページも確認し，PDFの文字・境界を独立に抽出した．PNGとPDF描画の[直接確認範囲](../evidence/ISS-0047-footnote-reserve-2026-10-30/review.md)は列挙してある．最終の全体gateはleadに委ねる．
+
+この修正で図は少し小さくなる．長脚注のafterラベルは31.74〜37.88pxで，muji脚注は9.6pxのまま細かい．読みやすさ全般，投影距離，作業時間を改善したとは主張しない．JavaScriptへの依存と自動算出処理の追加が，脚注の絶対位置・明示余白を保つための具体的な交換条件である．
+
 ## Conclusion
 
 `inconclusive`．限定的なbodyの効果は実測したが，ISS-0047の標準例に関する最後の完了条件は満たさない．既存実装の受入を取り消す判断でも，狭い条件へ受入基準を変更する判断でもない．ISS-0047はin-progressと未チェック項目を維持する．
 
-標準4例に追加修復がない以上，広い削減を示すためだけに共通CSSを変える根拠はなかった．今回は共有実装，依存，workflowを変更せず，必要な脚注調整と実証できた限界を利用文書に追加した．
+標準4例に追加修復がない以上，広い削減を示すためだけに共通CSSを変える根拠はなかった．Phase 1では共有実装，依存，workflowを変更せず，必要な脚注調整と実証できた限界を利用文書に追加した．Phase 2では直下脚注の実測reserveだけを改善したが，標準例の一般的削減を示す結果には変わらない．
 
 ## Reusable Findings
 
 * figure単体・結果には `.body` 1 wrapper，gridには `.fill` と図側の `.box` で足りる．不要なwrapper/classを新方式にも加えない．
 * `gap-4` からの移行は同じ `calc(var(--spacing) * 4)` を使う．theme内remのMarp変換とinline remの違いを見落とすと構図を固定できない．
 * 幅utilityはcaption由来のfigure幅にも影響される．文字の増加時に図内ラベルの実寸を再確認する．
-* 固定48px reserveを任意長脚注の自動測定と解釈しない．56pxはこの例の修正値であり，普遍的な既定値ではない．
+* Phase 1の固定48px reserveは自動測定ではなく，56pxはその原稿の修正値だった．Phase 2ではMarpAgent描画時の直下脚注だけを実測する．CSS単独では従来の手動指定が必要である．
 
 ## Artifacts
+
+* [Phase 2の測定・実装検証](../evidence/ISS-0047-footnote-reserve-2026-10-30/README.md)，[実PNG／PDF](../evidence/ISS-0047-footnote-reserve-2026-10-30/exports/)
 
 * [比較報告と再実行harness](../evidence/ISS-0047-layout-comparison-2026-10-30/README.md)
 * [63組の要約](../evidence/ISS-0047-layout-comparison-2026-10-30/run/summary.json)，[全993候補](../evidence/ISS-0047-layout-comparison-2026-10-30/run/all-trials.json.gz)，[選択原稿6本](../evidence/ISS-0047-layout-comparison-2026-10-30/run/inputs/)

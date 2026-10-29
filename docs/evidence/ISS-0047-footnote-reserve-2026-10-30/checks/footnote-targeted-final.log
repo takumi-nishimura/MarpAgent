@@ -1,0 +1,95 @@
+
+> marpagent@1.0.0 test:e2e
+> playwright test tests/e2e/body-layout.spec.js tests/e2e/body-footnotes.spec.js tests/e2e/body-footnote-exports.spec.js tests/e2e/layout-compatibility.spec.js tests/e2e/body-exports.spec.js tests/e2e/composition-utilities.spec.js tests/e2e/scroll-slides.spec.js tests/e2e/portable-bundle.spec.js --project=chromium --workers=1 --reporter=line --output=.cache/footnote-targeted-final
+
+
+Running 79 tests using 1 worker
+
+[1A[2K(node:621455) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:621455) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/79] [chromium] › tests/e2e/body-exports.spec.js:11:1 › body compositions keep media and captions inside HTML, image, and PDF exports
+[1A[2K[2/79] [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › lab 16:9: long direct footnotes survive HTML, PNG, and PDF exports
+[1A[2K[3/79] [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › lab 4:3: long direct footnotes survive HTML, PNG, and PDF exports
+[1A[2K[4/79] [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › muji 16:9: long direct footnotes survive HTML, PNG, and PDF exports
+[1A[2K[5/79] [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › muji 4:3: long direct footnotes survive HTML, PNG, and PDF exports
+[1A[2K[6/79] [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › toshiba 16:9: long direct footnotes survive HTML, PNG, and PDF exports
+[1A[2K[7/79] [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › toshiba 4:3: long direct footnotes survive HTML, PNG, and PDF exports
+[1A[2K[8/79] [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › lab 16:9: direct footnotes reserve their actual height through heading and caption growth
+[1A[2K[9/79] [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › lab 4:3: direct footnotes reserve their actual height through heading and caption growth
+[1A[2K[10/79] [chromium] › tests/e2e/body-footnotes.spec.js:94:5 › lab: source order, explicit reserve, late footnote growth, and print keep the contract
+[1A[2K[11/79] [chromium] › tests/e2e/body-footnotes.spec.js:117:5 › lab: natural figures and explicit crop dimensions remain authored
+[1A[2K[12/79] [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › muji 16:9: direct footnotes reserve their actual height through heading and caption growth
+[1A[2K[13/79] [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › muji 4:3: direct footnotes reserve their actual height through heading and caption growth
+[1A[2K[14/79] [chromium] › tests/e2e/body-footnotes.spec.js:94:5 › muji: source order, explicit reserve, late footnote growth, and print keep the contract
+[1A[2K[15/79] [chromium] › tests/e2e/body-footnotes.spec.js:117:5 › muji: natural figures and explicit crop dimensions remain authored
+[1A[2K[16/79] [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › toshiba 16:9: direct footnotes reserve their actual height through heading and caption growth
+[1A[2K[17/79] [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › toshiba 4:3: direct footnotes reserve their actual height through heading and caption growth
+[1A[2K[18/79] [chromium] › tests/e2e/body-footnotes.spec.js:94:5 › toshiba: source order, explicit reserve, late footnote growth, and print keep the contract
+[1A[2K[19/79] [chromium] › tests/e2e/body-footnotes.spec.js:117:5 › toshiba: natural figures and explicit crop dimensions remain authored
+[1A[2K[20/79] [chromium] › tests/e2e/body-footnotes.spec.js:138:1 › scaled and temporarily hidden slides recalculate added and removed direct notes
+[1A[2K[21/79] [chromium] › tests/e2e/body-footnotes.spec.js:156:1 › legacy, title, paper, and scroll keep their footnote mechanisms
+[1A[2K[22/79] [chromium] › tests/e2e/body-footnotes.spec.js:165:1 › excessive required text stays visible to diagnostics with a direct footnote
+[1A[2K[23/79] [chromium] › tests/e2e/body-layout.spec.js:61:5 › lab: nested fill preserves both placement axes in equal-height columns
+[1A[2K[24/79] [chromium] › tests/e2e/body-layout.spec.js:94:9 › lab 16:9: body gives an extra heading or caption line space before fitting media
+[1A[2K[25/79] [chromium] › tests/e2e/body-layout.spec.js:94:9 › lab 4:3: body gives an extra heading or caption line space before fitting media
+[1A[2K[26/79] [chromium] › tests/e2e/body-layout.spec.js:61:5 › muji: nested fill preserves both placement axes in equal-height columns
+[1A[2K[27/79] [chromium] › tests/e2e/body-layout.spec.js:94:9 › muji 16:9: body gives an extra heading or caption line space before fitting media
+[1A[2K[28/79] [chromium] › tests/e2e/body-layout.spec.js:94:9 › muji 4:3: body gives an extra heading or caption line space before fitting media
+[1A[2K[29/79] [chromium] › tests/e2e/body-layout.spec.js:61:5 › toshiba: nested fill preserves both placement axes in equal-height columns
+[1A[2K[30/79] [chromium] › tests/e2e/body-layout.spec.js:94:9 › toshiba 16:9: body gives an extra heading or caption line space before fitting media
+[1A[2K[31/79] [chromium] › tests/e2e/body-layout.spec.js:94:9 › toshiba 4:3: body gives an extra heading or caption line space before fitting media
+[1A[2K[32/79] [chromium] › tests/e2e/body-layout.spec.js:113:1 › body without a header and a heading inside a column shares the remaining area with stacked figures
+[1A[2K[33/79] [chromium] › tests/e2e/body-layout.spec.js:138:1 › stacked image, SVG, and video share a figure without displacing its caption
+[1A[2K[34/79] [chromium] › tests/e2e/body-layout.spec.js:162:1 › body keeps genuinely oversized text visible to rendered diagnostics
+[1A[2K[35/79] [chromium] › tests/e2e/body-layout.spec.js:174:1 › natural figures keep authored inline dimensions and fitting figures keep explicit crop
+[1A[2K[36/79] [chromium] › tests/e2e/composition-utilities.spec.js:72:5 › lab: representative baseline keeps evidence and composition
+[1A[2K[37/79] [chromium] › tests/e2e/composition-utilities.spec.js:292:5 › lab: utilities compose unequal columns without adding card styling
+[1A[2K[38/79] [chromium] › tests/e2e/composition-utilities.spec.js:370:5 › lab: flex rows size and align plain wrappers
+[1A[2K[39/79] [chromium] › tests/e2e/composition-utilities.spec.js:72:5 › muji: representative baseline keeps evidence and composition
+[1A[2K[40/79] [chromium] › tests/e2e/composition-utilities.spec.js:292:5 › muji: utilities compose unequal columns without adding card styling
+[1A[2K[41/79] [chromium] › tests/e2e/composition-utilities.spec.js:370:5 › muji: flex rows size and align plain wrappers
+[1A[2K[42/79] [chromium] › tests/e2e/composition-utilities.spec.js:72:5 › toshiba: representative baseline keeps evidence and composition
+[1A[2K[43/79] [chromium] › tests/e2e/composition-utilities.spec.js:292:5 › toshiba: utilities compose unequal columns without adding card styling
+[1A[2K[44/79] [chromium] › tests/e2e/composition-utilities.spec.js:370:5 › toshiba: flex rows size and align plain wrappers
+[1A[2K[45/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › lab: legacy col.fill preserves authored widths and place-top
+[1A[2K[46/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › lab: legacy col.fill preserves authored widths and place-middle
+[1A[2K[47/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › lab: legacy col.fill preserves authored widths and place-bottom
+[1A[2K[48/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › lab: legacy col.fill preserves authored widths and place-spread
+[1A[2K[49/79] [chromium] › tests/e2e/layout-compatibility.spec.js:114:5 › lab: legacy box.fill keeps an explicitly sized, cropped figure
+[1A[2K[50/79] [chromium] › tests/e2e/layout-compatibility.spec.js:192:5 › lab: legacy title fill stays on canvas without resetting title margins
+[1A[2K[51/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › muji: legacy col.fill preserves authored widths and place-top
+[1A[2K[52/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › muji: legacy col.fill preserves authored widths and place-middle
+[1A[2K[53/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › muji: legacy col.fill preserves authored widths and place-bottom
+[1A[2K[54/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › muji: legacy col.fill preserves authored widths and place-spread
+[1A[2K[55/79] [chromium] › tests/e2e/layout-compatibility.spec.js:114:5 › muji: legacy box.fill keeps an explicitly sized, cropped figure
+[1A[2K[56/79] [chromium] › tests/e2e/layout-compatibility.spec.js:192:5 › muji: legacy title fill stays on canvas without resetting title margins
+[1A[2K[57/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › toshiba: legacy col.fill preserves authored widths and place-top
+[1A[2K[58/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › toshiba: legacy col.fill preserves authored widths and place-middle
+[1A[2K[59/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › toshiba: legacy col.fill preserves authored widths and place-bottom
+[1A[2K[60/79] [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › toshiba: legacy col.fill preserves authored widths and place-spread
+[1A[2K[61/79] [chromium] › tests/e2e/layout-compatibility.spec.js:114:5 › toshiba: legacy box.fill keeps an explicitly sized, cropped figure
+[1A[2K[62/79] [chromium] › tests/e2e/layout-compatibility.spec.js:192:5 › toshiba: legacy title fill stays on canvas without resetting title margins
+[1A[2K[63/79] [chromium] › tests/e2e/portable-bundle.spec.js:113:1 › relocated bundle loads every displayed page and CSS/SVG/media with remote networking blocked
+[1A[2K[64/79] [chromium] › tests/e2e/portable-bundle.spec.js:327:1 › Mermaid font dependencies are disclosed, rejected by strict offline, and blocked during relocated viewing
+[1A[2K[65/79] [chromium] › tests/e2e/portable-bundle.spec.js:418:1 › ZIP CLI excludes private symlink targets and resolver metadata while preserving existing output on rejection
+[1A[2K[66/79] [chromium] › tests/e2e/portable-bundle.spec.js:525:1 › ZIP CLI rejects a post-inspection symlink exchange before reading outside bytes
+[1A[2K[67/79] [chromium] › tests/e2e/scroll-slides.spec.js:132:1 › an opted-in body that fits keeps native vertical page navigation
+[1A[2K[68/79] [chromium] › tests/e2e/scroll-slides.spec.js:151:1 › wheel and vertical keys scroll only the body; navigation and fixed chrome remain intact
+[1A[2K[69/79] [chromium] › tests/e2e/scroll-slides.spec.js:223:1 › focused controls and body touch gestures are not turned into slide navigation
+[1A[2K[70/79] [chromium] › tests/e2e/scroll-slides.spec.js:264:1 › native touch panning reaches the body without a Bespoke swipe
+[1A[2K[71/79] [chromium] › tests/e2e/scroll-slides.spec.js:308:1 › late presenter joins, bidirectional normalized sync, resize, previews, and revisits
+[1A[2K[72/79] [chromium] › tests/e2e/scroll-slides.spec.js:367:1 › separate native sessions and deck paths are isolated; incoming values are validated
+[1A[2K[73/79] [chromium] › tests/e2e/scroll-slides.spec.js:426:1 › printing resets only the local viewport and never publishes the reset
+[1A[2K[74/79] [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › lab normal: bare HTML preserves canvas, fonts, components, and reachable body
+[1A[2K[75/79] [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › lab invert: bare HTML preserves canvas, fonts, components, and reachable body
+[1A[2K[76/79] [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › muji normal: bare HTML preserves canvas, fonts, components, and reachable body
+[1A[2K[77/79] [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › muji invert: bare HTML preserves canvas, fonts, components, and reachable body
+[1A[2K[78/79] [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › toshiba normal: bare HTML preserves canvas, fonts, components, and reachable body
+[1A[2K[79/79] [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › toshiba invert: bare HTML preserves canvas, fonts, components, and reachable body
+[1A[2K  79 passed (52.0s)

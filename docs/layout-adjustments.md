@@ -14,7 +14,7 @@
 | 図と説明の列比率 | `--visual-left`，`--visual-right` | `.col.visual` に指定する．既定の比率を必要なページだけ変える |
 | 図と説明の列間隔 | `--visual-gap` | `.col.visual` に指定する |
 | その他の列間隔 | `--col-gap` | `.col` に指定する |
-| 本文上端と下端の余白 | `--body-top-gap`，`--body-bottom-safe` | `section` に指定し，`.body` の共通配置へ継承する |
+| 本文上端と下端の余白 | `--body-top-gap`，`--body-bottom-safe` | `section` に指定し，`.body` の共通配置へ継承する．bottom-safeはbody自身にも指定できる最低余白 |
 | 本文内の間隔 | `--body-gap` | `section` に指定する．`.body` 内の配置規則で使う |
 | 図と caption の間隔 | `--figure-gap` | `figure` またはそれを含む `section` に指定する |
 | 箱内の縦配置 | `.place-top`，`.place-middle`，`.place-bottom`，`.place-spread` | `.box` または `.col > div` に付ける．親に余剰高さがあるときに差が出る |
@@ -125,11 +125,22 @@ section {
 変換するため，inlineの `1rem` と見た目が同じとは限らない．この比較のlabでは
 元のgapが26px，inline `1rem` が16pxだった．
 
-`.body` の既定48px reserveは，任意の長さの脚注高を自動測定するものではない．
-現行labの長脚注例では，脚注上端667.8125pxに対して本文要素下端672pxが入り込んだ．
+実装修正前のPhase 1では，`.body` の既定48px reserveは脚注高を自動測定しなかった．
+labの長脚注例では，脚注上端667.8125pxに対して本文要素下端672pxが入り込んだ．
 bodyに `style="--body-bottom-safe: 56px"` を指定すると，下端664pxとなった．
 56pxはこの原稿の修正値であり，新しい共通既定値ではない．脚注の文字を縮めず，
 本文・caption・脚注の実際の境界から値を決める．
+
+その後の[Phase 2修正](evidence/ISS-0047-footnote-reserve-2026-10-30/README.md)では，
+MarpAgentの通常の描画で `section > .footnote` の実際の境界とbodyのgapを確保する．
+`--body-bottom-safe` は最低余白として残し，実測reserveのほうが大きければそちらを使う．
+同じlab原稿は手動56pxなしで本文下端654.8125px，脚注との離隔13pxとなった．
+見出し・caption・脚注の文字とsource order，脚注の位置は保持し，本文の図領域が少し小さくなる．
+
+この自動測定にはMarpAgentのJavaScriptが必要である．theme CSSだけで使う場合や
+JavaScript無効時は，実際の描画から手動reserveを決める．native footerや入れ子脚注は
+自動測定の対象ではない．title／paper／scrollと従来のfillも既存の方式を維持する．
+細かい脚注を読みやすくする修正や，入らない本文を隠す処理ではない．
 
 今回の縦長列は旧方式でも `figure style="height: 460px"` の1宣言で全3テーマと
 見出し／caption増加を通過した．bodyはこの値の選択を省ける一方，wrapperとclassが増える．

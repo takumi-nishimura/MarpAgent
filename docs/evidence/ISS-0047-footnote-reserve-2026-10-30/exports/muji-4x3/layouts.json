@@ -1,0 +1,24 @@
+[
+  {
+    "width": 960,
+    "height": 720,
+    "safe": 11.25,
+    "noteBottom": 11.25,
+    "mediaHeight": 430.546875,
+    "captionGap": 11.25,
+    "captionClearance": 58.4912109375,
+    "text": "Source: fictional data; not a measured result.\nConditions: identical input for both values.\nLimit: no claim about another setting.\nAll qualifications remain visible.",
+    "page": "1"
+  },
+  {
+    "width": 960,
+    "height": 720,
+    "safe": 11.25,
+    "noteBottom": 11.25,
+    "mediaHeight": 360.3369140625,
+    "captionGap": 11.25,
+    "captionClearance": 58.4912109375,
+    "text": "Source: fictional data; not a measured result.\nConditions: identical input for both values.\nLimit: no claim about another setting.\nAll qualifications remain visible.",
+    "page": "2"
+  }
+]

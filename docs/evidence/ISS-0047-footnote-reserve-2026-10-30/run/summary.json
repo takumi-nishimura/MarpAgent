@@ -1,0 +1,2969 @@
+{
+  "conditions": {
+    "node": "25.6.0",
+    "marpCore": "5.0.2",
+    "playwright": "1.58.2",
+    "chromium": "145.0.7632.6",
+    "platform": "linux",
+    "architecture": "x64",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "deviceScaleFactor": 1,
+    "safeBodyBottom": 672,
+    "remoteFonts": "all HTTP(S) blocked",
+    "font": {
+      "name": "Noto Sans JP variable",
+      "sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf"
+    },
+    "svgFont": {
+      "sha256": "86fe6d5d8ebd71a87280cebfe32b6e200a73d22c5b5a496cc26bc3fd68c72d8b",
+      "format": "woff2",
+      "labels": "svg-labels.txt",
+      "fonttools": "4.67.0",
+      "brotli": "1.2.0"
+    },
+    "cssComparison": "Identical body markup with pinned pre-fix theme CSS versus the recorded post-fix CSS and runtime.",
+    "phase": "post-fix",
+    "baselineCommit": "c8dece4",
+    "implementationCommit": "62cfcab2a9a17b2c51669496548f68c59a00c8e8",
+    "repairs": "Default body only; no 56px override. Pre-fix CSS is paired with current engine; the new private reserve has no consumer in that CSS. All prior body-default metrics are independently matched."
+  },
+  "fontUse": [
+    {
+      "theme": "lab",
+      "phase": "before",
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 18
+        }
+      ]
+    },
+    {
+      "theme": "lab",
+      "phase": "after",
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 18
+        }
+      ]
+    },
+    {
+      "theme": "muji",
+      "phase": "before",
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 18
+        }
+      ]
+    },
+    {
+      "theme": "muji",
+      "phase": "after",
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 18
+        }
+      ]
+    },
+    {
+      "theme": "toshiba",
+      "phase": "before",
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 18
+        }
+      ]
+    },
+    {
+      "theme": "toshiba",
+      "phase": "after",
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 18
+        }
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "theme": "lab",
+      "case": "figure-standard--base",
+      "family": "figure-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          43.46651785714286
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          43.46651785714286
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "0c9e15f159f8163fe3c86a1dedd9437ca37bacd6ae66e92c34265767c813c69d",
+        "typographySha256": "fedf427d07a96af4b2a027ac48468470e38065deb6e7090c80f3c58bb983b1a7"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "figure-standard--heading",
+      "family": "figure-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          39.45535714285714
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          39.45535714285714
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "741ac1c9b07d9ba0ebe6dcf355098d0ef92d884adef86275f84cdf7bd553c176",
+        "typographySha256": "0acee184fbcaa6d73758dce2ea5c6293edf65578f7e6c05b785118a93775be31"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "figure-standard--caption",
+      "family": "figure-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          41.29419642857143
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          41.29419642857143
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d76db4b995cef248afccd9409a82dee107a7bdee07056a514d5300921f5dc5bf",
+        "typographySha256": "8135122e939b9ea3838db0fa82670fe6ed7ef858db79fa97d4a078904c6cd2fe"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "columns-standard--base",
+      "family": "columns-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          29.512500000000003
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          29.512500000000003
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "9c9d85c96b30fb982d2d2b0765b17f03f61827cb9e9f68482b50c61e69654a7e",
+        "typographySha256": "72082af19d5f015c0d54fb5d0bb5f857163506132e49f371a3e343fb043b74fe"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "columns-standard--heading",
+      "family": "columns-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          29.512500000000003
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          29.512500000000003
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "c78adfd0e721a3ceece51d3eac9d0abd7bead4bbffde6162d395fd519f006278",
+        "typographySha256": "482f043ec39db293925263ae46bdc43ffe3b825a79881c262f51701f019e0e73"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "columns-standard--caption",
+      "family": "columns-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          29.512500000000003
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          29.512500000000003
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d507a18d6cb415577ba4f4aa9042fca4ac23855cc4dc2aedd70a47c64400f972",
+        "typographySha256": "8feed4ef772fa6a77027b77a45465d42f02af8f067e8599d85d87de313efedeb"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "stack-standard--base",
+      "family": "stack-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          47.68076923076923,
+          47.684134615384615
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          47.68076923076923,
+          47.684134615384615
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "aff91e3f4d5096953c9ead6d4b6606cf8d7d87ceae6079ee58891462ec0a7940",
+        "typographySha256": "7309c478a85188d6fcbd2f8fdb7278ef964b0887486bf5331d73c09726e159f3"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "stack-standard--heading",
+      "family": "stack-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          42.64278846153846,
+          42.64278846153846
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          42.64278846153846,
+          42.64278846153846
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "3f7ff23c4076d1c3ff4f9806c5c8aa7dba2815a45e2a1fe29a2c3405c2357630",
+        "typographySha256": "9925b0536da5d6162cf029f3e7f181ab613511543cced597cf76bf19135e38a1"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "stack-standard--caption",
+      "family": "stack-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          47.68076923076923,
+          42.22548076923077
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          47.68076923076923,
+          42.22548076923077
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          2
+        ],
+        "textSha256": "b5a304380b1d1254ecef2c718dff0db8842e0a7138a15a8bfbc712d6cc10bb52",
+        "typographySha256": "fd43f680233a7f0f7956b5e17122f4f249d7288727a3d0febdf41975a85a1804"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "results-standard--base",
+      "family": "results-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 687.40625,
+          "bottom": 707,
+          "width": 1176,
+          "height": 19.59375
+        },
+        "labelPx": [
+          37.895089285714285
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 687.40625,
+          "bottom": 707,
+          "width": 1176,
+          "height": 19.59375
+        },
+        "gap": 13,
+        "labelPx": [
+          37.895089285714285
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "0ecf1df29cbef1da484617e95120210266646677d77d8ad6dcb2d696ffa02493",
+        "typographySha256": "ea9ec4bb28ee86d8a8afa232021a1b8c62961c88099ed7ade6b56ecf018b1e41"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "results-standard--heading",
+      "family": "results-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 687.40625,
+          "bottom": 707,
+          "width": 1176,
+          "height": 19.59375
+        },
+        "labelPx": [
+          33.88392857142857
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 687.40625,
+          "bottom": 707,
+          "width": 1176,
+          "height": 19.59375
+        },
+        "gap": 13,
+        "labelPx": [
+          33.88392857142857
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "8430b2ab069633e7099d94712ae65572f1d7193c19c8010a06d28ef1c3ac18e5",
+        "typographySha256": "b7fef83bc6619717d50cb56bd033ca08fde921fe6c290a360ae879c4ad9a4d52"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "results-standard--caption",
+      "family": "results-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 687.40625,
+          "bottom": 707,
+          "width": 1176,
+          "height": 19.59375
+        },
+        "labelPx": [
+          35.722767857142856
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 687.40625,
+          "bottom": 707,
+          "width": 1176,
+          "height": 19.59375
+        },
+        "gap": 13,
+        "labelPx": [
+          35.722767857142856
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "4f3efe21ebd8e7178d4158de2bcf007008567300990d3e795cda5fdf23166c0f",
+        "typographySha256": "8a30978c125da2cb65dafbaae7848950b758d6b7ce317cec8de40b5a09133dac"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "columns-portrait--base",
+      "family": "columns-portrait",
+      "growth": "base",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          19.0166015625
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          19.0166015625
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "9c9d85c96b30fb982d2d2b0765b17f03f61827cb9e9f68482b50c61e69654a7e",
+        "typographySha256": "72082af19d5f015c0d54fb5d0bb5f857163506132e49f371a3e343fb043b74fe"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "columns-portrait--heading",
+      "family": "columns-portrait",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          17.26171875
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          17.26171875
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "c78adfd0e721a3ceece51d3eac9d0abd7bead4bbffde6162d395fd519f006278",
+        "typographySha256": "482f043ec39db293925263ae46bdc43ffe3b825a79881c262f51701f019e0e73"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "columns-portrait--caption",
+      "family": "columns-portrait",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          18.066210937500003
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          18.066210937500003
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d507a18d6cb415577ba4f4aa9042fca4ac23855cc4dc2aedd70a47c64400f972",
+        "typographySha256": "8feed4ef772fa6a77027b77a45465d42f02af8f067e8599d85d87de313efedeb"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "stack-taller-media--base",
+      "family": "stack-taller-media",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          47.68076923076923,
+          23.842067307692307
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          47.68076923076923,
+          23.842067307692307
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "aff91e3f4d5096953c9ead6d4b6606cf8d7d87ceae6079ee58891462ec0a7940",
+        "typographySha256": "7309c478a85188d6fcbd2f8fdb7278ef964b0887486bf5331d73c09726e159f3"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "stack-taller-media--heading",
+      "family": "stack-taller-media",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          42.64278846153846,
+          21.32139423076923
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          42.64278846153846,
+          21.32139423076923
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "3f7ff23c4076d1c3ff4f9806c5c8aa7dba2815a45e2a1fe29a2c3405c2357630",
+        "typographySha256": "9925b0536da5d6162cf029f3e7f181ab613511543cced597cf76bf19135e38a1"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "stack-taller-media--caption",
+      "family": "stack-taller-media",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          47.68076923076923,
+          21.112740384615385
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          47.68076923076923,
+          21.112740384615385
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          2
+        ],
+        "textSha256": "b5a304380b1d1254ecef2c718dff0db8842e0a7138a15a8bfbc712d6cc10bb52",
+        "typographySha256": "fd43f680233a7f0f7956b5e17122f4f249d7288727a3d0febdf41975a85a1804"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "results-footnote-wrap--base",
+      "family": "results-footnote-wrap",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 1,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 667.8125,
+          "bottom": 707,
+          "width": 1176,
+          "height": 39.1875
+        },
+        "labelPx": [
+          37.895089285714285
+        ],
+        "problems": [
+          "footnote-intrusion"
+        ]
+      },
+      "after": {
+        "bodyBottom": 654.8125,
+        "footnote": {
+          "left": 52,
+          "top": 667.8125,
+          "bottom": 707,
+          "width": 1176,
+          "height": 39.1875
+        },
+        "gap": 13,
+        "labelPx": [
+          36.421875
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "4a3589d7c62c20f8724d18d1acba8f00c66f19b7825f02d5c24c7dad8d146952",
+        "typographySha256": "1d1e7f627d8998680bd2b837e56473d2921f0c83a8b1ee7d18fe1aea6d3077aa"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "results-footnote-wrap--heading",
+      "family": "results-footnote-wrap",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 1,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 667.8125,
+          "bottom": 707,
+          "width": 1176,
+          "height": 39.1875
+        },
+        "labelPx": [
+          33.88392857142857
+        ],
+        "problems": [
+          "footnote-intrusion"
+        ]
+      },
+      "after": {
+        "bodyBottom": 654.8125,
+        "footnote": {
+          "left": 52,
+          "top": 667.8125,
+          "bottom": 707,
+          "width": 1176,
+          "height": 39.1875
+        },
+        "gap": 13,
+        "labelPx": [
+          32.410714285714285
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "63f6f00f5aa3192d2c9895c1ec3b7122007e305e6e68b5a276453f7e5ff8d897",
+        "typographySha256": "afe46c3202975d6948403da9778738309edf9855e621cb2cccd7c9df0db00e49"
+      }
+    },
+    {
+      "theme": "lab",
+      "case": "results-footnote-wrap--caption",
+      "family": "results-footnote-wrap",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 1,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 667.8125,
+          "bottom": 707,
+          "width": 1176,
+          "height": 39.1875
+        },
+        "labelPx": [
+          35.722767857142856
+        ],
+        "problems": [
+          "footnote-intrusion"
+        ]
+      },
+      "after": {
+        "bodyBottom": 654.8125,
+        "footnote": {
+          "left": 52,
+          "top": 667.8125,
+          "bottom": 707,
+          "width": 1176,
+          "height": 39.1875
+        },
+        "gap": 13,
+        "labelPx": [
+          34.24955357142857
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "a19cf596d6254c5b39095540646d7b37111fb941e9ee4c19670d2e8206913e9f",
+        "typographySha256": "68e1d8db338bc4b59adfad24a6e47fe82ced9467956f17c25414442a77252bc2"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "figure-standard--base",
+      "family": "figure-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          43.8
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          43.8
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "0c9e15f159f8163fe3c86a1dedd9437ca37bacd6ae66e92c34265767c813c69d",
+        "typographySha256": "13abf29e58cd0bc17aa281a5b9f1882c7b2c392487d318b40dac7d618ee22091"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "figure-standard--heading",
+      "family": "figure-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          39.35758928571428
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          39.35758928571428
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "741ac1c9b07d9ba0ebe6dcf355098d0ef92d884adef86275f84cdf7bd553c176",
+        "typographySha256": "bccf47d2bf05e786510cf71b3fc971dcd53daa29f06386c62c0f48b48cca3ff6"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "figure-standard--caption",
+      "family": "figure-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          41.82589285714286
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          41.82589285714286
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d76db4b995cef248afccd9409a82dee107a7bdee07056a514d5300921f5dc5bf",
+        "typographySha256": "e7752a38731a6afa1900edca78d8df59859f15b56b14b8489f68d00260fbcf12"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "columns-standard--base",
+      "family": "columns-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          28.749609375000002
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          28.749609375000002
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "9c9d85c96b30fb982d2d2b0765b17f03f61827cb9e9f68482b50c61e69654a7e",
+        "typographySha256": "0126d8e38812dc49678473eb858153c5626f144fe075a2589e79ebfadd201ae6"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "columns-standard--heading",
+      "family": "columns-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          28.749609375000002
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          28.749609375000002
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "c78adfd0e721a3ceece51d3eac9d0abd7bead4bbffde6162d395fd519f006278",
+        "typographySha256": "f810d53bc7333933f6c42f41eb694df3ad0127c4d242b9aafb2a1efbf7f73f37"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "columns-standard--caption",
+      "family": "columns-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          28.749609375000002
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          28.749609375000002
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d507a18d6cb415577ba4f4aa9042fca4ac23855cc4dc2aedd70a47c64400f972",
+        "typographySha256": "83717a9f0bd5a3b6bc8523fe58468ee67aee67fa7fb11caeaf56b3916d7146f7"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "stack-standard--base",
+      "family": "stack-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          48.673557692307696,
+          48.673557692307696
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 24,
+        "labelPx": [
+          48.673557692307696,
+          48.673557692307696
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "aff91e3f4d5096953c9ead6d4b6606cf8d7d87ceae6079ee58891462ec0a7940",
+        "typographySha256": "16f8dc928ede9b69c826ecc243a93e4eb30c8d0b20ad628e90550d306ef42daf"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "stack-standard--heading",
+      "family": "stack-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          43.090384615384615,
+          43.090384615384615
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 24,
+        "labelPx": [
+          43.090384615384615,
+          43.090384615384615
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "3f7ff23c4076d1c3ff4f9806c5c8aa7dba2815a45e2a1fe29a2c3405c2357630",
+        "typographySha256": "a823ce29ea897febecc2dac2a30114ee1a3060b8376a6539e6b0b10bc5f15ce9"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "stack-standard--caption",
+      "family": "stack-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          48.673557692307696,
+          43.70961538461538
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 24,
+        "labelPx": [
+          48.673557692307696,
+          43.70961538461538
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          2
+        ],
+        "textSha256": "b5a304380b1d1254ecef2c718dff0db8842e0a7138a15a8bfbc712d6cc10bb52",
+        "typographySha256": "a629bd4bfc83c9d4d76a54ff35e2cd70034fdba1c3a4a77c649b408d49db6147"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "results-standard--base",
+      "family": "results-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 692.65625,
+          "bottom": 708,
+          "width": 1184,
+          "height": 15.34375
+        },
+        "labelPx": [
+          38.45357142857143
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 692.65625,
+          "bottom": 708,
+          "width": 1184,
+          "height": 15.34375
+        },
+        "gap": 12,
+        "labelPx": [
+          38.45357142857143
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "0ecf1df29cbef1da484617e95120210266646677d77d8ad6dcb2d696ffa02493",
+        "typographySha256": "4b824287566335dfb2dd0a206ec50b2e4d4437ea8e70a525c54a7bf1c6d3350b"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "results-standard--heading",
+      "family": "results-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 692.65625,
+          "bottom": 708,
+          "width": 1184,
+          "height": 15.34375
+        },
+        "labelPx": [
+          34.00982142857143
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 692.65625,
+          "bottom": 708,
+          "width": 1184,
+          "height": 15.34375
+        },
+        "gap": 12,
+        "labelPx": [
+          34.00982142857143
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "8430b2ab069633e7099d94712ae65572f1d7193c19c8010a06d28ef1c3ac18e5",
+        "typographySha256": "39d8285f6f868cdf47412463fb157b6808f8aa332bfe33f7334a05fbd236b224"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "results-standard--caption",
+      "family": "results-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 692.65625,
+          "bottom": 708,
+          "width": 1184,
+          "height": 15.34375
+        },
+        "labelPx": [
+          36.478125000000006
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 692.65625,
+          "bottom": 708,
+          "width": 1184,
+          "height": 15.34375
+        },
+        "gap": 12,
+        "labelPx": [
+          36.478125000000006
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "4f3efe21ebd8e7178d4158de2bcf007008567300990d3e795cda5fdf23166c0f",
+        "typographySha256": "55ac2203b29e8af68b684b3d999001a2fee232c22ec235d31c6d63bb1067b6e9"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "columns-portrait--base",
+      "family": "columns-portrait",
+      "growth": "base",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          19.1630859375
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          19.1630859375
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "9c9d85c96b30fb982d2d2b0765b17f03f61827cb9e9f68482b50c61e69654a7e",
+        "typographySha256": "0126d8e38812dc49678473eb858153c5626f144fe075a2589e79ebfadd201ae6"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "columns-portrait--heading",
+      "family": "columns-portrait",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          17.218945312499997
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          17.218945312499997
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "c78adfd0e721a3ceece51d3eac9d0abd7bead4bbffde6162d395fd519f006278",
+        "typographySha256": "f810d53bc7333933f6c42f41eb694df3ad0127c4d242b9aafb2a1efbf7f73f37"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "columns-portrait--caption",
+      "family": "columns-portrait",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          18.298828125
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 12,
+        "labelPx": [
+          18.298828125
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d507a18d6cb415577ba4f4aa9042fca4ac23855cc4dc2aedd70a47c64400f972",
+        "typographySha256": "83717a9f0bd5a3b6bc8523fe58468ee67aee67fa7fb11caeaf56b3916d7146f7"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "stack-taller-media--base",
+      "family": "stack-taller-media",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          48.673557692307696,
+          24.336778846153848
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 24,
+        "labelPx": [
+          48.673557692307696,
+          24.336778846153848
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "aff91e3f4d5096953c9ead6d4b6606cf8d7d87ceae6079ee58891462ec0a7940",
+        "typographySha256": "16f8dc928ede9b69c826ecc243a93e4eb30c8d0b20ad628e90550d306ef42daf"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "stack-taller-media--heading",
+      "family": "stack-taller-media",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          43.090384615384615,
+          21.545192307692307
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 24,
+        "labelPx": [
+          43.090384615384615,
+          21.545192307692307
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "3f7ff23c4076d1c3ff4f9806c5c8aa7dba2815a45e2a1fe29a2c3405c2357630",
+        "typographySha256": "a823ce29ea897febecc2dac2a30114ee1a3060b8376a6539e6b0b10bc5f15ce9"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "stack-taller-media--caption",
+      "family": "stack-taller-media",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          48.673557692307696,
+          21.85480769230769
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 24,
+        "labelPx": [
+          48.673557692307696,
+          21.85480769230769
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          2
+        ],
+        "textSha256": "b5a304380b1d1254ecef2c718dff0db8842e0a7138a15a8bfbc712d6cc10bb52",
+        "typographySha256": "a629bd4bfc83c9d4d76a54ff35e2cd70034fdba1c3a4a77c649b408d49db6147"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "results-footnote-wrap--base",
+      "family": "results-footnote-wrap",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 677.3125,
+          "bottom": 708,
+          "width": 1184,
+          "height": 30.6875
+        },
+        "labelPx": [
+          38.45357142857143
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 665.3125,
+        "footnote": {
+          "left": 48,
+          "top": 677.3125,
+          "bottom": 708,
+          "width": 1184,
+          "height": 30.6875
+        },
+        "gap": 12,
+        "labelPx": [
+          37.88035714285714
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "4a3589d7c62c20f8724d18d1acba8f00c66f19b7825f02d5c24c7dad8d146952",
+        "typographySha256": "abff4d77cd66846c5795f67019b6a7be6348443096bec5f7c43a0d0448c9a359"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "results-footnote-wrap--heading",
+      "family": "results-footnote-wrap",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 677.3125,
+          "bottom": 708,
+          "width": 1184,
+          "height": 30.6875
+        },
+        "labelPx": [
+          34.00982142857143
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 665.3125,
+        "footnote": {
+          "left": 48,
+          "top": 677.3125,
+          "bottom": 708,
+          "width": 1184,
+          "height": 30.6875
+        },
+        "gap": 12,
+        "labelPx": [
+          33.43660714285714
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "63f6f00f5aa3192d2c9895c1ec3b7122007e305e6e68b5a276453f7e5ff8d897",
+        "typographySha256": "e4a8498256b05160576206f94dfff9087a541e95beb7104507f0da3fe2f0c106"
+      }
+    },
+    {
+      "theme": "muji",
+      "case": "results-footnote-wrap--caption",
+      "family": "results-footnote-wrap",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 48,
+          "top": 677.3125,
+          "bottom": 708,
+          "width": 1184,
+          "height": 30.6875
+        },
+        "labelPx": [
+          36.478125000000006
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 665.3125,
+        "footnote": {
+          "left": 48,
+          "top": 677.3125,
+          "bottom": 708,
+          "width": 1184,
+          "height": 30.6875
+        },
+        "gap": 12,
+        "labelPx": [
+          35.90491071428571
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "a19cf596d6254c5b39095540646d7b37111fb941e9ee4c19670d2e8206913e9f",
+        "typographySha256": "47d0ad210e703b6b93de94003e83d9fca60f8e2a7c355272336ab9693b88c037"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "figure-standard--base",
+      "family": "figure-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          42.621428571428574
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          42.621428571428574
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "0c9e15f159f8163fe3c86a1dedd9437ca37bacd6ae66e92c34265767c813c69d",
+        "typographySha256": "d80d663810b412716135a2c618ffe31b9ec5f8cf83329ca3fd3db2591a018d3e"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "figure-standard--heading",
+      "family": "figure-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          37.82142857142857
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          37.82142857142857
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "741ac1c9b07d9ba0ebe6dcf355098d0ef92d884adef86275f84cdf7bd553c176",
+        "typographySha256": "78e069da94adffaf31980d7d9929a79ac40022f293e2b1197b68d4967ae102b7"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "figure-standard--caption",
+      "family": "figure-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          40.73571428571429
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          40.73571428571429
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d76db4b995cef248afccd9409a82dee107a7bdee07056a514d5300921f5dc5bf",
+        "typographySha256": "9f2fcf91fe9e9311fac208ad03a9d369ff6b1c89fe6b36c0e7c8964d171ab2ea"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "columns-standard--base",
+      "family": "columns-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          28.712109374999997
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          28.712109374999997
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "9c9d85c96b30fb982d2d2b0765b17f03f61827cb9e9f68482b50c61e69654a7e",
+        "typographySha256": "10f4f99923dafb092a1889de6f506ba116799e1e6d18f9f5326918a33fc43af4"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "columns-standard--heading",
+      "family": "columns-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          28.712109374999997
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          28.712109374999997
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "c78adfd0e721a3ceece51d3eac9d0abd7bead4bbffde6162d395fd519f006278",
+        "typographySha256": "c3a7521e3bd0f0bc1f9920657d50ded1a4ebf5c1fab12ea81dae375bcea4d60e"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "columns-standard--caption",
+      "family": "columns-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          28.712109374999997
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          28.712109374999997
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d507a18d6cb415577ba4f4aa9042fca4ac23855cc4dc2aedd70a47c64400f972",
+        "typographySha256": "66ea0ac0528ca400b5c09534384aee981105c872f6956a5272fe8f2c6cbc7bfb"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "stack-standard--base",
+      "family": "stack-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          46.98076923076923,
+          46.98076923076923
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          46.98076923076923,
+          46.98076923076923
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "aff91e3f4d5096953c9ead6d4b6606cf8d7d87ceae6079ee58891462ec0a7940",
+        "typographySha256": "36cf0b49d6c75359a7337173e4b367c30c2e63d1e8146c83b32677268cfaadbc"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "stack-standard--heading",
+      "family": "stack-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          40.949999999999996,
+          40.949999999999996
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          40.949999999999996,
+          40.949999999999996
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "3f7ff23c4076d1c3ff4f9806c5c8aa7dba2815a45e2a1fe29a2c3405c2357630",
+        "typographySha256": "8fc6f0f152f2b5114cdd465fbf1830a809ea8a2c3f4ac372525ce3eec1dbdb9d"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "stack-standard--caption",
+      "family": "stack-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          46.98076923076923,
+          42.24230769230769
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          46.98076923076923,
+          42.24230769230769
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          2
+        ],
+        "textSha256": "b5a304380b1d1254ecef2c718dff0db8842e0a7138a15a8bfbc712d6cc10bb52",
+        "typographySha256": "f2c1871f5922c2f597ce7514a27bf92614c527a1e3d789a391915e4368716e0e"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "results-standard--base",
+      "family": "results-standard",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 692,
+          "bottom": 707,
+          "width": 1176,
+          "height": 15
+        },
+        "labelPx": [
+          37.22142857142857
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 692,
+          "bottom": 707,
+          "width": 1176,
+          "height": 15
+        },
+        "gap": 13,
+        "labelPx": [
+          37.22142857142857
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "0ecf1df29cbef1da484617e95120210266646677d77d8ad6dcb2d696ffa02493",
+        "typographySha256": "6b659d7f12b5038236aaa630284f4a24830ce315edf61e0da4df44f3cb768cd7"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "results-standard--heading",
+      "family": "results-standard",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 692,
+          "bottom": 707,
+          "width": 1176,
+          "height": 15
+        },
+        "labelPx": [
+          32.42142857142857
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 692,
+          "bottom": 707,
+          "width": 1176,
+          "height": 15
+        },
+        "gap": 13,
+        "labelPx": [
+          32.42142857142857
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "8430b2ab069633e7099d94712ae65572f1d7193c19c8010a06d28ef1c3ac18e5",
+        "typographySha256": "337e6530ddf2eb3d72e7f2edab6a882b02a72961842949598cc412184d346f07"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "results-standard--caption",
+      "family": "results-standard",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 692,
+          "bottom": 707,
+          "width": 1176,
+          "height": 15
+        },
+        "labelPx": [
+          35.33571428571429
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 692,
+          "bottom": 707,
+          "width": 1176,
+          "height": 15
+        },
+        "gap": 13,
+        "labelPx": [
+          35.33571428571429
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "4f3efe21ebd8e7178d4158de2bcf007008567300990d3e795cda5fdf23166c0f",
+        "typographySha256": "6f6d5bff942f893d0f2359399dc977b05a22b594c8ff2792e680f73c8788efe9"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "columns-portrait--base",
+      "family": "columns-portrait",
+      "growth": "base",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          18.646875
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          18.646875
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "9c9d85c96b30fb982d2d2b0765b17f03f61827cb9e9f68482b50c61e69654a7e",
+        "typographySha256": "10f4f99923dafb092a1889de6f506ba116799e1e6d18f9f5326918a33fc43af4"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "columns-portrait--heading",
+      "family": "columns-portrait",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          16.546875
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          16.546875
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "c78adfd0e721a3ceece51d3eac9d0abd7bead4bbffde6162d395fd519f006278",
+        "typographySha256": "c3a7521e3bd0f0bc1f9920657d50ded1a4ebf5c1fab12ea81dae375bcea4d60e"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "columns-portrait--caption",
+      "family": "columns-portrait",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 4,
+        "classTokens": 11,
+        "layoutClassTokens": 11,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          17.821875
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 13,
+        "labelPx": [
+          17.821875
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "d507a18d6cb415577ba4f4aa9042fca4ac23855cc4dc2aedd70a47c64400f972",
+        "typographySha256": "66ea0ac0528ca400b5c09534384aee981105c872f6956a5272fe8f2c6cbc7bfb"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "stack-taller-media--base",
+      "family": "stack-taller-media",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          46.98076923076923,
+          23.490384615384617
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          46.98076923076923,
+          23.490384615384617
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "aff91e3f4d5096953c9ead6d4b6606cf8d7d87ceae6079ee58891462ec0a7940",
+        "typographySha256": "36cf0b49d6c75359a7337173e4b367c30c2e63d1e8146c83b32677268cfaadbc"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "stack-taller-media--heading",
+      "family": "stack-taller-media",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          40.949999999999996,
+          20.474999999999998
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          40.949999999999996,
+          20.474999999999998
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1,
+          1
+        ],
+        "textSha256": "3f7ff23c4076d1c3ff4f9806c5c8aa7dba2815a45e2a1fe29a2c3405c2357630",
+        "typographySha256": "8fc6f0f152f2b5114cdd465fbf1830a809ea8a2c3f4ac372525ce3eec1dbdb9d"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "stack-taller-media--caption",
+      "family": "stack-taller-media",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 1,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 1,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 1,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": true,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "labelPx": [
+          46.98076923076923,
+          21.121153846153845
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 672,
+        "footnote": null,
+        "gap": 26,
+        "labelPx": [
+          46.98076923076923,
+          21.121153846153845
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1,
+          2
+        ],
+        "textSha256": "b5a304380b1d1254ecef2c718dff0db8842e0a7138a15a8bfbc712d6cc10bb52",
+        "typographySha256": "f2c1871f5922c2f597ce7514a27bf92614c527a1e3d789a391915e4368716e0e"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "results-footnote-wrap--base",
+      "family": "results-footnote-wrap",
+      "growth": "base",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 677,
+          "bottom": 707,
+          "width": 1176,
+          "height": 30
+        },
+        "labelPx": [
+          37.22142857142857
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 664,
+        "footnote": {
+          "left": 52,
+          "top": 677,
+          "bottom": 707,
+          "width": 1176,
+          "height": 30
+        },
+        "gap": 13,
+        "labelPx": [
+          36.535714285714285
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "4a3589d7c62c20f8724d18d1acba8f00c66f19b7825f02d5c24c7dad8d146952",
+        "typographySha256": "fd157e37d0561766771c52f407b2317a53edf5dac18cbc7850e065defb0cb581"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "results-footnote-wrap--heading",
+      "family": "results-footnote-wrap",
+      "growth": "heading",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 677,
+          "bottom": 707,
+          "width": 1176,
+          "height": 30
+        },
+        "labelPx": [
+          32.42142857142857
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 664,
+        "footnote": {
+          "left": 52,
+          "top": 677,
+          "bottom": 707,
+          "width": 1176,
+          "height": 30
+        },
+        "gap": 13,
+        "labelPx": [
+          31.735714285714288
+        ],
+        "problems": [],
+        "headingLines": 2,
+        "captionLines": [
+          1
+        ],
+        "textSha256": "63f6f00f5aa3192d2c9895c1ec3b7122007e305e6e68b5a276453f7e5ff8d897",
+        "typographySha256": "612f0d987fcb10a4d2102e39f2e962bafb19cc8400148128d8ff8fa982aea059"
+      }
+    },
+    {
+      "theme": "toshiba",
+      "case": "results-footnote-wrap--caption",
+      "family": "results-footnote-wrap",
+      "growth": "caption",
+      "counts": {
+        "wrappers": 1,
+        "classTokens": 2,
+        "layoutClassTokens": 1,
+        "widthUtilities": 0,
+        "inlineDeclarations": 0,
+        "caseSizeDeclarations": 0,
+        "compositionParameters": 0,
+        "scopedRules": 0
+      },
+      "removedCaseSizeDeclarations": 0,
+      "unchanged": false,
+      "before": {
+        "bodyBottom": 672,
+        "footnote": {
+          "left": 52,
+          "top": 677,
+          "bottom": 707,
+          "width": 1176,
+          "height": 30
+        },
+        "labelPx": [
+          35.33571428571429
+        ],
+        "problems": []
+      },
+      "after": {
+        "bodyBottom": 664,
+        "footnote": {
+          "left": 52,
+          "top": 677,
+          "bottom": 707,
+          "width": 1176,
+          "height": 30
+        },
+        "gap": 13,
+        "labelPx": [
+          34.650000000000006
+        ],
+        "problems": [],
+        "headingLines": 1,
+        "captionLines": [
+          2
+        ],
+        "textSha256": "a19cf596d6254c5b39095540646d7b37111fb941e9ee4c19670d2e8206913e9f",
+        "typographySha256": "c2e6ca6bc9d48156326d79c53028b8fce1c7e49a1909b1de3444b8a1130a9320"
+      }
+    }
+  ]
+}

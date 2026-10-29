@@ -15,18 +15,23 @@ depends_on: ["ISS-0046"]
 supersedes: []
 artifacts:
   revisions:
+    - c8dece4
+    - 62cfcab2a9a17b2c51669496548f68c59a00c8e8
     - 6560cc4
     - 44a841d
   manifests:
+    - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/manifest.json
     - docs/evidence/ISS-0047-body-layout/manifest.json
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/manifest.json
   results:
+    - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/README.md
     - docs/theme-contract.md
     - docs/evidence/ISS-0047-body-layout/README.md
     - docs/evidence/ISS-0047-body-layout/summary.json
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/README.md
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/run/summary.json
   commands:
+    - node docs/evidence/ISS-0047-footnote-reserve-2026-10-30/compare.cjs --verify
     - node --test tests/unit/theme-css.test.js
     - npm run test:e2e -- tests/e2e/body-layout.spec.js tests/e2e/composition-utilities.spec.js --project=chromium --workers=1
     - npm run test:e2e -- tests/e2e/layout-compatibility.spec.js tests/e2e/body-exports.spec.js --project=chromium --workers=1
@@ -38,7 +43,15 @@ artifacts:
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
 
-## 追加比較 2026-10-30
+## 限定修正 2026-10-30：直下脚注reserve（Phase 2）
+
+本人の指示により，Phase 1比較をc8dece4で固定後，62cfcabで通常の.body内の残余領域から直下脚注の実測高とgapを確保する修正を加えた．脚注の絶対位置，source order，pagination，文字設定，bottom-safeの明示最低値を保持する．[修正後の証跡](../evidence/ISS-0047-footnote-reserve-2026-10-30/README.md)は別folderに置き，既存artifactは変更していない．
+
+63ケースのbeforeはPhase 1の全metricと一致した．afterは54ケース不変，長脚注9ケースだけbodyが縮んだ．labの脚注との離隔は−4.1875→13pxとなり，56pxという著者指定1値（3caseの宣言3件）が不要になった．wrapper／class／gap指定は変わらず，runtimeは脚注のある18caseに計算値を生成する．対象unit85件とstrict Chromium79件が成功し，3テーマ×2比率のHTML／PNG／PDFを検証した．最終全体gateはlead担当である．
+
+この効果はMarpAgentのJavaScriptが動く通常.bodyと直下.footnoteに限定する．CSS単独／JS無効では手動reserveが必要で，native footer，入れ子脚注，title，paper，scrollの方式は維持する．細かい脚注や図の読みやすさ自体は解決していない．広い個別指定削減の完了条件は未達であり，in-progressと未チェック項目を維持する．
+
+## 追加比較 2026-10-30（Phase 1：実装修正前）
 
 [XR-0009](../explorations/XR-0009-measure-layout-adjustment-effort-against-minimal-legacy-repairs.md)と
 [新しい証跡](../evidence/ISS-0047-layout-comparison-2026-10-30/README.md)に，
