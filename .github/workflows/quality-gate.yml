@@ -26,6 +26,15 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Setup pinned uv for records and test font preparation
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.13.1"
+
+      # Validate the whole record graph, including docs-only duplicate IDs.
+      - name: Validate record integrity
+        run: uv run .github/records.py validate
+
       # Keep a completed check on content-only PRs, without installing the engine.
       - name: Select engine checks
         id: changes
@@ -55,7 +64,7 @@ jobs:
 
       - name: Report content-only validation scope
         if: steps.changes.outputs.engine == 'false'
-        run: echo 'Deck/docs-only change; engine checks not selected. Run this workflow manually for full strict acceptance.' >> "$GITHUB_STEP_SUMMARY"
+        run: echo 'Record integrity passed. Deck/docs-only change; engine smoke and rendered acceptance were not run. See docs/ci.md for manual or local full acceptance before merge.' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Setup Node.js
         if: steps.changes.outputs.engine == 'true'
@@ -72,15 +81,13 @@ jobs:
         if: github.event_name != 'workflow_dispatch' && steps.changes.outputs.engine == 'true'
         run: npm run test:ci
 
+      - name: Report automatic engine validation scope
+        if: github.event_name != 'workflow_dispatch' && steps.changes.outputs.engine == 'true'
+        run: echo 'Record integrity and engine smoke passed. Full acceptance was not run. See docs/ci.md for manual or local full acceptance before merge.' >> "$GITHUB_STEP_SUMMARY"
+
       - name: Install Playwright browsers
         if: github.event_name == 'workflow_dispatch'
         run: npx playwright install --with-deps chromium firefox
-
-      - name: Setup pinned uv for test font preparation
-        if: github.event_name == 'workflow_dispatch'
-        uses: astral-sh/setup-uv@v6
-        with:
-          version: "0.13.1"
 
       - name: Install pinned D2 acceptance tools explicitly
         if: github.event_name == 'workflow_dispatch'

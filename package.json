@@ -9,7 +9,8 @@
   "scripts": {
     "marpx": "node bin/marpx.js",
     "test": "node scripts/run-node-tests.js",
-    "test:ci": "node --test tests/unit/runtime-version.test.js tests/unit/mise-config.test.js tests/unit/markdown-slides.test.js tests/unit/markdown-source.test.js tests/unit/slide-map.test.js tests/unit/canvas-size.test.js tests/unit/dependency-audit.test.js tests/unit/d2-diagnostics.test.js",
+    "test:ci": "node --test tests/unit/runtime-version.test.js tests/unit/mise-config.test.js tests/unit/markdown-slides.test.js tests/unit/markdown-source.test.js tests/unit/slide-map.test.js tests/unit/canvas-size.test.js tests/unit/dependency-audit.test.js tests/unit/d2-diagnostics.test.js tests/unit/ci-workflow.test.js",
+    "ci:full": "uv run .github/records.py validate && npm run test:d2 && npm run test:zip:d2 && npm run quality:gate:strict",
     "test:d2": "node --test tests/integration/d2-cli.test.js",
     "test:zip:d2": "node --test --test-isolation=none --test-reporter=spec tests/integration/portable-d2.test.js",
     "doctor": "node scripts/doctor.js",
