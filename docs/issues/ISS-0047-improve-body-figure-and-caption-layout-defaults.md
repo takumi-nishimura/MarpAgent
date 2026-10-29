@@ -4,7 +4,7 @@ title: "Improve body figure and caption layout defaults"
 type: issue
 status: in-progress
 date: "2026-10-21"
-updated: "2026-10-21"
+updated: "2026-10-30"
 authors:
   - codex-main-leader
 scope:
@@ -19,20 +19,40 @@ artifacts:
     - 44a841d
   manifests:
     - docs/evidence/ISS-0047-body-layout/manifest.json
+    - docs/evidence/ISS-0047-layout-comparison-2026-10-30/manifest.json
   results:
     - docs/theme-contract.md
     - docs/evidence/ISS-0047-body-layout/README.md
     - docs/evidence/ISS-0047-body-layout/summary.json
+    - docs/evidence/ISS-0047-layout-comparison-2026-10-30/README.md
+    - docs/evidence/ISS-0047-layout-comparison-2026-10-30/run/summary.json
   commands:
     - node --test tests/unit/theme-css.test.js
     - npm run test:e2e -- tests/e2e/body-layout.spec.js tests/e2e/composition-utilities.spec.js --project=chromium --workers=1
     - npm run test:e2e -- tests/e2e/layout-compatibility.spec.js tests/e2e/body-exports.spec.js --project=chromium --workers=1
     - node docs/evidence/ISS-0047-body-layout/rerun.cjs --verify
+    - node docs/evidence/ISS-0047-layout-comparison-2026-10-30/rerun.cjs --verify
 ---
 
 # Improve body figure and caption layout defaults
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
+
+## 追加比較 2026-10-30
+
+[XR-0009](../explorations/XR-0009-measure-layout-adjustment-effort-against-minimal-legacy-repairs.md)と
+[新しい証跡](../evidence/ISS-0047-layout-comparison-2026-10-30/README.md)に，
+標準4構図と既存の縦長図／縦積み高増加／長脚注について，元の内容・見出し＋1行・caption＋1行の21ケース×3テーマを保存した．
+同じ現行CSS，内容，フォント，文字設定，8:4の幅とgapを保ち，旧方式の既存幅utility全候補と固定高さ1宣言の代替を測った．
+
+標準36組は旧方式の修復・再調整が0件で，4枚1組のwrapperは4→7，classは12→15，gap parameterは0→1だった．
+縦長列9組ではbodyがcase固有サイズ1件を省けるが，旧 `height:460px` 1宣言も全増加条件を通り，再調整0件だった．
+現行labの長脚注ではbodyに `--body-bottom-safe:56px` 1宣言が必要となり，その負担も含めた．
+修正後の63組は収まり・内容・文字設定の照合に通り，PNG22枚の直接確認，対象unit49件，strict Chromiumのbody／互換／構図／export41件が成功した．
+
+広い個別指定削減は依然として支持されない．支持できるのは縦長列でcase固有サイズ値を選ばなくてよい範囲と，残余領域へ図を収める動作である．
+追加構造との交換条件を新しい完了条件として認めるか，既に複数の個別指定を持つ実原稿でさらに比較するかが未解決である．
+本ISSはin-progress，最後の完了条件は未チェックを維持し，歴史的な証跡・チェック結果は以下にそのまま残す．共有CSS，依存，workflowは変更していない．
 
 ## 現在の説明
 

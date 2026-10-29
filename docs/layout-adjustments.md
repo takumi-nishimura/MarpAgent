@@ -105,6 +105,37 @@ section {
 全14ケースの `.body` 移行や投影距離での可読性を評価したものではない．
 `max-h-full` の名前が存在しても，親高さの前提を満たさなければ効かないことがわかる．
 
+## 2026-10-30の比較に基づく選び方
+
+[追加比較](evidence/ISS-0047-layout-comparison-2026-10-30/README.md)では，
+単図，8:4列，縦積み，結果＋補足の標準例は，旧構造でも見出し・captionが
+1行増えて収まった．`.body` は残余領域を使う選択肢であり，その選択だけで
+指定総量が減るわけではない．同じ内容・構図・文字設定を保ち，次の順に確認する．
+
+1. 自然寸法で収まる場合は，図の大きさとcaptionの距離を見て，移行の目的を決める．
+2. 図だけが大きい場合は既存の幅utilityも試す．captionがfigureの自然幅を変えるため，
+   `w-3/4` などの比率だけから実寸を予測せず，図内ラベルも描画して確認する．
+3. 残余領域へ図を収める場合は `.body` を選ぶ．単図・結果は `.body` 1 wrapperでよく，
+   gridは `.fill` と図側の `.box` で高さをつなぐ．説明側に不要な `.box` を増やさない．
+4. 見出し・caption・脚注が増えたら，元の指定を持ち越して描画し直す．
+   width utilityの再選択，figure全体の高さ，bodyの下端reserveを別の修復経路として数える．
+
+縦積みの `gap-4` をbodyへ移す場合，同じ式を保つ指定は
+`style="--body-gap: calc(var(--spacing) * 4)"` である．Marpがtheme内のremを
+変換するため，inlineの `1rem` と見た目が同じとは限らない．この比較のlabでは
+元のgapが26px，inline `1rem` が16pxだった．
+
+`.body` の既定48px reserveは，任意の長さの脚注高を自動測定するものではない．
+現行labの長脚注例では，脚注上端667.8125pxに対して本文要素下端672pxが入り込んだ．
+bodyに `style="--body-bottom-safe: 56px"` を指定すると，下端664pxとなった．
+56pxはこの原稿の修正値であり，新しい共通既定値ではない．脚注の文字を縮めず，
+本文・caption・脚注の実際の境界から値を決める．
+
+今回の縦長列は旧方式でも `figure style="height: 460px"` の1宣言で全3テーマと
+見出し／caption増加を通過した．bodyはこの値の選択を省ける一方，wrapperとclassが増える．
+標準例の一般的な個別指定削減は未立証であり，
+[ISS-0047](issues/ISS-0047-improve-body-figure-and-caption-layout-defaults.md)の最後の完了条件を残す．
+
 ## クラスの利用可否を確認する
 
 validator のクラス診断は常に `severity: info`，`source: classes` の助言である．
