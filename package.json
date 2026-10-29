@@ -63,5 +63,10 @@
     "@playwright/test": "^1.58.1",
     "playwright": "^1.58.1",
     "prettier": "3.8.1"
+  },
+  "overrides": {
+    "@marp-team/marp-cli@4.5.1": {
+      "puppeteer-core": "25.13.0"
+    }
   }
 }
