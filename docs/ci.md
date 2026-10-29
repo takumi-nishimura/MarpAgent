@@ -42,7 +42,7 @@ npm run ci:full
 
 `ci:full` は記録検証 → `test:d2` → `test:zip:d2` → `quality:gate:strict` を順番に実行し，どれかの失敗で停止する．strict gate は全 unit → fixture/example 実測 → Chromium／Firefox E2E であり，ブラウザ不足による skip を成功扱いしない．既存の platform／機能条件による対象外 skip は，成功件数と分けて記録する．実 D2／portable ZIP も必要な実行資源の不足では skip しない．
 
-共有ホストで同時作業する場合は，準備を含むブラウザ／D2 操作を共通ロックで直列化する．今回の統合環境では実行コマンドを `flock /home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock npm run ci:full` にする．Chromium sandbox が利用できない承認済みの Linux 環境では，workflow と同じ `CHROME_NO_SANDBOX=1` を必要に応じて指定する．
+共有ホストで同時作業する場合は，準備を含むブラウザ／D2 操作を共通ロックで直列化する．例えば `flock /tmp/marpagent-browser.lock npm run ci:full` とし，同じホストの作業者全員が同じロックパスを使う．Chromium sandbox が利用できない承認済みの Linux 環境では，workflow と同じ `CHROME_NO_SANDBOX=1` を必要に応じて指定する．
 
 結果には revision，未コミット変更の有無，Node／uv／D2／font の条件，コマンド，終了コード，ログ，対象外 skip を残す．対象 revision に変更が加わったら影響する受入れを再実行する．ローカル成功で required checks や保護設定を緩和せず，GitHub のチェックが必要なら利用可能な経路でその結果も取得する．dependency audit は別ゲートなので，担当変更を統合した候補で `npm run audit:dependencies` も確認する．
 
