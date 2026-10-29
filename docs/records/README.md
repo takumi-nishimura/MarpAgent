@@ -20,7 +20,7 @@ docs/
 .github/
 ├── records.py
 └── workflows/
-    └── validate-records.yml
+    └── quality-gate.yml
 ```
 
 issueは単一ディレクトリで管理し，`_closed/`のような移動先ディレクトリを作らない．閉鎖はfrontmatterの`status: closed`で表現する．
@@ -57,6 +57,8 @@ uv run .github/records.py validate
 ```
 
 `.github/records.py`はPEP 723 inline metadataを持つ．`uv`はPyYAMLとjsonschemaを一時環境へ解決するため，project dependencyと`uv.lock`は変更されない．
+
+`Quality Gate` は PR／main push／手動実行のすべてで全記録を検証する．docs／decks だけの変更でエンジン導入を省略しても，重複 ID や参照不整合を検出する．[CI の検証範囲と完全受入れ](../ci.md)を参照．
 
 検証内容は次のとおり．
 
