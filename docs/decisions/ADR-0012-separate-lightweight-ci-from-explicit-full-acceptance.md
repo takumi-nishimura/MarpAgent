@@ -23,16 +23,22 @@ artifacts:
     - 6a6c9433cc0f893b20d5f40fbfa52d990591d103
     - 0c2adeec7b60ecabafb500c28760ec39173fb339
     - 0cecb0cf0872687ab1122b10b84eda8a26a0641d
+    - 0b0fdc00d0a02be789390e9915bd4001057e895c
+    - b19b98d0094e0d0a65ae48bb908a647c7f615140
   manifests:
     - .github/workflows/quality-gate.yml
     - package.json
-  results: []
+    - docs/evidence/ci-acceptance-2026-10-30/manifest.json
+    - docs/evidence/ci-acceptance-2026-10-30/SHA256SUMS
+  results:
+    - docs/evidence/ci-acceptance-2026-10-30/README.md
   commands:
     - uv run .github/records.py validate
     - npm run test:ci
     - node --test --test-isolation=none --test-reporter=spec tests/unit/ci-workflow.test.js
     - actionlint .github/workflows/quality-gate.yml .github/workflows/dependency-audit.yml
     - npm run ci:full
+    - npm run audit:dependencies
 ---
 
 # Separate lightweight CI from explicit full acceptance
@@ -74,7 +80,7 @@ PR64 の開始 head `0c2adee` は，PR／main push を軽量 smoke，`workflow_d
 
 Option 2 を提案する．uv の準備と `uv run .github/records.py validate` を既存 job の常時ステップへ移し，パス判定から独立させる．エンジンが必要な自動実行は `test:ci`，manual は従来の完全受入れへ進む．ローカル用 `ci:full` は記録 → D2 → portable ZIP → strict gate を順に実行し，失敗時に停止する．
 
-本 ADR は `proposed` のままとする．CI の限定検証だけでは採用を確定せず，peer の依存・記録変更を含む統合 revision で完全受入れと dependency audit を確認した後に判断する．
+本 ADR は `proposed` のままとする．依存修正を含む統合 revision の完全受入れと dependency audit は成功し，以下に実行結果と PR64 候補への適用範囲を記録した．運用方式の採用確定は統合・公開を担当する lead の判断として残す．
 
 ### Scope
 
@@ -104,12 +110,23 @@ dependency の版・lockfile・audit baseline の変更，peer の記録修正�
 
 ## Validation
 
+### 初期の軽量検証（upstream 0cecb0c の履歴）
+
 * 開始 head に CI 回帰テストを先に追加し，記録検証ステップがないことを理由とする失敗を確認した．2026-10-30 の復元時にも21件成功・2件失敗を再確認した．変更後は実 Git repository と workflow の Bash で docs／deck／engine／mixed／workflow，同一 SHA，複数 commit，checkout と event head の違い，base の先行，不足端点の取得，取得・diff 失敗を検証した．
 * npm 導入のない一時 repository で正常な記録を通し，重複 `XR-0003`，参照先欠落，壊れた YAML を既存 validator が非ゼロで拒否することを確認した．
 * YAML の条件評価で自動／manual の到達性，既存 D2／font の固定値，Chromium／Firefox，strict flags，concurrency を検証した．`ci:full` は各段階の成功と失敗を模擬コマンドで検証した．これらは実ブラウザ／実 D2 を起動した完全受入れではない．
 * CI 実装 commit `0cecb0c`：Node 25.6.0／uv 0.13.5 のローカル環境で `test:ci` の9ファイル，CI 回帰24件が成功し，失敗・skip は0件だった．同一 lockfile の既存 node_modules を独立コピーして使用し，新規 `npm ci` はこの限定検証では行っていない．本 ADR を含む72件の記録検証と `git diff --check` も成功した．
 * actionlint v1.7.12 で quality-gate と dependency-audit の構文・式を検証し，エラー0件だった．shellcheck／pyflakes は今回の環境にないため，その連携チェックは実施していない．
-* `npm run ci:full` と `npm run audit:dependencies` の統合 revision での実行は lead が担当し，この限定検証では未実施である．過去の受入結果を今回の成功として流用しない．
+* この初期段階では統合 revision の full／audit は未実施だった．後続の実行結果は次節に分け，軽量検証の履歴を完全受入れの結果へ読み替えない．
+
+### 統合 full／audit と PR64 候補への適用（2026-10-30）
+
+* 実行対象は `0b0fdc00d0a02be789390e9915bd4001057e895c`．`npm ci` と実 registry の `npm run audit:dependencies` が成功した．audit は既存 baseline 内に7 package が残存する結果であり，baseline は拡大していない．
+* 初回 full は E2E 117成功・2失敗・1 skip で exit 1．日本語フォントが選択されない条件を確認し，隔離した `FONTCONFIG_FILE` に検証済み Noto Sans JP static weight 400 を登録した．追跡ファイルを変えずに対象2ファイル11件が成功し，その後の full も exit 0 になった．初回失敗と最終成功のログは両方保存した．
+* 最終 full は記録73件，D2 7件，portable D2 ZIP 2件，strict unit 528件，strict rendered fixture/example 18件，Chromium 105件，Firefox 14件が成功した．Firefox の1 skip は既存の Chromium CDP 専用 native touch injection．Node 25.6.0／uv 0.13.1，12 workers，retry なしであり，初期の uv 0.13.5 の軽量検証とは区別する．
+* PR64 候補 `b19b98d0094e0d0a65ae48bb908a647c7f615140` は上記実行対象と docs 以外の全 tree が一致する．差分は `docs/ci.md` の portable lock 例と，候補にない歴史的 XR-0008／その案内文だけである．記録集合が異なるため候補では別途 validator を実行し，本 ADR 更新後も72件が成功した．今回の保存・ADR 更新は文書だけの差分であり，候補で full を再実行したという主張ではない．
+* [保存 report](../evidence/ci-acceptance-2026-10-30/README.md)に比較コマンド，環境・結果 manifest，圧縮前後の SHA256，実行条件，初回／最終／audit の生ログと再現手順を残した．ブラウザ成果物全体は保存対象外．WSL2 のローカル実行で，hosted runner，macOS／Windows，native Firefox BiDi PDF の受入れではない．
+
 
 ## Related Records
 
