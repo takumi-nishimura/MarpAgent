@@ -1,0 +1,455 @@
+---
+marp: true
+theme: muji
+paginate: true
+style: |
+  section {
+    --logos-dark: none;
+    --logos-light: none;
+  }
+---
+
+<!-- case: figure-standard--base -->
+<!-- _header: 図とキャプション -->
+
+## 同じ条件で二つの値を比較する
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じ入力条件で比較した架空の値．単位は任意単位．</figcaption>
+</figure>
+
+</div>
+
+---
+
+<!-- case: figure-standard--heading -->
+<!-- _header: 図とキャプション -->
+
+## 同じ条件で二つの値を比較する：図と説明を読む前に，比較の前提と適用範囲を一緒に確認する
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じ入力条件で比較した架空の値．単位は任意単位．</figcaption>
+</figure>
+
+</div>
+
+---
+
+<!-- case: figure-standard--caption -->
+<!-- _header: 図とキャプション -->
+
+## 同じ条件で二つの値を比較する
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じ入力条件で比較した架空の値．単位は任意単位．この例は図と説明の配置確認用であり，実験結果を示すものではない．条件の違いに関する推論や，実際の装置・利用者への一般化は行わない．</figcaption>
+</figure>
+
+</div>
+
+---
+
+<!-- case: columns-standard--base -->
+<!-- _header: 主資料と補足 -->
+
+## 比較の根拠に広い列を割り当てる
+
+<div class="body">
+<div class="grid grid-cols-12 gap-6 items-stretch fill" data-region="columns">
+<div class="col-span-8 min-w-0 box" data-region="evidence">
+
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じデータを，図と近くの説明で読む．</figcaption>
+</figure>
+
+</div>
+<div class="col-span-4 min-w-0" data-region="interpretation">
+
+### 読み取れること
+
+条件Bの値は条件Aより大きい．**同じ入力条件**であることが比較の前提になる．
+
+この架空の値から，別の条件での性能は判断しない．
+
+</div>
+</div>
+
+</div>
+
+---
+
+<!-- case: columns-standard--heading -->
+<!-- _header: 主資料と補足 -->
+
+## 比較の根拠に広い列を割り当てる：図と説明を読む前に，比較の前提と適用範囲を一緒に確認する
+
+<div class="body">
+<div class="grid grid-cols-12 gap-6 items-stretch fill" data-region="columns">
+<div class="col-span-8 min-w-0 box" data-region="evidence">
+
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じデータを，図と近くの説明で読む．</figcaption>
+</figure>
+
+</div>
+<div class="col-span-4 min-w-0" data-region="interpretation">
+
+### 読み取れること
+
+条件Bの値は条件Aより大きい．**同じ入力条件**であることが比較の前提になる．
+
+この架空の値から，別の条件での性能は判断しない．
+
+</div>
+</div>
+
+</div>
+
+---
+
+<!-- case: columns-standard--caption -->
+<!-- _header: 主資料と補足 -->
+
+## 比較の根拠に広い列を割り当てる
+
+<div class="body">
+<div class="grid grid-cols-12 gap-6 items-stretch fill" data-region="columns">
+<div class="col-span-8 min-w-0 box" data-region="evidence">
+
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じデータを，図と近くの説明で読む．この例は配置確認用であり，実験結果を示すものではない．入力条件と単位も保持する．</figcaption>
+</figure>
+
+</div>
+<div class="col-span-4 min-w-0" data-region="interpretation">
+
+### 読み取れること
+
+条件Bの値は条件Aより大きい．**同じ入力条件**であることが比較の前提になる．
+
+この架空の値から，別の条件での性能は判断しない．
+
+</div>
+</div>
+
+</div>
+
+---
+
+<!-- case: stack-standard--base -->
+<!-- _header: 図を縦に読む -->
+
+## 入力と出力の順序を保つ
+
+<div class="body" style="--body-gap: calc(var(--spacing) * 4)" data-region="stack">
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>上段：入力から出力までの流れ．</figcaption>
+</figure>
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>下段：同じ流れを繰り返して確認する．</figcaption>
+</figure>
+</div>
+
+---
+
+<!-- case: stack-standard--heading -->
+<!-- _header: 図を縦に読む -->
+
+## 入力と出力の順序を保つ：図と説明を読む前に，比較の前提と適用範囲を一緒に確認する
+
+<div class="body" style="--body-gap: calc(var(--spacing) * 4)" data-region="stack">
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>上段：入力から出力までの流れ．</figcaption>
+</figure>
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>下段：同じ流れを繰り返して確認する．</figcaption>
+</figure>
+</div>
+
+---
+
+<!-- case: stack-standard--caption -->
+<!-- _header: 図を縦に読む -->
+
+## 入力と出力の順序を保つ
+
+<div class="body" style="--body-gap: calc(var(--spacing) * 4)" data-region="stack">
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>上段：入力から出力までの流れ．</figcaption>
+</figure>
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>下段：同じ流れを繰り返して確認する．この例は図と説明の配置確認用であり，実験結果を示すものではない．条件の違いに関する推論や，実際の装置・利用者への一般化は行わない．図中の入力・処理・出力の順序だけを確認する．</figcaption>
+</figure>
+</div>
+
+---
+
+<!-- case: results-standard--base -->
+<!-- _header: 結果と条件 -->
+
+## 値の差と比較条件を一緒に示す
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>条件Aは52，条件Bは68．いずれも架空の値．</figcaption>
+</figure>
+
+差は16任意単位である．<mark>入力条件は共通</mark>であり，別条件への一般化は行わない．
+
+
+</div>
+<div class="footnote">出典：配置確認のために作成した架空のデータ．実測値ではない．</div>
+
+---
+
+<!-- case: results-standard--heading -->
+<!-- _header: 結果と条件 -->
+
+## 値の差と比較条件を一緒に示す：図と説明を読む前に，比較の前提と適用範囲を一緒に確認する
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>条件Aは52，条件Bは68．いずれも架空の値．</figcaption>
+</figure>
+
+差は16任意単位である．<mark>入力条件は共通</mark>であり，別条件への一般化は行わない．
+
+
+</div>
+<div class="footnote">出典：配置確認のために作成した架空のデータ．実測値ではない．</div>
+
+---
+
+<!-- case: results-standard--caption -->
+<!-- _header: 結果と条件 -->
+
+## 値の差と比較条件を一緒に示す
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>条件Aは52，条件Bは68．いずれも架空の値．この例は図と説明の配置確認用であり，実験結果を示すものではない．条件の違いに関する推論や，実際の装置・利用者への一般化は行わない．</figcaption>
+</figure>
+
+差は16任意単位である．<mark>入力条件は共通</mark>であり，別条件への一般化は行わない．
+
+
+</div>
+<div class="footnote">出典：配置確認のために作成した架空のデータ．実測値ではない．</div>
+
+---
+
+<!-- case: columns-portrait--base -->
+<!-- _header: 主資料と補足 -->
+
+## 比較の根拠に広い列を割り当てる
+
+<div class="body">
+<div class="grid grid-cols-12 gap-6 items-stretch fill" data-region="columns">
+<div class="col-span-8 min-w-0 box" data-region="evidence">
+
+<figure>
+<img src="assets/img/comparison-portrait.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じデータを，図と近くの説明で読む．</figcaption>
+</figure>
+
+</div>
+<div class="col-span-4 min-w-0" data-region="interpretation">
+
+### 読み取れること
+
+条件Bの値は条件Aより大きい．**同じ入力条件**であることが比較の前提になる．
+
+この架空の値から，別の条件での性能は判断しない．
+
+</div>
+</div>
+
+</div>
+
+---
+
+<!-- case: columns-portrait--heading -->
+<!-- _header: 主資料と補足 -->
+
+## 比較の根拠に広い列を割り当てる：図と説明を読む前に，比較の前提と適用範囲を一緒に確認する
+
+<div class="body">
+<div class="grid grid-cols-12 gap-6 items-stretch fill" data-region="columns">
+<div class="col-span-8 min-w-0 box" data-region="evidence">
+
+<figure>
+<img src="assets/img/comparison-portrait.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じデータを，図と近くの説明で読む．</figcaption>
+</figure>
+
+</div>
+<div class="col-span-4 min-w-0" data-region="interpretation">
+
+### 読み取れること
+
+条件Bの値は条件Aより大きい．**同じ入力条件**であることが比較の前提になる．
+
+この架空の値から，別の条件での性能は判断しない．
+
+</div>
+</div>
+
+</div>
+
+---
+
+<!-- case: columns-portrait--caption -->
+<!-- _header: 主資料と補足 -->
+
+## 比較の根拠に広い列を割り当てる
+
+<div class="body">
+<div class="grid grid-cols-12 gap-6 items-stretch fill" data-region="columns">
+<div class="col-span-8 min-w-0 box" data-region="evidence">
+
+<figure>
+<img src="assets/img/comparison-portrait.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>同じデータを，図と近くの説明で読む．この例は配置確認用であり，実験結果を示すものではない．入力条件と単位も保持する．</figcaption>
+</figure>
+
+</div>
+<div class="col-span-4 min-w-0" data-region="interpretation">
+
+### 読み取れること
+
+条件Bの値は条件Aより大きい．**同じ入力条件**であることが比較の前提になる．
+
+この架空の値から，別の条件での性能は判断しない．
+
+</div>
+</div>
+
+</div>
+
+---
+
+<!-- case: stack-taller-media--base -->
+<!-- _header: 図を縦に読む -->
+
+## 入力と出力の順序を保つ
+
+<div class="body" style="--body-gap: calc(var(--spacing) * 4)" data-region="stack">
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>上段：入力から出力までの流れ．</figcaption>
+</figure>
+<figure>
+<img src="assets/img/stage-tall.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>下段：同じ流れを繰り返して確認する．</figcaption>
+</figure>
+</div>
+
+---
+
+<!-- case: stack-taller-media--heading -->
+<!-- _header: 図を縦に読む -->
+
+## 入力と出力の順序を保つ：図と説明を読む前に，比較の前提と適用範囲を一緒に確認する
+
+<div class="body" style="--body-gap: calc(var(--spacing) * 4)" data-region="stack">
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>上段：入力から出力までの流れ．</figcaption>
+</figure>
+<figure>
+<img src="assets/img/stage-tall.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>下段：同じ流れを繰り返して確認する．</figcaption>
+</figure>
+</div>
+
+---
+
+<!-- case: stack-taller-media--caption -->
+<!-- _header: 図を縦に読む -->
+
+## 入力と出力の順序を保つ
+
+<div class="body" style="--body-gap: calc(var(--spacing) * 4)" data-region="stack">
+<figure>
+<img src="assets/img/stage.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>上段：入力から出力までの流れ．</figcaption>
+</figure>
+<figure>
+<img src="assets/img/stage-tall.svg" alt="入力から処理を経て出力へ進む模式図" />
+<figcaption>下段：同じ流れを繰り返して確認する．この例は図と説明の配置確認用であり，実験結果を示すものではない．条件の違いに関する推論や，実際の装置・利用者への一般化は行わない．図中の入力・処理・出力の順序だけを確認する．</figcaption>
+</figure>
+</div>
+
+---
+
+<!-- case: results-footnote-wrap--base -->
+<!-- _header: 結果と条件 -->
+
+## 値の差と比較条件を一緒に示す
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>条件Aは52，条件Bは68．いずれも架空の値．</figcaption>
+</figure>
+
+差は16任意単位である．<mark>入力条件は共通</mark>であり，別条件への一般化は行わない．
+
+
+</div>
+<div class="footnote">出典：配置確認のために作成した架空のデータ．実測値ではない．この資料の図と数値は部品の配置，文字の読みやすさ，出典と本文の距離を確認するためだけに作成した．実際の研究参加者，実験装置，測定条件との対応はなく，精度や有効性に関する根拠として使うことはできない．境界例ではこの注記だけを長くして，本文と脚注の干渉を確認する．</div>
+
+---
+
+<!-- case: results-footnote-wrap--heading -->
+<!-- _header: 結果と条件 -->
+
+## 値の差と比較条件を一緒に示す：図と説明を読む前に，比較の前提と適用範囲を一緒に確認する
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>条件Aは52，条件Bは68．いずれも架空の値．</figcaption>
+</figure>
+
+差は16任意単位である．<mark>入力条件は共通</mark>であり，別条件への一般化は行わない．
+
+
+</div>
+<div class="footnote">出典：配置確認のために作成した架空のデータ．実測値ではない．この資料の図と数値は部品の配置，文字の読みやすさ，出典と本文の距離を確認するためだけに作成した．実際の研究参加者，実験装置，測定条件との対応はなく，精度や有効性に関する根拠として使うことはできない．境界例ではこの注記だけを長くして，本文と脚注の干渉を確認する．</div>
+
+---
+
+<!-- case: results-footnote-wrap--caption -->
+<!-- _header: 結果と条件 -->
+
+## 値の差と比較条件を一緒に示す
+
+<div class="body">
+<figure>
+<img src="assets/img/comparison.svg" alt="架空の同条件比較．条件Aは52，条件Bは68．単位は任意単位" />
+<figcaption>条件Aは52，条件Bは68．いずれも架空の値．この例は図と説明の配置確認用であり，実験結果を示すものではない．条件の違いに関する推論や，実際の装置・利用者への一般化は行わない．</figcaption>
+</figure>
+
+差は16任意単位である．<mark>入力条件は共通</mark>であり，別条件への一般化は行わない．
+
+
+</div>
+<div class="footnote">出典：配置確認のために作成した架空のデータ．実測値ではない．この資料の図と数値は部品の配置，文字の読みやすさ，出典と本文の距離を確認するためだけに作成した．実際の研究参加者，実験装置，測定条件との対応はなく，精度や有効性に関する根拠として使うことはできない．境界例ではこの注記だけを長くして，本文と脚注の干渉を確認する．</div>

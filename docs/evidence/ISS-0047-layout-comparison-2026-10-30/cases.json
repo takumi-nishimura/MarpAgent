@@ -1,0 +1,548 @@
+[
+  {
+    "id": "figure-standard--base",
+    "family": "figure-standard",
+    "growth": "base",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 0,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "figure-standard--heading",
+    "family": "figure-standard",
+    "growth": "heading",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 0,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "figure-standard--caption",
+    "family": "figure-standard",
+    "growth": "caption",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 0,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "columns-standard--base",
+    "family": "columns-standard",
+    "growth": "base",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 3,
+      "classTokens": 8,
+      "layoutClassTokens": 8,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 4,
+      "classTokens": 11,
+      "layoutClassTokens": 11,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "columns-standard--heading",
+    "family": "columns-standard",
+    "growth": "heading",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 3,
+      "classTokens": 8,
+      "layoutClassTokens": 8,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 4,
+      "classTokens": 11,
+      "layoutClassTokens": 11,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "columns-standard--caption",
+    "family": "columns-standard",
+    "growth": "caption",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 3,
+      "classTokens": 8,
+      "layoutClassTokens": 8,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 4,
+      "classTokens": 11,
+      "layoutClassTokens": 11,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "stack-standard--base",
+    "family": "stack-standard",
+    "growth": "base",
+    "figures": 2,
+    "legacy": {
+      "wrappers": 1,
+      "classTokens": 3,
+      "layoutClassTokens": 3,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 1,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 1,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "stack-standard--heading",
+    "family": "stack-standard",
+    "growth": "heading",
+    "figures": 2,
+    "legacy": {
+      "wrappers": 1,
+      "classTokens": 3,
+      "layoutClassTokens": 3,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 1,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 1,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "stack-standard--caption",
+    "family": "stack-standard",
+    "growth": "caption",
+    "figures": 2,
+    "legacy": {
+      "wrappers": 1,
+      "classTokens": 3,
+      "layoutClassTokens": 3,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 1,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 1,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "results-standard--base",
+    "family": "results-standard",
+    "growth": "base",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 1,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 2,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "results-standard--heading",
+    "family": "results-standard",
+    "growth": "heading",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 1,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 2,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "results-standard--caption",
+    "family": "results-standard",
+    "growth": "caption",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 1,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 2,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "columns-portrait--base",
+    "family": "columns-portrait",
+    "growth": "base",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 3,
+      "classTokens": 8,
+      "layoutClassTokens": 8,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 4,
+      "classTokens": 11,
+      "layoutClassTokens": 11,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "columns-portrait--heading",
+    "family": "columns-portrait",
+    "growth": "heading",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 3,
+      "classTokens": 8,
+      "layoutClassTokens": 8,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 4,
+      "classTokens": 11,
+      "layoutClassTokens": 11,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "columns-portrait--caption",
+    "family": "columns-portrait",
+    "growth": "caption",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 3,
+      "classTokens": 8,
+      "layoutClassTokens": 8,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 4,
+      "classTokens": 11,
+      "layoutClassTokens": 11,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "stack-taller-media--base",
+    "family": "stack-taller-media",
+    "growth": "base",
+    "figures": 2,
+    "legacy": {
+      "wrappers": 1,
+      "classTokens": 3,
+      "layoutClassTokens": 3,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 1,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 1,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "stack-taller-media--heading",
+    "family": "stack-taller-media",
+    "growth": "heading",
+    "figures": 2,
+    "legacy": {
+      "wrappers": 1,
+      "classTokens": 3,
+      "layoutClassTokens": 3,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 1,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 1,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "stack-taller-media--caption",
+    "family": "stack-taller-media",
+    "growth": "caption",
+    "figures": 2,
+    "legacy": {
+      "wrappers": 1,
+      "classTokens": 3,
+      "layoutClassTokens": 3,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 1,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 1,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 1,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "results-footnote-wrap--base",
+    "family": "results-footnote-wrap",
+    "growth": "base",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 1,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 2,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "results-footnote-wrap--heading",
+    "family": "results-footnote-wrap",
+    "growth": "heading",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 1,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 2,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  },
+  {
+    "id": "results-footnote-wrap--caption",
+    "family": "results-footnote-wrap",
+    "growth": "caption",
+    "figures": 1,
+    "legacy": {
+      "wrappers": 0,
+      "classTokens": 1,
+      "layoutClassTokens": 0,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    },
+    "body": {
+      "wrappers": 1,
+      "classTokens": 2,
+      "layoutClassTokens": 1,
+      "widthUtilities": 0,
+      "inlineDeclarations": 0,
+      "caseSizeDeclarations": 0,
+      "compositionParameters": 0,
+      "scopedRules": 0
+    }
+  }
+]

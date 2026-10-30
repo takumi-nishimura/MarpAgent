@@ -14,7 +14,7 @@
 | 図と説明の列比率 | `--visual-left`，`--visual-right` | `.col.visual` に指定する．既定の比率を必要なページだけ変える |
 | 図と説明の列間隔 | `--visual-gap` | `.col.visual` に指定する |
 | その他の列間隔 | `--col-gap` | `.col` に指定する |
-| 本文上端と下端の余白 | `--body-top-gap`，`--body-bottom-safe` | `section` に指定し，`.body` の共通配置へ継承する |
+| 本文上端と下端の余白 | `--body-top-gap`，`--body-bottom-safe` | `section` に指定し，`.body` の共通配置へ継承する．bottom-safeはbody自身にも指定できる最低余白 |
 | 本文内の間隔 | `--body-gap` | `section` に指定する．`.body` 内の配置規則で使う |
 | 図と caption の間隔 | `--figure-gap` | `figure` またはそれを含む `section` に指定する |
 | 箱内の縦配置 | `.place-top`，`.place-middle`，`.place-bottom`，`.place-spread` | `.box` または `.col > div` に付ける．親に余剰高さがあるときに差が出る |
@@ -104,6 +104,48 @@ section {
 これは1ケースでの欠け・文字衝突・最小文字サイズ違反の確認であり，
 全14ケースの `.body` 移行や投影距離での可読性を評価したものではない．
 `max-h-full` の名前が存在しても，親高さの前提を満たさなければ効かないことがわかる．
+
+## 2026-10-30の比較に基づく選び方
+
+[追加比較](evidence/ISS-0047-layout-comparison-2026-10-30/README.md)では，
+単図，8:4列，縦積み，結果＋補足の標準例は，旧構造でも見出し・captionが
+1行増えて収まった．`.body` は残余領域を使う選択肢であり，その選択だけで
+指定総量が減るわけではない．同じ内容・構図・文字設定を保ち，次の順に確認する．
+
+1. 自然寸法で収まる場合は，図の大きさとcaptionの距離を見て，移行の目的を決める．
+2. 図だけが大きい場合は既存の幅utilityも試す．captionがfigureの自然幅を変えるため，
+   `w-3/4` などの比率だけから実寸を予測せず，図内ラベルも描画して確認する．
+3. 残余領域へ図を収める場合は `.body` を選ぶ．単図・結果は `.body` 1 wrapperでよく，
+   gridは `.fill` と図側の `.box` で高さをつなぐ．説明側に不要な `.box` を増やさない．
+4. 見出し・caption・脚注が増えたら，元の指定を持ち越して描画し直す．
+   width utilityの再選択，figure全体の高さ，bodyの下端reserveを別の修復経路として数える．
+
+縦積みの `gap-4` をbodyへ移す場合，同じ式を保つ指定は
+`style="--body-gap: calc(var(--spacing) * 4)"` である．Marpがtheme内のremを
+変換するため，inlineの `1rem` と見た目が同じとは限らない．この比較のlabでは
+元のgapが26px，inline `1rem` が16pxだった．
+
+実装修正前のPhase 1では，`.body` の既定48px reserveは脚注高を自動測定しなかった．
+labの長脚注例では，脚注上端667.8125pxに対して本文要素下端672pxが入り込んだ．
+bodyに `style="--body-bottom-safe: 56px"` を指定すると，下端664pxとなった．
+56pxはこの原稿の修正値であり，新しい共通既定値ではない．脚注の文字を縮めず，
+本文・caption・脚注の実際の境界から値を決める．
+
+その後の[Phase 2修正](evidence/ISS-0047-footnote-reserve-2026-10-30/README.md)では，
+MarpAgentの通常の描画で `section > .footnote` の実際の境界とbodyのgapを確保する．
+`--body-bottom-safe` は最低余白として残し，実測reserveのほうが大きければそちらを使う．
+同じlab原稿は手動56pxなしで本文下端654.8125px，脚注との離隔13pxとなった．
+見出し・caption・脚注の文字とsource order，脚注の位置は保持し，本文の図領域が少し小さくなる．
+
+この自動測定にはMarpAgentのJavaScriptが必要である．theme CSSだけで使う場合や
+JavaScript無効時は，実際の描画から手動reserveを決める．native footerや入れ子脚注は
+自動測定の対象ではない．title／paper／scrollと従来のfillも既存の方式を維持する．
+細かい脚注を読みやすくする修正や，入らない本文を隠す処理ではない．
+
+今回の縦長列は旧方式でも `figure style="height: 460px"` の1宣言で全3テーマと
+見出し／caption増加を通過した．bodyはこの値の選択を省ける一方，wrapperとclassが増える．
+標準例の一般的な個別指定削減は未立証であり，
+[ISS-0047](issues/ISS-0047-improve-body-figure-and-caption-layout-defaults.md)の最後の完了条件を残す．
 
 ## クラスの利用可否を確認する
 

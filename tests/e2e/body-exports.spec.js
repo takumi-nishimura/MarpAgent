@@ -121,7 +121,7 @@ test("body compositions keep media and captions inside HTML, image, and PDF expo
         // alongside plain dictionaries without depending on PDF object IDs.
         const dictionaries = [pdfSource];
         for (const match of pdfSource.matchAll(
-            /\bstream\r?\n([\s\S]*?)\r?\nendstream/g,
+            /\bstream\r?\n([\s\S]*?)endstream/g,
         )) {
             try {
                 dictionaries.push(

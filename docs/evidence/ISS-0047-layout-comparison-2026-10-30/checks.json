@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-30",
+  "baseRevision": "6a6c9433cc0f893b20d5f40fbfa52d990591d103",
+  "productionChanges": false,
+  "checks": [
+    {
+      "command": "node docs/evidence/ISS-0047-layout-comparison-2026-10-30/rerun.cjs --font <TTF> --svg-font <WOFF2> --output <NEW_RUN>",
+      "sharedBrowserLock": true,
+      "exitCode": 0,
+      "trials": 993,
+      "pairs": 63,
+      "defaultBodyFits": 60,
+      "adjustedBodyFits": 63
+    },
+    {
+      "command": "node --test tests/unit/theme-css.test.js tests/unit/body-class-contract.test.js tests/unit/canvas-size.test.js tests/unit/layout-baselines.test.js tests/unit/scroll-slides.test.js",
+      "exitCode": 0,
+      "passed": 49,
+      "skipped": 0
+    },
+    {
+      "command": "MARP_AGENT_STRICT_E2E=1 npm run test:e2e -- tests/e2e/body-layout.spec.js tests/e2e/layout-compatibility.spec.js tests/e2e/body-exports.spec.js tests/e2e/composition-utilities.spec.js --project=chromium --workers=1 --reporter=line --output=<RUN_OUTPUT>",
+      "sharedBrowserLock": true,
+      "exitCode": 0,
+      "passed": 41,
+      "skipped": 0,
+      "durationSeconds": 15.6
+    },
+    {
+      "command": "uv run --offline .github/records.py validate",
+      "exitCode": 0,
+      "records": 72
+    },
+    {
+      "command": "node --check <recipes.cjs|rerun.cjs|package.cjs>",
+      "exitCode": 0
+    },
+    {
+      "command": "node package.cjs --run <COMPLETED_RUN> --output <NEW_ARCHIVE>",
+      "exitCode": 0,
+      "pngFiles": 36,
+      "verification": "Second packaging run matches every archived byte; aggregate counts checked independently against the reported table."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "environmentRetries": [
+    "Initial font download required network escalation after DNS failure.",
+    "Browser commands required escalation because the shared lock is outside the writable root.",
+    "Packaging diff subprocess raised sandbox EPERM; an escalated retry into a new directory completed."
+  ],
+  "limits": [
+    "Whole acceptance gate belongs to lead.",
+    "Export test uses the existing four-page fixture; no PDF pixel comparison of all 63 new pairs.",
+    "22 of 126 selected PNGs visually inspected; 36 retained.",
+    "No user-time or projection-readability experiment."
+  ]
+}

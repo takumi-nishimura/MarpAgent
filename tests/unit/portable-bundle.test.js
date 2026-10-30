@@ -597,3 +597,14 @@ test("custom script dependencies are disclosed and strict offline rejects them",
         !p.manifest.files.some((f) => f.source?.includes("runtime.json")),
     );
 });
+
+test("configured body footnote runtime remains available in a strict offline bundle", (t) => {
+    const { createConfiguredMarp } = require("../../src/slide-map");
+    const f = fixture(t);
+    const { html } = createConfiguredMarp().render('<div class="body">Evidence</div>\n\n<div class="footnote">Required source</div>');
+    const p = plan(f, html, { strictOffline: true });
+    assert.deepEqual(p.errors, []);
+    assert.deepEqual(p.manifest.unsupported, []);
+    assert.match(textOf(p, "index.html"), /__marpagentBodyFootnotes/);
+    assert.ok(plan(f, html + '<script>fetch("dynamic.json")</script>', { strictOffline: true }).errors.some((e) => e.code === "OFFLINE_DEPENDENCY"));
+});
