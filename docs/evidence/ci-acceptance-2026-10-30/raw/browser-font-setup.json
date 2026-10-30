@@ -1,0 +1,21 @@
+{
+  "observedAt": "2026-10-29T17:31:31.513Z",
+  "before": {
+    "match": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf\nDejaVu Sans",
+    "japaneseFonts": ""
+  },
+  "after": {
+    "match": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/browser-fonts/NotoSansJP-Regular.ttf\nNoto Sans JP,Noto Sans JP Thin",
+    "japaneseFonts": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/browser-fonts/NotoSansJP-Regular.ttf: Noto Sans JP,Noto Sans JP Thin"
+  },
+  "font": {
+    "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/browser-fonts/NotoSansJP-Regular.ttf",
+    "sha256": "6f513200a25f77ccd4388393d973f4c32a3f06fe9145e6a0fab38d16f2dc4819"
+  },
+  "fontconfig": {
+    "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/fontconfig/fonts.conf",
+    "sha256": "574e1f0a29d91069c15d6f4387c621324e7bb6758d21639a392cd95cac3468b6",
+    "cacheDir": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/fontconfig-cache"
+  },
+  "scope": "Per-process FONTCONFIG_FILE; tracked files, tests and global font directories unchanged"
+}
