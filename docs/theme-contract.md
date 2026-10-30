@@ -300,6 +300,10 @@ mechanisms. Multiple direct notes retain their authored positions; this reserve
 does not resolve collisions between notes. Required text stays visible to
 clipping/overlap diagnostics if the remaining body is too small.
 
+The rationale and tradeoffs for measured footnote reservation are recorded in
+[ADR-0013](decisions/ADR-0013-measure-direct-footnotes-when-reserving-opted-in-body-space.md),
+proposed pending final integrated validation and acceptance.
+
 Existing `.fill`-only decks retain their header margins, bottom reserve, and
 natural figure behavior. No deck rewrite is required. Opt in one slide at a
 time by adding `.body` to its direct wrapper (for example,

@@ -51,6 +51,8 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
 
 この効果はMarpAgentのJavaScriptが動く通常.bodyと直下.footnoteに限定する．CSS単独／JS無効では手動reserveが必要で，native footer，入れ子脚注，title，paper，scrollの方式は維持する．細かい脚注や図の読みやすさ自体は解決していない．広い個別指定削減の完了条件は未達であり，in-progressと未チェック項目を維持する．
 
+実測JSを選ぶ理由，flow化／固定56pxとの比較，公開契約とruntimeの境界は[ADR-0013](../decisions/ADR-0013-measure-direct-footnotes-when-reserving-opted-in-body-space.md)に記録した．ADRはleadの最終統合gateと受入を待つproposedであり，本ISSの広いACを完了扱いにしない．
+
 ## 追加比較 2026-10-30（Phase 1：実装修正前）
 
 [XR-0009](../explorations/XR-0009-measure-layout-adjustment-effort-against-minimal-legacy-repairs.md)と
