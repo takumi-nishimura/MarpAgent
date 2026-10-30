@@ -15,15 +15,18 @@ depends_on: ["ISS-0046"]
 supersedes: []
 artifacts:
   revisions:
+    - 77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c
     - c8dece4
     - 62cfcab2a9a17b2c51669496548f68c59a00c8e8
     - 6560cc4
     - 44a841d
   manifests:
+    - docs/evidence/integration-2026-10-30/manifest.json
     - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/manifest.json
     - docs/evidence/ISS-0047-body-layout/manifest.json
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/manifest.json
   results:
+    - docs/evidence/integration-2026-10-30/README.md
     - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/README.md
     - docs/theme-contract.md
     - docs/evidence/ISS-0047-body-layout/README.md
@@ -31,6 +34,9 @@ artifacts:
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/README.md
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/run/summary.json
   commands:
+    - npm ci
+    - npm run ci:full
+    - npm run audit:dependencies
     - node docs/evidence/ISS-0047-footnote-reserve-2026-10-30/compare.cjs --verify
     - node --test tests/unit/theme-css.test.js
     - npm run test:e2e -- tests/e2e/body-layout.spec.js tests/e2e/composition-utilities.spec.js --project=chromium --workers=1
@@ -42,6 +48,14 @@ artifacts:
 # Improve body figure and caption layout defaults
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
+
+## 最終統合受入れ 2026-10-30
+
+検証対象 `77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c` で `npm ci`，共通browser.lock下の `npm run ci:full`，`npm run audit:dependencies` が終了コード0となった．開始・終了とも同じHEADでclean，lock hashも一致した．記録74件，D2 7件，portable ZIP 2件，strict unit529件，描画fixture18件，Chromium126件，Firefox14件が成功し，失敗0件．Firefoxの既存CDP専用touch除外1件だけをskipした．auditは既知7 packageが元baseline内に残り，baselineは変更していない．
+
+脚注runtime15件と3テーマ×2比率のHTML／PNG／PDF export6件，strict offline bundleの脚注runtime unitを含む．固定D2 0.9.0，fonttools4.60.1のNoto Sans JP static400，隔離Fontconfig，uv0.13.1の条件とhashは[最終統合受入れ](../evidence/integration-2026-10-30/README.md)と[manifest](../evidence/integration-2026-10-30/manifest.json)に保存した．この記録の保存開始時のbranchのHEAD `e905b96` はCI／依存の5パスが検証対象と異なる．更新PR64を取り込んだ後に，文書を除く追跡ファイルの比較を行う．その具体的な範囲・差分・コマンドは証跡に記録し，取り込み前の同一性は主張しない．
+
+以下のPhase 2節の最終gate待ちは執筆時点の状態であり，今回の実行で統合gateは完了した．ADR-0013の採用状態はproposedのまま，広い個別指定削減のACと本ISSのin-progressは維持する．Phase 1／2と2026-10-21の観測・結論・artifactは置き換えない．
 
 ## 限定修正 2026-10-30：直下脚注reserve（Phase 2）
 

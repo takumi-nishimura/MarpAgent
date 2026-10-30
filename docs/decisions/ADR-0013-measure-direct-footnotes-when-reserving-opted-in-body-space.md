@@ -21,19 +21,25 @@ supersedes: []
 issues: ["ISS-0047"]
 artifacts:
   revisions:
+    - 77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c
     - c8dece4
     - 62cfcab2a9a17b2c51669496548f68c59a00c8e8
     - a4ccb36
   manifests:
+    - docs/evidence/integration-2026-10-30/manifest.json
     - docs/evidence/ISS-0047-layout-comparison-2026-10-30/manifest.json
     - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/manifest.json
   results:
+    - docs/evidence/integration-2026-10-30/README.md
     - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/README.md
     - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/run/summary.json
     - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/review.md
     - docs/evidence/ISS-0047-footnote-reserve-2026-10-30/checks.json
     - docs/theme-contract.md
   commands:
+    - npm ci
+    - npm run ci:full
+    - npm run audit:dependencies
     - uv run .github/records.py validate --strict-relations
     - node docs/evidence/ISS-0047-footnote-reserve-2026-10-30/compare.cjs --verify
 ---
@@ -44,7 +50,7 @@ artifacts:
 
 通常スライドの直下 `.body` は，見出しの下に残る領域を図・caption・本文へ配分する選択式の配置である．従来の `--body-bottom-safe: 48px` は脚注の実際の高さを測らず，絶対配置された長脚注とbodyが干渉し得た．XR-0009のPhase 1では，labの本文要素下端672pxに対し脚注上端667.8125pxとなり，その原稿には `--body-bottom-safe: 56px` が必要だった．
 
-本人の開発継続指示を受け，leadはPhase 1の証拠を固定した後，この手動reserveを除く限定修正を具体化して担当へ依頼した．実測JSという方式を本人が個別に指定・採用したと解釈しない．本ADRは実装済みの `62cfcab` を公開契約として採用する案であり，leadの最終統合gateと最終受入を待つ `proposed` である．標準例の個別指定が一般的に減るというISS-0047の完了条件を変更・達成扱いにする判断ではない．
+本人の開発継続指示を受け，leadはPhase 1の証拠を固定した後，この手動reserveを除く限定修正を具体化して担当へ依頼した．実測JSという方式を本人が個別に指定・採用したと解釈しない．本ADRは実装済みの `62cfcab` を公開契約として採用する案であり，検証済み `77e1029` の最終統合gateは成功したが，公開契約の採用判断は別に残す `proposed` である．標準例の個別指定が一般的に減るというISS-0047の完了条件を変更・達成扱いにする判断ではない．
 
 ## Decision Drivers
 
@@ -72,7 +78,7 @@ flex／gridの通常flowに脚注を入れれば，CSS自身がその自然高�
 
 ### Chosen Option
 
-Option 1を採用案とする．脚注を動かさず，直下bodyの残余領域だけを変えることで，既存の位置・順序と著者指定を保ったまま長脚注に追従できるためである．最終gateの成功やleadの受入は，本記録時点では未確定であり，`accepted` へは移行しない．
+Option 1を採用案とする．脚注を動かさず，直下bodyの残余領域だけを変えることで，既存の位置・順序と著者指定を保ったまま長脚注に追従できるためである．最終統合gateは `77e1029` で成功し，leadも結果を点検した．この検証結果だけで公開契約の採用を確定せず，`proposed` を維持する．
 
 計測するreserveは，sectionの下border／paddingを除いた使用可能下端から，表示された直下脚注の最も高い上端までの距離に，bodyのcomputed row gapを足した値とする．負値を0に抑え，1/64px単位で切り上げる．presentation／overviewの縮尺をsectionの未拡大座標へ戻して計算し，非表示で寸法が得られないsectionは表示復帰後のresize通知で再測定する．
 
@@ -121,7 +127,11 @@ XR-0009 Phase 2では，4行脚注でbody下端672pxが脚注上端628.625pxに�
 
 既存の対象unit85件と共有browser.lock下のstrict Chromium79件が成功した．3テーマ×16:9／4:3，見出し・caption追加，遅い脚注変更，明示最低値，縮尺・非表示復帰，source order，crop，legacy／title／paper／scroll，strict offlineの互換性を含む．別のEnglish入力でHTML，PNG12枚，PDF6本12ページを出力し，native寸法，PDFの脚注4行・留保・paginationと境界を確認した．詳しい確認範囲と未確認範囲は[Phase 2報告](../evidence/ISS-0047-footnote-reserve-2026-10-30/README.md)と[目視記録](../evidence/ISS-0047-footnote-reserve-2026-10-30/review.md)を参照する．
 
-2026-10-30にleadから，実装scope・縮尺処理・tests・offline hash許可リストの点検でmaterialな問題は見つからず，このコードを含む統合全体gateを実行中との連絡を受けた．これはgate完了の証拠ではない．最終受入後にADRの状態を判断し，ISS-0047の広いACは別途未達のまま追跡する．今回の追加は文書だけであり，新しいコード／browser試験は行わない．
+2026-10-30にleadが実装scope・縮尺処理・tests・offline hash許可リストを点検した後，検証対象 `77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c` で `npm ci`，共通browser.lock下の `npm run ci:full`，`npm run audit:dependencies` が終了コード0となった．開始・終了とも同じHEADでclean，lock hashも一致した．記録74件，D2 7件，portable ZIP 2件，strict unit529件，描画fixture18件，Chromium126件，Firefox14件が成功し，失敗0件．Firefoxの既存CDP専用touch除外1件だけをskipした．auditは既知7 packageが元baseline内に残り，baselineは変更していない．
+
+脚注runtime15件，HTML／PNG／PDF export6件，strict offline bundleのunitを含む．固定D2・static font・隔離Fontconfig・uvとbrowserの版／hash，rawまたは正規化を明示したログ，clean before／afterは[最終統合受入れ](../evidence/integration-2026-10-30/README.md)と[manifest](../evidence/integration-2026-10-30/manifest.json)から追跡できる．この記録の保存開始時のbranchのHEAD `e905b96` はCI／依存の5パスが検証対象と異なる．更新PR64を取り込んだ後に，文書を除く追跡ファイルの比較を行う．その具体的な範囲・差分・コマンドは証跡に記録し，取り込み前の同一性は主張しない．
+
+統合gate完了とleadによる結果点検を確認した上で，ADRの採用状態はproposedのままとする．ISS-0047の広いACも未達のまま追跡する．この追加は既存の受入れを保存する文書変更だけであり，browserは再実行していない．
 
 ## Related Records
 

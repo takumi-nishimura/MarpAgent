@@ -22,16 +22,30 @@ depends_on:
   - ISS-0053
 supersedes: []
 artifacts:
-  revisions: []
-  manifests: []
-  results: []
+  revisions:
+    - 77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c
+  manifests:
+    - docs/evidence/integration-2026-10-30/manifest.json
+  results:
+    - docs/evidence/integration-2026-10-30/README.md
   commands:
+    - npm ci
+    - npm run ci:full
+    - npm run audit:dependencies
     - uv run .github/records.py validate
 ---
 
 # Coordinate design improvements and asset distribution
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/53
+
+## 最終統合受入れ 2026-10-30
+
+検証対象 `77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c` で `npm ci`，共通browser.lock下の `npm run ci:full`，`npm run audit:dependencies` が終了コード0となった．開始・終了とも同じHEADでclean，lock hashも一致した．記録74件，D2 7件，portable ZIP 2件，strict unit529件，描画fixture18件，Chromium126件，Firefox14件が成功し，失敗0件．Firefoxの既存CDP専用touch除外1件だけをskipした．auditは既知7 packageが元baseline内に残り，baselineは変更していない．
+
+[最終統合受入れ](../evidence/integration-2026-10-30/README.md)と[manifest](../evidence/integration-2026-10-30/manifest.json)へ実行条件・resource hash・full／audit／install logを保存した．追加された脚注runtime15件，HTML／PNG／PDF export6件，strict offline unitも成功した．この記録の保存開始時のbranchのHEAD `e905b96` はCI／依存の5パスが検証対象と異なる．更新PR64を取り込んだ後に，文書を除く追跡ファイルの比較を行う．その具体的な範囲・差分・コマンドは証跡に記録し，取り込み前の同一性は主張しない．
+
+この受入れは限定実装と統合候補の回帰確認であり，一般的な個別指定削減の証拠ではない．親をin-progressのまま保ち，最後のACは未チェックとする．以下の継続作業と2026-10-21のcheckpointは各記録時点の状態として保持する．
 
 ## 継続作業 2026-10-30
 
