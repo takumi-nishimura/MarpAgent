@@ -1,6 +1,6 @@
 # CI と完全受入れ
 
-`Quality Gate` の自動実行は記録整合性とエンジンの smoke を担当する．自動チェックが成功しても，描画・export を含む完全受入れの成功を意味しない．採用判断は [ADR-0012](decisions/ADR-0012-separate-lightweight-ci-from-explicit-full-acceptance.md) に記録し，統合候補の完全受入れまで `proposed` とする．
+`Quality Gate` の自動実行は記録整合性とエンジンの smoke を担当する．自動チェックが成功しても，描画・export を含む完全受入れの成功を意味しない．採用判断と受入れの根拠は [ADR-0012](decisions/ADR-0012-separate-lightweight-ci-from-explicit-full-acceptance.md) に記録する．
 
 ## 実行範囲
 

@@ -302,7 +302,7 @@ clipping/overlap diagnostics if the remaining body is too small.
 
 The rationale and tradeoffs for measured footnote reservation are recorded in
 [ADR-0013](decisions/ADR-0013-measure-direct-footnotes-when-reserving-opted-in-body-space.md),
-proposed pending final integrated validation and acceptance.
+accepted after integrated validation and the 2026-10-31 merge authorization.
 
 Existing `.fill`-only decks retain their header margins, bottom reserve, and
 natural figure behavior. No deck rewrite is required. Opt in one slide at a

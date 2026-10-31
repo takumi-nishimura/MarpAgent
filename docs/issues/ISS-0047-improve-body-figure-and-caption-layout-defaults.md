@@ -55,7 +55,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
 
 脚注runtime15件と3テーマ×2比率のHTML／PNG／PDF export6件，strict offline bundleの脚注runtime unitを含む．固定D2 0.9.0，fonttools4.60.1のNoto Sans JP static400，隔離Fontconfig，uv0.13.1の条件とhashは[最終統合受入れ](../evidence/integration-2026-10-30/README.md)と[manifest](../evidence/integration-2026-10-30/manifest.json)に保存した．この記録の保存開始時のbranchのHEAD `e905b96` はCI／依存の5パスが検証対象と異なる．更新PR64を取り込んだ後に，文書を除く追跡ファイルの比較を行う．その具体的な範囲・差分・コマンドは証跡に記録し，取り込み前の同一性は主張しない．
 
-以下のPhase 2節の最終gate待ちは執筆時点の状態であり，今回の実行で統合gateは完了した．ADR-0013の採用状態はproposedのまま，広い個別指定削減のACと本ISSのin-progressは維持する．Phase 1／2と2026-10-21の観測・結論・artifactは置き換えない．
+以下のPhase 2節の最終gate待ちは執筆時点の状態であり，今回の実行で統合gateは完了した．2026-10-31のmerge指示に基づきADR-0013をacceptedへ移行した．広い個別指定削減のACと本ISSのin-progressは維持する．Phase 1／2と2026-10-21の観測・結論・artifactは置き換えない．
 
 ## 限定修正 2026-10-30：直下脚注reserve（Phase 2）
 
@@ -65,7 +65,7 @@ GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
 
 この効果はMarpAgentのJavaScriptが動く通常.bodyと直下.footnoteに限定する．CSS単独／JS無効では手動reserveが必要で，native footer，入れ子脚注，title，paper，scrollの方式は維持する．細かい脚注や図の読みやすさ自体は解決していない．広い個別指定削減の完了条件は未達であり，in-progressと未チェック項目を維持する．
 
-実測JSを選ぶ理由，flow化／固定56pxとの比較，公開契約とruntimeの境界は[ADR-0013](../decisions/ADR-0013-measure-direct-footnotes-when-reserving-opted-in-body-space.md)に記録した．ADRはleadの最終統合gateと受入を待つproposedであり，本ISSの広いACを完了扱いにしない．
+実測JSを選ぶ理由，flow化／固定56pxとの比較，公開契約とruntimeの境界は[ADR-0013](../decisions/ADR-0013-measure-direct-footnotes-when-reserving-opted-in-body-space.md)に記録した．ADRは最終統合gateとmerge指示に基づく受入れを経てacceptedであり，本ISSの広いACは完了扱いにしない．
 
 ## 追加比較 2026-10-30（Phase 1：実装修正前）
 
