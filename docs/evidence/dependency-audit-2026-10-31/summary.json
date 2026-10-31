@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-31",
+  "githubIssue": 67,
+  "upstreamMain": "357ccfcaa725b6ab4f9686f98e9fdca486d51ea4",
+  "executedIn": {
+    "repository": "takumi-nishimura/my-decks",
+    "revision": "fee3de1bd8a00ff80af592c7985a9620084a5328",
+    "mainTreeEquivalent": "d03003f838042f9b020737b952d7f64dedb12a1e"
+  },
+  "identicalInputs": {
+    "packageJson": "2cdbdaedb30f9f99f09509ca40ed240a22b488df391b87faac4fb86efbbf7a15",
+    "packageLock": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+    "baseline": "181d2718ac3153409387f67d7d29c444b1ba2ad3bf54a608e4e3e5de34712092"
+  },
+  "command": "npm audit --omit=dev --json --fetch-retries=0 --fetch-timeout=20000",
+  "auditExitCode": 1,
+  "gateExitCode": 1,
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 2,
+      "moderate": 9,
+      "high": 1,
+      "critical": 0,
+      "total": 12
+    },
+    "dependencies": {
+      "prod": 265,
+      "dev": 72,
+      "optional": 37,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 372
+    }
+  },
+  "newOrIncreased": {
+    "@marp-team/marp-core": {
+      "name": "@marp-team/marp-core",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "@mathjax/src",
+        "katex"
+      ],
+      "effects": [
+        "@marp-team/marp-cli"
+      ],
+      "range": ">=0.12.1",
+      "nodes": [
+        "node_modules/@marp-team/marp-cli/node_modules/@marp-team/marp-core",
+        "node_modules/@marp-team/marp-core"
+      ],
+      "fixAvailable": {
+        "name": "@marp-team/marp-core",
+        "version": "0.12.0",
+        "isSemVerMajor": true
+      }
+    },
+    "@mathjax/src": {
+      "name": "@mathjax/src",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "mj-context-menu"
+      ],
+      "effects": [
+        "@marp-team/marp-core"
+      ],
+      "range": ">=4.1.0",
+      "nodes": [
+        "node_modules/@mathjax/src"
+      ],
+      "fixAvailable": {
+        "name": "@mathjax/src",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "mj-context-menu": {
+      "name": "mj-context-menu",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "rimraf"
+      ],
+      "effects": [
+        "@mathjax/src"
+      ],
+      "range": ">=1.0.0",
+      "nodes": [
+        "node_modules/mj-context-menu"
+      ],
+      "fixAvailable": {
+        "name": "@mathjax/src",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "rimraf": {
+      "name": "rimraf",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "glob"
+      ],
+      "effects": [
+        "mj-context-menu"
+      ],
+      "range": ">=4.2.0",
+      "nodes": [
+        "node_modules/rimraf"
+      ],
+      "fixAvailable": {
+        "name": "@mathjax/src",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "glob": {
+      "name": "glob",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1244013,
+          "name": "glob",
+          "dependency": "glob",
+          "title": "Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal",
+          "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=9.0.0 <=14.0.1"
+        },
+        "minimatch"
+      ],
+      "effects": [
+        "rimraf"
+      ],
+      "range": "3.0.0 - 14.0.1",
+      "nodes": [
+        "node_modules/glob"
+      ],
+      "fixAvailable": {
+        "name": "@mathjax/src",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "minimatch": {
+      "name": "minimatch",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1244012,
+          "name": "minimatch",
+          "dependency": "minimatch",
+          "title": "minimatch has potential denial of service via globparts amplification",
+          "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-405"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<11.0.1"
+        }
+      ],
+      "effects": [
+        "glob"
+      ],
+      "range": "<11.0.1",
+      "nodes": [
+        "node_modules/minimatch"
+      ],
+      "fixAvailable": {
+        "name": "@mathjax/src",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "sourceRun": "https://github.com/takumi-nishimura/MarpAgent/actions/runs/41199500606",
+  "baselineChanged": false,
+  "applicationReachability": "Not evaluated",
+  "remediation": "Not implemented in this recording branch"
+}

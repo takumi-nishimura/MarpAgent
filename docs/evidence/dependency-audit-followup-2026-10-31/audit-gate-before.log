@@ -1,0 +1,19 @@
+
+> marpagent@1.0.0 audit:dependencies
+> node scripts/audit-dependencies.js
+
+Resolved: @puppeteer/browsers; remove its baseline entry after review.
+Resolved: basic-ftp; remove its baseline entry after review.
+Resolved: extract-zip; remove its baseline entry after review.
+Resolved: get-uri; remove its baseline entry after review.
+Resolved: pac-proxy-agent; remove its baseline entry after review.
+Resolved: proxy-agent; remove its baseline entry after review.
+Resolved: puppeteer-core; remove its baseline entry after review.
+@marp-team/marp-core: severity increased from low to moderate.
+@marp-team/marp-core: new affected path node_modules/@marp-team/marp-core.
+@mathjax/src: new vulnerable package (moderate).
+glob: new vulnerable package (moderate).
+minimatch: new vulnerable package (moderate).
+mj-context-menu: new vulnerable package (moderate).
+rimraf: new vulnerable package (moderate).
+Review the findings and update ISS-0042 before changing the audit baseline.

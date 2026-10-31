@@ -1,0 +1,935 @@
+
+> marpagent@1.0.0 ci:full
+> uv run .github/records.py validate && npm run test:d2 && npm run test:zip:d2 && npm run quality:gate:strict
+
+Validated 76 record(s).
+
+> marpagent@1.0.0 test:d2
+> node --test tests/integration/d2-cli.test.js
+
+✔ fixed D2 verifies prelude layout, seeds, repeated vars, null and environment precedence (688.600263ms)
+✔ fixed D2 renders Japanese, long labels, math, groups and tall and wide diagrams (5535.691986ms)
+✔ inline-block imports are rejected in both projects before the fixed CLI or shared cache (1.249054ms)
+✔ configured engine preserves measured labels, isolates repeated diagrams and reports source lines (1869.853089ms)
+✔ HTML, PDF, PPTX, images and screenshot refuse D2 failure before replacing output (3151.856148ms)
+✔ validation retains D2 failure when the browser cannot launch (1448.418807ms)
+✔ compiled HTML and overview display offline without D2 and without SVG interference (3177.589496ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16109.528811
+
+> marpagent@1.0.0 test:zip:d2
+> node --test --test-isolation=none --test-reporter=spec tests/integration/portable-d2.test.js
+
+✔ D2 ZIP renders Japanese, repeated diagrams and math after removing the source repo and configured compiler (2796.003499ms)
+✔ real D2 compile and missing-tool failures cannot publish a successful ZIP or replace existing output (3708.761605ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6852.15159
+
+> marpagent@1.0.0 quality:gate:strict
+> MARP_AGENT_REQUIRE_VISUAL=1 MARP_AGENT_STRICT_E2E=1 npm run quality:gate
+
+
+> marpagent@1.0.0 quality:gate
+> npm test && npm run validate:fixtures && npm run test:e2e
+
+
+> marpagent@1.0.0 test
+> node scripts/run-node-tests.js
+
+✔ marpx assets list/search share JSON, captions, dimensions and source locations (1473.735135ms)
+✔ preview is an explicit local temporary artifact (477.109356ms)
+✔ doctor distinguishes hidden missing references and returns a failure status (903.06071ms)
+✔ reuse dry-run preserves the destination; execution refuses an existing link (1203.356931ms)
+✔ assets rejects unsupported modes and misplaced options (1149.28902ms)
+✔ lab: body components are available and misspellings remain advisory (611.021619ms)
+✔ lab: imported body fixture uses only available classes (83.532923ms)
+✔ muji: body components are available and misspellings remain advisory (243.848993ms)
+✔ muji: imported body fixture uses only available classes (115.123738ms)
+✔ toshiba: body components are available and misspellings remain advisory (238.29755ms)
+✔ toshiba: imported body fixture uses only available classes (69.985166ms)
+✔ only missing browser launch prerequisites qualify for environment skips (0.95305ms)
+✔ marpx's missing-executable diagnostic qualifies as a browser prerequisite (0.465873ms)
+✔ visual support caches known environment failures without hiding implementation bugs (0.272463ms)
+✔ npm test requires a working Chromium for rendered validation (624.461372ms)
+✔ keeps empty non-void HTML elements explicitly closed after BudouX (408.477114ms)
+✔ leaves HTML void elements self-closing after BudouX cleanup (122.846397ms)
+✔ closes empty elements whose quoted attributes contain greater-than signs (79.936015ms)
+✔ preserves Core 5 browser scripts through Japanese line breaking (129.631952ms)
+✔ preserves raw scripts while wrapping Japanese body text (67.707625ms)
+✔ preserves generated Mermaid styles and attribute-bearing fences (415.678893ms)
+✔ rewrites real media attributes with entities and preserves scripts, comments, citations and tag casing (5.104275ms)
+✔ CSS imports and URL escapes use parsed values while strings and comments stay untouched (1.411389ms)
+✔ handles inline CSS, media source/poster, preload, srcset data commas, and section identity (1.264226ms)
+✔ SVG processing preserves case, IDs and internal fragments (1.426824ms)
+✔ a leading BOM preserves canvas directives and slide source locations (699.504551ms)
+✔ canvas frontmatter accepts longer closing fences and trailing spaces (0.281443ms)
+✔ parseCustomPixelSize accepts bounded width x height values (1.165985ms)
+✔ findCustomPixelSizes reads frontmatter size (0.190461ms)
+✔ isASeriesCanvas detects supported A4 orientation sizes only (0.245135ms)
+✔ injectCustomSizeMetadata appends @size inside Marp theme comment (0.286559ms)
+✔ ensureCustomSizesForMarkdown lets Marp render custom pixel canvas (94.633701ms)
+✔ pull_request: docs changes select engine=false (101.99765ms)
+✔ pull_request: deck changes select engine=false (79.043618ms)
+✔ pull_request: engine changes select engine=true (61.891737ms)
+✔ pull_request: mixed changes select engine=true (93.013071ms)
+✔ pull_request: workflow changes select engine=true (69.424625ms)
+✔ pull_request: record tooling changes select engine=true (94.789273ms)
+✔ pull_request: unchanged changes select engine=false (50.482564ms)
+✔ push: docs changes select engine=false (95.438567ms)
+✔ push: deck changes select engine=false (86.78264ms)
+✔ push: engine changes select engine=true (94.225343ms)
+✔ push: mixed changes select engine=true (65.390559ms)
+✔ push: workflow changes select engine=true (85.908681ms)
+✔ push: record tooling changes select engine=true (89.750972ms)
+✔ push: unchanged changes select engine=false (59.382675ms)
+✔ selection uses event endpoints, not checkout HEAD or only its last commit (178.156502ms)
+✔ deleted and renamed engine paths cannot hide inside docs (147.041082ms)
+✔ diverged endpoint trees conservatively select base-side engine changes (126.751734ms)
+✔ manual runs and unknown/initial push bases conservatively select the engine (32.441171ms)
+✔ shallow checkouts fetch both missing event endpoints from origin (174.196305ms)
+✔ failed endpoint fetches and diff errors fail closed without a selection (108.927179ms)
+✔ record validation blocks duplicate XR IDs on docs-only changes without npm (1069.136488ms)
+✔ automatic checks stay light and manual checks reach every full acceptance command (84.3688ms)
+✔ local full acceptance runs every gate in order and stops on each failure (75.441726ms)
+✔ manual acceptance cannot cancel or be cancelled by an automatic run (11.204996ms)
+✔ CSS inventory parses compound, nested, escaped and attribute selectors (5.314742ms)
+✔ CSS comments, declarations, strings, parts and URLs do not define classes (0.74204ms)
+✔ imports, non-enumerable class selectors and broken CSS remain unknown (1.360966ms)
+✔ undefined utilities and typos are hints with nearby defined candidates (453.363724ms)
+✔ source extraction ignores code, notes, escaped tags and quoted class examples (160.358878ms)
+✔ HTML attribute parsing handles quotes, entities, multiline tags and CR-only input (101.159763ms)
+✔ deck CSS definitions include front matter, active style directive and compound selectors (233.701313ms)
+✔ scoped definitions are available only on their owning slide (88.080219ms)
+✔ external, dynamic and unparsable inputs stay unknown without hiding known classes (371.476938ms)
+✔ dynamic attributes are unknown and literal classes in the same element still work (56.487399ms)
+✔ original lines and displayed pages follow the existing slide map, including hidden slides (63.87341ms)
+✔ authored class directives use their original declaration line and ignore generated classes (68.129587ms)
+✔ the active compiled theme defines classes without a per-deck build (255.507345ms)
+✔ unavailable themes do not imply that authored classes are undefined (83.830205ms)
+✔ only HTML ASCII whitespace separates class tokens (60.904607ms)
+✔ inline HTML in lists and quotes retains the original use lines (69.04295ms)
+✔ the bundled font import exemption never applies to deck imports (79.050349ms)
+✔ class presence selectors are not enumerable definitions (82.046169ms)
+✔ YAML class locations exclude block-string decoys and include flow mappings (240.935595ms)
+✔ class diagnostics are non-blocking hints in source-only validation (504.553537ms)
+✔ class advice retains original locations and metadata in JSON and SARIF reports (155.674459ms)
+✔ class hints stay advisory after a measured render or a skipped render (172.015193ms)
+✔ paper decks retain class advice while skipping slide-density heuristics (118.213878ms)
+✔ validate-deck fails when --report-dir value is missing (175.720011ms)
+✔ generate-outline fails when --output value is missing (64.436999ms)
+✔ marpx export modes are mutually exclusive (313.473762ms)
+✔ marpx --images rejects an unsupported format (39.682057ms)
+✔ marpx --images defaults to png and requires a file (42.589442ms)
+✔ marpx --output requires an export, screenshot, or outline mode (107.977532ms)
+✔ marpx --autofix requires -v or --lint (34.452242ms)
+✔ marpx rejects validator-only options in serve mode (115.654614ms)
+✔ marpx --dry-run requires --autofix (35.070322ms)
+✔ marpx --pdf requires a file path (37.11655ms)
+✔ marpx --paper requires --new (41.510361ms)
+✔ marpx --poster reports replacement (44.237044ms)
+✔ marpx theme scaffold options require --theme-new (80.945458ms)
+✔ marpx --force requires a mode supporting explicit overwrite (62.301986ms)
+✔ marpx --outline refuses to overwrite an existing outline without --force (213.528683ms)
+✔ marpx --theme-new forwards scaffold options (83.034658ms)
+✔ conversion timeout rejects zero, negative, fractional, and nonnumeric values (232.53384ms)
+✔ validate and screenshot bound a stalled HTML conversion and remove temporary output (1427.227689ms)
+✔ a timed-out export stops its detached browser descendant (678.510877ms)
+✔ screenshot kills its browser when a page operation stalls (166.131943ms)
+✔ a single compiled HTML carries D2 failures to browser-free exporters (1.533711ms)
+✔ D2 errors appear in preview HTML and diagnostic carrier with Markdown positions (441.728013ms)
+✔ D2 parse-only, hidden slides and normal code never start the executable (176.2769ms)
+✔ unsupported D2 fence arguments are explicit errors (76.329054ms)
+✔ validation retains browser D2 errors without a carrier and deduplicates known compiler failures (297.067513ms)
+✔ success returns stdout and stderr with literal args, env, cwd and stdin (125.498376ms)
+✔ exit zero returns JSON-looking output as plain data (148.782096ms)
+✔ nonzero exit fails with D2_PROCESS_EXIT and keeps partial output (103.803821ms)
+✔ a missing executable fails with D2_PROCESS_START and does not hang (93.445467ms)
+✔ timeout kills a stubborn root plus regular and detached descendants (650.423425ms)
+✔ exit zero with a descendant holding output pipes still times out with status 0 (597.41944ms)
+✔ success cleans fast pipe-free detached children without killing unrelated processes (368.898716ms)
+✔ stdout overflow fails with D2_PROCESS_BUFFER and retains stderr diagnostics (164.347424ms)
+✔ stderr overflow fails with D2_PROCESS_BUFFER and retains stdout output (165.759074ms)
+✔ each stream may use its own maxBuffer and byte overflow is not length overflow (349.805456ms)
+✔ ignored large stdin cannot fail as EPIPE and >1MiB stdout is transported (98.481091ms)
+✔ invalid timeoutMs and maxBuffer are RangeError API failures (0.382971ms)
+✔ UTF-8 split between chunks cannot exceed the captured byte limit (174.58309ms)
+✔ terminating a synchronous caller cleans up its supervisor and D2 child (177.191031ms)
+✔ D2 cache reuses validated success and invalidates source, salt and executable content (836.915554ms)
+✔ nonzero exit with partial SVG never succeeds or enters D2 cache (342.250921ms)
+✔ D2 inherited rendering environment is stripped without overriding source layout (218.027228ms)
+✔ unsupported dependencies and boards are rejected before invoking D2 (4.49235ms)
+✔ inline and inconsistent D2 block strings fail before any CLI invocation (1.693071ms)
+✔ inline-block imports cannot read or share cached content across projects (1.288307ms)
+✔ missing CLI, unsupported version and input overflow are explicit failures (123.231515ms)
+✔ D2 cache detects changed font bytes and repairs corrupted SVG entries (389.340652ms)
+✔ D2 cache rechecks CSS string resources before returning a cached SVG (357.085848ms)
+✔ D2 malformed success is never cached and optional cache failures do not fail a valid render (728.410558ms)
+✔ mise shim resolves the selected binary in the original project and changes invalidate cache (621.902863ms)
+✔ D2 SVG IDs, CSS selectors and local references are isolated together (6.420235ms)
+✔ D2 SVG rejects malformed roots, duplicate IDs and missing references (1.201145ms)
+✔ D2 SVG refuses active content and external resources in XML and CSS (1.61134ms)
+✔ D2 SVG rejects CSS image functions with string resource arguments (9.809981ms)
+✔ D2 SVG retains static color functions and quoted font families (0.901242ms)
+✔ D2 SVG permits embedded font data and protects font family names (13.602917ms)
+✔ missing non-Latin glyphs and broken embedded fonts fail explicitly (0.977143ms)
+✔ the recorded residual audit passes and removed findings are reported (1.820771ms)
+✔ a new advisory fails even when the affected package count is unchanged (0.358599ms)
+✔ severity increases, new dependency locations, and newly available fixes require review (0.377144ms)
+✔ a new vulnerable package cannot be hidden by a resolved package (0.329364ms)
+✔ registry errors and malformed audit output never pass as a clean audit (0.392391ms)
+✔ missing design produces a concise diagnostic without a stack (35.111653ms)
+✔ design lint reports a missing executable instead of failing silently (43.966639ms)
+✔ missing designs directory reports the failing operation without a stack (39.216939ms)
+✔ doctor reports checks in json format (3185.020573ms)
+✔ doctor rejects a configured engine that drops rendering features (159.657967ms)
+✔ doctor rejects a configured engine from another Core installation (0.480847ms)
+✔ renders the five GFM alert types into matching theme classes (773.346649ms)
+✔ supports multi-paragraph alert bodies (45.489686ms)
+✔ matches GitHub by keeping later alert markers inside the same blockquote (51.549528ms)
+✔ blank lines between blockquotes render two or more separate alerts (156.490461ms)
+✔ handles an alert with no body content (47.774059ms)
+✔ legacy <div class="note"> form continues to render identically (114.094421ms)
+✔ ordinary blockquotes without an alert tag pass through unchanged (32.084809ms)
+✔ blockquote whose first line is not an alert tag is left alone (47.765479ms)
+✔ emits no plugin-internal token types in the final HTML (35.780466ms)
+✔ <!-- hide: true --> hides only the slide that carries it (401.907859ms)
+✔ <!-- hide: true --> keeps inherited directives of the following slides (157.760326ms)
+✔ <!-- hide: true --> does not count the hidden slide toward page numbers (68.314234ms)
+✔ <!-- _hide: true --> hides only the slide that carries it (64.831399ms)
+✔ <!-- _hide: true --> keeps inherited directives of the following slides (97.613121ms)
+✔ <!-- _hide: true --> does not count the hidden slide toward page numbers (63.632366ms)
+✔ a hidden last slide does not inflate the total after a skipped title (91.21768ms)
+✔ hidden slides keep paginate skip and hold semantics of other slides (44.703967ms)
+✔ hide: false and hide comments inside code blocks keep the slide (151.765927ms)
+✔ hiding the last slide keeps the earlier slides (44.297874ms)
+✔ baseline IDs, pages and local assets stay resolvable (3.588952ms)
+✔ each boundary changes one declared source condition and preserves the rest (0.821753ms)
+✔ the comparison table reuses the canonical template body (0.814202ms)
+✔ archived baseline retains its inputs, verified font observations and complete PNGs (39.12325ms)
+✔ autofix edits rendered HTML classes and wrappers without changing other source (7.304576ms)
+✔ autofix preserves quote and list prefixes while fixing rendered HTML (0.493166ms)
+✔ lint-deck --autofix normalizes tiny typography markers (2715.092381ms)
+✔ lint-deck --autofix leaves fenced code and code spans byte-identical (2331.140566ms)
+✔ lint-deck prints a deprecation notice for the --lint alias (1829.423355ms)
+✔ lint-deck supports --report-dir like -v (5132.155411ms)
+✔ validate-deck --autofix normalizes tiny typography markers (1539.385746ms)
+✔ --autofix --dry-run prints a unified diff without writing (1530.741653ms)
+✔ --dry-run requires --autofix (222.269378ms)
+✔ indented code does not start a fence that hides later top-level content (1.190745ms)
+✔ fences allow up to three spaces and retain their matching close rules (0.234585ms)
+✔ backticks in an opening fence info string are ordinary Markdown (0.226837ms)
+✔ frontmatter delimiters match Marp without exposing YAML as Markdown (7.541059ms)
+✔ findInstalledBrowser honors CHROME_PATH when the file exists (1.179389ms)
+✔ findInstalledBrowser ignores a CHROME_PATH that does not exist (0.197586ms)
+✔ findInstalledBrowser finds Chrome on macOS (1.149218ms)
+✔ findInstalledBrowser finds Edge on macOS (0.939378ms)
+✔ findInstalledBrowser finds Chrome on Linux via PATH (0.166341ms)
+✔ findInstalledBrowser finds Edge on Linux at its fixed path (0.119614ms)
+✔ findInstalledBrowser finds Chrome on Windows (0.372146ms)
+✔ findInstalledBrowser returns null when no browser is installed (0.637255ms)
+✔ marpBrowserArgs lets Marp detect an installed browser itself (0.656287ms)
+✔ Marp ignores missing browser environment paths when selecting an installed browser (1132.066268ms)
+✔ marpBrowserArgs pins the Playwright Chromium fallback (0.198434ms)
+✔ browser fallback skips a removed headless shell (0.162607ms)
+✔ browser selection diagnoses missing fallback paths (0.33692ms)
+✔ marpx export aborts with a clear error when the conversion stalls (312.219113ms)
+✔ marpx html export succeeds within the default timeout (722.335384ms)
+✔ configured engine renders Shiki, katex, and extended Mermaid (1581.232513ms)
+✔ CLI renders the same Core 5 features outside the repository (katex) (1361.223762ms)
+✔ configured engine renders Shiki, mathjax, and extended Mermaid (298.808222ms)
+✔ CLI renders the same Core 5 features outside the repository (mathjax) (1087.038468ms)
+✔ MathJax bbm extension renders vector glyphs (74.393559ms)
+✔ MathJax bboldx extension renders vector glyphs (72.729556ms)
+✔ MathJax dsfont extension renders vector glyphs (71.314206ms)
+✔ MathJax mhchem extension renders vector glyphs (87.231401ms)
+✔ findSlideIdByDisplayedPage accounts for paginate skip (342.355819ms)
+✔ findSlideIdByDisplayedPage skips hidden slides (108.088281ms)
+✔ findSlideIdByDisplayedPage uses the rendered position without page numbers (45.12855ms)
+✔ isNotifierPortConflict detects the unhandled notifier EADDRINUSE (0.682859ms)
+✔ isNotifierPortConflict ignores the handled listen-port failure (0.079097ms)
+✔ isNotifierPortConflict still retries when both failures appear (0.092267ms)
+✔ isNotifierPortConflict returns false for clean output (0.059768ms)
+✔ two concurrent serve processes survive the watch-notifier port race (1139.671617ms)
+✔ implicit HTTP conflict advances to next candidate (357.517801ms)
+✔ isHttpPortConflict matches the handled diagnostic for the attempted port (0.380424ms)
+✔ isHttpPortConflict tolerates ANSI styling and forwarded wrapping (0.091542ms)
+✔ isHttpPortConflict rejects notifier, generic, and partial output (0.069367ms)
+✔ implicit free default port serves without fallback (164.616476ms)
+✔ multiple implicit conflicts advance through candidates (369.735628ms)
+✔ explicit PORT conflict exits with original status and no fallback (233.549136ms)
+✔ explicit empty and invalid PORT reach the child untouched (334.592817ms)
+✔ implicit fallback exhausts candidates with the original exit status (519.363441ms)
+✔ generic and wrong-port failures do not advance the candidate (307.181884ms)
+✔ notifier retries keep the HTTP candidate and share a global budget (780.483543ms)
+✔ notifier budget stays global across an HTTP candidate change (1550.09204ms)
+✔ mixed diagnostics prefer HTTP advance only for implicit PORT (534.616989ms)
+✔ opened URL keeps the rendered-slide hash after fallback (319.142447ms)
+✔ SIGINT reaches the current child after fallback (152.384351ms)
+✔ SIGINT during the notifier retry delay exits without respawn (108.905884ms)
+✔ SIGTERM reaches the current child after fallback (158.06163ms)
+✔ SIGTERM during the notifier retry delay exits without respawn (118.292569ms)
+✔ rimraf require preserves literal and glob deletion selection (27.454633ms)
+✔ rimraf import preserves literal and glob deletion selection (37.680528ms)
+✔ rimraf CLI still accepts the literal directories used by the MathJax menu build (77.201939ms)
+✔ glob stops reading descendant directories when its first read is aborted (4.500514ms)
+✔ minimatch bounds globstar-parent pattern expansion and retains ordinary matches (4.760228ms)
+✔ glob bundled matcher respects the expansion budget in both module formats (2.136773ms)
+✔ media extraction follows Markdown destinations, references, entities, and code rules (7.877214ms)
+✔ reference definitions on later or hidden slides resolve at the image's slide (334.473683ms)
+✔ extractMediaReferences reads Markdown, HTML, and CSS media references (1.697032ms)
+✔ resolveLocalReference skips remote and inline URLs (0.318256ms)
+✔ findMissingAssets reports a missing image on its slide (64.883582ms)
+✔ findMissingAssets names the target of a broken symlink (35.1677ms)
+✔ findMissingAssets reports missing background images and CSS urls (30.511624ms)
+✔ frontmatter CSS assets are checked with BOM and longer closing delimiters (47.766329ms)
+✔ findMissingAssets reports missing video sources and posters (18.835757ms)
+✔ findMissingAssets ignores remote URLs and hidden slides (27.048806ms)
+✔ findMissingAssets skips media on slides hidden with _hide (28.476765ms)
+✔ findMissingAssets does not hide a slide over a fenced hide comment (36.310013ms)
+✔ findMissingAssets reports nothing when every asset exists (24.236046ms)
+✔ copyDeckForRender skips export artifacts the render does not need (4.163374ms)
+✔ copyDeckForRender keeps a PDF the deck embeds (1.802591ms)
+✔ catalog relates local, shared, aliases and identical files to source pages (405.361987ms)
+✔ default catalog excludes private, ignored, and symlinked private metadata (169.653466ms)
+✔ catalog never hashes external paths and keeps repair diagnostics local (23.423971ms)
+✔ HTML preview escapes source context and provides local media links (44.664141ms)
+✔ Git symlink placeholders are diagnosed without hashing their text as media (45.654391ms)
+✔ visible-only output still redacts context from adjacent hidden private references (20.36298ms)
+✔ public CSS selectors do not erase searchable captions (49.861028ms)
+✔ unsupported asset formats remain listable and kind filters distinguish them (5.905324ms)
+✔ top-level assets/decks directory symlinks never enumerate external names (7.389581ms)
+✔ PNG metadata includes independent dimensions, size and SHA256 (3.686833ms)
+✔ SVG viewBox dimensions never execute external entities (1.304314ms)
+✔ unsupported and malformed files give a dimension reason without losing the hash (1.368375ms)
+✔ expected identity mismatch and symlinks are refused before hashing (0.848966ms)
+✔ JPEG SOF and GIF dimensions are read without decoding pixels (1.754851ms)
+✔ containment uses path components and follows a symlinked repo root (3.480533ms)
+✔ bundle accepts shared and relative file reuse without choosing ownership (3.116673ms)
+✔ bundle diagnoses absolute links, cross-deck directories, and escapes via a parent (310.531467ms)
+✔ cycles and broken parent links identify the link requiring repair (2.473108ms)
+✔ reference origins retain source lines, hidden pages, and frontmatter scope (112.2107ms)
+✔ nonlocal references stay inspectable and never become copy candidates (6.819128ms)
+✔ missing files below a valid shared link are missing rather than broken links (5.016713ms)
+✔ CSS origin lines refer to the URL-bearing source line (20.097159ms)
+✔ symlink target dot segments resolve after intermediate links (1.8182ms)
+✔ dry-run describes a relative file link without creating directories (464.929439ms)
+✔ explicit reuse creates only the named relative file symlink (155.712053ms)
+✔ existing dangling symlinks, private sources and directory sources are refused (122.093521ms)
+✔ destination parent symlinks and external destinations are rejected before writes (1.296047ms)
+✔ source replacement after planning and unavailable symlinks do not create a copy (258.423438ms)
+✔ a safe named file alias can be reused without choosing another owner (117.257852ms)
+[mermaid] render-failed: Mermaid subprocess failed: parse error
+Error: Invalid mermaid header: "not a diagram". Expected "graph TD", "flowchart LR", "stateDiagram-v2", etc.
+    at parseFlowchart (file:///home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/node_modules/beautiful-mermaid/dist/index.js:353:11)
+    at parseMermaid (file:///home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/node_modules/beautiful-mermaid/dist/index.js:348:10)
+    at Module.renderMermaidSVG (file:///home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/node_modules/beautiful-mermaid/dist/index.js:9273:21)
+    at e (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/node_modules/@marp-team/marp-core/lib/internals/mermaid.node.cjs:1:119)
+    at r (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/node_modules/@marp-team/marp-core/lib/mermaid-DzViM_sj.cjs:8:65)
+    at e.renderer.rules.marp_mermaid (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/node_modules/@marp-team/marp-core/lib/mermaid-DzViM_sj.cjs:8:883)
+    at renderNative (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/scripts/mermaid-plugin.js:247:18)
+    at md.renderer.rules.marp_mermaid (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/scripts/mermaid-plugin.js:298:14)
+    at Renderer.render (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/node_modules/markdown-it/dist/index.cjs.js:582:69)
+    at a.renderMarkdown (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/node_modules/@marp-team/marpit/lib/marpit.js:235:35)
+[mermaid] render-failed: Mermaid subprocess failed: "><img src=x onerror=alert(1)> $& 'q'
+second line
+[mermaid] render-failed: Mermaid subprocess failed: subprocess unavailable
+[mermaid] cache-write-failed: rename failed
+✔ Mermaid math decodes XML entities before rendering inequalities (1164.43329ms)
+✔ postProcessLineBreaks converts escaped br labels into tspans (0.697514ms)
+✔ postProcessLineBreaks converts literal newline markers into tspans (0.223785ms)
+✔ postProcessLineBreaks strips Mermaid quote wrappers from simple labels (0.112081ms)
+✔ postProcessLineBreaks leaves math labels for MathJax processing (0.100167ms)
+✔ mermaid render emits multiline labels as tspans (398.144687ms)
+✔ mermaid render measures fullwidth Japanese labels before layout (905.369606ms)
+✔ mermaid render sizes explicit multiline node labels before layout (1015.951106ms)
+✔ mermaid cache reuses the rendered SVG without a second subprocess (7.186116ms)
+✔ mermaid cache persists across plugin module instances (2.638888ms)
+✔ mermaid cache does not store failed renders (3.371991ms)
+✔ native Mermaid failures retain their source and expose one render diagnostic (304.762002ms)
+✔ Mermaid render diagnostics escape the error message (2.852501ms)
+✔ a successful native fallback is not reported as a diagram failure (158.669122ms)
+✔ MARP_AGENT_MERMAID_CACHE=0 disables the mermaid cache (1.672074ms)
+✔ mermaid cache key covers source, renderer files, and package versions (0.191024ms)
+✔ mermaid cache fingerprint resolves renderer hashes and dependency versions (0.488783ms)
+✔ an entities upgrade misses SVGs cached with the previous version (2.523953ms)
+✔ Mermaid subprocess renders SVG output larger than one MiB (296.134106ms)
+✔ cache hits remove crash leftovers without deleting a live writer temp file (27.403258ms)
+✔ failed cache writes remove their own temporary file (1.292624ms)
+✔ pruneCache evicts by age first, then oldest entries beyond the limit (0.710998ms)
+✔ mise config exposes the repo-local marpx wrapper on PATH (0.856202ms)
+✔ new-deck scaffolds brief and slide templates (43.747549ms)
+✔ new-deck --paper scaffolds a single A-series paper template (46.206407ms)
+✔ new-deck refuses to overwrite existing scaffold files (45.458559ms)
+✔ new-deck --force overwrites existing scaffold files (47.990492ms)
+✔ new-deck reports a non-symlink shared entry and leaves it untouched (101.197131ms)
+✔ marpx -n forwards --force to new-deck (148.662062ms)
+✔ new-deck rejects path traversal outside decks directory (26.370291ms)
+✔ new-deck rejects absolute paths (28.005303ms)
+✔ new-theme scaffolds design, theme source, and fixture (5.588701ms)
+✔ new-theme reuses lab DESIGN.md as the complete token scaffold (1.394374ms)
+✔ new-theme validates and normalizes theme names (0.543604ms)
+✔ new-theme refuses to overwrite scaffold files unless forced (3.246295ms)
+✔ new-theme parses source and build options (0.265871ms)
+✔ outline builder emits slide plan with required fields (8.867155ms)
+✔ parseBrief supports Japanese heading aliases (1.137506ms)
+✔ validateBriefSchema reports missing required sections (0.225919ms)
+✔ outline does not duplicate Title slide when brief lists Title in Required Sections (1.045879ms)
+✔ outline maps Title-aliased section to the title layout (0.535406ms)
+✔ outline carries bracketed variant hint from required-section text (0.573551ms)
+✔ outline carries 'using the X variant' prose variant hint (1.472465ms)
+✔ outline carries newer layout hints and strips their markers (0.246953ms)
+✔ generateOutlineFile refuses to overwrite an existing output (1.211038ms)
+✔ generateOutlineFile overwrites an existing output with force (2.41987ms)
+✔ outline overflow risk counts only assets a section names (1.651461ms)
+✔ generateOutlineFile rejects incomplete brief by default (0.498377ms)
+✔ overview stops polling when it starts a reload (5.708873ms)
+✔ overview output names cannot collide across decks or sessions (0.887143ms)
+✔ buildOverviewDocument labels cards with the Markdown slide index (1.239246ms)
+✔ extractSlides returns every rendered slide svg (0.28556ms)
+✔ extractSlides keeps the last slide even if scripts follow it (0.844763ms)
+✔ buildOverviewDocument preserves slide content and labels (0.375881ms)
+✔ buildWaitingDocument shows a reload-ready placeholder (0.21655ms)
+✔ buildOverviewDocument includes polling live-reload script (1.963631ms)
+✔ buildWaitingDocument includes polling live-reload script (0.388721ms)
+✔ package exposes a repo-local marpx npm script (0.51971ms)
+✔ pins the installed @marp-team/marp-core version (0.572222ms)
+✔ configured CLI engine uses installed full Core even with another default (41.780693ms)
+✔ plans only rendered resources and rewrites CSS/SVG transitively with their own bases (34.732952ms)
+✔ lists remote dependencies without fetching and rejects them in strict offline mode (7.4526ms)
+✔ shared bundle policy rejects absolute links, whole-directory reuse, and direct cross-deck references without leaking API paths (3.893774ms)
+✔ every resolver call explicitly uses bundle policy and internal origin/context never enters exported metadata (16.834174ms)
+✔ private realpaths behind innocent media names are excluded through CSS and SVG references (4.406309ms)
+✔ a resource exchanged for an outside symlink after inspection is rejected before reading its bytes (3.370384ms)
+✔ an already verified read handle keeps the authorized snapshot when its pathname is exchanged (6.374548ms)
+✔ parent symlinks retain the browser URL base and a symlinked bundle root remains portable (10.48345ms)
+✔ reports missing, absolute, outside, cyclic, private, and nonregular resources without leaking local paths (4.499929ms)
+✔ keeps equal basenames distinct and deduplicates repeated aliases (6.381701ms)
+✔ size/file limits and unreadable files fail before output (7.038518ms)
+✔ archive entries are regular, deterministic, and match their manifest hashes (4.02506ms)
+✔ refuses overwrites and invalid plans, preserves existing output, and cleans staging on failure (3.614243ms)
+✔ force cannot overwrite a resource or its symlink alias (2.046634ms)
+✔ archive I/O failure preserves output and removes the staging directory (2.897747ms)
+✔ custom script dependencies are disclosed and strict offline rejects them (3.706904ms)
+✔ configured body footnote runtime remains available in a strict offline bundle (377.570783ms)
+✔ ZIP-only flags reject other modes and ZIP limits validate before rendering (538.932875ms)
+✔ ZIP dry-run lists missing/remote resources, exits unsuccessfully, and creates no output (1165.089793ms)
+✔ ZIP success, overwrite routing, and strict-offline failure preserve existing archives (2405.939794ms)
+✔ dry-run compiles HTML once through the common config and writes no archive (17.579289ms)
+✔ ZIP conversion retains the original D2 project context and requests strict rendering without mutating caller environment (2.62602ms)
+✔ conversion and configured-engine diagnostics preserve existing ZIP and clean the render stage (2.279585ms)
+✔ presenter cursor reaches its audience without leaking to another deck or session (4.63855ms)
+✔ serve defaults to loopback and permits explicit LAN binding (8409.481609ms)
+✔ overview defaults to loopback and permits explicit LAN binding (794.544765ms)
+✔ parseDeckAndPageArgs requires a deck path (0.763933ms)
+✔ parseDeckAndPageArgs rejects page-only shorthand (0.233454ms)
+✔ parseDeckAndPageArgs diagnoses a page before the deck (0.163282ms)
+✔ parseDeckAndPageArgs resolves explicit deck paths (0.758254ms)
+✔ buildDeckUrl targets the deck route and hash (0.182178ms)
+✔ buildOverviewUrl encodes the target slide id in the query string (0.151445ms)
+✔ static file deletion between stat and stream open returns 404 without stopping the server (25.633892ms)
+✔ rendered output deletion during a request returns 404 and preserves availability (5.723202ms)
+✔ metadata reports missing output without caching (13.511969ms)
+✔ metadata token changes when rendered output changes (17.450117ms)
+✔ overview page reports its current token without caching (21.677239ms)
+✔ malformed URL-encoded path returns 404 and server stays available (12.974223ms)
+✔ removed WebSocket endpoint is not served (18.579373ms)
+✔ render queue coalesces requests made while a render is running (0.645285ms)
+[  INFO ] Converting 1 markdown...
+[  INFO ] ../../../../../../../tmp/overview-render-test-w8wpy2/slide.md => ../../../../../../../tmp/overview-render-test-w8wpy2/.slide.overview.rendering-2339744.html
+[  WARN ] Not found processable Markdown file(s).
+
+Usage:
+  marp [options] <files...>
+  marp [options] -I <dir>
+
+Basic Options:
+  -v, --version                      Show versions                     [boolean]
+  -h, --help                         Show help                         [boolean]
+  -d, --debug                        Show debug logs (bool or filter pattern)
+                                                       [string] [default: false]
+  -o, --output                       Output file path (or directory when
+                                     input-dir is passed)               [string]
+  -I, --input-dir                    The base directory to find markdown and
+                                     theme CSS                          [string]
+  -c, --config-file, --config        Specify path to a configuration file
+                                                                        [string]
+      --no-config-file, --no-config  Prevent looking up for a configuration file
+                                                                       [boolean]
+  -P, --parallel                     Number of max parallel processes for
+                                     multiple conversions  [number] [default: 5]
+      --no-parallel                  Disable parallel processing       [boolean]
+  -w, --watch                        Watch input markdowns for changes [boolean]
+  -s, --server                       Enable server mode                [boolean]
+  -p, --preview                      Open preview window               [boolean]
+
+Converter Options:
+      --pdf                Convert slide deck into PDF                 [boolean]
+      --pptx               Convert slide deck into PowerPoint document [boolean]
+      --pptx-editable      [EXPERIMENTAL] Generate editable PPTX when converting
+                           to PPTX                                     [boolean]
+      --notes              Convert slide deck notes into a text file   [boolean]
+      --image              Convert the first slide page into an image file
+                                               [string] [choices: "png", "jpeg"]
+      --images             Convert slide deck into multiple image files
+                                               [string] [choices: "png", "jpeg"]
+      --image-scale        The scale factor for rendered images
+                                           [number] [default: 1 (or 2 for PPTX)]
+      --jpeg-quality       Set JPEG image quality         [number] [default: 85]
+      --allow-local-files  Allow to access local files from Markdown while
+                           converting PDF, PPTX, or image (NOT SECURE) [boolean]
+
+Template Options:
+      --template            Choose template
+                      [string] [choices: "bare", "bespoke"] [default: "bespoke"]
+      --bespoke.osc         [Bespoke] Use on-screen controller
+                                                       [boolean] [default: true]
+      --bespoke.progress    [Bespoke] Use progress bar[boolean] [default: false]
+      --bespoke.transition  [Bespoke] Use transitions (Only in browsers
+                            supported View Transition API)
+                                                       [boolean] [default: true]
+
+Browser Options:
+      --browser           The kind of browser to use for PDF, PPTX, and image
+                          conversion
+       [string] [choices: "auto", "chrome", "edge", "firefox"] [default: "auto"]
+      --browser-path      Path to the browser executable (Find automatically if
+                          not set)                                      [string]
+      --browser-protocol  Preferred protocol to use for browser connection
+                    [string] [choices: "cdp", "webdriver-bidi"] [default: "cdp"]
+      --browser-timeout   Timeout for each browser operation in seconds (0 to
+                          disable)                                 [default: 30]
+
+PDF Options:
+      --pdf-notes              Add presenter notes to PDF as annotations
+                                                                       [boolean]
+      --pdf-outlines           Add outlines (bookmarks) to PDF         [boolean]
+      --pdf-outlines.pages     Make outlines from slide pages
+                                                       [boolean] [default: true]
+      --pdf-outlines.headings  Make outlines from Markdown headings
+                                                       [boolean] [default: true]
+
+Metadata Options:
+      --title        Define title of the slide deck                     [string]
+      --description  Define description of the slide deck               [string]
+      --author       Define author of the slide deck                    [string]
+      --keywords     Define comma-separated keywords for the slide deck [string]
+      --url          Define canonical URL                               [string]
+      --og-image     Define Open Graph image URL                        [string]
+
+Marp / Marpit Options:
+      --engine     Select Marpit based engine by module name or path    [string]
+      --html       Enable or disable HTML tags                         [boolean]
+      --theme      Override theme by name or CSS file                   [string]
+      --theme-set  Path to additional theme CSS files                    [array]
+✔ renderDeck publishes the rendered deck and keeps it when a later render fails (610.839061ms)
+✔ overview sessions for the same deck own independent output files (855.112167ms)
+✔ concurrent overview servers keep serving and following saves (963.363126ms)
+✔ browser opener failure warns with the URL and remains recoverable (1.503265ms)
+✔ getMarpBin returns platform-appropriate binary path (0.294025ms)
+✔ openBrowser returns null when MARP_AGENT_NO_OPEN is set (0.151891ms)
+✔ forwardLines pipes each line to the writer and calls onLine (53.376461ms)
+✔ resolveRequestedSlideId returns undefined when displayedPage is undefined (0.304813ms)
+✔ resolveRequestedSlideId throws when page is not found (262.843413ms)
+✔ resolveRequestedSlideId returns slide id for valid page (63.314716ms)
+✔ resolveRequestedSlide returns the section id and rendered position (34.161799ms)
+✔ forwardChildSignals forwards SIGINT to child (0.800696ms)
+✔ export and serve diagnose a missing Marp binary without an unhandled error (417.764125ms)
+✔ runScript handles a spawn error before exit can be emitted (45.434218ms)
+✔ process inspection fails explicitly when ps is unavailable (7.862045ms)
+✔ a timed-out command kills its hanging child and grandchild (detached: false) (634.235681ms)
+✔ a timed-out command kills its hanging child and grandchild (detached: true) (656.661751ms)
+✔ a successful command retains stdout, stderr, and exit status (33.942058ms)
+✔ a timed-out command cannot pass by exiting zero after SIGTERM (261.780148ms)
+✔ parseNodeMajor extracts major from semver values (0.723392ms)
+✔ getRuntimePolicy loads required major from .mise.toml tools.node (0.308791ms)
+✔ assertSupportedNodeRuntime accepts matching major (0.218734ms)
+✔ assertSupportedNodeRuntime rejects non-matching major (0.306254ms)
+✔ assertSupportedNodeRuntime can be skipped via env flag (0.173308ms)
+✔ the spot scroll directive wraps only its own slide (372.141822ms)
+✔ local inheritance and spot overrides use Marpit semantics (92.297758ms)
+✔ fenced, escaped, and commented examples cannot opt in a slide (484.312151ms)
+✔ hidden slides preserve inherited scroll and visible pagination (81.378955ms)
+✔ fixed elements stay outside one body while nested Markdown and raw HTML stay together (80.314098ms)
+✔ an HTML heading is fixed without moving its following sibling (49.327297ms)
+✔ raw-text script strings cannot absorb the fixed heading or body (45.137002ms)
+✔ scoped CSS, math, Mermaid, and Core helper scripts survive body wrapping (939.270984ms)
+✔ intentional vertical scrolling warns about static exports without failing presentation validation (2888.385467ms)
+✔ validation reaches math errors and tiny text below the initial scroll viewport (1614.550827ms)
+✔ vertical scrolling does not hide horizontal clipping (1457.08724ms)
+✔ validation finds defects in the middle of a long scrollable body and counts each occurrence once (4579.118538ms)
+✔ scroll findings in a mixed deck map to the Markdown slide, rendered position, and displayed page (1532.852725ms)
+✔ an opted-in body that fits its viewport does not warn about static exports (1260.896317ms)
+✔ buildSlideMap keeps empty slides, which Marp still renders (284.811563ms)
+✔ buildSlideMap treats a setext underline as a heading, not a separator (36.050176ms)
+✔ buildSlideMap ignores --- inside fenced code (19.716854ms)
+✔ buildSlideMap reports hidden slides without a rendered position (28.610327ms)
+✔ buildSlideMap reports displayed pages under skipped pagination (28.737918ms)
+✔ buildSlideMap follows headingDivider (29.76855ms)
+✔ findSlideByDisplayedPage resolves displayed pages and never hidden slides (29.722427ms)
+✔ findSlideByDisplayedPage falls back to rendered position without page numbers (29.491945ms)
+✔ formatSlideLabel shows the displayed page only when it differs (0.562439ms)
+✔ Mermaid theme CSS exposes sizing custom properties (1.66095ms)
+✔ title logo background sizing defaults to height-based and remains overridable (0.701804ms)
+✔ theme CSS provides reusable layout component classes (3.806774ms)
+✔ theme CSS defines default subtle panel token (0.230959ms)
+✔ lab default highlight follows the warm accent token (0.464898ms)
+✔ lab font defaults remain overridable after theme compilation (0.400376ms)
+✔ normal slide header uses a flat surface with an accent rule (0.614785ms)
+✔ title and normal slide rules share the same accent treatment (0.424069ms)
+✔ theme sources take Tailwind utilities only from the explicit safelist (1.999935ms)
+✔ compiled themes contain no utilities generated from prose words (2.565175ms)
+✔ compiled themes define every design token for deck-local styles (1.292281ms)
+✔ compiled theme CSS matches a fresh Tailwind build (1053.245448ms)
+✔ classes used by examples, fixtures, templates, and skills exist in every compiled theme (15.219256ms)
+✔ lab theme declares canvas size families and imports paper components (0.391678ms)
+✔ generated design token CSS is fresh for all designs (651.248609ms)
+✔ all DESIGN.md files pass designmd lint without warnings (476.039529ms)
+✔ theme source colors come from generated design tokens (0.759131ms)
+✔ legacy deck color variables map to lab design tokens (0.192157ms)
+✔ DESIGN.md files follow the Google design.md document shape (0.508341ms)
+✔ muji theme renders a smoke deck (92.558384ms)
+✔ toshiba theme renders a smoke deck (62.296217ms)
+✔ muji header title inset comes from design tokens (0.226419ms)
+✔ CSS variables referenced by examples, fixtures, templates, and skills resolve in every compiled theme (3.500674ms)
+✔ compiled themes define the full Tailwind text scale for deck-local styles (1.133205ms)
+✔ theme build reports a missing compiler without an unhandled error (54.756063ms)
+✔ theme build preserves a compiler signal as failure (70.434389ms)
+✔ theme build forwards a parent SIGTERM to its compiler (90.753063ms)
+✔ theme watch reports a missing compiler without an unhandled error (51.73602ms)
+✔ theme watch preserves a compiler signal as failure (93.695241ms)
+✔ theme watch forwards a parent SIGTERM to its compiler (94.84047ms)
+✔ theme watch regenerates tokens after consecutive atomic saves (1584.238106ms)
+✔ validator flags dense bullets (449.905836ms)
+✔ a fence marker followed by an info string does not end a code example (102.100509ms)
+✔ validator flags figure-plus-text density (99.382488ms)
+✔ validator flags long heading and overflow risk (77.428123ms)
+✔ validator flags typography drift (108.469662ms)
+✔ clean slide produces no findings (104.8227ms)
+✔ isPaperDeck detects A-series orientation size directives (0.255511ms)
+✔ A-series paper decks skip slide-density heuristics (154.209225ms)
+✔ validator flags comparison density (92.069867ms)
+✔ splitSlides strips frontmatter and filters empty slides (13.070457ms)
+✔ splitSlides does not split on --- inside fenced code blocks (10.363016ms)
+✔ bullet-like lines inside fenced code blocks are not counted (190.043683ms)
+✔ formatSummary reports zero findings cleanly (0.355256ms)
+✔ buildSarifReport emits SARIF with rule and result entries (0.769811ms)
+✔ writeArtifacts returns empty when no reportDir given (0.909604ms)
+✔ validator flags overflow-risk for very long body lines (50.412684ms)
+✔ validateDeckWithVisualCheck reports clipped content on the heavy fixture (1888.504735ms)
+✔ rendered katex and Mermaid failures retain slide identity and fail validation (1758.919843ms)
+✔ rendered mathjax and Mermaid failures retain slide identity and fail validation (4796.832153ms)
+✔ rendered math and diagram errors become one error finding per slide and kind (35.602049ms)
+✔ measured decks turn heuristics into hints and drop overflow-risk (38.638384ms)
+✔ measured clipping becomes a blocking content-clipped error (39.482972ms)
+✔ measured edge crowding is a non-blocking edge-crowding warning (38.168306ms)
+✔ measured text below the floor is one blocking text-too-small error per slide (41.800701ms)
+✔ measured overlapping text is one blocking text-overlap error per slide (32.070202ms)
+✔ typography-drift is superseded by a render and kept as a fallback warning (90.317678ms)
+✔ skipped visual check keeps heuristics as non-blocking warnings (31.565425ms)
+✔ defaultImageExporter removes its temp directory when the export fails (1450.531745ms)
+✔ missing assets are one blocking error per slide, deduplicated across checks (33.603376ms)
+✔ missing assets still fail validation when rendering is skipped (74.499654ms)
+✔ missing-asset names the target of a broken symlink (36.654702ms)
+✔ rendered and file checks report a missing image once (1252.763036ms)
+✔ formatSummary hides hints unless requested (0.256255ms)
+✔ reports record the visual check and screenshot only non-hint slides (0.545128ms)
+✔ buildSarifReport records the visual check and maps hints to notes (0.146359ms)
+✔ dense-bullets on multi-column slide reports per-column breakdown (35.343248ms)
+✔ dense-bullets keeps single-list message when slide is not multi-column (29.590022ms)
+✔ overflow-risk message names the threshold that tripped (34.854261ms)
+✔ overflow-risk identifies callout source for long line (37.883073ms)
+✔ typography-drift message names the offending class (33.185622ms)
+✔ validator allows the supported text-xs utility (34.550572ms)
+✔ figure-text-density message names the contributing count (36.342144ms)
+✔ validator writes report artifacts and uses injected screenshot exporter (31.629315ms)
+✔ findings carry the slide identity from the Marp render (36.848522ms)
+✔ report.md and report.json carry the slide identity (37.997377ms)
+✔ defaultImageExporter selects screenshots by rendered position (1507.289186ms)
+✔ validate-deck emits structured warning logs on visual-check fallback (630.555798ms)
+✔ validate-deck emits structured debug stack log when debug mode is enabled (565.977432ms)
+✔ validate-deck fails fast in strict visual mode (403.515756ms)
+✔ validate-deck reports a skipped visual check in JSON and SARIF output (827.523186ms)
+✔ screenshot export failure retains measured findings and writes reports (420.724956ms)
+✔ CLI report write failure never falls back from measured findings (2583.672007ms)
+✔ failed HTML conversion removes its temporary directory (690.888595ms)
+✔ failed screenshot cleans up before the CLI exits (1043.964379ms)
+✔ fixture validation accepts reports larger than the default child buffer (43.536276ms)
+✔ fixture validation diagnoses process and JSON failures before comparing findings (0.442553ms)
+✔ strict fixture validation rejects unmeasured reports even with exit zero (0.130134ms)
+✔ nested HTML sections do not shift slide or media identities (2123.276113ms)
+✔ detectHiddenSlides finds slides with hide directive (26.253488ms)
+✔ detectHiddenSlides treats hide and _hide as hiding only their own slide (31.573897ms)
+✔ detectHiddenSlides reads hide from multi-key directive comments (9.345136ms)
+✔ detectHiddenSlides ignores hide false and hide comments in code blocks (13.171763ms)
+✔ detectHiddenSlides returns empty set when no hidden slides (9.135054ms)
+✔ buildRenderedToMarkdownMap maps rendered indices to markdown slide numbers (11.440741ms)
+✔ buildRenderedToMarkdownMap skips a slide hidden with _hide (12.423433ms)
+✔ buildRenderedToMarkdownMap keeps empty slides, which Marp renders (14.69219ms)
+✔ buildRenderedToMarkdownMap does not split on a setext heading underline (19.35019ms)
+✔ buildRenderedToMarkdownMap keeps --- inside fenced code in one slide (10.125846ms)
+✔ measureRenderedSlides reports clipped text on the heavy fixture (1352.196588ms)
+✔ measureRenderedSlides reports nothing for a clean slide (1254.469575ms)
+✔ measureRenderedSlides ignores trailing margins and intentional crops (4508.19175ms)
+✔ measureRenderedSlides reports content crowding the slide edge (1250.46641ms)
+✔ measureRenderedSlides records rendered font sizes and flags text below the floor (1318.26243ms)
+✔ measureRenderedSlides scales the font floor to a paper canvas (1552.305789ms)
+✔ measureRenderedSlides reports text that collides with text or media (1425.879636ms)
+✔ measureRenderedSlides reports media that fail to load (1188.631292ms)
+✔ measureRenderedSlides reports only painted render errors (1230.633022ms)
+✔ measureRenderedSlides renders a deck whose directory name contains # and % (1210.828682ms)
+✔ measureRenderedSlides reports a skipped check instead of throwing (0.338084ms)
+ℹ tests 539
+ℹ suites 0
+ℹ pass 539
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21437.517711
+
+> marpagent@1.0.0 validate:fixtures
+> node scripts/ci-validate-fixtures.js
+
+Fixture validation running in strict visual mode.
+decks/example/slide.md: ok
+fixtures/clean-slide.md: ok
+fixtures/core5-slide.md: ok
+fixtures/scroll-slide.md: ok
+fixtures/paginate-skip-slide.md: ok
+fixtures/muji-slide.md: ok
+fixtures/toshiba-slide.md: ok
+template/layouts.md: ok
+template/core5-components.md: ok
+fixtures/render-errors-slide.md: ok
+fixtures/comparison-slide.md: ok
+fixtures/dense-bullets-slide.md: ok
+fixtures/figure-heavy-slide.md: ok
+fixtures/long-japanese-slide.md: ok
+fixtures/tiny-text-slide.md: ok
+fixtures/scoped-small-text-slide.md: ok
+fixtures/text-overlap-slide.md: ok
+fixtures/overflow-heavy-slide.md: ok
+Fixture validation quality gate passed.
+
+> marpagent@1.0.0 test:e2e
+> playwright test
+
+
+Running 141 tests using 12 workers
+
+(node:2354011) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354013) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354030) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354031) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354042) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354050) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354063) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354077) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354099) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354042) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354013) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354011) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354050) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354031) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354030) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354063) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354077) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2354099) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓    2 [chromium] › tests/e2e/cli-smoke.spec.js:57:1 › outline generation smoke (88ms)
+  ✓    3 [chromium] › tests/e2e/overview-canvas.spec.js:4:1 › overview fits widescreen, 4:3, and portrait canvases after resizing (318ms)
+  ✓    5 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › lab: legacy col.fill preserves authored widths and place-top (366ms)
+  ✓    6 [chromium] › tests/e2e/body-layout.spec.js:61:5 › lab: nested fill preserves both placement axes in equal-height columns (361ms)
+  ✓   12 [chromium] › tests/e2e/lab-refinement.spec.js:88:1 › plain lab uses readable type roles and preserves colored emphasis (322ms)
+  ✓   13 [chromium] › tests/e2e/caption-wrapping.spec.js:104:5 › lab normal: captions balance short final lines while preserving text and fitting (331ms)
+  ✓   15 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › lab: legacy col.fill preserves authored widths and place-middle (204ms)
+  ✓   16 [chromium] › tests/e2e/body-layout.spec.js:94:9 › lab 16:9: body gives an extra heading or caption line space before fitting media (335ms)
+  ✓   19 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › lab: legacy col.fill preserves authored widths and place-bottom (181ms)
+  ✓   18 [chromium] › tests/e2e/caption-wrapping.spec.js:104:5 › lab normal invert: captions balance short final lines while preserving text and fitting (213ms)
+  ✓   10 [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › lab 16:9: direct footnotes reserve their actual height through heading and caption growth (848ms)
+  ✓   21 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › lab: legacy col.fill preserves authored widths and place-spread (169ms)
+  ✓   22 [chromium] › tests/e2e/caption-wrapping.spec.js:119:1 › Japanese captions keep BudouX phrase boundaries and explicit no-break runs (244ms)
+  ✓   20 [chromium] › tests/e2e/body-layout.spec.js:94:9 › lab 4:3: body gives an extra heading or caption line space before fitting media (309ms)
+  ✓   24 [chromium] › tests/e2e/layout-compatibility.spec.js:114:5 › lab: legacy box.fill keeps an explicitly sized, cropped figure (243ms)
+  ✓   26 [chromium] › tests/e2e/body-layout.spec.js:61:5 › muji: nested fill preserves both placement axes in equal-height columns (166ms)
+  ✓   17 [chromium] › tests/e2e/lab-refinement.spec.js:109:1 › plain lab keeps invert and named-scheme emphasis colored (744ms)
+  ✓   27 [chromium] › tests/e2e/layout-compatibility.spec.js:192:5 › lab: legacy title fill stays on canvas without resetting title margins (221ms)
+  ✓   23 [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › lab 4:3: direct footnotes reserve their actual height through heading and caption growth (524ms)
+  ✓   29 [chromium] › tests/e2e/lab-refinement.spec.js:137:1 › lab mark references use an inset fill across wrapped lines while em stays a band (252ms)
+  ✓    8 [chromium] › tests/e2e/core5-rendering.spec.js:9:1 › BOM frontmatter keeps the rendered validator canvas and readability floors at 4:3 (1.4s)
+  ✓   28 [chromium] › tests/e2e/body-layout.spec.js:94:9 › muji 16:9: body gives an extra heading or caption line space before fitting media (305ms)
+  ✓   25 [chromium] › tests/e2e/caption-wrapping.spec.js:137:1 › caption balancing respects authored wrapping and independent theme scales (510ms)
+  ✓   30 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › muji: legacy col.fill preserves authored widths and place-top (191ms)
+  ✓   31 [chromium] › tests/e2e/body-footnotes.spec.js:94:5 › lab: source order, explicit reserve, late footnote growth, and print keep the contract (301ms)
+  ✓   36 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › muji: legacy col.fill preserves authored widths and place-middle (206ms)
+  ✓   34 [chromium] › tests/e2e/body-layout.spec.js:94:9 › muji 4:3: body gives an extra heading or caption line space before fitting media (349ms)
+  ✓   32 [chromium] › tests/e2e/lab-refinement.spec.js:238:1 › lab marker changes preserve authored paint and the other surfaces (500ms)
+  ✓   38 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › muji: legacy col.fill preserves authored widths and place-bottom (175ms)
+  ✓   39 [chromium] › tests/e2e/body-layout.spec.js:61:5 › toshiba: nested fill preserves both placement axes in equal-height columns (158ms)
+  ✓   37 [chromium] › tests/e2e/body-footnotes.spec.js:117:5 › lab: natural figures and explicit crop dimensions remain authored (338ms)
+  ✓   41 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › muji: legacy col.fill preserves authored widths and place-spread (162ms)
+  ✓    4 [chromium] › tests/e2e/overview-live-reload.spec.js:90:1 › overview follows consecutive saves in every supported browser (2.4s)
+  ✓   42 [chromium] › tests/e2e/body-layout.spec.js:94:9 › toshiba 16:9: body gives an extra heading or caption line space before fitting media (277ms)
+  ✓   44 [chromium] › tests/e2e/layout-compatibility.spec.js:114:5 › muji: legacy box.fill keeps an explicitly sized, cropped figure (189ms)
+  ✓   40 [chromium] › tests/e2e/lab-refinement.spec.js:271:1 › plain lab preserves deck overrides and the independent paper and other-theme scales (407ms)
+  ✓   14 [chromium] › tests/e2e/portable-bundle.spec.js:113:1 › relocated bundle loads every displayed page and CSS/SVG/media with remote networking blocked (2.2s)
+  ✓   33 [chromium] › tests/e2e/core5-rendering.spec.js:48:5 › lab: MathJax inline math stays within its text line (941ms)
+  ✓   35 [chromium] › tests/e2e/scroll-slides.spec.js:132:1 › an opted-in body that fits keeps native vertical page navigation (235ms)
+(node:2356240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   46 [chromium] › tests/e2e/layout-compatibility.spec.js:192:5 › muji: legacy title fill stays on canvas without resetting title margins (168ms)
+  ✓   43 [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › muji 16:9: direct footnotes reserve their actual height through heading and caption growth (437ms)
+  ✓   47 [chromium] › tests/e2e/lab-refinement.spec.js:302:5 › plain lab 16:9: body reserves larger captions and preserves figure groups (151ms)
+  ✓   45 [chromium] › tests/e2e/body-layout.spec.js:94:9 › toshiba 4:3: body gives an extra heading or caption line space before fitting media (250ms)
+  ✓   51 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › toshiba: legacy col.fill preserves authored widths and place-top (144ms)
+  ✓   53 [chromium] › tests/e2e/lab-refinement.spec.js:302:5 › plain lab 4:3: body reserves larger captions and preserves figure groups (160ms)
+  ✓   54 [chromium] › tests/e2e/body-layout.spec.js:113:1 › body without a header and a heading inside a column shares the remaining area with stacked figures (149ms)
+  ✓   55 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › toshiba: legacy col.fill preserves authored widths and place-middle (146ms)
+  ✓   56 [chromium] › tests/e2e/body-layout.spec.js:138:1 › stacked image, SVG, and video share a figure without displacing its caption (177ms)
+  ✓   49 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › lab normal: both Mermaid renderers follow theme colors and sizing (501ms)
+  ✓   52 [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › muji 4:3: direct footnotes reserve their actual height through heading and caption growth (414ms)
+(node:2356390) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   57 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › toshiba: legacy col.fill preserves authored widths and place-bottom (148ms)
+  ✓   50 [chromium] › tests/e2e/scroll-slides.spec.js:151:1 › wheel and vertical keys scroll only the body; navigation and fixed chrome remain intact (546ms)
+  ✓    9 [chromium] › tests/e2e/composition-utilities.spec.js:72:5 › lab: representative baseline keeps evidence and composition (3.0s)
+  ✓   58 [chromium] › tests/e2e/body-layout.spec.js:162:1 › body keeps genuinely oversized text visible to rendered diagnostics (180ms)
+(node:2356240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   61 [chromium] › tests/e2e/layout-compatibility.spec.js:19:9 › toshiba: legacy col.fill preserves authored widths and place-spread (157ms)
+  ✓   63 [chromium] › tests/e2e/composition-utilities.spec.js:292:5 › lab: utilities compose unequal columns without adding card styling (174ms)
+  ✓   64 [chromium] › tests/e2e/body-layout.spec.js:174:1 › natural figures keep authored inline dimensions and fitting figures keep explicit crop (155ms)
+  ✓   60 [chromium] › tests/e2e/body-footnotes.spec.js:94:5 › muji: source order, explicit reserve, late footnote growth, and print keep the contract (318ms)
+  ✓   62 [chromium] › tests/e2e/scroll-slides.spec.js:223:1 › focused controls and body touch gestures are not turned into slide navigation (271ms)
+  ✓   59 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › lab normal: Shiki retains the theme's code palette (391ms)
+  ✓   65 [chromium] › tests/e2e/layout-compatibility.spec.js:114:5 › toshiba: legacy box.fill keeps an explicitly sized, cropped figure (193ms)
+  ✓   67 [chromium] › tests/e2e/composition-utilities.spec.js:370:5 › lab: flex rows size and align plain wrappers (151ms)
+  ✓   71 [chromium] › tests/e2e/layout-compatibility.spec.js:192:5 › toshiba: legacy title fill stays on canvas without resetting title margins (177ms)
+(node:2356639) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   68 [chromium] › tests/e2e/body-footnotes.spec.js:117:5 › muji: natural figures and explicit crop dimensions remain authored (299ms)
+(node:2356390) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   70 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › lab invert: both Mermaid renderers follow theme colors and sizing (279ms)
+  ✓   69 [chromium] › tests/e2e/scroll-slides.spec.js:264:1 › native touch panning reaches the body without a Bespoke swipe (427ms)
+  ✓   74 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › lab invert: Shiki retains the theme's code palette (179ms)
+  ✓   73 [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › toshiba 16:9: direct footnotes reserve their actual height through heading and caption growth (462ms)
+  ✓   77 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › lab neogaia invert: both Mermaid renderers follow theme colors and sizing (301ms)
+(node:2356639) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   48 [chromium] › tests/e2e/portable-bundle.spec.js:327:1 › Mermaid font dependencies are disclosed, rejected by strict offline, and blocked during relocated viewing (1.9s)
+  ✓   79 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › lab neogaia invert: Shiki retains the theme's code palette (190ms)
+  ✓   78 [chromium] › tests/e2e/body-footnotes.spec.js:68:9 › toshiba 4:3: direct footnotes reserve their actual height through heading and caption growth (451ms)
+  ✓   81 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › lab github-light invert: both Mermaid renderers follow theme colors and sizing (257ms)
+  ✓   84 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › lab github-light invert: Shiki retains the theme's code palette (160ms)
+  ✓   66 [firefox-overview] › tests/e2e/overview-canvas.spec.js:4:1 › overview fits widescreen, 4:3, and portrait canvases after resizing (1.3s)
+  ✓   83 [chromium] › tests/e2e/body-footnotes.spec.js:94:5 › toshiba: source order, explicit reserve, late footnote growth, and print keep the contract (295ms)
+  ✓   85 [chromium] › tests/e2e/core5-rendering.spec.js:48:5 › muji: MathJax inline math stays within its text line (191ms)
+  ✓   86 [chromium] › tests/e2e/body-footnotes.spec.js:117:5 › toshiba: natural figures and explicit crop dimensions remain authored (263ms)
+  ✓   76 [chromium] › tests/e2e/scroll-slides.spec.js:308:1 › late presenter joins, bidirectional normalized sync, resize, previews, and revisits (1.4s)
+  ✓   87 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › muji normal: both Mermaid renderers follow theme colors and sizing (252ms)
+  ✓   90 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › muji normal: Shiki retains the theme's code palette (175ms)
+  ✓   88 [chromium] › tests/e2e/body-footnotes.spec.js:138:1 › scaled and temporarily hidden slides recalculate added and removed direct notes (342ms)
+  ✓   11 [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › lab 16:9: long direct footnotes survive HTML, PNG, and PDF exports (5.5s)
+  ✓   72 [chromium] › tests/e2e/composition-utilities.spec.js:72:5 › muji: representative baseline keeps evidence and composition (2.2s)
+  ✓   91 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › muji invert: both Mermaid renderers follow theme colors and sizing (247ms)
+  ✓   94 [chromium] › tests/e2e/composition-utilities.spec.js:292:5 › muji: utilities compose unequal columns without adding card styling (151ms)
+  ✓   95 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › muji invert: Shiki retains the theme's code palette (169ms)
+  ✓    1 [chromium] › tests/e2e/body-exports.spec.js:11:1 › body compositions keep media and captions inside HTML, image, and PDF exports (6.0s)
+  ✓   96 [chromium] › tests/e2e/composition-utilities.spec.js:370:5 › muji: flex rows size and align plain wrappers (132ms)
+  ✓   89 [chromium] › tests/e2e/scroll-slides.spec.js:367:1 › separate native sessions and deck paths are isolated; incoming values are validated (799ms)
+  ✓   92 [chromium] › tests/e2e/body-footnotes.spec.js:156:1 › legacy, title, paper, and scroll keep their footnote mechanisms (508ms)
+  ✓   97 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › muji neogaia invert: both Mermaid renderers follow theme colors and sizing (225ms)
+  ✓  100 [chromium] › tests/e2e/body-footnotes.spec.js:165:1 › excessive required text stays visible to diagnostics with a direct footnote (250ms)
+  ✓  101 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › muji neogaia invert: Shiki retains the theme's code palette (177ms)
+  ✓   80 [chromium] › tests/e2e/portable-bundle.spec.js:418:1 › ZIP CLI excludes private symlink targets and resolver metadata while preserving existing output on rejection (2.0s)
+  ✓   99 [chromium] › tests/e2e/scroll-slides.spec.js:426:1 › printing resets only the local viewport and never publishes the reset (446ms)
+  ✓   82 [firefox-overview] › tests/e2e/scroll-slides.spec.js:132:1 › an opted-in body that fits keeps native vertical page navigation (1.2s)
+  ✓  102 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › muji github-light invert: both Mermaid renderers follow theme colors and sizing (220ms)
+  ✓   75 [firefox-overview] › tests/e2e/overview-live-reload.spec.js:90:1 › overview follows consecutive saves in every supported browser (2.6s)
+  ✓  106 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › muji github-light invert: Shiki retains the theme's code palette (146ms)
+  ✓  107 [chromium] › tests/e2e/core5-rendering.spec.js:48:5 › toshiba: MathJax inline math stays within its text line (186ms)
+  ✓  104 [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › lab normal: bare HTML preserves canvas, fonts, components, and reachable body (630ms)
+  ✓  108 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › toshiba normal: both Mermaid renderers follow theme colors and sizing (202ms)
+  ✓  110 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › toshiba normal: Shiki retains the theme's code palette (144ms)
+  ✓  105 [firefox-overview] › tests/e2e/scroll-slides.spec.js:151:1 › wheel and vertical keys scroll only the body; navigation and fixed chrome remain intact (755ms)
+  ✓  109 [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › lab invert: bare HTML preserves canvas, fonts, components, and reachable body (244ms)
+  ✓  111 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › toshiba invert: both Mermaid renderers follow theme colors and sizing (195ms)
+  ✓  113 [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › muji normal: bare HTML preserves canvas, fonts, components, and reachable body (236ms)
+  ✓  103 [chromium] › tests/e2e/portable-bundle.spec.js:525:1 › ZIP CLI rejects a post-inspection symlink exchange before reading outside bytes (1.2s)
+  ✓  114 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › toshiba invert: Shiki retains the theme's code palette (162ms)
+  ✓  112 [firefox-overview] › tests/e2e/scroll-slides.spec.js:223:1 › focused controls and body touch gestures are not turned into slide navigation (364ms)
+  -  117 [firefox-overview] › tests/e2e/scroll-slides.spec.js:264:1 › native touch panning reaches the body without a Bespoke swipe
+  ✓  115 [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › muji invert: bare HTML preserves canvas, fonts, components, and reachable body (227ms)
+  ✓  116 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › toshiba neogaia invert: both Mermaid renderers follow theme colors and sizing (182ms)
+  ✓   98 [chromium] › tests/e2e/composition-utilities.spec.js:72:5 › toshiba: representative baseline keeps evidence and composition (2.0s)
+  ✓  120 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › toshiba neogaia invert: Shiki retains the theme's code palette (154ms)
+  ✓  119 [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › toshiba normal: bare HTML preserves canvas, fonts, components, and reachable body (214ms)
+  ✓  121 [chromium] › tests/e2e/composition-utilities.spec.js:292:5 › toshiba: utilities compose unequal columns without adding card styling (126ms)
+  ✓  122 [chromium] › tests/e2e/core5-rendering.spec.js:82:9 › toshiba github-light invert: both Mermaid renderers follow theme colors and sizing (194ms)
+  ✓  124 [chromium] › tests/e2e/composition-utilities.spec.js:370:5 › toshiba: flex rows size and align plain wrappers (127ms)
+  ✓  123 [chromium] › tests/e2e/scroll-slides.spec.js:465:9 › toshiba invert: bare HTML preserves canvas, fonts, components, and reachable body (244ms)
+  ✓  125 [chromium] › tests/e2e/core5-rendering.spec.js:145:9 › toshiba github-light invert: Shiki retains the theme's code palette (144ms)
+  ✓  118 [firefox-overview] › tests/e2e/scroll-slides.spec.js:308:1 › late presenter joins, bidirectional normalized sync, resize, previews, and revisits (905ms)
+  ✓  126 [firefox-overview] › tests/e2e/scroll-slides.spec.js:367:1 › separate native sessions and deck paths are isolated; incoming values are validated (827ms)
+  ✓  127 [firefox-overview] › tests/e2e/scroll-slides.spec.js:426:1 › printing resets only the local viewport and never publishes the reset (562ms)
+  ✓    7 [chromium] › tests/e2e/cli-smoke.spec.js:79:1 › export smoke: Core 5 features in pdf, pptx, html, and images (10.3s)
+  ✓   93 [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › lab 4:3: long direct footnotes survive HTML, PNG, and PDF exports (4.8s)
+  ✓  128 [firefox-overview] › tests/e2e/scroll-slides.spec.js:465:9 › lab normal: bare HTML preserves canvas, fonts, components, and reachable body (780ms)
+  ✓  131 [firefox-overview] › tests/e2e/scroll-slides.spec.js:465:9 › lab invert: bare HTML preserves canvas, fonts, components, and reachable body (297ms)
+  ✓  132 [firefox-overview] › tests/e2e/scroll-slides.spec.js:465:9 › muji normal: bare HTML preserves canvas, fonts, components, and reachable body (308ms)
+  ✓  133 [firefox-overview] › tests/e2e/scroll-slides.spec.js:465:9 › muji invert: bare HTML preserves canvas, fonts, components, and reachable body (287ms)
+  ✓  134 [firefox-overview] › tests/e2e/scroll-slides.spec.js:465:9 › toshiba normal: bare HTML preserves canvas, fonts, components, and reachable body (297ms)
+  ✓  129 [chromium] › tests/e2e/cli-smoke.spec.js:161:1 › screenshot smoke (1.8s)
+  ✓  135 [firefox-overview] › tests/e2e/scroll-slides.spec.js:465:9 › toshiba invert: bare HTML preserves canvas, fonts, components, and reachable body (290ms)
+  ✓  136 [chromium] › tests/e2e/cli-smoke.spec.js:182:1 › screenshot of a later page (1.5s)
+  ✓  137 [chromium] › tests/e2e/cli-smoke.spec.js:203:1 › overview smoke (733ms)
+  ✓  130 [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › muji 16:9: long direct footnotes survive HTML, PNG, and PDF exports (4.4s)
+  ✓  138 [chromium] › tests/e2e/cli-smoke.spec.js:264:1 › SIGTERM to marpx stops the overview child processes (455ms)
+  ✓  139 [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › muji 4:3: long direct footnotes survive HTML, PNG, and PDF exports (4.1s)
+  ✓  140 [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › toshiba 16:9: long direct footnotes survive HTML, PNG, and PDF exports (4.0s)
+  ✓  141 [chromium] › tests/e2e/body-footnote-exports.spec.js:25:9 › toshiba 4:3: long direct footnotes survive HTML, PNG, and PDF exports (4.1s)
+
+  1 skipped
+  140 passed (28.6s)

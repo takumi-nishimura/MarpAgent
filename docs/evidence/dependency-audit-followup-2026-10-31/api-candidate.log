@@ -1,0 +1,13 @@
+✔ rimraf require preserves literal and glob deletion selection (13.248715ms)
+✔ rimraf import preserves literal and glob deletion selection (19.071314ms)
+✔ rimraf CLI still accepts the literal directories used by the MathJax menu build (38.68871ms)
+✔ glob stops reading descendant directories when its first read is aborted (1.720154ms)
+✔ minimatch bounds globstar-parent pattern expansion and retains ordinary matches (2.421568ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77.968678

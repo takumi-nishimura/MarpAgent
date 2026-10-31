@@ -1,0 +1,592 @@
+{
+  "representation": "Derived compact summary from final REPORT.md and CLI-PROVENANCE.md. Historical generic trace inventory is not an accepted CLI whitelist. Non-CLI counts are distinct resolved module URLs; accepted CLI counts are distinct loaded module URLs, not function calls.",
+  "sourceRoot": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/reachability",
+  "originalFiles": {
+    "REPORT.md": {
+      "bytes": 23073,
+      "sha256": "c562006fe3e9e1be0a47e77ee10b59a5c6f90ce198c54e128c7a589fe0bceb6e"
+    },
+    "MANIFEST.sha256": {
+      "bytes": 22161,
+      "sha256": "27fc206d53310fb6593fe046aae264d3463c3adffd6d4c6d75289307dc6b2899"
+    },
+    "workspace-check.json": {
+      "bytes": 471,
+      "sha256": "49edfba42a1b4bac3d02d022ad94464edfc6734bd5015a8ae0ede1ebdd6acc24"
+    },
+    "trace-summary.json": {
+      "bytes": 90864,
+      "sha256": "85e9a496bfd6607a7c3cd1ab4f2bb22044bd1c6d81fa0b6c6fda78275171c4bb"
+    },
+    "menu-imports.json": {
+      "bytes": 27345,
+      "sha256": "87875ed3618519e2b36bd40257f6cbf6801755e1e3f788cbd400262ac5950cbd"
+    },
+    "runtime-distribution-check.json": {
+      "bytes": 871,
+      "sha256": "552623b2769b60bbd153354160be22934f95a2da1f5b91832b29e80cfbf43d99"
+    },
+    "probes/candidate-apis.cjs": {
+      "bytes": 2214,
+      "sha256": "20648e29aa9604f1ecc5534d97b648e20c99b434310a8fba977884127aa3ed3b"
+    },
+    "probes/candidate-apis.json": {
+      "bytes": 4026,
+      "sha256": "3a068698bfa8dafea89aca6a55664658715c3aaee6af8a5b1d95905f15f71e5d"
+    },
+    "CLI-PROVENANCE.md": {
+      "bytes": 4827,
+      "sha256": "006aa78b29ff1300df5869691abb1d06e5012df2cd91959b2d38678009f9d3ae"
+    },
+    "cli-provenance-summary.json": {
+      "bytes": 10175,
+      "sha256": "39c8315e6b08af2c79808e2abaa7ad6938bad70f875f29c62eab456ad4a97c98"
+    },
+    "provenance-archive.json": {
+      "bytes": 589,
+      "sha256": "68d3ddee518aeafaefa7f59c980252f819ef6de9df06e01eda65109902093d55"
+    }
+  },
+  "originalManifestVerified": {
+    "files": 116,
+    "bytes": 21272979
+  },
+  "workspace": {
+    "checkedAt": "2026-10-31T12:58:54.537Z",
+    "cwd": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/issue67-reachability",
+    "branch": "codex/issue67-reachability",
+    "head": "357ccfcaa725b6ab4f9686f98e9fdca486d51ea4",
+    "status": "",
+    "diffCheck": "",
+    "lockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+    "baselineSha256": "181d2718ac3153409387f67d7d29c444b1ba2ad3bf54a608e4e3e5de34712092",
+    "localLinks": "all exist"
+  },
+  "distribution": [
+    {
+      "name": "@marp-team/marp-core",
+      "distribution": "marp-team--marp-core-5.0.2",
+      "filesCompared": 117,
+      "differences": []
+    },
+    {
+      "name": "@mathjax/src",
+      "distribution": "mathjax--src-4.1.3",
+      "filesCompared": 4287,
+      "differences": []
+    },
+    {
+      "name": "mathjax",
+      "distribution": "mathjax-4.1.3",
+      "filesCompared": 106,
+      "differences": []
+    },
+    {
+      "name": "mj-context-menu",
+      "distribution": "mj-context-menu-1.0.0",
+      "filesCompared": 239,
+      "differences": []
+    },
+    {
+      "name": "rimraf",
+      "distribution": "rimraf-6.1.3",
+      "filesCompared": 137,
+      "differences": []
+    },
+    {
+      "name": "glob",
+      "distribution": "glob-13.0.6",
+      "filesCompared": 65,
+      "differences": []
+    },
+    {
+      "name": "minimatch",
+      "distribution": "minimatch-10.2.6",
+      "filesCompared": 53,
+      "differences": []
+    }
+  ],
+  "menuImports": {
+    "filesParsed": 79,
+    "parseErrors": [],
+    "imports": 154,
+    "nonrelative": []
+  },
+  "traces": [
+    {
+      "file": "probes/cli-html-2300952.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 268,
+      "packageModules": {
+        "@mathjax/src": 257,
+        "mathjax": 0,
+        "mj-context-menu": 0,
+        "rimraf": 0,
+        "glob": 0,
+        "minimatch": 0
+      },
+      "acceptedForNonCliResolutionEvidence": false,
+      "acceptedForCliRuntimeEvidence": false
+    },
+    {
+      "file": "probes/cli-html-2301027.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 0,
+      "packageModules": {
+        "@mathjax/src": 0,
+        "mathjax": 4,
+        "mj-context-menu": 0,
+        "rimraf": 0,
+        "glob": 0,
+        "minimatch": 0
+      },
+      "acceptedForNonCliResolutionEvidence": false,
+      "acceptedForCliRuntimeEvidence": false
+    },
+    {
+      "file": "probes/cli-isolated-2312375.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 0,
+      "packageModules": {
+        "@mathjax/src": 257,
+        "mathjax": 0,
+        "mj-context-menu": 0,
+        "rimraf": 0,
+        "glob": 0,
+        "minimatch": 0
+      },
+      "acceptedForNonCliResolutionEvidence": false,
+      "acceptedForCliRuntimeEvidence": false
+    },
+    {
+      "file": "probes/cli-isolated-2312404.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 0,
+      "packageModules": {
+        "@mathjax/src": 0,
+        "mathjax": 4,
+        "mj-context-menu": 0,
+        "rimraf": 0,
+        "glob": 0,
+        "minimatch": 0
+      },
+      "acceptedForNonCliResolutionEvidence": false,
+      "acceptedForCliRuntimeEvidence": false
+    },
+    {
+      "file": "probes/menu-2296595.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 0,
+      "packageModules": {
+        "@mathjax/src": 1,
+        "mathjax": 0,
+        "mj-context-menu": 30,
+        "rimraf": 0,
+        "glob": 0,
+        "minimatch": 0
+      },
+      "acceptedForNonCliResolutionEvidence": true,
+      "acceptedForCliRuntimeEvidence": false
+    },
+    {
+      "file": "probes/positive-2296564.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 0,
+      "packageModules": {
+        "@mathjax/src": 0,
+        "mathjax": 0,
+        "mj-context-menu": 0,
+        "rimraf": 16,
+        "glob": 1,
+        "minimatch": 6
+      },
+      "acceptedForNonCliResolutionEvidence": true,
+      "acceptedForCliRuntimeEvidence": false
+    },
+    {
+      "file": "probes/render-2291892.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 0,
+      "packageModules": {
+        "@mathjax/src": 257,
+        "mathjax": 0,
+        "mj-context-menu": 0,
+        "rimraf": 0,
+        "glob": 0,
+        "minimatch": 0
+      },
+      "acceptedForNonCliResolutionEvidence": true,
+      "acceptedForCliRuntimeEvidence": false
+    },
+    {
+      "file": "probes/render-2292054.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 0,
+      "packageModules": {
+        "@mathjax/src": 0,
+        "mathjax": 4,
+        "mj-context-menu": 0,
+        "rimraf": 0,
+        "glob": 0,
+        "minimatch": 0
+      },
+      "acceptedForNonCliResolutionEvidence": true,
+      "acceptedForCliRuntimeEvidence": false
+    },
+    {
+      "file": "probes/theme-build-2301637.json",
+      "exitCode": 0,
+      "outsideCopiedRuntimeCount": 0,
+      "packageModules": {
+        "@mathjax/src": 0,
+        "mathjax": 0,
+        "mj-context-menu": 0,
+        "rimraf": 0,
+        "glob": 0,
+        "minimatch": 0
+      },
+      "acceptedForNonCliResolutionEvidence": true,
+      "acceptedForCliRuntimeEvidence": false
+    }
+  ],
+  "candidateApiProbe": [
+    {
+      "version": "13.0.6",
+      "mode": "commonjs",
+      "exports": [
+        "Glob",
+        "Ignore",
+        "escape",
+        "glob",
+        "globIterate",
+        "globIterateSync",
+        "globStream",
+        "globStreamSync",
+        "globSync",
+        "hasMagic",
+        "iterate",
+        "iterateSync",
+        "stream",
+        "streamSync",
+        "sync",
+        "unescape"
+      ],
+      "asynchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "synchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "abortReasonPreserved": true,
+      "boundedPreprocess": {
+        "pattern": "**/../a/b/**/../c/d",
+        "braceExpandMax": 1,
+        "resultingPatterns": 4
+      }
+    },
+    {
+      "version": "13.0.6",
+      "mode": "esm",
+      "exports": [
+        "Glob",
+        "Ignore",
+        "escape",
+        "glob",
+        "globIterate",
+        "globIterateSync",
+        "globStream",
+        "globStreamSync",
+        "globSync",
+        "hasMagic",
+        "iterate",
+        "iterateSync",
+        "stream",
+        "streamSync",
+        "sync",
+        "unescape"
+      ],
+      "asynchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "synchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "abortReasonPreserved": true,
+      "boundedPreprocess": {
+        "pattern": "**/../a/b/**/../c/d",
+        "braceExpandMax": 1,
+        "resultingPatterns": 4
+      }
+    },
+    {
+      "version": "14.0.2",
+      "mode": "commonjs",
+      "exports": [
+        "Glob",
+        "Ignore",
+        "escape",
+        "glob",
+        "globIterate",
+        "globIterateSync",
+        "globStream",
+        "globStreamSync",
+        "globSync",
+        "hasMagic",
+        "iterate",
+        "iterateSync",
+        "stream",
+        "streamSync",
+        "sync",
+        "unescape"
+      ],
+      "asynchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "synchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "abortReasonPreserved": true,
+      "boundedPreprocess": {
+        "pattern": "**/../a/b/**/../c/d",
+        "braceExpandMax": 1,
+        "resultingPatterns": 4
+      }
+    },
+    {
+      "version": "14.0.2",
+      "mode": "esm",
+      "exports": [
+        "Glob",
+        "Ignore",
+        "escape",
+        "glob",
+        "globIterate",
+        "globIterateSync",
+        "globStream",
+        "globStreamSync",
+        "globSync",
+        "hasMagic",
+        "iterate",
+        "iterateSync",
+        "stream",
+        "streamSync",
+        "sync",
+        "unescape"
+      ],
+      "asynchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "synchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "abortReasonPreserved": true,
+      "boundedPreprocess": {
+        "pattern": "**/../a/b/**/../c/d",
+        "braceExpandMax": 1,
+        "resultingPatterns": 4
+      }
+    },
+    {
+      "version": "14.0.3",
+      "mode": "commonjs",
+      "exports": [
+        "Glob",
+        "Ignore",
+        "escape",
+        "glob",
+        "globIterate",
+        "globIterateSync",
+        "globStream",
+        "globStreamSync",
+        "globSync",
+        "hasMagic",
+        "iterate",
+        "iterateSync",
+        "stream",
+        "streamSync",
+        "sync",
+        "unescape"
+      ],
+      "asynchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "synchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "abortReasonPreserved": true,
+      "boundedPreprocess": {
+        "pattern": "**/../a/b/**/../c/d",
+        "braceExpandMax": 1,
+        "resultingPatterns": 1
+      }
+    },
+    {
+      "version": "14.0.3",
+      "mode": "esm",
+      "exports": [
+        "Glob",
+        "Ignore",
+        "escape",
+        "glob",
+        "globIterate",
+        "globIterateSync",
+        "globStream",
+        "globStreamSync",
+        "globSync",
+        "hasMagic",
+        "iterate",
+        "iterateSync",
+        "stream",
+        "streamSync",
+        "sync",
+        "unescape"
+      ],
+      "asynchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "synchronous": [
+        "nested/three.md",
+        "one.md"
+      ],
+      "abortReasonPreserved": true,
+      "boundedPreprocess": {
+        "pattern": "**/../a/b/**/../c/d",
+        "braceExpandMax": 1,
+        "resultingPatterns": 1
+      }
+    }
+  ],
+  "conclusion": "No known route from normal deck/material input through the fixed MarpAgent config to rimraf/glob pattern or cancellation APIs was found. @mathjax/src is required for Core math. Menu rimraf use is in its clean/prepare scripts; all 154 parsed runtime imports were relative. This does not prove absence for arbitrary config/plugin/JavaScript or future entry points; it is not an audit suppression rationale. Accepted CLI evidence is only the final provenance rerun with one default-Core entry substitution, recorded cwd/locks and zero outside-copy resolve/load. Four historical CLI traces are excluded; no claim is made for an unmodified launch in the empty-node_modules worktree. Browser execution was not repeated by that provenance task.",
+  "cliProvenance": {
+    "sourceFile": "cli-provenance-summary.json",
+    "sourceSha256": "39c8315e6b08af2c79808e2abaa7ad6938bad70f875f29c62eab456ad4a97c98",
+    "expectedCwd": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/issue67-reachability",
+    "expectedLock": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+    "runtimeIsolation": "One known ambient default-Core entrypoint is redirected to the lock-matched independent copy. Any other outside node_modules resolution or load fails before loading.",
+    "acceptedCliRuns": [
+      {
+        "file": "probes/cli-provenance-2374223.json",
+        "traceSha256": "d34f942b7a0777b7d0331addfac6d714e95bf718e3e76af4460de71a55b9548f",
+        "pid": 2374223,
+        "ppid": 6581,
+        "cwdAtStart": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/issue67-reachability",
+        "cwdAtExit": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/issue67-reachability",
+        "realCwdAtStart": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/issue67-reachability",
+        "sourceLockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+        "worktreeLockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+        "substitutions": [
+          {
+            "specifier": "/home/hapticslab/projects/MarpAgent/node_modules/@marp-team/marp-core/lib/full.mjs",
+            "replacement": "file:///home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/reachability/runtime/node_modules/@marp-team/marp-core/lib/full.mjs",
+            "parent": "file:///home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/reachability/runtime/node_modules/@marp-team/marp-cli/lib/marp-cli-Bx8lKNmZ.js"
+          }
+        ],
+        "outsideCopiedRuntime": [],
+        "totalLoadEvents": 1106,
+        "fileLoadEvents": 981,
+        "loadedSourceHashMatches": 981,
+        "sourceHashMismatches": [],
+        "uniqueLoadedPackageModules": {
+          "@mathjax/src": 257,
+          "mathjax": 0,
+          "mj-context-menu": 0,
+          "rimraf": 0,
+          "glob": 0,
+          "minimatch": 0
+        }
+      },
+      {
+        "file": "probes/cli-provenance-2374487.json",
+        "traceSha256": "6832e0663e075ac60251396fdacc806ba8e8a0709d107c22606bd7195adf549a",
+        "pid": 2374487,
+        "ppid": 2374223,
+        "cwdAtStart": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/issue67-reachability",
+        "cwdAtExit": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/issue67-reachability",
+        "realCwdAtStart": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/issue67-reachability",
+        "sourceLockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+        "worktreeLockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+        "substitutions": [],
+        "outsideCopiedRuntime": [],
+        "totalLoadEvents": 28,
+        "fileLoadEvents": 27,
+        "loadedSourceHashMatches": 27,
+        "sourceHashMismatches": [],
+        "uniqueLoadedPackageModules": {
+          "@mathjax/src": 0,
+          "mathjax": 4,
+          "mj-context-menu": 0,
+          "rimraf": 0,
+          "glob": 0,
+          "minimatch": 0
+        }
+      }
+    ],
+    "excludedCliRuns": [
+      {
+        "file": "probes/cli-html-2300952.json",
+        "acceptedForCliRuntimeEvidence": false,
+        "outsideCopiedRuntimeResolutionEdges": 268,
+        "cwdRecordedInTrace": false,
+        "reason": "Initial CLI cohort: parent resolved 268 edges to ambient runtime; exclude parent and child as a cohort."
+      },
+      {
+        "file": "probes/cli-html-2301027.json",
+        "acceptedForCliRuntimeEvidence": false,
+        "outsideCopiedRuntimeResolutionEdges": 0,
+        "cwdRecordedInTrace": false,
+        "reason": "Initial CLI cohort: parent resolved 268 edges to ambient runtime; exclude parent and child as a cohort."
+      },
+      {
+        "file": "probes/cli-isolated-2312375.json",
+        "acceptedForCliRuntimeEvidence": false,
+        "outsideCopiedRuntimeResolutionEdges": 0,
+        "cwdRecordedInTrace": false,
+        "reason": "Earlier isolated cohort: outside runtime resolution was zero, but cwd was not recorded in the trace; superseded by provenance rerun."
+      },
+      {
+        "file": "probes/cli-isolated-2312404.json",
+        "acceptedForCliRuntimeEvidence": false,
+        "outsideCopiedRuntimeResolutionEdges": 0,
+        "cwdRecordedInTrace": false,
+        "reason": "Earlier isolated cohort: outside runtime resolution was zero, but cwd was not recorded in the trace; superseded by provenance rerun."
+      }
+    ],
+    "limits": [
+      "CLI engine resolution is instrumented; this does not show an unmodified launch in the empty-node_modules worktree.",
+      "The prior generic trace-summary.json is an archive inventory, not an accepted-CLI whitelist.",
+      "Only this one HTML case and its Mermaid child were rerun; all input combinations and exports remain outside this provenance check."
+    ],
+    "previousBrowserArtifact": {
+      "file": "probes/cli-isolated-browser.json",
+      "originalHtml": "probes/cli-isolated.html",
+      "newHtml": "probes/cli-provenance.html",
+      "originalInlineScriptSha256": [
+        "4dc2920455c3f002a90b44252e8ed201f9b97a8c4888760391c9a49f41921f91",
+        "4de608cfac3e76fb89860320358bd994a3d5ea3ab4d359b4f7d496965b6a1216",
+        "8689739f4d166b849d18566ce2f3eb8bca164d63b419718cb30fcaf53d44ac27",
+        "b77425341f10bec7e241a26972486089b0fca87d2a661d78deb6e4b5518d31eb",
+        "8bdb5faf1a307edf480ff331cd2bbf8b3fd70115e0b24a48d7eda62da0465d72"
+      ],
+      "newInlineScriptSha256": [
+        "4dc2920455c3f002a90b44252e8ed201f9b97a8c4888760391c9a49f41921f91",
+        "4de608cfac3e76fb89860320358bd994a3d5ea3ab4d359b4f7d496965b6a1216",
+        "8689739f4d166b849d18566ce2f3eb8bca164d63b419718cb30fcaf53d44ac27",
+        "b77425341f10bec7e241a26972486089b0fca87d2a661d78deb6e4b5518d31eb",
+        "8bdb5faf1a307edf480ff331cd2bbf8b3fd70115e0b24a48d7eda62da0465d72"
+      ],
+      "byteIdenticalInlineScripts": true,
+      "browserRerun": false
+    }
+  }
+}

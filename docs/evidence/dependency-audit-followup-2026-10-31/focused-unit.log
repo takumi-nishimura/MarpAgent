@@ -1,0 +1,27 @@
+✔ the recorded residual audit passes and removed findings are reported (0.982009ms)
+✔ a new advisory fails even when the affected package count is unchanged (0.217279ms)
+✔ severity increases, new dependency locations, and newly available fixes require review (0.141072ms)
+✔ a new vulnerable package cannot be hidden by a resolved package (0.098196ms)
+✔ registry errors and malformed audit output never pass as a clean audit (0.400778ms)
+✔ configured engine renders Shiki, katex, and extended Mermaid (729.280715ms)
+✔ CLI renders the same Core 5 features outside the repository (katex) (760.095274ms)
+✔ configured engine renders Shiki, mathjax, and extended Mermaid (168.619025ms)
+✔ CLI renders the same Core 5 features outside the repository (mathjax) (722.236508ms)
+✔ MathJax bbm extension renders vector glyphs (48.990214ms)
+✔ MathJax bboldx extension renders vector glyphs (42.485316ms)
+✔ MathJax dsfont extension renders vector glyphs (49.268527ms)
+✔ MathJax mhchem extension renders vector glyphs (63.160143ms)
+✔ rimraf require preserves literal and glob deletion selection (15.303553ms)
+✔ rimraf import preserves literal and glob deletion selection (20.244656ms)
+✔ rimraf CLI still accepts the literal directories used by the MathJax menu build (36.56723ms)
+✔ glob stops reading descendant directories when its first read is aborted (2.152223ms)
+✔ minimatch bounds globstar-parent pattern expansion and retains ordinary matches (2.441008ms)
+✔ glob bundled matcher respects the expansion budget in both module formats (1.102455ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2703.901089

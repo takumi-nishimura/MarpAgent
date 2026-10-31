@@ -1,0 +1,130 @@
+{
+  "revision": "b9e2504f34358939ef96069d6e4563f0efcae5e2",
+  "status": "M package-lock.json\n M package.json\n M tests/unit/marp-engine.test.js\n?? tests/unit/mathjax-cleanup-dependencies.test.js",
+  "observedAt": "2026-10-31T12:52:30.779Z",
+  "commands": [
+    {
+      "command": "/home/hapticslab/.local/share/mise/installs/node/25.6.0/bin/node",
+      "args": [
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/bin/marpx.js",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/source/slide.md",
+        "--html",
+        "--output",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/math.html"
+      ],
+      "exitCode": 0,
+      "stdout": ""
+    },
+    {
+      "command": "/home/hapticslab/.local/share/mise/installs/node/25.6.0/bin/node",
+      "args": [
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/bin/marpx.js",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/source/slide.md",
+        "--pdf",
+        "--output",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/math.pdf"
+      ],
+      "exitCode": 0,
+      "stdout": ""
+    },
+    {
+      "command": "/home/hapticslab/.local/share/mise/installs/node/25.6.0/bin/node",
+      "args": [
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/bin/marpx.js",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/source/slide.md",
+        "--images",
+        "png",
+        "--output",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/math.png"
+      ],
+      "exitCode": 0,
+      "stdout": ""
+    },
+    {
+      "command": "/home/hapticslab/.local/share/mise/installs/node/25.6.0/bin/node",
+      "args": [
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup/bin/marpx.js",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/source/slide.md",
+        "--zip",
+        "--strict-offline",
+        "--bundle-root",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/source",
+        "--output",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/math.zip"
+      ],
+      "exitCode": 0,
+      "stdout": "Portable HTML bundle: /home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/math.zip\n"
+    }
+  ],
+  "mathCaseCount": 6,
+  "htmlCssUnchanged": true,
+  "png": {
+    "width": 1280,
+    "height": 720
+  },
+  "pages": [
+    {
+      "file": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/math.html",
+      "glyphs": {
+        "2115": {
+          "width": 766,
+          "height": 683.5506591796875
+        },
+        "1D7D9": {
+          "width": 411,
+          "height": 667
+        },
+        "211D": {
+          "width": 548,
+          "height": 683
+        },
+        "E402": {
+          "width": 514,
+          "height": 467
+        }
+      },
+      "containers": 6
+    },
+    {
+      "file": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-artifacts/relocated/index.html",
+      "glyphs": {
+        "2115": {
+          "width": 766,
+          "height": 683.5506591796875
+        },
+        "1D7D9": {
+          "width": 411,
+          "height": 667
+        },
+        "211D": {
+          "width": 548,
+          "height": 683
+        },
+        "E402": {
+          "width": 514,
+          "height": 467
+        }
+      },
+      "containers": 6
+    }
+  ],
+  "seenRemote": [],
+  "files": {
+    "math.001.png": {
+      "bytes": 32367,
+      "sha256": "3f41f1117f8847b63a82e982903e794edfaf60b0870f2145ec10356e4c08d62b"
+    },
+    "math.html": {
+      "bytes": 157713,
+      "sha256": "307f2da787c17d5f46fc19f900434f9d3bb4a1f4b7cad4a31520c3e5cbf07f36"
+    },
+    "math.pdf": {
+      "bytes": 11792,
+      "sha256": "f0b66ed0bd2e2ed52211a347a562e1234c58bed883e651a675bf06e9e5febc5d"
+    },
+    "math.zip": {
+      "bytes": 39536,
+      "sha256": "5a7bd725d1bff107b563b31cc47a8fc7208f9ef6553a52659009bc0b6be5167f"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "label": "math-exports",
+  "command": "node",
+  "args": [
+    "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-exports.cjs"
+  ],
+  "cwd": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup",
+  "startedAt": "2026-10-31T12:52:26.072Z",
+  "before": {
+    "revision": "b9e2504f34358939ef96069d6e4563f0efcae5e2",
+    "branch": "codex/audit-followup-20261031",
+    "status": "M package-lock.json\n M package.json\n M tests/unit/marp-engine.test.js\n?? tests/unit/mathjax-cleanup-dependencies.test.js",
+    "lockSha256": "44f3f12399951b53f092c4ea3d8c3d30899f12de53858c458b87e9dbbb2c66fd"
+  },
+  "environment": {
+    "FONTCONFIG_FILE": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/fontconfig/fonts.conf",
+    "FONTCONFIG_PATH": null,
+    "MARP_AGENT_TEST_JAPANESE_FONT_PATH": null,
+    "PATH": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/audit-followup:/home/hapticslab/projects/MarpAgent:/home/hapticslab/.local/share/mise/installs/node/25.6.0/bin:/home/hapticslab/.local/share/mise/installs/npm-openai-codex/0.164.0~aube~c0e9ab6db370d4da/node_modules/.bin:/home/hapticslab/.local/share/mise/installs/aqua-anthropics-claude-code/2.1.310:/home/hapticslab/.local/share/mise/installs/npm-opencode-cli/2.1.4~aube~3c4614386262b43f/node_modules/.bin:/home/hapticslab/.local/share/mise/installs/aqua-jj-vcs-jj/0.46.0:/home/hapticslab/.local/share/mise/installs/uv/0.13.5/.mise-bins:/home/hapticslab/.local/share/mise/installs/gh/2.103.2/gh_2.103.2_linux_amd64/bin:/home/hapticslab/.local/share/mise/installs/ghq/1.11.2/ghq_linux_amd64:/home/hapticslab/.local/share/mise/installs/ripgrep/15.2.0/ripgrep-15.2.0-x86_64-unknown-linux-musl:/home/hapticslab/.local/share/mise/installs/fzf/0.74.5:/home/hapticslab/.cargo/bin:/home/hapticslab/.local/share/mise/installs/npm-rivolink-leaf/1.29.1/node_modules/.bin:/home/hapticslab/.local/share/mise/installs/npm-ccusage/20.0.42/node_modules/.bin:/home/hapticslab/.local/share/mise/installs/herdr/0.9.5:/home/hapticslab/.local/share/mise/installs/lazygit/0.66.2:/home/hapticslab/.local/share/mise/installs/github-feel-ix-343-markdown-oxide/0.25.12:/home/hapticslab/.local/share/mise/installs/bat/0.26.1/.mise-bins:/home/hapticslab/.local/share/mise/installs/carapace/1.8.1:/home/hapticslab/.local/share/mise/installs/direnv/2.38.2:/home/hapticslab/.local/share/mise/installs/eza/0.23.5/.mise-bins:/home/hapticslab/.local/share/mise/installs/fd/10.5.0/.mise-bins:/home/hapticslab/.local/share/mise/installs/helix/25.07.1/helix-25.07.1-x86_64-linux:/home/hapticslab/.local/share/mise/installs/jjui/0.10.12:/home/hapticslab/.local/share/mise/installs/jq/1.8.2:/home/hapticslab/.local/share/mise/installs/ruff/0.17.2/.mise-bins:/home/hapticslab/.local/share/mise/installs/ty/0.0.91/.mise-bins:/home/hapticslab/.local/share/mise/installs/sheldon/0.8.5:/home/hapticslab/.local/share/mise/installs/yazi/26.9.1/.mise-bins:/home/hapticslab/.local/share/mise/installs/zellij/0.45.1:/home/hapticslab/.local/share/mise/installs/zoxide/0.10.0:/home/hapticslab/.local/share/mise/shims:/home/hapticslab/.local/bin:/home/hapticslab/.codex/tmp/arg0-linux/codex-arg0irGFeK:/home/hapticslab/.config/carapace/bin:/home/hapticslab/.cache/lm-studio/bin:/home/hapticslab/.bun/bin:/home/hapticslab/.agents/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/wsl/lib",
+    "CI": null,
+    "MARP_AGENT_D2_PATH": null,
+    "MARP_AGENT_D2_FONT_PATH": null,
+    "MARP_AGENT_ZIP_D2_ARTIFACT_DIR": null,
+    "CHROME_NO_SANDBOX": "1",
+    "MARP_AGENT_REQUIRE_VISUAL": null,
+    "MARP_AGENT_STRICT_E2E": null,
+    "NODE_OPTIONS": null,
+    "PLAYWRIGHT_BROWSERS_PATH": null
+  },
+  "exitCode": 0,
+  "signal": null,
+  "finishedAt": "2026-10-31T12:52:30.800Z",
+  "after": {
+    "revision": "b9e2504f34358939ef96069d6e4563f0efcae5e2",
+    "branch": "codex/audit-followup-20261031",
+    "status": "M package-lock.json\n M package.json\n M tests/unit/marp-engine.test.js\n?? tests/unit/mathjax-cleanup-dependencies.test.js",
+    "lockSha256": "44f3f12399951b53f092c4ea3d8c3d30899f12de53858c458b87e9dbbb2c66fd"
+  },
+  "log": {
+    "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-exports.log",
+    "sha256": "890d9ab00cd690252de55477bd615f1da95f612889b4195f324081946b817397"
+  }
+}
