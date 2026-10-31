@@ -5,7 +5,7 @@ type: issue
 status: closed
 resolution: completed
 resolved: "2026-10-18"
-updated: "2026-10-21"
+updated: "2026-10-30"
 date: "2026-10-17"
 authors:
   - opencode-glm
@@ -93,3 +93,63 @@ artifacts:
 PR #62のDependency Auditが，新たに直接依存へ加えたfflate 0.8.2を検出して失敗した．[GHSA-px8p-9vwx-vf98](https://github.com/advisories/GHSA-px8p-9vwx-vf98)は不正なZIP64を`unzipSync`で読む際の無限ループで，0.8.3が修正版である．productionの配布処理は`zipSync`による作成だけで，`unzipSync`は生成したZIPを検査するテストで使用している．この利用範囲を理由にbaselineへ追加せず，直接依存を互換修正版0.8.3へ固定した．package-lockの変更もfflateだけである．
 
 更新前の実レジストリ結果を既存監査に与えると，`fflate: new vulnerable package (moderate)`でexit 1となることを確認した．更新後は15件から既知残存14件へ戻り，同じ監査がexit 0となった．監査baselineは変更していない．ZIPと監査の既存unit21件も成功し，失敗・skipなし．統合全体と実D2入りZIPはmainの最終検証で確認する．
+
+### PR #64 dependency remediation 2026-10-30
+
+PR #64の既知の監査失敗（run `40440480639`，head `0c2adee`）を受け，main `6a6c943`のlockから再調査した．Node 25.6.0／npm 11.8.0で`npm audit --omit=dev --json --fetch-retries=0 --fetch-timeout=20000`を実行すると16件（high 11，moderate 3，low 2），exit 1となった．既存gateも`chromium-bidi: new vulnerable package (high)`と`zod: new vulnerable package (high)`の2件でexit 1になり，過去に受け入れた14件へ戻ったとは扱わない．
+
+[GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5)はZod `<4.6.6`を対象とし，修正版を4.6.6とする．[上流修正](https://github.com/colinhacks/zod/commit/a0ebf970f2d752e5f58527cd2942ff48be4f46bd)はv4のcollection上限を要素解析より先に検査する変更であり，v3 APIへの修正を保証するものではない．npm配布情報と配布物の実コードを確認し，次の候補を比較した．
+
+| 候補 | 一次情報・実行結果 | 判断 |
+| --- | --- | --- |
+| 宣言済みの互換範囲でlockを更新 | `npm view @marp-team/marp-cli version dependencies --json`では最新版4.5.1がPuppeteer `^24.43.1`を要求する．24系の最終版24.43.1はBiDi `14.0.0`を固定し，BiDiはZod `^3.24.1`を要求する．`npm view zod@3 version --json`の最終版は3.25.76で，修正版なし． | この範囲では解消できない． |
+| BiDi 14配下のZodだけを4.6.6へoverride | 独立コピーしたBiDi 14の`parseObject(7, z.string())`で比較すると，3.25.76は`InvalidArgumentException`，4.6.6は`TypeError: Cannot read properties of undefined (reading 'map')`となる．BiDi 14は`parseResult.error.errors`を参照している． | エラー処理を壊すため不採用．package番号だけを4系にしてv3 APIを使い続ける回避も採用しない． |
+| BiDiだけをZod 4対応版へoverride | 157.0.8082-0はZod `^4.6.5`を要求するが，旧`lib/cjs/bidiMapper/BidiMapper.js`が配布物に存在しない．Puppeteer 24.43.1はこのパスを直接requireしている． | 親側のimport変更も必要なため不採用． |
+| Marp CLI配下のPuppeteerを25.13.0へ固定 | `npm view puppeteer-core@25 version dependencies.chromium-bidi --json`で，25.0.2～25.12.0はZod 3依存のBiDi 16.0.1／17.0.2を固定し，25.13.0で157.0.8090-0へ切り替わる．そのBiDiはZod `^4.6.5`を要求し，lockは修正版4.6.7を解決する． | Node 25でのAPI確認と下記回帰検証を経て採用． |
+
+配布情報の参照先：[Marp CLI 4.5.1](https://registry.npmjs.org/@marp-team/marp-cli/4.5.1)，[Puppeteer 24.43.1](https://registry.npmjs.org/puppeteer-core/24.43.1)，[BiDi 14.0.0](https://registry.npmjs.org/chromium-bidi/14.0.0)，[Puppeteer 25.13.0](https://registry.npmjs.org/puppeteer-core/25.13.0)，[BiDi 157.0.8090-0](https://registry.npmjs.org/chromium-bidi/157.0.8090-0)．
+
+採用するoverrideは`@marp-team/marp-cli@4.5.1`の`puppeteer-core: 25.13.0`だけに限定した．これはMarp CLI自身の`^24.43.1`宣言を超えるため，上流が保証するsemver互換更新とは呼ばない．[Puppeteer 25の破壊的変更](https://github.com/puppeteer/puppeteer/releases/tag/puppeteer-core-v25.0.0)を照合し，Marp CLIの配布コードが削除された`Browser.isConnected()`や同期版`defaultArgs()`／`executablePath()`を使用しておらず，`launch()`と`Browser.connected`を使用することを確認した．本repoのNode制約`>=25 <26`はPuppeteerの`>=22.12.0`を満たし，CommonJSからのrequireとCLI実行も成功した．Marp CLIを次に更新するときは，この版限定overrideの必要性と上流の対応範囲を再確認する．
+
+| 依存 | 更新前 | 更新後 |
+| --- | --- | --- |
+| puppeteer-core | 24.43.1 | 25.13.0 |
+| @puppeteer/browsers | 2.13.2 | 3.2.4 |
+| chromium-bidi | 14.0.0 | 157.0.8090-0 |
+| productionのzod | 3.25.76 | BiDi配下4.6.7 |
+| devtools-protocol | 0.0.1608973 | 0.0.1696802 |
+| webdriver-bidi-protocol | 0.4.1 | 1.0.1 |
+
+直接依存のバージョンは変更していない．lockの追加14項目・削除50項目・更新5項目はこのbrowser依存ツリーに対応する．残る1項目の差はルートZod 3.25.76の`dev: true`への変更で，`@google/design.md`からのdev依存は残る．`@puppeteer/browsers` 3.2.4が`extract-zip`と旧proxy依存を必須依存から外したため，その旧ツリーも除去される．
+
+検証はLinux／WSL2，Node 25.6.0，Playwright 1.58.2，既存Chromium headless shell 145.0.7632.6で行った．browserを起動し得るunitとE2Eは共通の`flock /home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock`で直列化した．sandbox内では子プロセスの`EPERM`が出たため，該当検証は通常の承認を経て制限外で再実行した．
+
+```sh
+npm install --ignore-scripts --no-audit --no-fund --fetch-retries=0 --fetch-timeout=20000
+npm ci --offline --no-audit --no-fund
+npm ls puppeteer-core chromium-bidi zod --all
+npm audit --omit=dev --json --fetch-retries=0 --fetch-timeout=20000
+npm run audit:dependencies
+
+# Run browser-capable checks under the shared lock.
+flock /home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock \
+  node --test tests/unit/dependency-audit.test.js tests/unit/package-json.test.js \
+  tests/unit/marp-engine.test.js tests/unit/marp-browser.test.js \
+  tests/unit/conversion-runtime.test.js tests/unit/portable-export.test.js \
+  tests/unit/portable-bundle.test.js
+flock /home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock \
+  npm run test:e2e:strict -- tests/e2e/cli-smoke.spec.js \
+  tests/e2e/body-exports.spec.js tests/e2e/core5-rendering.spec.js \
+  --project=chromium --workers=1
+```
+
+- `npm ci --offline --no-audit --no-fund`：341 packageの再インストールに成功した．lockのSHA-256は前後とも`0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1`で一致する．
+- 関連unit：50件成功，失敗・skipなし．Core 5のCommonJS／CLI経路，browser選択，timeout・子プロセス終了，portable export，audit比較を含む．
+- strict E2E：35件成功，失敗・skipなし．PDF・PPTX・HTML・PNG，スクリーンショット，overviewと終了処理，本文組版，MathJax・Mermaid・Shikiを確認した．
+- 再インストール後は同じstrict E2Eの`cli-smoke.spec.js`を`--grep 'export smoke: Core 5 features in pdf, pptx, html, and images$'`で実行し，1件成功，失敗・skipなし．
+- BiDi明示指定：Marp CLIへ`--browser chrome --browser-protocol webdriver-bidi --browser-path <headless-shell>`を与え，`template/core5-components.md`をPDFとPNGへ出力できた．更新後の実BiDi parserは不正入力を`InvalidArgumentException`として返す．配下Zod 4.6.7の`z.array(z.preprocess(counter, z.string())).max(1).safeParse([1, 2])`は要素解析0回・上限違反1件となり，旧Zodの要素解析2回・違反3件との差も確認した．
+- 記録・差分：`uv run .github/records.py validate`は71件成功，`git diff --check`も成功した．
+
+更新後のproduction監査は7件（high 1，moderate 3，low 3），raw `npm audit`は残存指摘のためexit 1のままである．新規のZod／BiDi指摘とbrowser周辺の既知指摘7 packageが消え，baselineを変更せず実レジストリを用いる`npm run audit:dependencies`がexit 0になった．残存はhighの`@xmldom/xmldom`，moderateの`gaxios`／`speech-rule-engine`／`uuid`，lowの`@marp-team/marp-cli`／CLI配下`@marp-team/marp-core`／`katex`である．解消済みbaseline項目の除去候補はgateが引き続き表示する．
+
+追加のFirefox 146.0.1によるBiDi PDF出力は，更新前24.43.1の独立コピーと更新後25.13.0の両方で`browsingContext.create`応答待ちから進まず，35秒の外側timeoutで終了した．同一input・config・browser，`--browser-timeout 20`で比較し，終了時の`Target closed`も両方に見られた．初回の更新後単独試行も60秒でtimeoutしている．この観測はFirefox出力の成功や原因の特定を意味しない．Firefox，macOS／Windows，proxyを介したbrowser取得，全品質gateの受入は本検証では完了していない．統合担当の最終検証と区別する．Zod 3はdev依存に残り，既知のproduction 7件も残るため，「全依存の脆弱性を解消した」とは扱わない．

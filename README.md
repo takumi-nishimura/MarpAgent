@@ -155,6 +155,8 @@ The shorter new brief is not an input contract for that legacy generator.
 | `marpx --theme-new <name> --source-url <url>` | Scaffold a new theme |
 | `marpx --theme -w` | Watch-build themes |
 | `npm test` | Run unit tests |
+| `npm run test:ci` | Run browser-free engine smoke and CI regression tests |
+| `npm run ci:full` | Run records + fixed D2 + portable D2 ZIP + strict quality gate after tool preparation |
 | `npm run quality:gate` | Run unit tests + fixture/example validation + E2E tests |
 | `npm run quality:gate:strict` | Run the quality gate with required visual checks and strict E2E policy |
 | `npm run audit:dependencies` | Compare the production dependency audit with the reviewed ISS-0042 baseline |
@@ -172,6 +174,15 @@ the same command without `--dry-run` to create the selected file symlink.
 Existing paths are never overwritten; symlink failures never fall back to a
 copy. See [media discovery and reuse](docs/media-assets.md) for examples,
 visibility rules, preview behavior, and Windows checkout diagnostics.
+
+Automatic PR/main CI always validates record integrity. It skips engine
+installation for changes confined to `docs/` and `decks/`; other changes run
+`test:ci`. Manual dispatch retains full acceptance. A green automatic check is
+not full acceptance; see [CI scope and the pre-merge local fallback](docs/ci.md).
+
+The CI regression tests in `test:ci` and `npm test` also require Git, Bash, and
+uv. Run `uv run .github/records.py validate` first to prepare the pinned Python
+dependencies; record fixtures reuse that cache offline.
 
 `npm test` requires a working Playwright Chromium installed as described above.
 Individual visual tests can skip when launch prerequisites are missing, but an
