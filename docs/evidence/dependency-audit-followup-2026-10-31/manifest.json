@@ -1,0 +1,465 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-31T12:59:18.303Z",
+  "testedRevision": "c89b9146b33c94a3ddbff6536d5c66c844b15143",
+  "implementationCommit": "c89b9146b33c94a3ddbff6536d5c66c844b15143",
+  "branch": "codex/audit-followup-20261031",
+  "documentationOverlay": {
+    "scope": [
+      "docs/evidence/dependency-audit-followup-2026-10-31",
+      "docs/issues/ISS-0054-resolve-newly-reported-glob-and-minimatch-audit-findings.md"
+    ],
+    "nonDocsTreeSha256": "ba25504d125fa1c77739d8ec0615e048ac7672828f8e1615814c25d58fa95e65",
+    "nonDocsTreeEncoding": "git ls-tree -r output at tested revision, excluding paths starting docs/, joined with LF including final LF",
+    "comparisonCommand": [
+      "git",
+      "diff",
+      "--exit-code",
+      "c89b9146b33c94a3ddbff6536d5c66c844b15143",
+      "--",
+      ".",
+      ":!docs/**"
+    ],
+    "comparisonExitCode": 0,
+    "fullBrowsersRerunForArchive": false
+  },
+  "baselineSha256": "181d2718ac3153409387f67d7d29c444b1ba2ad3bf54a608e4e3e5de34712092",
+  "packageSha256": "22e3faca74967dc11fb38e025258e4e4fd9e5a5774e453bfb83c88abf45bd0bc",
+  "lockSha256": "44f3f12399951b53f092c4ea3d8c3d30899f12de53858c458b87e9dbbb2c66fd",
+  "audit": {
+    "before": {
+      "info": 0,
+      "low": 2,
+      "moderate": 9,
+      "high": 1,
+      "critical": 0,
+      "total": 12
+    },
+    "after": {
+      "info": 0,
+      "low": 3,
+      "moderate": 3,
+      "high": 1,
+      "critical": 0,
+      "total": 7
+    },
+    "rawExitBefore": 1,
+    "rawExitAfter": 1,
+    "gateExitBefore": 1,
+    "gateExitAfter": 0,
+    "residualPackages": [
+      {
+        "name": "@marp-team/marp-cli",
+        "severity": "low",
+        "nodes": [
+          "node_modules/@marp-team/marp-cli"
+        ]
+      },
+      {
+        "name": "@marp-team/marp-core",
+        "severity": "low",
+        "nodes": [
+          "node_modules/@marp-team/marp-cli/node_modules/@marp-team/marp-core"
+        ]
+      },
+      {
+        "name": "@xmldom/xmldom",
+        "severity": "high",
+        "nodes": [
+          "node_modules/mathjax-full/node_modules/@xmldom/xmldom"
+        ]
+      },
+      {
+        "name": "gaxios",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/gaxios"
+        ]
+      },
+      {
+        "name": "katex",
+        "severity": "low",
+        "nodes": [
+          "node_modules/@marp-team/marp-cli/node_modules/katex"
+        ]
+      },
+      {
+        "name": "speech-rule-engine",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/mathjax-full/node_modules/speech-rule-engine"
+        ]
+      },
+      {
+        "name": "uuid",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/uuid"
+        ]
+      }
+    ],
+    "removedPackages": [
+      "@mathjax/src",
+      "glob",
+      "minimatch",
+      "mj-context-menu",
+      "rimraf"
+    ]
+  },
+  "full": {
+    "testedRevision": "c89b9146b33c94a3ddbff6536d5c66c844b15143",
+    "cleanBefore": true,
+    "cleanAfter": true,
+    "startedAt": "2026-10-31T12:54:27.186Z",
+    "finishedAt": "2026-10-31T12:56:06.301Z",
+    "exitCode": 0,
+    "records": 76,
+    "d2": {
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "portableZip": {
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "unit": {
+      "tests": 539,
+      "pass": 539,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "fixtures": {
+      "pass": 18,
+      "fail": 0,
+      "skipped": 0
+    },
+    "chromium": {
+      "pass": 126,
+      "fail": 0,
+      "skipped": 0
+    },
+    "firefox": {
+      "pass": 14,
+      "fail": 0,
+      "skipped": 1,
+      "skipLogLines": [
+        "  -  117 [firefox-overview] › tests/e2e/scroll-slides.spec.js:264:1 › native touch panning reaches the body without a Bespoke swipe"
+      ]
+    },
+    "workers": 12,
+    "retries": 0
+  },
+  "strictRecords": {
+    "count": 76,
+    "exitCode": 0,
+    "log": "records-final.log"
+  },
+  "files": {
+    "REPORT.md": {
+      "bytes": 11684,
+      "sha256": "d6856b460192f2c855d40e297f1e5ba34910f57a4389e0e54c406fa955564954",
+      "representation": "authored report or explicitly labelled derived JSON"
+    },
+    "api-before.json": {
+      "bytes": 4065,
+      "sha256": "923a6d360726f2dd739301ffc9008a4d84d4b2db54e4558f25f4503cb4179d7e",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/api-before.json",
+      "originalSha256": "923a6d360726f2dd739301ffc9008a4d84d4b2db54e4558f25f4503cb4179d7e",
+      "representation": "exact copy"
+    },
+    "api-before.log": {
+      "bytes": 2202,
+      "sha256": "47309d33782104e558e0faf09ea90d2575601838cc37c017526028b5eb90b8ca",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/api-before.log",
+      "originalSha256": "e696c87ce4579e78a45d37db22f17dc46191dac2308e36fd5715e1cd1a7ad8be",
+      "representation": "normalized whitespace-only lines",
+      "normalization": {
+        "rule": "Remove spaces/tabs from otherwise empty lines; retain all other bytes and line order.",
+        "affectedLines": 2,
+        "originalSha256": "e696c87ce4579e78a45d37db22f17dc46191dac2308e36fd5715e1cd1a7ad8be",
+        "note": "Run JSON log.sha256 still identifies the original durable capture."
+      }
+    },
+    "api-candidate.json": {
+      "bytes": 4094,
+      "sha256": "3a91cb9661d6f66a3cb5d27a19c17a3894616875880d9bf135efb28307e7fef4",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/api-candidate.json",
+      "originalSha256": "3a91cb9661d6f66a3cb5d27a19c17a3894616875880d9bf135efb28307e7fef4",
+      "representation": "exact copy"
+    },
+    "api-candidate.log": {
+      "bytes": 555,
+      "sha256": "e7302ebb5efef79492b1c3e38f23302c6b33d80b7e121418a0bee0bc5dd7eec6",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/api-candidate.log",
+      "originalSha256": "e7302ebb5efef79492b1c3e38f23302c6b33d80b7e121418a0bee0bc5dd7eec6",
+      "representation": "exact copy"
+    },
+    "audit-gate-before.json": {
+      "bytes": 3993,
+      "sha256": "d32db496597e92afb9821658c1293ea6145a710097c778b42ef018d391eae90c",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/audit-gate-before.json",
+      "originalSha256": "d32db496597e92afb9821658c1293ea6145a710097c778b42ef018d391eae90c",
+      "representation": "exact copy"
+    },
+    "audit-gate-before.log": {
+      "bytes": 971,
+      "sha256": "86c1642651c8c37ebb5d48bad60ab6a4c8d8167e5a14f3cef6abb1daac500987",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/audit-gate-before.log",
+      "originalSha256": "86c1642651c8c37ebb5d48bad60ab6a4c8d8167e5a14f3cef6abb1daac500987",
+      "representation": "exact copy"
+    },
+    "audit-gate-final.json": {
+      "bytes": 3991,
+      "sha256": "2f27cac6159e2fcd302ddaed4ec464bc87410f4507c60c3794ce83f36af28fcd",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/audit-gate-final.json",
+      "originalSha256": "2f27cac6159e2fcd302ddaed4ec464bc87410f4507c60c3794ce83f36af28fcd",
+      "representation": "exact copy"
+    },
+    "audit-gate-final.log": {
+      "bytes": 605,
+      "sha256": "3e5c5904b86e71fbd0efc6a5c3974deb0d36a39ef7db1f9b673a60b2ea5aed8a",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/audit-gate-final.log",
+      "originalSha256": "3e5c5904b86e71fbd0efc6a5c3974deb0d36a39ef7db1f9b673a60b2ea5aed8a",
+      "representation": "exact copy"
+    },
+    "audit-raw-before.json": {
+      "bytes": 4053,
+      "sha256": "a47f38c822a31bdce4506cc6768256e9c80cbcd6f121150ede63d606c5d6d938",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/audit-raw-before.json",
+      "originalSha256": "a47f38c822a31bdce4506cc6768256e9c80cbcd6f121150ede63d606c5d6d938",
+      "representation": "exact copy"
+    },
+    "audit-raw-before.log": {
+      "bytes": 14023,
+      "sha256": "1fc74cde457fd41a0f0294e5f6c460d485be466351c620836d52a17f44f0992a",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/audit-raw-before.log",
+      "originalSha256": "1fc74cde457fd41a0f0294e5f6c460d485be466351c620836d52a17f44f0992a",
+      "representation": "exact copy"
+    },
+    "audit-raw-final.json": {
+      "bytes": 4051,
+      "sha256": "ceb19fe653df451fbb337593e8c9b4e57aaa90ec0ecb521944b437f08a8bd331",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/audit-raw-final.json",
+      "originalSha256": "ceb19fe653df451fbb337593e8c9b4e57aaa90ec0ecb521944b437f08a8bd331",
+      "representation": "exact copy"
+    },
+    "audit-raw-final.log": {
+      "bytes": 10939,
+      "sha256": "7ca1becacd9d5fb046fed629438b3824bc8f7a9e900286c478f8a73524ba8694",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/audit-raw-final.log",
+      "originalSha256": "7ca1becacd9d5fb046fed629438b3824bc8f7a9e900286c478f8a73524ba8694",
+      "representation": "exact copy"
+    },
+    "ci-full-final.json": {
+      "bytes": 4553,
+      "sha256": "b406455fcb096076866bbd339982444ab0d11ab6851f8bb8516f335af7e1cbd7",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/ci-full-final.json",
+      "originalSha256": "b406455fcb096076866bbd339982444ab0d11ab6851f8bb8516f335af7e1cbd7",
+      "representation": "exact copy"
+    },
+    "ci-full-final.log": {
+      "bytes": 80327,
+      "sha256": "f0d3024a462aa722f07fc03f7b8422d9e6b650eb7907a5400f2b036c5cbc9d11",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/ci-full-final.log",
+      "originalSha256": "cc5ed8408816a6d3125661bdea4d6b83d212032d29a49a2888d67230e01c7646",
+      "representation": "normalized whitespace-only lines",
+      "normalization": {
+        "rule": "Remove spaces/tabs from otherwise empty lines; retain all other bytes and line order.",
+        "affectedLines": 1,
+        "originalSha256": "cc5ed8408816a6d3125661bdea4d6b83d212032d29a49a2888d67230e01c7646",
+        "note": "Run JSON log.sha256 still identifies the original durable capture."
+      }
+    },
+    "dependency-probe.cjs": {
+      "bytes": 4422,
+      "sha256": "dd96be0f4f6746044234ce9c5a507017cb677b70049aed8b4c23ef61622b3a6b",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/dependency-probe.cjs",
+      "originalSha256": "dd96be0f4f6746044234ce9c5a507017cb677b70049aed8b4c23ef61622b3a6b",
+      "representation": "exact copy"
+    },
+    "environment.json": {
+      "bytes": 4027,
+      "sha256": "7be4a50a2bbeacf3fa6d8d8343bf6f4eac760f7704e46b75f1c42236b6416378",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/environment.json",
+      "originalSha256": "7be4a50a2bbeacf3fa6d8d8343bf6f4eac760f7704e46b75f1c42236b6416378",
+      "representation": "exact copy"
+    },
+    "focused-unit.json": {
+      "bytes": 4343,
+      "sha256": "26119134ef5a83fb58bcd99dd990d80e3f84186c406798ca787b882f43609f70",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/focused-unit.json",
+      "originalSha256": "26119134ef5a83fb58bcd99dd990d80e3f84186c406798ca787b882f43609f70",
+      "representation": "exact copy"
+    },
+    "focused-unit.log": {
+      "bytes": 1692,
+      "sha256": "23af5a5d2f037d1aadb16c0d2844f50d255acaebb7f744938ebd490c2f22a9ca",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/focused-unit.log",
+      "originalSha256": "23af5a5d2f037d1aadb16c0d2844f50d255acaebb7f744938ebd490c2f22a9ca",
+      "representation": "exact copy"
+    },
+    "full-results.json": {
+      "bytes": 1000,
+      "sha256": "c849c6dcc30606a5c3e118aca102654b70ae0420b20a393a36ea33815708da42",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/full-results.json",
+      "originalSha256": "c849c6dcc30606a5c3e118aca102654b70ae0420b20a393a36ea33815708da42",
+      "representation": "exact copy"
+    },
+    "lock-normalization.json": {
+      "bytes": 2279,
+      "sha256": "1f7f9af5b4716ab96a400188f6ff53c3485490dbbf17167ce07072c5b6480fb5",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/lock-normalization.json",
+      "originalSha256": "1f7f9af5b4716ab96a400188f6ff53c3485490dbbf17167ce07072c5b6480fb5",
+      "representation": "exact copy"
+    },
+    "math-after.json": {
+      "bytes": 2310,
+      "sha256": "7746e8ea86ba6779d0d4fcb5d41b6e01af8ba29bf8e8b0a6ce5f3887be915381",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-after.json",
+      "originalSha256": "7746e8ea86ba6779d0d4fcb5d41b6e01af8ba29bf8e8b0a6ce5f3887be915381",
+      "representation": "exact copy"
+    },
+    "math-before.json": {
+      "bytes": 2368,
+      "sha256": "9fd94c9bef903009eb9e583f256db8127c4be30cf65a7f733da2c6de6289bf2b",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-before.json",
+      "originalSha256": "9fd94c9bef903009eb9e583f256db8127c4be30cf65a7f733da2c6de6289bf2b",
+      "representation": "exact copy"
+    },
+    "math-export-results.json": {
+      "bytes": 4567,
+      "sha256": "29efcd9df0cac386e980d7173b612bed1d62ac9de2ff9f5b28eb6170e4bcdf19",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-export-results.json",
+      "originalSha256": "29efcd9df0cac386e980d7173b612bed1d62ac9de2ff9f5b28eb6170e4bcdf19",
+      "representation": "exact copy"
+    },
+    "math-exports.cjs": {
+      "bytes": 5136,
+      "sha256": "cf231cfb92f8610809c44583bd7cd9cf230ae5c2c1ad7bf7d5f98a9015b277cf",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-exports.cjs",
+      "originalSha256": "cf231cfb92f8610809c44583bd7cd9cf230ae5c2c1ad7bf7d5f98a9015b277cf",
+      "representation": "exact copy"
+    },
+    "math-exports.json": {
+      "bytes": 4424,
+      "sha256": "08801515edebc1e01d4b57e9f6842050be17c79cceebce3c584b856dedf68878",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-exports.json",
+      "originalSha256": "08801515edebc1e01d4b57e9f6842050be17c79cceebce3c584b856dedf68878",
+      "representation": "exact copy"
+    },
+    "math-exports.log": {
+      "bytes": 5387,
+      "sha256": "890d9ab00cd690252de55477bd615f1da95f612889b4195f324081946b817397",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/math-exports.log",
+      "originalSha256": "890d9ab00cd690252de55477bd615f1da95f612889b4195f324081946b817397",
+      "representation": "exact copy"
+    },
+    "npm-ci-before.json": {
+      "bytes": 3958,
+      "sha256": "351d58ef45f9f972455a26545b20a9241e435ce612e6799aded36727f68515ba",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/npm-ci-before.json",
+      "originalSha256": "351d58ef45f9f972455a26545b20a9241e435ce612e6799aded36727f68515ba",
+      "representation": "exact copy"
+    },
+    "npm-ci-before.log": {
+      "bytes": 873,
+      "sha256": "86a4ff16f090aa589677a2e86e6dca4f6b26e01c3217e9cdc74ad5b154b58865",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/npm-ci-before.log",
+      "originalSha256": "86a4ff16f090aa589677a2e86e6dca4f6b26e01c3217e9cdc74ad5b154b58865",
+      "representation": "exact copy"
+    },
+    "npm-ci-final.json": {
+      "bytes": 4010,
+      "sha256": "c0f40261684039f16257751fb1c9d50a878d94387336e92fa9833e754078836b",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/npm-ci-final.json",
+      "originalSha256": "c0f40261684039f16257751fb1c9d50a878d94387336e92fa9833e754078836b",
+      "representation": "exact copy"
+    },
+    "npm-ci-final.log": {
+      "bytes": 872,
+      "sha256": "e4fd30ee986f7b6c3a11af41414f4eb34c417f48dad90674a4358f5847f5bb95",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/npm-ci-final.log",
+      "originalSha256": "e4fd30ee986f7b6c3a11af41414f4eb34c417f48dad90674a4358f5847f5bb95",
+      "representation": "exact copy"
+    },
+    "package-source-evidence.json": {
+      "bytes": 10981,
+      "sha256": "54441bd201a50c7966ce6781394e0dce677bd74350e28fb79d20b4078ffcd1d7",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/package-source-evidence.json",
+      "originalSha256": "54441bd201a50c7966ce6781394e0dce677bd74350e28fb79d20b4078ffcd1d7",
+      "representation": "exact copy"
+    },
+    "preflight-final.cjs": {
+      "bytes": 4507,
+      "sha256": "d8cc519e3215f8c66f0a307769ed62b95db9a3fec8274dee3448298e7333aaf6",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/preflight-final.cjs",
+      "originalSha256": "d8cc519e3215f8c66f0a307769ed62b95db9a3fec8274dee3448298e7333aaf6",
+      "representation": "exact copy"
+    },
+    "preflight-final.json": {
+      "bytes": 4543,
+      "sha256": "4b12b3a6d8def1769863ffb6cbfe39fc7860ad9bda3b21dc85a592f44bf5e927",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/preflight-final.json",
+      "originalSha256": "4b12b3a6d8def1769863ffb6cbfe39fc7860ad9bda3b21dc85a592f44bf5e927",
+      "representation": "exact copy"
+    },
+    "preflight-final.log": {
+      "bytes": 4055,
+      "sha256": "56106c7efeebdde8b27668037f058eea168522c8610cc135e589fc462138a9b3",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/preflight-final.log",
+      "originalSha256": "56106c7efeebdde8b27668037f058eea168522c8610cc135e589fc462138a9b3",
+      "representation": "exact copy"
+    },
+    "reachability-summary.json": {
+      "bytes": 18702,
+      "sha256": "e62bf9ed51f7d597affd9579e54d79674b2ea97faa18ad933921c41d641aae74",
+      "representation": "authored report or explicitly labelled derived JSON"
+    },
+    "records-final.json": {
+      "bytes": 4416,
+      "sha256": "9b7c6509a3ff8b73054b53a4345cd46501535e7379385d254422ae0a43cd66e1",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/records-final.json",
+      "originalSha256": "9b7c6509a3ff8b73054b53a4345cd46501535e7379385d254422ae0a43cd66e1",
+      "representation": "exact copy"
+    },
+    "records-final.log": {
+      "bytes": 24,
+      "sha256": "16c4a48bb00a27388242a402a0d285efa1b228bbf06988ded98cf367a682b4a6",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/records-final.log",
+      "originalSha256": "16c4a48bb00a27388242a402a0d285efa1b228bbf06988ded98cf367a682b4a6",
+      "representation": "exact copy"
+    },
+    "run-command.cjs": {
+      "bytes": 2989,
+      "sha256": "d324f731650bfc67de159de4f20035281adabcbc070d3b35add78650a863a3f3",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/run-command.cjs",
+      "originalSha256": "d324f731650bfc67de159de4f20035281adabcbc070d3b35add78650a863a3f3",
+      "representation": "exact copy"
+    },
+    "source-selection.json": {
+      "bytes": 2973,
+      "sha256": "0c8f52e269600a76aab59d6183f23aeb64ced5a9835bfb42fa3d1dfefd055f42",
+      "representation": "authored report or explicitly labelled derived JSON"
+    },
+    "upstream-metadata.json": {
+      "bytes": 16476,
+      "sha256": "62eed5ddb72598ed224cce2243a5993c8bb2920d53ffe62fab79a3e8d7c89917",
+      "originalPath": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/upstream-metadata.json",
+      "originalSha256": "62eed5ddb72598ed224cce2243a5993c8bb2920d53ffe62fab79a3e8d7c89917",
+      "representation": "exact copy"
+    }
+  },
+  "excluded": "Full browser artifacts, tarballs and resource binaries remain in durable coordination paths; selected hashes are included. Historical evidence and baseline were not edited.",
+  "reachabilityFinalReportSha256": "c562006fe3e9e1be0a47e77ee10b59a5c6f90ce198c54e128c7a589fe0bceb6e",
+  "reachabilityCliProvenanceSha256": "006aa78b29ff1300df5869691abb1d06e5012df2cd91959b2d38678009f9d3ae"
+}

@@ -1,0 +1,311 @@
+{
+  "observedAt": "2026-10-31T12:54:48.897Z",
+  "artifacts": [
+    {
+      "name": "glob",
+      "version": "13.0.6",
+      "tarball": "https://registry.npmjs.org/glob/-/glob-13.0.6.tgz",
+      "integrity": "sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==",
+      "verifiedIntegrity": true,
+      "tarballSha256": "020f184fa9c4e2905cf33c3d1dbba4b25a58e05f6f785f81cc931394e07b8970",
+      "dependencies": {
+        "minipass": "^7.1.3",
+        "minimatch": "^10.2.2",
+        "path-scurry": "^2.0.2"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "exports": {
+        ".": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.min.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.min.js"
+          }
+        },
+        "./raw": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.js"
+          }
+        },
+        "./package.json": "./package.json"
+      }
+    },
+    {
+      "name": "glob",
+      "version": "14.0.2",
+      "tarball": "https://registry.npmjs.org/glob/-/glob-14.0.2.tgz",
+      "integrity": "sha512-vfMgTR2djMHPUchsJMLpZlYQvtjVL+mHpEr5wPpoCbQs2vr/FBNK+3Gnl9Ara1DSs4Aeg4eG9HiADb5/rkY/ZA==",
+      "verifiedIntegrity": true,
+      "tarballSha256": "dc6b6adfdeb67d7aefdc9c639d715a9420ad5970118cb977df342927da398f0a",
+      "dependencies": {
+        "minipass": "^7.1.3",
+        "minimatch": "^11.0.0",
+        "path-scurry": "^3.0.0"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "exports": {
+        ".": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.min.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.min.js"
+          }
+        },
+        "./raw": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.js"
+          }
+        },
+        "./package.json": "./package.json"
+      }
+    },
+    {
+      "name": "glob",
+      "version": "14.0.3",
+      "tarball": "https://registry.npmjs.org/glob/-/glob-14.0.3.tgz",
+      "integrity": "sha512-A1vjIwC3qpdCso45Iw127gnp7sPhqgY8lUQhDrArIs+GbmfaaVPFuoyy7WyLT9EPZCRZ7j7aLdwUhQmHWesEow==",
+      "verifiedIntegrity": true,
+      "tarballSha256": "f936d47081e316874bcd0ad9ed38a4275c7a16f5dd3300917231e0030a0acd91",
+      "dependencies": {
+        "minipass": "^7.1.3",
+        "minimatch": "^11.0.2",
+        "path-scurry": "^3.0.0"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "exports": {
+        ".": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.min.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.min.js"
+          }
+        },
+        "./raw": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.js"
+          }
+        },
+        "./package.json": "./package.json"
+      }
+    },
+    {
+      "name": "minimatch",
+      "version": "10.2.6",
+      "tarball": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.6.tgz",
+      "integrity": "sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==",
+      "verifiedIntegrity": true,
+      "tarballSha256": "5a3d2c8074a28229665727e47b8a1090941856a7962905efe05d20d3760355f8",
+      "dependencies": {
+        "brace-expansion": "^5.0.8"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "exports": {
+        ".": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.js"
+          }
+        },
+        "./package.json": "./package.json"
+      }
+    },
+    {
+      "name": "minimatch",
+      "version": "11.0.3",
+      "tarball": "https://registry.npmjs.org/minimatch/-/minimatch-11.0.3.tgz",
+      "integrity": "sha512-iny/40PEGkNJQ5/Pv6z3nm6FbRAby32GeZRjCUJk2WnNDbgPSTcdI+DDvLqsgBdD4cD5sMtMheqPPnehCCa8Nw==",
+      "verifiedIntegrity": true,
+      "tarballSha256": "175b2fd9c9d3611e06980341c1be226c7af72b1f414eefb424dca1be9cd9e8ae",
+      "dependencies": {
+        "brace-expansion": "^5.0.12",
+        "@isaacs/nonrecursive-glob-match": "^1.0.3"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "exports": {
+        ".": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.js"
+          }
+        },
+        "./package.json": "./package.json"
+      }
+    },
+    {
+      "name": "rimraf",
+      "version": "6.1.3",
+      "tarball": "https://registry.npmjs.org/rimraf/-/rimraf-6.1.3.tgz",
+      "integrity": "sha512-LKg+Cr2ZF61fkcaK1UdkH2yEBBKnYjTyWzTJT6KNPcSPaiT7HSdhtMXQuN5wkTX0Xu72KQ1l8S42rlmexS2hSA==",
+      "verifiedIntegrity": true,
+      "tarballSha256": "3e0b33bb2cac954eddbadc3816f72ca7168bb69660fb298f4e5f1c25bf6ea368",
+      "dependencies": {
+        "glob": "^13.0.3",
+        "package-json-from-dist": "^1.0.1"
+      },
+      "engines": {
+        "node": "20 || >=22"
+      },
+      "exports": {
+        ".": {
+          "import": {
+            "types": "./dist/esm/index.d.ts",
+            "default": "./dist/esm/index.js"
+          },
+          "require": {
+            "types": "./dist/commonjs/index.d.ts",
+            "default": "./dist/commonjs/index.js"
+          }
+        },
+        "./package.json": "./package.json"
+      }
+    },
+    {
+      "name": "mj-context-menu",
+      "version": "1.0.0",
+      "tarball": "https://registry.npmjs.org/mj-context-menu/-/mj-context-menu-1.0.0.tgz",
+      "integrity": "sha512-OSgBFQRCVhrZwRa9lhqnKcJU92dd/YXgBjup0uyeuj9bOaVsf4myOyrjU4PfhYkdDk6AqVUTov7v5uFMvIbduA==",
+      "verifiedIntegrity": true,
+      "tarballSha256": "5899c2ba56023b10ea7ebf741682dd70eba296cc3ee2301e275bf4a03c78ae85",
+      "dependencies": {
+        "rimraf": "^6.0.1"
+      }
+    },
+    {
+      "name": "@mathjax/src",
+      "version": "4.1.3",
+      "tarball": "https://registry.npmjs.org/@mathjax/src/-/src-4.1.3.tgz",
+      "integrity": "sha512-rIrWquuBSoJuoMBdC/1qD+AUHTorlccPicoVy6P2xbUgnuDBpCcpbHtOAsB8L3hdCHtNBg92lF8e3Fz+pkcQbw==",
+      "verifiedIntegrity": true,
+      "tarballSha256": "4611bed26b338dfc4b5757b8ed2d7ba82a85bcbd05d2729fb3465fba17b8896c",
+      "dependencies": {
+        "@mathjax/mathjax-newcm-font": "4.1.3",
+        "mhchemparser": "^4.2.1",
+        "mj-context-menu": "^1.0.0",
+        "speech-rule-engine": "5.0.0-rc.4"
+      },
+      "exports": {
+        ".": {
+          "import": "./bundle/node-main.mjs",
+          "require": "./bundle/node-main.cjs"
+        },
+        "./source": {
+          "import": "./components/mjs/node-main/node-main.mjs",
+          "require": "./components/cjs/node-main/node-main.cjs"
+        },
+        "./js/*": {
+          "import": "./mjs/*",
+          "require": "./cjs/*"
+        },
+        "./components/src/*": {
+          "import": "./components/mjs/*",
+          "require": "./components/cjs/*"
+        },
+        "./components/js/*": {
+          "import": "./components/mjs/*",
+          "require": "./components/cjs/*"
+        },
+        "./require.mjs": "./bundle/require.mjs",
+        "./es5/*": "./bundle/*",
+        "./*": "./*"
+      }
+    }
+  ],
+  "bundled": [
+    {
+      "version": "13.0.6",
+      "format": "commonjs",
+      "entrySha256": "3178e109aa75b45d6970a51a718f01e5b5b8f87150563ee6cb4c0e75ec215617",
+      "sourceMapSha256": "75a1b662ab33359e14ccf9107a4324f22790ec92cb61b69e74afb0e24232c63d",
+      "minimatchSource": "../../node_modules/minimatch/src/index.ts",
+      "minimatchSourceSha256": "b0126b85efed7f6c4fff66092c57a9f00487567e92d52ecfc051a3f637339b4c",
+      "expansionGuardPresent": false
+    },
+    {
+      "version": "13.0.6",
+      "format": "esm",
+      "entrySha256": "9eff492e16fdf9ea47a5f3c3d64784f9238b607f95a278101eb5a4e882f6ea85",
+      "sourceMapSha256": "eaaff9a7fe3bda8861a61724e8f6867b3c0233fd3312cb0a64adde69436cc27c",
+      "minimatchSource": "../../node_modules/minimatch/src/index.ts",
+      "minimatchSourceSha256": "b0126b85efed7f6c4fff66092c57a9f00487567e92d52ecfc051a3f637339b4c",
+      "expansionGuardPresent": false
+    },
+    {
+      "version": "14.0.2",
+      "format": "commonjs",
+      "entrySha256": "f32848848f1b4a52ae62f1ec4d209b69a825ce7fdf5735b1e3237e2202a03604",
+      "sourceMapSha256": "ee671f474f0518eb5b85ee231b0a61c2f225b35fc2cd56e35ce220c0f717ed7c",
+      "minimatchSource": "../../node_modules/minimatch/src/index.ts",
+      "minimatchSourceSha256": "624aa1c8da8c65303c7577450fc608ced3309906401546dfeaeee3a7c2100362",
+      "expansionGuardPresent": false
+    },
+    {
+      "version": "14.0.2",
+      "format": "esm",
+      "entrySha256": "399221c4e0d6ff9994d284c9402105738721572d9f8532c94649826ff5c7e207",
+      "sourceMapSha256": "67c539658a616b7c391aa8b23d99eab98cb9758adf7eab66ce66eb1d35039a68",
+      "minimatchSource": "../../node_modules/minimatch/src/index.ts",
+      "minimatchSourceSha256": "624aa1c8da8c65303c7577450fc608ced3309906401546dfeaeee3a7c2100362",
+      "expansionGuardPresent": false
+    },
+    {
+      "version": "14.0.3",
+      "format": "commonjs",
+      "entrySha256": "e0e787fa4b225c70db7aab2886011cae21855ef232908db066ce054c8f8ded16",
+      "sourceMapSha256": "c7d0d38a8e318cc679b5917150a42e01a4c6fed3301883d802611561af240dab",
+      "minimatchSource": "../../node_modules/minimatch/src/index.ts",
+      "minimatchSourceSha256": "eff2f23257708f4bd102cf94d746c8f26f5887e993e6de0f3c139bdae924c37b",
+      "expansionGuardPresent": true
+    },
+    {
+      "version": "14.0.3",
+      "format": "esm",
+      "entrySha256": "2f9b6d6d8afd271d48c25fdf87643983192cfefac359713c341136a39d635d49",
+      "sourceMapSha256": "2b28349c7c9ff001b1b8f7473419f98a43fd64076a9de676731714e7b7f9a772",
+      "minimatchSource": "../../node_modules/minimatch/src/index.ts",
+      "minimatchSourceSha256": "eff2f23257708f4bd102cf94d746c8f26f5887e993e6de0f3c139bdae924c37b",
+      "expansionGuardPresent": true
+    }
+  ]
+}

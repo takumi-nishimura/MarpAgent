@@ -1,0 +1,12 @@
+
+> marpagent@1.0.0 audit:dependencies
+> node scripts/audit-dependencies.js
+
+Resolved: @puppeteer/browsers; remove its baseline entry after review.
+Resolved: basic-ftp; remove its baseline entry after review.
+Resolved: extract-zip; remove its baseline entry after review.
+Resolved: get-uri; remove its baseline entry after review.
+Resolved: pac-proxy-agent; remove its baseline entry after review.
+Resolved: proxy-agent; remove its baseline entry after review.
+Resolved: puppeteer-core; remove its baseline entry after review.
+Dependency audit matches the reviewed ISS-0042 baseline (7 affected packages).

@@ -1,0 +1,50 @@
+✔ rimraf require preserves literal and glob deletion selection (12.407924ms)
+✔ rimraf import preserves literal and glob deletion selection (17.907717ms)
+✔ rimraf CLI still accepts the literal directories used by the MathJax menu build (35.693987ms)
+✖ glob stops reading descendant directories when its first read is aborted (3.070662ms)
+✖ minimatch bounds globstar-parent pattern expansion and retains ordinary matches (4.217024ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 3
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.277422
+
+✖ failing tests:
+
+test at ../coordination/issue67/fix/dependency-probe.cjs:47:1
+✖ glob stops reading descendant directories when its first read is aborted (3.070662ms)
+  AssertionError [ERR_ASSERTION]: aborting must stop traversal, not just reject the promise
+
+  3 !== 1
+
+      at TestContext.<anonymous> (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/dependency-probe.cjs:65:12)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../coordination/issue67/fix/dependency-probe.cjs:67:1
+✖ minimatch bounds globstar-parent pattern expansion and retains ordinary matches (4.217024ms)
+  AssertionError [ERR_ASSERTION]: compiled alternatives must respect the allocation budget
+      at TestContext.<anonymous> (/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/issue67/fix/dependency-probe.cjs:70:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -1,0 +1,53 @@
+{
+  "testedRevision": "c89b9146b33c94a3ddbff6536d5c66c844b15143",
+  "cleanBefore": true,
+  "cleanAfter": true,
+  "startedAt": "2026-10-31T12:54:27.186Z",
+  "finishedAt": "2026-10-31T12:56:06.301Z",
+  "exitCode": 0,
+  "records": 76,
+  "d2": {
+    "tests": 7,
+    "pass": 7,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "portableZip": {
+    "tests": 2,
+    "pass": 2,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "unit": {
+    "tests": 539,
+    "pass": 539,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "fixtures": {
+    "pass": 18,
+    "fail": 0,
+    "skipped": 0
+  },
+  "chromium": {
+    "pass": 126,
+    "fail": 0,
+    "skipped": 0
+  },
+  "firefox": {
+    "pass": 14,
+    "fail": 0,
+    "skipped": 1,
+    "skipLogLines": [
+      "  -  117 [firefox-overview] › tests/e2e/scroll-slides.spec.js:264:1 › native touch panning reaches the body without a Bespoke swipe"
+    ]
+  },
+  "workers": 12,
+  "retries": 0
+}
