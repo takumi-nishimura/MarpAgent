@@ -2,7 +2,9 @@
 id: ISS-0054
 title: "Resolve newly reported glob and minimatch audit findings"
 type: issue
-status: in-review
+status: closed
+resolution: completed
+resolved: "2026-10-31"
 date: "2026-10-31"
 authors:
   - codex
@@ -24,6 +26,7 @@ artifacts:
     - 357ccfcaa725b6ab4f9686f98e9fdca486d51ea4
     - d03003f838042f9b020737b952d7f64dedb12a1e
     - c89b9146b33c94a3ddbff6536d5c66c844b15143
+    - 52e32aa9c4b407cde8f1f02018aab8d40ad35c16
   manifests:
     - docs/evidence/dependency-audit-followup-2026-10-31/manifest.json
   results:
@@ -60,7 +63,7 @@ baselineを緩めずに新規指摘とseverity増加を解消し，数式・expo
 - [x] 互換性を調べて最小修正を選び，実レジストリで新規指摘・severity増加を解消してgate成功を確認する．
 - [x] baseline・保護設定・受入条件を緩めず，残存high 1件などを解消済みとしない．
 - [x] 数式，HTML／PDF／PNG，portable bundleの関連回帰と完全受入れ，strict記録検証を確認する．
-- [ ] my-decksへ共有修正を反映し，同一patchと下流の実行結果を別に確認する．
+- [x] my-decksへ共有修正を反映し，同一patchと下流の実行結果を別に確認する．
 
 ## Out of scope
 
@@ -87,4 +90,6 @@ baselineを緩めずに新規指摘とseverity増加を解消し，数式・expo
 
 最終npm ci後，同じclean revisionでci:fullを完走し，前後ともcleanを確認した．records76，D2 7，portable ZIP2，strict unit539，fixtures18，Chromium126，Firefox14が成功し，fail0．Firefoxの既存CDP native-touch skip1を別計上した．重点19単体回帰と6数式の変更前後HTML/CSS一致，4 font extensionsのglyph，HTML/PDF/PNG/移設後offline ZIPも確認した．正確なコマンド・環境hash・ログ・実件数は上記報告とmanifestへ保存した．
 
-upstream実装・完全受入れは完了し，文書のみの追加についてstrict records/hash/diffを検証する．my-decksへの共有commit適用と独立受入れは別担当の結果待ちであり，最後のACは開いたままにする．公式親が修正版を取り込むか不要runtime依存を除去した場合は，fresh auditと回帰を通してこの限定overrideの除去を再評価する．
+my-decksの `52e32aa9c4b407cde8f1f02018aab8d40ad35c16` は共有4ファイルの内容とpatchが一致し，fresh npm ciと実監査，独立した完全受入れが成功した．records74，D2 7，ZIP2，unit540，fixtures18，E2E119成功，失敗0・既存Firefox CDP条件skip1．downstream自身の開始revisionとの6数式HTML/CSS/glyph一致，HTML/PDF/PNG/移設後offline ZIPも確認した．上流を参照値とした初回比較の不一致は，既存renderer差分に由来する検証手順上の失敗として下流の証拠に保存している．
+
+公開直前の両repoの実レジストリ監査ゲートも成功し，baselineは同じhashを維持した．[PR #68](https://github.com/takumi-nishimura/MarpAgent/pull/68)へ修正と検証記録をまとめた．公式親が修正版を取り込むか不要runtime依存を除去した場合は，fresh auditと回帰を通してこの限定overrideの除去を再評価する．
