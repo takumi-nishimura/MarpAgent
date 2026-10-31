@@ -69,3 +69,24 @@ A["日本語 $x<y$"] --> B["出力<br/>結果"]
         assertCoreFeatures(fs.readFileSync(output, "utf8"), math);
     });
 }
+
+for (const [extension, tex, glyph] of [
+    ["bbm", String.raw`\mathbbm{1}`, "1D7D9"],
+    ["bboldx", String.raw`\mathbb{R}`, "211D"],
+    ["dsfont", String.raw`\mathds{N}`, "2115"],
+    ["mhchem", String.raw`\ce{CO2 <=>[k] H2O}`, "E402"],
+]) {
+    test("MathJax " + extension + " extension renders vector glyphs", () => {
+        const { html } = createConfiguredMarp().render(
+            "---\nmath: mathjax\n---\n$" + tex + "$",
+        );
+        assert.match(
+            html,
+            new RegExp('<path data-c="' + glyph + '" d="[^"]+"'),
+        );
+        assert.doesNotMatch(
+            html,
+            /data-mjx-error|data-mml-node="merror"|<text\b/,
+        );
+    });
+}
