@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-30",
+  "repository": "takumi-nishimura/MarpAgent",
+  "testedRevision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+  "validatedRevision": "81d2873397c9f54d635f2baf19d3460ed2c406a4",
+  "branch": "codex/20261030-backlog-report",
+  "basePullRequest": 64,
+  "baseRevision": "f5f50fd92d4c0f5d9815f5d39648dab86beea3fc",
+  "verification": {
+    "command": "git diff --exit-code 77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c HEAD -- . ':!docs/**'",
+    "exitCode": 0,
+    "scope": "All tracked files outside docs, including workflow, README, source, tests, themes, package manifest and lock",
+    "records": {
+      "command": "uv run .github/records.py validate --strict-relations",
+      "exitCode": 0,
+      "count": 74
+    },
+    "diffCheck": "passed"
+  },
+  "results": {
+    "d2": 7,
+    "portableD2": 2,
+    "unit": 529,
+    "fixtures": 18,
+    "chromium": 126,
+    "firefox": 14,
+    "skipped": 1,
+    "skipReason": "Existing Firefox exclusion for Chromium CDP native touch injection",
+    "productionAudit": {
+      "exitCode": 0,
+      "remainingPackages": 7,
+      "baselineChanged": false
+    }
+  },
+  "publication": {
+    "mainMerged": false,
+    "pr52": "https://github.com/takumi-nishimura/MarpAgent/pull/52",
+    "pr64": "https://github.com/takumi-nishimura/MarpAgent/pull/64",
+    "downstreamCI": "https://github.com/takumi-nishimura/my-decks/pull/6",
+    "downstreamAssets": "https://github.com/takumi-nishimura/my-decks/pull/7",
+    "downstreamHostedChecks": "Jobs did not start due to account payment/spending-limit restriction; annotations verified",
+    "issues53And55": "Remain open because broad standard-case adjustment reduction is unsupported"
+  },
+  "note": "This receipt is a documentation-only addition after verification; sealed execution evidence remains unchanged."
+}

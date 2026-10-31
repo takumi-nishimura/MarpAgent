@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-30",
+  "implementationCommit": "62cfcab2a9a17b2c51669496548f68c59a00c8e8",
+  "browserLock": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock",
+  "red": {
+    "command": "MARP_AGENT_STRICT_E2E=1 npm run test:e2e -- tests/e2e/body-footnotes.spec.js --project=chromium --workers=1 --reporter=line --output=.cache/footnote-red -g 'lab 16:9'",
+    "outcome": "expected failure before the implementation",
+    "bodyBottom": 672,
+    "footnoteTop": 628.625,
+    "expectedBodyBottomLessThan": 627.625,
+    "screenshot": "checks/overlap-red.png",
+    "portableRed": "checks/footnote-portable-red.log"
+  },
+  "unit": [
+    {
+      "command": "node --test --test-isolation=none tests/unit/theme-css.test.js tests/unit/body-class-contract.test.js tests/unit/canvas-size.test.js tests/unit/layout-baselines.test.js tests/unit/scroll-slides.test.js",
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "log": "checks/footnote-unit-green.log"
+    },
+    {
+      "command": "node --test --test-isolation=none tests/unit/portable-bundle.test.js tests/unit/marp-engine.test.js tests/unit/budoux-html.test.js tests/unit/overview-preview.test.js",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "log": "checks/footnote-engine-unit.log"
+    }
+  ],
+  "browser": {
+    "command": "flock /home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock env MARP_AGENT_STRICT_E2E=1 npm run test:e2e -- tests/e2e/body-layout.spec.js tests/e2e/body-footnotes.spec.js tests/e2e/body-footnote-exports.spec.js tests/e2e/layout-compatibility.spec.js tests/e2e/body-exports.spec.js tests/e2e/composition-utilities.spec.js tests/e2e/scroll-slides.spec.js tests/e2e/portable-bundle.spec.js --project=chromium --workers=1 --reporter=line --output=.cache/footnote-targeted-final",
+    "passed": 79,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 52,
+    "log": "checks/footnote-targeted-final.log"
+  },
+  "comparison": {
+    "command": "flock /home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock node docs/evidence/ISS-0047-footnote-reserve-2026-10-30/compare.cjs --font .cache/layout-inputs/NotoSansJP.ttf --svg-font .cache/layout-inputs/labels.woff2 --output .cache/footnote-comparison-final",
+    "pairs": 63,
+    "allPriorMetricsMatch": true,
+    "unchangedPairs": 54,
+    "allAfterFit": true,
+    "removedAuthoredReserveDeclarations": 3,
+    "runtimeGeneratedDeclarations": 18,
+    "savedComparisonPngs": 21,
+    "conditionsOnlyUpdate": "Final script adds runtime/revision metadata and line-count assertions. All pair data and 21 PNG bytes matched the first post-fix run."
+  },
+  "exports": {
+    "pdfFiles": 6,
+    "pdfPages": 12,
+    "pngFiles": 12,
+    "pdfTextAndGeometry": "pdf-review/pdf-content.json",
+    "pymupdf": "2.0",
+    "pythonDependencyScope": "uv tool cache only; no project dependency or lockfile change"
+  },
+  "intermediateFailures": [
+    "Sandbox unit run: child design commands returned status 1/empty output; reran the same target checks with approved normal permissions. This failure was not counted as a pass.",
+    "First export test assumed 4:3 native PNG was 960x720. Themes declare 1024x768; HTML preview is scaled to 960x720. Corrected the test's native PNG/PDF dimensions; product code was not changed for this discrepancy.",
+    "A PDF dictionary test found zero dictionaries when it stripped/required a newline at compressed stream end. Preserved payload bytes through endstream in both body export tests. The final six PDFs also passed an independent PyMuPDF parse."
+  ],
+  "wholeGate": "Lead owns final integrated gate; these are targeted checks only.",
+  "records": {
+    "command": "uv run --offline .github/records.py validate",
+    "validated": 72
+  },
+  "diffCheck": {
+    "command": "git diff --check",
+    "exitCode": 0
+  },
+  "baselineImmutability": {
+    "command": "git diff --exit-code c8dece4 -- docs/evidence/ISS-0047-layout-comparison-2026-10-30 fixtures/layout-baselines docs/evidence/ISS-0047-body-layout",
+    "exitCode": 0
+  },
+  "archivedLogNormalization": "Removed trailing spaces on two otherwise blank lines in footnote-portable-red.log; all diagnostic text and other logs are unchanged."
+}

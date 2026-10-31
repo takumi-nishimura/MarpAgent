@@ -261,7 +261,7 @@ and overlap diagnostics; the theme does not hide or scroll excess content.
 | Variable | Default | Scope |
 | :------- | :------ | :---- |
 | `--body-top-gap` | `10px` | space below a header, or above the first content without one |
-| `--body-bottom-safe` | `48px` | reserved space above the slide bottom/padding for footnotes, footer, and pagination |
+| `--body-bottom-safe` | `48px` | minimum reserved space above the slide bottom/padding for footnotes, footer, and pagination |
 | `--body-gap` | `0.5em` | vertical gaps in the body and its column boxes |
 | `--col-gap` | `1rem` | column gaps; `.col.visual` accepts its existing `--visual-gap` override |
 | `--figure-gap` | `0.5em` | gaps between direct media and caption inside fitting figures |
@@ -278,16 +278,38 @@ column ratio that gives the labels and caption enough width. Adjust the body
 or figure gap if needed. To allocate more height to one stacked figure, set its
 `style="flex: 2"` weight. To limit a whole media/caption group, set the figure's
 `style="flex: none; height: 280px"`; a bare media `height: 100%` would leave no
-caption allowance. Increase `--body-bottom-safe` for a taller footnote/footer.
+caption allowance. Increase `--body-bottom-safe` for a taller footer or a larger
+author-selected minimum; section- and body-local values remain supported.
 If the required text itself is too tall, revise or split the slide after a
 render; reducing the media cannot make that text fit.
+
+The configured MarpAgent renderer measures direct `section > .footnote` elements
+for opted-in regular bodies. It reserves space up to the highest footnote edge
+plus the body's computed row gap, or `--body-bottom-safe`, whichever is larger.
+Footnotes keep their absolute placement, font size, source order, and distance
+from pagination. Only the available body area changes. Measurement updates after
+fonts load, footnote edits/resizing, presentation scaling, and before printing.
+It does not resize fixed media or change `.figure-natural`/crop opt-outs.
+
+This measurement needs the renderer's JavaScript, including in exported HTML.
+Theme CSS used alone or with JavaScript disabled retains the authored/default
+`--body-bottom-safe`; measure a taller note and set that value manually. The
+runtime's `--marpagent-body-bottom-reserve` is private, not an authoring control.
+Native `footer`, nested notes, title, paper, and scroll layouts keep their existing
+mechanisms. Multiple direct notes retain their authored positions; this reserve
+does not resolve collisions between notes. Required text stays visible to
+clipping/overlap diagnostics if the remaining body is too small.
+
+The rationale and tradeoffs for measured footnote reservation are recorded in
+[ADR-0013](decisions/ADR-0013-measure-direct-footnotes-when-reserving-opted-in-body-space.md),
+accepted after integrated validation and the 2026-10-31 merge authorization.
 
 Existing `.fill`-only decks retain their header margins, bottom reserve, and
 natural figure behavior. No deck rewrite is required. Opt in one slide at a
 time by adding `.body` to its direct wrapper (for example,
 `class="box fill"` becomes `class="body box"`, or `class="col visual fill"`
 becomes `class="body col visual"`) and inspect the render. The new defaults
-change media height allocation and reserve `48px`, rather than the legacy
+change media height allocation and reserve at least `48px`, rather than the legacy
 `.fill` reserve of `1.25em`.
 
 For intentionally fixed media inside a new body, add `.figure-natural` to

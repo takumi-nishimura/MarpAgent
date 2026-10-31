@@ -1,0 +1,421 @@
+{
+  "observedAt": "2026-10-30T02:50:35.102Z",
+  "status": "passed",
+  "revision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+  "cwd": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/integration",
+  "before": {
+    "observedAt": "2026-10-30T02:47:16.606Z",
+    "cwd": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/integration",
+    "revision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+    "branch": "codex/20261030-integration",
+    "status": "",
+    "diffCheck": "passed",
+    "lockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+    "packageSha256": "2cdbdaedb30f9f99f09509ca40ed240a22b488df391b87faac4fb86efbbf7a15",
+    "workflowSha256": "a521086eee91439ad7f3640084b42152e63c2676b1bc34c72b661312f8f8f39b",
+    "baselineSha256": "181d2718ac3153409387f67d7d29c444b1ba2ad3bf54a608e4e3e5de34712092",
+    "priorAcceptance": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/0b0fdc0-20261030-01",
+    "scriptOrigins": [
+      {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/0b0fdc0-20261030-01/run-command-fonts.cjs",
+        "sha256": "de2724ec7babe74ec5d19c4935d6723cae1475b911ab00bfbe4999389f5585d9"
+      },
+      {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/0b0fdc0-20261030-01/preflight.cjs",
+        "sha256": "2766204f945e6b27bca04994479d59ff00412691efbafb85a6bac85ba1457404"
+      }
+    ]
+  },
+  "after": {
+    "observedAt": "2026-10-30T02:50:35.079Z",
+    "cwd": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/integration",
+    "revision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+    "branch": "codex/20261030-integration",
+    "status": "",
+    "diffCheck": "passed",
+    "lockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+    "packageSha256": "2cdbdaedb30f9f99f09509ca40ed240a22b488df391b87faac4fb86efbbf7a15",
+    "workflowSha256": "a521086eee91439ad7f3640084b42152e63c2676b1bc34c72b661312f8f8f39b",
+    "baselineSha256": "181d2718ac3153409387f67d7d29c444b1ba2ad3bf54a608e4e3e5de34712092"
+  },
+  "environment": {
+    "observedAt": "2026-10-30T02:47:48.616Z",
+    "revision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+    "status": "",
+    "host": {
+      "name": "mars",
+      "platform": "linux",
+      "arch": "x64",
+      "release": "5.15.167.4-microsoft-standard-WSL2"
+    },
+    "node": {
+      "version": "v25.6.0",
+      "executable": "/home/hapticslab/.local/share/mise/installs/node/25.6.0/bin/node"
+    },
+    "npm": "11.8.0",
+    "uv": {
+      "version": "uv 0.13.1 (x86_64-unknown-linux-gnu)",
+      "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/uv-0.13.1/uv",
+      "sha256": "db919fb9428cc8ad04377ba3c898e0ec5fbee83700da5b982b1c9539f1e1b34f"
+    },
+    "d2": {
+      "version": "v0.9.0",
+      "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/d2-v0.9.0/bin/d2",
+      "sha256": "32494f164e751a0da93c0f0016500b9ae3dddc95ad061060871da6c7989a7a6e",
+      "archive": {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/d2-v0.9.0-linux-amd64.tar.gz",
+        "sha256": "5669ddc46b99e942cc96078f4a4e36d5e62103348f4c05179ede27802fdd87a9"
+      }
+    },
+    "font": {
+      "python": "3.14.7 (main, Sep 24 2026, 17:58:18) [Clang 22.1.3 ]",
+      "fonttools": "4.60.1",
+      "weight": 400,
+      "variable": false,
+      "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/NotoSansJP-Regular.ttf",
+      "sha256": "6f513200a25f77ccd4388393d973f4c32a3f06fe9145e6a0fab38d16f2dc4819",
+      "variableSource": {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/NotoSansJP-variable.ttf",
+        "sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f"
+      }
+    },
+    "lock": {
+      "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/integration/package-lock.json",
+      "sha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1"
+    },
+    "workflow": {
+      "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/integration/.github/workflows/quality-gate.yml",
+      "sha256": "a521086eee91439ad7f3640084b42152e63c2676b1bc34c72b661312f8f8f39b"
+    },
+    "playwright": "1.58.2",
+    "puppeteer": "25.13.0",
+    "browsers": [
+      {
+        "name": "chromium-headless-shell",
+        "version": "145.0.7632.6",
+        "path": "/home/hapticslab/.cache/ms-playwright/chromium_headless_shell-1208/chrome-headless-shell-linux64/chrome-headless-shell",
+        "sha256": "27e55cc30e487493b89b663085d6deeb0707be201a568657c922fac9076c317c"
+      },
+      {
+        "name": "firefox",
+        "version": "146.0.1",
+        "path": "/home/hapticslab/.cache/ms-playwright/firefox-1509/firefox/firefox",
+        "sha256": "e3767fa34fe73c69859a6c8e0345fea0b84d782bf3461e5a02cabf45defe21ce"
+      }
+    ],
+    "fontconfig": {
+      "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/fontconfig/fonts.conf",
+      "sha256": "574e1f0a29d91069c15d6f4387c621324e7bb6758d21639a392cd95cac3468b6",
+      "selectedFont": {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/browser-fonts/NotoSansJP-Regular.ttf",
+        "sha256": "6f513200a25f77ccd4388393d973f4c32a3f06fe9145e6a0fab38d16f2dc4819"
+      },
+      "japaneseFonts": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/browser-fonts/NotoSansJP-Regular.ttf: Noto Sans JP,Noto Sans JP Thin"
+    }
+  },
+  "fullRunEnvironment": {
+    "FONTCONFIG_FILE": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/fontconfig/fonts.conf",
+    "FONTCONFIG_PATH": null,
+    "MARP_AGENT_TEST_JAPANESE_FONT_PATH": null,
+    "PATH": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/uv-0.13.1:/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/integration:/home/hapticslab/projects/MarpAgent:/home/hapticslab/.local/share/mise/installs/node/25.6.0/bin:/home/hapticslab/.local/share/mise/installs/npm-openai-codex/0.164.0~aube~c0e9ab6db370d4da/node_modules/.bin:/home/hapticslab/.local/share/mise/installs/aqua-anthropics-claude-code/2.1.310:/home/hapticslab/.local/share/mise/installs/npm-opencode-cli/2.1.4~aube~3c4614386262b43f/node_modules/.bin:/home/hapticslab/.local/share/mise/installs/aqua-jj-vcs-jj/0.46.0:/home/hapticslab/.local/share/mise/installs/uv/0.13.5/.mise-bins:/home/hapticslab/.local/share/mise/installs/gh/2.103.2/gh_2.103.2_linux_amd64/bin:/home/hapticslab/.local/share/mise/installs/ghq/1.11.2/ghq_linux_amd64:/home/hapticslab/.local/share/mise/installs/ripgrep/15.2.0/ripgrep-15.2.0-x86_64-unknown-linux-musl:/home/hapticslab/.local/share/mise/installs/fzf/0.74.5:/home/hapticslab/.cargo/bin:/home/hapticslab/.local/share/mise/installs/npm-rivolink-leaf/1.29.1/node_modules/.bin:/home/hapticslab/.local/share/mise/installs/npm-ccusage/20.0.42/node_modules/.bin:/home/hapticslab/.local/share/mise/installs/herdr/0.9.5:/home/hapticslab/.local/share/mise/installs/lazygit/0.66.2:/home/hapticslab/.local/share/mise/installs/github-feel-ix-343-markdown-oxide/0.25.12:/home/hapticslab/.local/share/mise/installs/bat/0.26.1/.mise-bins:/home/hapticslab/.local/share/mise/installs/carapace/1.8.1:/home/hapticslab/.local/share/mise/installs/direnv/2.38.2:/home/hapticslab/.local/share/mise/installs/eza/0.23.5/.mise-bins:/home/hapticslab/.local/share/mise/installs/fd/10.5.0/.mise-bins:/home/hapticslab/.local/share/mise/installs/helix/25.07.1/helix-25.07.1-x86_64-linux:/home/hapticslab/.local/share/mise/installs/jjui/0.10.12:/home/hapticslab/.local/share/mise/installs/jq/1.8.2:/home/hapticslab/.local/share/mise/installs/ruff/0.17.2/.mise-bins:/home/hapticslab/.local/share/mise/installs/ty/0.0.91/.mise-bins:/home/hapticslab/.local/share/mise/installs/sheldon/0.8.5:/home/hapticslab/.local/share/mise/installs/yazi/26.9.1/.mise-bins:/home/hapticslab/.local/share/mise/installs/zellij/0.45.1:/home/hapticslab/.local/share/mise/installs/zoxide/0.10.0:/home/hapticslab/.local/share/mise/shims:/home/hapticslab/.local/bin:/home/hapticslab/.codex/tmp/arg0-linux/codex-arg0MRSszO:/home/hapticslab/.config/carapace/bin:/home/hapticslab/.cache/lm-studio/bin:/home/hapticslab/.bun/bin:/home/hapticslab/.agents/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/wsl/lib",
+    "CI": null,
+    "MARP_AGENT_D2_PATH": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/d2-v0.9.0/bin/d2",
+    "MARP_AGENT_D2_FONT_PATH": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/tools/full-acceptance-20261030/NotoSansJP-Regular.ttf",
+    "MARP_AGENT_ZIP_D2_ARTIFACT_DIR": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/portable-zip",
+    "CHROME_NO_SANDBOX": "1",
+    "MARP_AGENT_REQUIRE_VISUAL": null,
+    "MARP_AGENT_STRICT_E2E": null,
+    "NODE_OPTIONS": null,
+    "PLAYWRIGHT_BROWSERS_PATH": null
+  },
+  "sharedBrowserLock": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock",
+  "results": {
+    "records": {
+      "validated": 74,
+      "failed": 0,
+      "skipped": 0
+    },
+    "stages": [
+      {
+        "name": "D2",
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "name": "portable ZIP D2",
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "name": "strict unit",
+        "total": 529,
+        "passed": 529,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    ],
+    "strictFixtures": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "fixtures": [
+        "decks/example/slide.md",
+        "fixtures/clean-slide.md",
+        "fixtures/core5-slide.md",
+        "fixtures/scroll-slide.md",
+        "fixtures/paginate-skip-slide.md",
+        "fixtures/muji-slide.md",
+        "fixtures/toshiba-slide.md",
+        "template/layouts.md",
+        "template/core5-components.md",
+        "fixtures/render-errors-slide.md",
+        "fixtures/comparison-slide.md",
+        "fixtures/dense-bullets-slide.md",
+        "fixtures/figure-heavy-slide.md",
+        "fixtures/long-japanese-slide.md",
+        "fixtures/tiny-text-slide.md",
+        "fixtures/scoped-small-text-slide.md",
+        "fixtures/text-overlap-slide.md",
+        "fixtures/overflow-heavy-slide.md"
+      ]
+    },
+    "e2e": {
+      "total": 141,
+      "passed": 140,
+      "failed": 0,
+      "skipped": 1,
+      "workers": 12,
+      "retries": 0,
+      "durationSeconds": 29.8,
+      "projects": {
+        "chromium": {
+          "passed": 126,
+          "failed": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        "firefox-overview": {
+          "passed": 14,
+          "failed": 0,
+          "skipped": 1,
+          "skips": [
+            "tests/e2e/scroll-slides.spec.js:264:1 › native touch panning reaches the body without a Bespoke swipe"
+          ]
+        }
+      },
+      "skipReason": "The existing Firefox exclusion for native touch injection that requires Chromium CDP, tests/e2e/scroll-slides.spec.js:264."
+    },
+    "addedLayoutCoverage": {
+      "footnoteRuntimePassed": 15,
+      "footnoteExportsPassed": 6,
+      "strictOfflineUnitPassed": true,
+      "tests": [
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:68:9 › lab 16:9: direct footnotes reserve their actual height through heading and caption growth (761ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:68:9 › lab 4:3: direct footnotes reserve their actual height through heading and caption growth (483ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:94:5 › lab: source order, explicit reserve, late footnote growth, and print keep the contract (297ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:117:5 › lab: natural figures and explicit crop dimensions remain authored (284ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:68:9 › muji 16:9: direct footnotes reserve their actual height through heading and caption growth (396ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:68:9 › muji 4:3: direct footnotes reserve their actual height through heading and caption growth (383ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:94:5 › muji: source order, explicit reserve, late footnote growth, and print keep the contract (288ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:117:5 › muji: natural figures and explicit crop dimensions remain authored (280ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:68:9 › toshiba 16:9: direct footnotes reserve their actual height through heading and caption growth (444ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:68:9 › toshiba 4:3: direct footnotes reserve their actual height through heading and caption growth (392ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:94:5 › toshiba: source order, explicit reserve, late footnote growth, and print keep the contract (264ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:117:5 › toshiba: natural figures and explicit crop dimensions remain authored (262ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:138:1 › scaled and temporarily hidden slides recalculate added and removed direct notes (339ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:156:1 › legacy, title, paper, and scroll keep their footnote mechanisms (429ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnotes.spec.js:165:1 › excessive required text stays visible to diagnostics with a direct footnote (245ms)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnote-exports.spec.js:25:9 › lab 16:9: long direct footnotes survive HTML, PNG, and PDF exports (5.2s)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnote-exports.spec.js:25:9 › lab 4:3: long direct footnotes survive HTML, PNG, and PDF exports (4.4s)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnote-exports.spec.js:25:9 › muji 16:9: long direct footnotes survive HTML, PNG, and PDF exports (5.0s)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnote-exports.spec.js:25:9 › muji 4:3: long direct footnotes survive HTML, PNG, and PDF exports (4.8s)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnote-exports.spec.js:25:9 › toshiba 16:9: long direct footnotes survive HTML, PNG, and PDF exports (4.7s)"
+        },
+        {
+          "project": "chromium",
+          "status": "passed",
+          "title": "tests/e2e/body-footnote-exports.spec.js:25:9 › toshiba 4:3: long direct footnotes survive HTML, PNG, and PDF exports (4.5s)"
+        }
+      ]
+    },
+    "dependencyAudit": {
+      "command": "npm run audit:dependencies",
+      "exitCode": 0,
+      "affectedPackages": 7,
+      "baselineChanged": false,
+      "note": "Existing reviewed vulnerabilities remain; this gate does not assert a zero-vulnerability dependency tree."
+    }
+  },
+  "runs": [
+    {
+      "label": "npm-ci",
+      "command": "npm",
+      "args": [
+        "ci"
+      ],
+      "startedAt": "2026-10-30T02:47:16.662Z",
+      "finishedAt": "2026-10-30T02:47:22.184Z",
+      "exitCode": 0,
+      "manifest": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/npm-ci.json",
+      "log": {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/npm-ci.log",
+        "sha256": "e3c4714b1e19d0082beca3c06ee90c395f9db3a4adb0ef7418bd6d3244c1a5d2"
+      }
+    },
+    {
+      "label": "preflight",
+      "command": "flock",
+      "args": [
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock",
+        "node",
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/preflight.cjs"
+      ],
+      "startedAt": "2026-10-30T02:47:48.358Z",
+      "finishedAt": "2026-10-30T02:47:50.795Z",
+      "exitCode": 0,
+      "manifest": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/preflight.json",
+      "log": {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/preflight.log",
+        "sha256": "89e91789a6064d924d9dc5c9093e917045af3d37e4cdfb7b988ddeb1a021bf89"
+      }
+    },
+    {
+      "label": "audit-dependencies",
+      "command": "npm",
+      "args": [
+        "run",
+        "audit:dependencies"
+      ],
+      "startedAt": "2026-10-30T02:47:49.590Z",
+      "finishedAt": "2026-10-30T02:47:50.088Z",
+      "exitCode": 0,
+      "manifest": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/audit-dependencies.json",
+      "log": {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/audit-dependencies.log",
+        "sha256": "3e5c5904b86e71fbd0efc6a5c3974deb0d36a39ef7db1f9b673a60b2ea5aed8a"
+      }
+    },
+    {
+      "label": "ci-full",
+      "command": "flock",
+      "args": [
+        "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock",
+        "npm",
+        "run",
+        "ci:full"
+      ],
+      "startedAt": "2026-10-30T02:48:04.260Z",
+      "finishedAt": "2026-10-30T02:49:46.432Z",
+      "exitCode": 0,
+      "manifest": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/ci-full.json",
+      "log": {
+        "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/ci-full.log",
+        "sha256": "a49f72c105ec350af7ce173f6b4afd11cab45d8aafb24ab7faa24e9363bef0f6"
+      }
+    }
+  ],
+  "priorEvidence": {
+    "directory": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/0b0fdc0-20261030-01",
+    "verifiedUnchangedFiles": 151,
+    "manifestSha256": "1b1424405254d9c286dbce9e676a53c6ca9cae51a66e4ec534858f7e71085702"
+  },
+  "artifacts": {
+    "e2e": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/e2e-artifacts",
+    "portableZIP": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/portable-zip"
+  },
+  "limitations": [
+    "Acceptance is for exactly 77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c and lock SHA256 0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1. Subsequent tracked changes are not covered.",
+    "Local WSL2/Linux execution reused the checked browser binaries and prepared D2/static font with an isolated Fontconfig configuration. It is not a hosted GitHub Actions execution or a fresh --with-deps installation.",
+    "Firefox E2E is limited to the overview/live reload/scroll suites selected in playwright.config.js. Native Puppeteer Firefox BiDi PDF is outside this run.",
+    "No tracked files, branches, tests, baseline or acceptance thresholds were altered. No commit, push, merge or publication was performed. Repository-level durable acceptance packaging remains for the lead."
+  ]
+}

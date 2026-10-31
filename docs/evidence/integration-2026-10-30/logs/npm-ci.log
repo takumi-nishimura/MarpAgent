@@ -1,0 +1,21 @@
+npm warn deprecated @xmldom/xmldom@0.9.10: this version has critical issues, please update to the latest version
+npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated mathjax-full@3.2.2: Version 4 replaces this package with the scoped package @mathjax/src
+
+added 341 packages, and audited 342 packages in 5s
+
+139 packages are looking for funding
+  run `npm fund` for details
+
+9 vulnerabilities (3 low, 3 moderate, 3 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.

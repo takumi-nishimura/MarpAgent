@@ -2,8 +2,9 @@
 id: ADR-0012
 title: "Separate lightweight CI from explicit full acceptance"
 type: decision
-status: proposed
+status: accepted
 date: "2026-10-30"
+updated: "2026-10-31"
 authors:
   - marp-ci-astra
 scope:
@@ -78,9 +79,9 @@ PR64 の開始 head `0c2adee` は，PR／main push を軽量 smoke，`workflow_d
 
 ### Chosen Option
 
-Option 2 を提案する．uv の準備と `uv run .github/records.py validate` を既存 job の常時ステップへ移し，パス判定から独立させる．エンジンが必要な自動実行は `test:ci`，manual は従来の完全受入れへ進む．ローカル用 `ci:full` は記録 → D2 → portable ZIP → strict gate を順に実行し，失敗時に停止する．
+Option 2 を採用する．uv の準備と `uv run .github/records.py validate` を既存 job の常時ステップへ移し，パス判定から独立させる．エンジンが必要な自動実行は `test:ci`，manual は従来の完全受入れへ進む．ローカル用 `ci:full` は記録 → D2 → portable ZIP → strict gate を順に実行し，失敗時に停止する．
 
-本 ADR は `proposed` のままとする．依存修正を含む統合 revision の完全受入れと dependency audit は成功し，以下に実行結果と PR64 候補への適用範囲を記録した．運用方式の採用確定は統合・公開を担当する lead の判断として残す．
+2026-10-31，本人のmerge指示を受け，leadが検証済みheadと保護設定を再確認し，PR #64をmerge commit `96c4eeb223b5f51af747d306a0eb0270885cf7a1`でmainへ取り込んだ．本ADRを`accepted`とする．依存修正を含む完全受入れ，dependency auditとhosted checksの成功は以下の証拠に基づく．自動の軽量成功を完全受入れの代わりにしない運用を維持する．
 
 ### Scope
 

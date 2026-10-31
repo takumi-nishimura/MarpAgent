@@ -4,7 +4,7 @@ title: "Coordinate design improvements and asset distribution"
 type: issue
 status: in-progress
 date: "2026-10-21"
-updated: "2026-10-21"
+updated: "2026-10-30"
 authors:
   - codex-main-leader
   - marp-i53-lead
@@ -22,10 +22,16 @@ depends_on:
   - ISS-0053
 supersedes: []
 artifacts:
-  revisions: []
-  manifests: []
-  results: []
+  revisions:
+    - 77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c
+  manifests:
+    - docs/evidence/integration-2026-10-30/manifest.json
+  results:
+    - docs/evidence/integration-2026-10-30/README.md
   commands:
+    - npm ci
+    - npm run ci:full
+    - npm run audit:dependencies
     - uv run .github/records.py validate
 ---
 
@@ -33,7 +39,32 @@ artifacts:
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/53
 
-## 現在の説明
+## 最終統合受入れ 2026-10-30
+
+検証対象 `77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c` で `npm ci`，共通browser.lock下の `npm run ci:full`，`npm run audit:dependencies` が終了コード0となった．開始・終了とも同じHEADでclean，lock hashも一致した．記録74件，D2 7件，portable ZIP 2件，strict unit529件，描画fixture18件，Chromium126件，Firefox14件が成功し，失敗0件．Firefoxの既存CDP専用touch除外1件だけをskipした．auditは既知7 packageが元baseline内に残り，baselineは変更していない．
+
+[最終統合受入れ](../evidence/integration-2026-10-30/README.md)と[manifest](../evidence/integration-2026-10-30/manifest.json)へ実行条件・resource hash・full／audit／install logを保存した．追加された脚注runtime15件，HTML／PNG／PDF export6件，strict offline unitも成功した．この記録の保存開始時のbranchのHEAD `e905b96` はCI／依存の5パスが検証対象と異なる．更新PR64を取り込んだ後に，文書を除く追跡ファイルの比較を行う．その具体的な範囲・差分・コマンドは証跡に記録し，取り込み前の同一性は主張しない．
+
+この受入れは限定実装と統合候補の回帰確認であり，一般的な個別指定削減の証拠ではない．親をin-progressのまま保ち，最後のACは未チェックとする．以下の継続作業と2026-10-21のcheckpointは各記録時点の状態として保持する．
+
+## 継続作業 2026-10-30
+
+GitHubの未完了Issue／PRを再確認し，本人の開発継続指示に従ってHerdr worktreeで並行作業を再開した．今回の担当はCodex Astraであり，Devin／OpenCodeは使わない．ユーザーのmain checkoutは変更せず，実装・検証・公開を論理単位に分ける．過去の担当モデルや実行結果は以下の履歴として保持する．
+
+| 対象 | 確認した状態と今回の対応 |
+| --- | --- |
+| #54，#56〜#61 | PR #62の実装はmainへ統合済みで，GitHub Issueもclosed．完了済み機能を再実装しない |
+| PR #52 | 元の監査本文181行と3コメントを保存するXR-0008を採番し，現mainのXR-0003との衝突を解消した．既存PRをhead `00e4b5a`へ履歴を保って更新した |
+| PR #64 | docs-onlyでも記録整合性を検証し，差分判定の回帰試験と明示的な完全受入れ入口を追加する．新規依存監査失敗も同じ候補で解消する |
+| #55／ISS-0047 | 最少の旧utility修復を対照に，構造追加・class・case固有寸法・再調整を分けて比較する．一般的な削減を未立証のまま完了扱いにしない．比較で見つかった長脚注の余白調整を具体的な修正対象とする |
+| my-decks #2 | 素材の所有元と意図した版を確認し，絶対symlinkを相対ファイルリンクへ修正する．原稿・素材は同repoが所有し，移植後の描画と既存所見を分けて検証する |
+| my-decks PR #6 | PR #64と同じ共有CI・依存修正を反映し，下流のrevisionで検証する．課金・利用上限によるGitHub job開始前停止をテスト失敗と混同しない |
+
+各担当が差分と関連チェックを確認し，統合候補で固定D2・font，portable ZIP，strict unit／fixture／Chromium・Firefoxを検証する．並行するbrowser／D2操作は共通lockで直列化する．ローカル成功，GitHubチェック，PR公開，mainへのmergeを別の状態として記録する．
+
+親の状態は`in-progress`を維持する．個別指定削減の結論を，依存監査や機能テストの成功だけで置き換えない．起票時の未起票・未実装の記述と，2026-10-21の受入結果は当時の状態であり，今回の検証結果として流用しない．
+
+## 2026-10-21の説明
 
 **変更前の問題**：配置，外観，素材管理，配布，D2を同時に変更すると，同じCSSやCLIを複数担当が書き換え，単独では動いても組合せで壊れるおそれがある．このISSは，全体の実装境界と受け入れを管理する親作業である．
 

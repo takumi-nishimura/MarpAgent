@@ -92,6 +92,7 @@ function trustedScriptHashes() {
         path.join(core, "lib/browser-iife.iife.js"),
         path.join(__dirname, "../scripts/presenter-cursor.js"),
         path.join(__dirname, "../scripts/presenter-scroll.js"),
+        path.join(__dirname, "../scripts/body-footnotes.js"),
     ]) {
         const script = fs
             .readFileSync(file, "utf8")

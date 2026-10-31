@@ -1,0 +1,44 @@
+✔ keeps empty non-void HTML elements explicitly closed after BudouX (129.565822ms)
+✔ leaves HTML void elements self-closing after BudouX cleanup (23.833971ms)
+✔ closes empty elements whose quoted attributes contain greater-than signs (32.999084ms)
+✔ preserves Core 5 browser scripts through Japanese line breaking (37.68464ms)
+✔ preserves raw scripts while wrapping Japanese body text (22.404069ms)
+✔ preserves generated Mermaid styles and attribute-bearing fences (184.84819ms)
+✔ configured engine renders Shiki, katex, and extended Mermaid (293.445448ms)
+✔ CLI renders the same Core 5 features outside the repository (katex) (637.449563ms)
+✔ configured engine renders Shiki, mathjax, and extended Mermaid (132.068894ms)
+✔ CLI renders the same Core 5 features outside the repository (mathjax) (669.995627ms)
+✔ overview stops polling when it starts a reload (2.52776ms)
+✔ overview output names cannot collide across decks or sessions (0.441594ms)
+✔ buildOverviewDocument labels cards with the Markdown slide index (0.622044ms)
+✔ extractSlides returns every rendered slide svg (0.073459ms)
+✔ extractSlides keeps the last slide even if scripts follow it (0.058832ms)
+✔ buildOverviewDocument preserves slide content and labels (0.137585ms)
+✔ buildWaitingDocument shows a reload-ready placeholder (0.064399ms)
+✔ buildOverviewDocument includes polling live-reload script (0.066653ms)
+✔ buildWaitingDocument includes polling live-reload script (0.047744ms)
+✔ plans only rendered resources and rewrites CSS/SVG transitively with their own bases (13.256722ms)
+✔ lists remote dependencies without fetching and rejects them in strict offline mode (1.468702ms)
+✔ shared bundle policy rejects absolute links, whole-directory reuse, and direct cross-deck references without leaking API paths (1.514631ms)
+✔ every resolver call explicitly uses bundle policy and internal origin/context never enters exported metadata (4.300163ms)
+✔ private realpaths behind innocent media names are excluded through CSS and SVG references (2.092683ms)
+✔ a resource exchanged for an outside symlink after inspection is rejected before reading its bytes (1.365471ms)
+✔ an already verified read handle keeps the authorized snapshot when its pathname is exchanged (2.296148ms)
+✔ parent symlinks retain the browser URL base and a symlinked bundle root remains portable (2.220226ms)
+✔ reports missing, absolute, outside, cyclic, private, and nonregular resources without leaking local paths (1.739309ms)
+✔ keeps equal basenames distinct and deduplicates repeated aliases (1.15191ms)
+✔ size/file limits and unreadable files fail before output (1.564402ms)
+✔ archive entries are regular, deterministic, and match their manifest hashes (2.448693ms)
+✔ refuses overwrites and invalid plans, preserves existing output, and cleans staging on failure (2.365655ms)
+✔ force cannot overwrite a resource or its symlink alias (0.881973ms)
+✔ archive I/O failure preserves output and removes the staging directory (1.304029ms)
+✔ custom script dependencies are disclosed and strict offline rejects them (1.579164ms)
+✔ configured body footnote runtime remains available in a strict offline bundle (22.738689ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2311.56413

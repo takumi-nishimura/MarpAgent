@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Compact archive of the completed integrated acceptance, not a new execution on the archival branch.",
+  "archivedAt": "2026-10-30T02:57:25.629Z",
+  "testedRevision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+  "testedCheckout": {
+    "before": {
+      "observedAt": "2026-10-30T02:47:16.606Z",
+      "cwd": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/integration",
+      "revision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+      "branch": "codex/20261030-integration",
+      "status": "",
+      "diffCheck": "passed",
+      "lockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+      "packageSha256": "2cdbdaedb30f9f99f09509ca40ed240a22b488df391b87faac4fb86efbbf7a15",
+      "workflowSha256": "a521086eee91439ad7f3640084b42152e63c2676b1bc34c72b661312f8f8f39b",
+      "baselineSha256": "181d2718ac3153409387f67d7d29c444b1ba2ad3bf54a608e4e3e5de34712092",
+      "priorAcceptance": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/0b0fdc0-20261030-01",
+      "scriptOrigins": [
+        {
+          "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/0b0fdc0-20261030-01/run-command-fonts.cjs",
+          "sha256": "de2724ec7babe74ec5d19c4935d6723cae1475b911ab00bfbe4999389f5585d9"
+        },
+        {
+          "path": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/0b0fdc0-20261030-01/preflight.cjs",
+          "sha256": "2766204f945e6b27bca04994479d59ff00412691efbafb85a6bac85ba1457404"
+        }
+      ]
+    },
+    "after": {
+      "observedAt": "2026-10-30T02:50:35.079Z",
+      "cwd": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/integration",
+      "revision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+      "branch": "codex/20261030-integration",
+      "status": "",
+      "diffCheck": "passed",
+      "lockSha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1",
+      "packageSha256": "2cdbdaedb30f9f99f09509ca40ed240a22b488df391b87faac4fb86efbbf7a15",
+      "workflowSha256": "a521086eee91439ad7f3640084b42152e63c2676b1bc34c72b661312f8f8f39b",
+      "baselineSha256": "181d2718ac3153409387f67d7d29c444b1ba2ad3bf54a608e4e3e5de34712092"
+    }
+  },
+  "result": {
+    "records": {
+      "validated": 74,
+      "failed": 0,
+      "skipped": 0
+    },
+    "stages": [
+      {
+        "name": "D2",
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "name": "portable ZIP D2",
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "name": "strict unit",
+        "total": 529,
+        "passed": 529,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    ],
+    "strictFixtures": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "fixtures": [
+        "decks/example/slide.md",
+        "fixtures/clean-slide.md",
+        "fixtures/core5-slide.md",
+        "fixtures/scroll-slide.md",
+        "fixtures/paginate-skip-slide.md",
+        "fixtures/muji-slide.md",
+        "fixtures/toshiba-slide.md",
+        "template/layouts.md",
+        "template/core5-components.md",
+        "fixtures/render-errors-slide.md",
+        "fixtures/comparison-slide.md",
+        "fixtures/dense-bullets-slide.md",
+        "fixtures/figure-heavy-slide.md",
+        "fixtures/long-japanese-slide.md",
+        "fixtures/tiny-text-slide.md",
+        "fixtures/scoped-small-text-slide.md",
+        "fixtures/text-overlap-slide.md",
+        "fixtures/overflow-heavy-slide.md"
+      ]
+    },
+    "e2e": {
+      "total": 141,
+      "passed": 140,
+      "failed": 0,
+      "skipped": 1,
+      "workers": 12,
+      "retries": 0,
+      "durationSeconds": 29.8,
+      "projects": {
+        "chromium": {
+          "passed": 126,
+          "failed": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        "firefox-overview": {
+          "passed": 14,
+          "failed": 0,
+          "skipped": 1,
+          "skips": [
+            "tests/e2e/scroll-slides.spec.js:264:1 › native touch panning reaches the body without a Bespoke swipe"
+          ]
+        }
+      },
+      "skipReason": "The existing Firefox exclusion for native touch injection that requires Chromium CDP, tests/e2e/scroll-slides.spec.js:264."
+    },
+    "addedLayoutCoverage": {
+      "footnoteRuntimePassed": 15,
+      "footnoteExportsPassed": 6,
+      "strictOfflineUnitPassed": true
+    },
+    "dependencyAudit": {
+      "command": "npm run audit:dependencies",
+      "exitCode": 0,
+      "affectedPackages": 7,
+      "baselineChanged": false,
+      "note": "Existing reviewed vulnerabilities remain; this gate does not assert a zero-vulnerability dependency tree."
+    }
+  },
+  "execution": {
+    "runs": [
+      {
+        "label": "npm-ci",
+        "command": "npm",
+        "args": [
+          "ci"
+        ],
+        "startedAt": "2026-10-30T02:47:16.662Z",
+        "finishedAt": "2026-10-30T02:47:22.184Z",
+        "exitCode": 0
+      },
+      {
+        "label": "preflight",
+        "command": "flock",
+        "args": [
+          "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock",
+          "node",
+          "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final/preflight.cjs"
+        ],
+        "startedAt": "2026-10-30T02:47:48.358Z",
+        "finishedAt": "2026-10-30T02:47:50.795Z",
+        "exitCode": 0
+      },
+      {
+        "label": "audit-dependencies",
+        "command": "npm",
+        "args": [
+          "run",
+          "audit:dependencies"
+        ],
+        "startedAt": "2026-10-30T02:47:49.590Z",
+        "finishedAt": "2026-10-30T02:47:50.088Z",
+        "exitCode": 0
+      },
+      {
+        "label": "ci-full",
+        "command": "flock",
+        "args": [
+          "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/browser.lock",
+          "npm",
+          "run",
+          "ci:full"
+        ],
+        "startedAt": "2026-10-30T02:48:04.260Z",
+        "finishedAt": "2026-10-30T02:49:46.432Z",
+        "exitCode": 0
+      }
+    ],
+    "fullRunEnvironment": "run.json#/fullRunEnvironment",
+    "environmentAndResourceHashes": "run.json#/environment"
+  },
+  "source": {
+    "directoryAtExecution": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/77e1029-final",
+    "verifiedFiles": 124,
+    "inventorySha256": "c2bdddaa6997d27bea469d88a2090d3f0b12cf109b3f8dee33ab80ce7aac0c68",
+    "priorEvidence": {
+      "directory": "/home/hapticslab/projects/MarpAgent/.cache/backlog-20261030/coordination/acceptance/0b0fdc0-20261030-01",
+      "verifiedUnchangedFiles": 151,
+      "manifestSha256": "1b1424405254d9c286dbce9e676a53c6ca9cae51a66e4ec534858f7e71085702"
+    }
+  },
+  "files": [
+    {
+      "path": "run.json",
+      "sha256": "93bde282e6ec01b4e734e60d6dade4e94025f120b40bfc01e1d5f36fc9e4ba93",
+      "bytes": 21373,
+      "sourceFile": "acceptance.json",
+      "sourceSha256": "93bde282e6ec01b4e734e60d6dade4e94025f120b40bfc01e1d5f36fc9e4ba93",
+      "sourceBytes": 21373,
+      "transformation": "none; exact original bytes"
+    },
+    {
+      "path": "logs/ci-full.trimmed.log",
+      "sha256": "4685b8fd5b6fb576d04cc559906be750b0ccce0c07850501868926e24ee5ae41",
+      "bytes": 79460,
+      "sourceFile": "ci-full.log",
+      "sourceSha256": "a49f72c105ec350af7ce173f6b4afd11cab45d8aafb24ab7faa24e9363bef0f6",
+      "sourceBytes": 79470,
+      "transformation": "Trailing ASCII spaces/tabs removed before LF or EOF; only original line 442 changes. No other normalization."
+    },
+    {
+      "path": "logs/audit-dependencies.log",
+      "sha256": "3e5c5904b86e71fbd0efc6a5c3974deb0d36a39ef7db1f9b673a60b2ea5aed8a",
+      "bytes": 605,
+      "sourceFile": "audit-dependencies.log",
+      "sourceSha256": "3e5c5904b86e71fbd0efc6a5c3974deb0d36a39ef7db1f9b673a60b2ea5aed8a",
+      "sourceBytes": 605,
+      "transformation": "none; exact original bytes"
+    },
+    {
+      "path": "logs/npm-ci.log",
+      "sha256": "e3c4714b1e19d0082beca3c06ee90c395f9db3a4adb0ef7418bd6d3244c1a5d2",
+      "bytes": 872,
+      "sourceFile": "npm-ci.log",
+      "sourceSha256": "e3c4714b1e19d0082beca3c06ee90c395f9db3a4adb0ef7418bd6d3244c1a5d2",
+      "sourceBytes": 872,
+      "transformation": "none; exact original bytes"
+    }
+  ],
+  "archiveBaseComparison": {
+    "archivalBranch": "codex/20261030-backlog-report",
+    "archivalBaseRevision": "e905b96c07b71d287ff628f9ebf15a1c0a05b65d",
+    "testedRevision": "77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c",
+    "excludedPaths": [
+      "docs/**",
+      "README.md"
+    ],
+    "scope": "All other tracked paths, including workflow, tests, package manifests, lock, assets and runtime files; modes and Git blob identities compared.",
+    "fingerprintEncoding": "SHA256 of path-sorted UTF-8 lines: MODE SPACE TYPE SPACE GIT_OID TAB PATH LF.",
+    "tested": {
+      "entries": 329,
+      "fingerprintSha256": "b651263cc40acb39eeadd2befa129c01e1cf1a52a0a9070767188227173fad1e"
+    },
+    "archivalBase": {
+      "entries": 328,
+      "fingerprintSha256": "d116e7980c9cfeb8915d9f64847c02c0553d777c30a01a54c6bda9392d631f9a"
+    },
+    "equal": false,
+    "differences": [
+      {
+        "path": ".github/workflows/dependency-audit.yml",
+        "tested": {
+          "path": ".github/workflows/dependency-audit.yml",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "2f391fc9d9a46d45e98937a413c67a8623745a13",
+          "sha256": "8087638f0ff33c9fc61c40ff88225df3fdc5a47ff28b393aa2ad0a7432a4fdd7"
+        },
+        "archivalBase": {
+          "path": ".github/workflows/dependency-audit.yml",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "70fa73c92534370ca28c05b8e941702a04190e2c",
+          "sha256": "3db47e1a987b1e51f9fbd331ded5bbc871268a9f2190b911a9ee42adcef79d5c"
+        }
+      },
+      {
+        "path": ".github/workflows/quality-gate.yml",
+        "tested": {
+          "path": ".github/workflows/quality-gate.yml",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "2d40dfa1a8e41f153baff9e91942be5e17ce1662",
+          "sha256": "a521086eee91439ad7f3640084b42152e63c2676b1bc34c72b661312f8f8f39b"
+        },
+        "archivalBase": {
+          "path": ".github/workflows/quality-gate.yml",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "fa869e29e6b107c526e924fd2f82473f85ff3075",
+          "sha256": "35057394059276e4d81c9bc1f2782ad8eb31f7ddf7c65c3cf5014f96e4640d14"
+        }
+      },
+      {
+        "path": "package-lock.json",
+        "tested": {
+          "path": "package-lock.json",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "156b7e411c3507459fe4fc9d3a08a300a0b70e39",
+          "sha256": "0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1"
+        },
+        "archivalBase": {
+          "path": "package-lock.json",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "f7fc315c54b1cb4e258a72690ac99cba518ac34c",
+          "sha256": "5cf7fcfb48293adb2ead52a55830925f2b99f820e40661e086a6e79f3986bf05"
+        }
+      },
+      {
+        "path": "package.json",
+        "tested": {
+          "path": "package.json",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "4218146915f7aa75f88e31acd1153edd3c8145b9",
+          "sha256": "2cdbdaedb30f9f99f09509ca40ed240a22b488df391b87faac4fb86efbbf7a15"
+        },
+        "archivalBase": {
+          "path": "package.json",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "e7d36a1a270bd91dc91ef1571af32ff3dad79a1a",
+          "sha256": "e6ac289e77be98e7170e2aed650bcbe28a3ef643aa5de5228b5ed11fb8990988"
+        }
+      },
+      {
+        "path": "tests/unit/ci-workflow.test.js",
+        "tested": {
+          "path": "tests/unit/ci-workflow.test.js",
+          "mode": "100644",
+          "type": "blob",
+          "oid": "036b6f7d9afa46646f9ec93574ebc6a6edaff84c",
+          "sha256": "39b3207bdf732a8f4eca3875df107bdff9464f3e5bdfbd7789b9339893ad647c"
+        },
+        "archivalBase": null
+      }
+    ],
+    "rootReadmeAlsoDiffers": true,
+    "futureComparisonCommand": "git diff --exit-code 77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c HEAD -- . ':(exclude)docs/**' ':(exclude)README.md'",
+    "requiredFollowup": "The lead must merge updated PR64 after its evidence worker completes, then run the exact comparison. No equivalence of the archival branch to the tested tree is claimed before that merge."
+  },
+  "preservation": {
+    "priorBrowserArtifactsCopied": false,
+    "existingHistoricalEvidenceChanged": false,
+    "leadAttributionBase": "e905b96c07b71d287ff628f9ebf15a1c0a05b65d",
+    "adoptionStatus": "ADR-0013 remains proposed",
+    "broadAcceptanceCriteria": "ISS-0045 and ISS-0047 remain in-progress with their open criteria unchanged"
+  },
+  "limitations": [
+    "Acceptance is for exactly 77e1029ee745cb2d4c49b1e63c5c5f8e97562e3c and lock SHA256 0110761e135d67493d6a7fa42341b9ac23bd99b8ef63f8f2c056f241e6fa7ec1. Subsequent tracked changes are not covered.",
+    "Local WSL2/Linux execution reused the checked browser binaries and prepared D2/static font with an isolated Fontconfig configuration. It is not a hosted GitHub Actions execution or a fresh --with-deps installation.",
+    "Firefox E2E is limited to the overview/live reload/scroll suites selected in playwright.config.js. Native Puppeteer Firefox BiDi PDF is outside this run."
+  ]
+}
