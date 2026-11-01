@@ -542,4 +542,3 @@ The validator skips the per-slide source hints for A-series paper outputs
 (a dense full page is expected) but still flags content clipped at the page edge. See
 `decks/example-paper/paper.md` for a worked example and the `marp-paper` skill
 for authoring details.
-
