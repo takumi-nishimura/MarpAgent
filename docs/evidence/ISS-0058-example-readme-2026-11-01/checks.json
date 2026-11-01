@@ -1,0 +1,181 @@
+{
+  "base": "b070f9b750fdabf8df14cb269ed8837404ebbba8",
+  "testedCandidate": "59c2ea214b3cfb8ab875fecf48e09e62b80c16dc",
+  "worktreeStatusAtAcceptanceStart": "",
+  "rendererThemesAndSkills": "unchanged from base",
+  "environment": {
+    "host": "macOS arm64",
+    "node": "v25.6.0",
+    "uv": "0.13.6",
+    "d2": "0.9.0",
+    "chromium": "145.0.7632.6",
+    "unitConcurrency": 1,
+    "browserWorkers": 1
+  },
+  "example": {
+    "slides": 10,
+    "visualCheck": "measured",
+    "counts": {
+      "errors": 0,
+      "warnings": 0,
+      "hints": 0
+    },
+    "findings": [],
+    "figureCaptionGapPx": 9.75,
+    "bodyFontProbe": {
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin_Regular",
+          "isCustomFont": true,
+          "glyphCount": 49
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "pdfPages": 10,
+    "pptxSlides": 10,
+    "htmlSlides": 10,
+    "pngFiles": 10,
+    "zipSlides": 10,
+    "commands": [
+      {
+        "label": "example-strict",
+        "status": 0
+      },
+      {
+        "label": "example-pdf",
+        "status": 0
+      },
+      {
+        "label": "example-pptx",
+        "status": 0
+      },
+      {
+        "label": "example-html",
+        "status": 0
+      },
+      {
+        "label": "example-images",
+        "status": 0
+      },
+      {
+        "label": "example-zip-plan",
+        "status": 0
+      },
+      {
+        "label": "example-zip",
+        "status": 0
+      }
+    ]
+  },
+  "quickStart": {
+    "scaffold": "passed",
+    "serveSlides": 2,
+    "overviewSlides": 2,
+    "strictValidation": "passed",
+    "pdf": "passed"
+  },
+  "zip": {
+    "network": "blocked",
+    "navigation": "all slides",
+    "markdownExcluded": true,
+    "remoteDependencies": [
+      {
+        "from": "decks/example/slide.md",
+        "reference": "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap",
+        "pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    ],
+    "strictOfflineClaim": false
+  },
+  "documentation": {
+    "localLinks": 45,
+    "retainedReferenceBlocks": 83
+  },
+  "fullAcceptance": {
+    "method": "ci:full component suites run separately; unit files and browser workers serialized",
+    "components": [
+      {
+        "label": "records",
+        "status": 0
+      },
+      {
+        "label": "d2-acceptance",
+        "status": 0
+      },
+      {
+        "label": "portable-d2-acceptance",
+        "status": 0
+      },
+      {
+        "label": "unit-serial",
+        "status": 0
+      },
+      {
+        "label": "strict-fixtures",
+        "status": 0
+      },
+      {
+        "label": "strict-e2e",
+        "status": 0
+      },
+      {
+        "label": "dependency-audit",
+        "status": 0
+      }
+    ],
+    "records": 80,
+    "unit": {
+      "total": 540,
+      "passed": 538,
+      "failed": 0,
+      "skipped": 2
+    },
+    "fixtures": 18,
+    "e2e": {
+      "total": 157,
+      "passed": 156,
+      "failed": 0,
+      "skipped": 1
+    },
+    "fixedD2": {
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0
+    },
+    "portableD2": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "audit": "matches reviewed ISS-0042 baseline; not a zero-vulnerability claim"
+  },
+  "limits": [
+    "PowerPoint application was not opened; PPTX export and slide package were checked",
+    "Default theme keeps the disclosed Google Fonts remote dependency",
+    "Final evidence/record and one trailing blank-line removal in the usage reference are documentation-only changes after acceptance"
+  ],
+  "sourceHashes": {
+    "README.md": "7dff9e76b3d9e1e3ecd82d68eeecb4d866738ea1471123c199460d0cf9f97a0b",
+    "docs/usage.md": "8eed9e8190ca2f1dbe3fcaf872bd60402a7919d867306b322b1c865cb8952ea9",
+    "decks/example/slide.md": "ae2759ec6a9f8de86fa48fec0ffbe418ad38e57e384c988d76d19596bb89e5ee",
+    "decks/example/slide.pdf": "028059dace4c18de6757ca842abd6bf0a767a05e684f67c387c5fa694de33c49",
+    "decks/example/brief.md": "40eeec5f63ff7c1deab6c1be36dc32986cd1bc8fe9746644fcf53ba4c8847e4f",
+    "decks/example/assets/img/introduction-preview.png": "9b6be29b2b6bb16b63a901b4a04ca8c1aa00bc6539212ed753d74a80aa3fc47c",
+    "decks/example/assets/img/overview-mode.png": "3df781d064f530ebbac3ae198e107782a4adbe6ae18eba0b3c7ae2cb5a9db7c7",
+    "decks/example/assets/img/laser-pointer-demo.png": "116c265c60d7cb9eaf46fb8a97a10898c9b17467d2c05eb7e00c6e3e3e0e4673"
+  }
+}
