@@ -79,8 +79,14 @@ function applyBudoux(html) {
             return `<!--${prefix}-${rawElements.length - 1}-->`;
         },
     );
-    const translated = budouxJa.translateHTMLString(protectedHtml);
-    const cleaned = translated
+    // BudouX translates one root element. CLI output has sibling SVG slides,
+    // so wrap the fragment temporarily and remove that root after translation.
+    const translated = budouxJa.translateHTMLString(`<div>${protectedHtml}</div>`);
+    const contents = translated.slice(
+        translated.indexOf(">") + 1,
+        translated.lastIndexOf("</div>"),
+    );
+    const cleaned = contents
         .replace(/overflow-wrap:anywhere;?/g, "")
         .replace(
             SVG_TEXT_ZWSP_RE,

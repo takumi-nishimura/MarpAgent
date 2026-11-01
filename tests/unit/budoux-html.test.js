@@ -6,12 +6,12 @@ const { Marp } = require("@marp-team/marp-core/full");
 
 const configPath = path.join(__dirname, "../..", "marp.config.js");
 
-function freshMarp() {
+function freshMarp(options = {}) {
     delete require.cache[path.resolve(configPath)];
     const config = require(configPath);
-    const marp = new Marp({ html: config.html ?? true });
+    const marp = new Marp({ html: config.html ?? true, ...options });
     return typeof config.engine === "function"
-        ? config.engine({ marp }) || marp
+        ? config.engine({ marp, ...options }) || marp
         : marp;
 }
 
@@ -25,6 +25,29 @@ ${markdown}
     const { html } = freshMarp().render(deck);
     return html;
 }
+
+test("wraps Japanese phrases on every CLI-style slide without adding a container", () => {
+    const sentence = "`--overview`で，全ページの並びを確認できる．";
+    const markdown = [1, 2, 3]
+        .map((number) => `## Slide ${number}\n\n${sentence}`)
+        .join("\n\n---\n\n");
+    const { html } = freshMarp({
+        inlineSVG: true,
+        container: [],
+        slideContainer: [],
+    }).render(markdown);
+    const paragraphs = [...html.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/g)]
+        .map((match) => match[0]);
+
+    assert.equal(paragraphs.length, 3);
+    for (const paragraph of paragraphs) {
+        assert.match(paragraph, /word-break:keep-all/);
+        assert.match(paragraph, /全ページの\u200b並びを\u200b確認できる．/);
+        assert.doesNotMatch(paragraph, /確認でき\u200bる/);
+    }
+    assert.ok(html.startsWith("<svg"), "The original slide roots must stay direct siblings.");
+    assert.equal((html.match(/data-marpit-svg=/g) || []).length, 3);
+});
 
 test("keeps empty non-void HTML elements explicitly closed after BudouX", () => {
     const html = renderBody(
