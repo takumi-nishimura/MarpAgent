@@ -340,6 +340,12 @@ with a visual redesign unless that is the explicit task.
 
 ## Typography Contract
 
+The shared engine applies BudouX phrase boundaries to every slide. CLI output
+can contain several sibling SVG roots; the engine translates them under one
+temporary root and removes it before returning the HTML. Phrase boundaries do
+not by themselves balance line lengths; Lab captions additionally use the
+balancing style described below.
+
 The shipped themes import Noto Sans JP from Google Fonts. When that service is
 unavailable, the browser uses installed fonts from the theme's fallback list;
 glyph widths and validator measurements can differ. For repeatable offline

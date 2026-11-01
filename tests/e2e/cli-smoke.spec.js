@@ -76,6 +76,29 @@ test("outline generation smoke", async () => {
   }
 });
 
+test("HTML export applies Japanese phrase wrapping to every slide", async () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-e2e-budoux-"));
+  try {
+    const deckPath = path.join(tempDir, "slide.md");
+    const outputPath = path.join(tempDir, "slide.html");
+    const sentence = "`--overview`で，全ページの並びを確認できる．";
+    fs.writeFileSync(deckPath, "---\nmarp: true\ntheme: lab\n---\n" +
+      [1, 2, 3].map(number => `## Slide ${number}\n\n${sentence}`).join("\n\n---\n\n"));
+    const result = await runMarpx([deckPath, "--html", "--output", outputPath]);
+    expect(result.status, result.stderr).toBe(0);
+    const html = fs.readFileSync(outputPath, "utf8");
+    const paragraphs = [...html.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/g)]
+      .map(match => match[0]).filter(paragraph => paragraph.includes("--overview"));
+    expect(paragraphs).toHaveLength(3);
+    for (const paragraph of paragraphs) {
+      expect(paragraph).toMatch(/word-break:keep-all/);
+      expect(paragraph).toContain("全ページの\u200b並びを\u200b確認できる．");
+    }
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("export smoke: Core 5 features in pdf, pptx, html, and images", async () => {
   // Browser-backed conversions run back to back.
   test.setTimeout(120000);
