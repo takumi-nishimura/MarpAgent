@@ -36,3 +36,23 @@ For business explanation decks, begin with the table or plain composition recipe
 Choose a denser composition when the content relationship and readable result justify it, even if the user has not named its CSS class; preserve an explicitly fixed layout. Compose with supported utilities and components before adding scoped CSS for a genuine local need. Respect slide count and content constraints when deciding to split.
 
 Evaluate rendered information density, not just Markdown line counts. Do not collapse source lines, hide content in excluded blocks, or shrink body text to evade a heuristic. See [marp-validator](../marp-validator/SKILL.md) when an actual finding needs interpretation.
+
+## Use the slide's body area
+
+For a new regular slide, keep the heading outside one direct `.body` wrapper and
+place the material inside it. Start with the canonical [composition recipes](references/composition.md).
+Choose a reading width and placement for the material. Start explanations and
+tables with `.body.box` so they follow the heading at a stable gap, even when
+short. `.body.centered.box.place-top` also bounds the reading width.
+`.body.col.visual` gives a figure and interpretation a shared height. Use middle
+placement for a deliberate focal composition or alignment to a figure, rather
+than because the body is short. Keep comparison headings aligned and preserve
+deliberate layouts in existing decks.
+
+Inspect the whole canvas as well as text fit. Do not enlarge the heading/body
+gap to distribute short content across the canvas. Unused space after a complete
+group can remain. Reconsider width, grouping, and placement when labels compete,
+lines become hard to follow, or the main figure is too small to read. These observations are
+review prompts, not automatic failures or a requirement to center every page.
+Use supported body/placement primitives before adding page-specific coordinates
+or empty spacing elements. A validator pass does not establish visual balance.

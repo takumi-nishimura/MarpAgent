@@ -559,6 +559,7 @@ section {
   --padding-bottom: 0;
   --header-height: 60px;
   --body-top-gap: 10px;
+  --body-heading-gap: 1em;
   --body-bottom-safe: 48px;
   --body-gap: 0.5em;
   --col-gap: 1rem;
@@ -624,6 +625,18 @@ section li {
 section p {
   margin: 0.5em 0;
 }
+section blockquote {
+  margin: 0.5em 0;
+  padding: 0.5em 0.75em;
+  border-inline-start: 0.12em solid var(--fg-muted);
+  background-color: var(--bg-gray-5);
+}
+section blockquote > :first-child {
+  margin-top: 0;
+}
+section blockquote > :last-child {
+  margin-bottom: 0;
+}
 section > footer:not(.paper-footer) {
   position: absolute;
   inset-inline: var(--padding-x);
@@ -667,6 +680,9 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
 }
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :first-child, section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header + * {
   margin-top: 0;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > :is(h1, h2, h3, h4) + .body {
+  margin-top: var(--body-heading-gap);
 }
 section.title {
   padding-top: 20px;
@@ -901,7 +917,7 @@ mjx-container[jax="SVG"]:not([display]) > svg {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: safe center;
     gap: 0.75em;
     width: max-content;
     max-width: min(100%, 720px);
@@ -1112,7 +1128,7 @@ mjx-container[jax="SVG"]:not([display]) > svg {
     --place-block: flex-start;
   }
   .box.place-middle, .col > div.place-middle {
-    --place-block: center;
+    --place-block: safe center;
   }
   .box.place-bottom, .col > div.place-bottom {
     --place-block: flex-end;
@@ -1139,6 +1155,9 @@ mjx-container[jax="SVG"]:not([display]) > svg {
   margin-bottom: var(--marpagent-body-bottom-reserve, var(--body-bottom-safe));
   gap: var(--body-gap);
 }
+.body.centered {
+  max-width: min(100%, 720px);
+}
 .body.col {
   flex-direction: row;
   align-items: stretch;
@@ -1150,6 +1169,9 @@ mjx-container[jax="SVG"]:not([display]) > svg {
 .body .box, .body .col > div {
   min-height: 0;
   gap: var(--body-gap);
+}
+.body > :where(p, ul, ol, table, pre, blockquote, h3, h4), .body :where(.box, .col > div) > :where(p, ul, ol, table, pre, blockquote, h3, h4) {
+  margin-block: 0;
 }
 .body:is(.box.place-left, .box.place-center, .box.place-right) > :not(.self-start, .self-center, .self-end), .body :is(.box, .col > div):is(.place-left, .place-center, .place-right) > :not(.self-start, .self-center, .self-end) {
   margin-inline: 0;

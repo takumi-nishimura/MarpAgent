@@ -43,6 +43,14 @@ fill every slide with the same number of bullets, cards, or summary boxes, or
 force layout variety. Follow the user's references and preserve evidence,
 qualifications, and intentional human edits.
 
+New regular slides use one direct `.body` wrapper below the heading, as shown in
+`template/layouts.md`. Choose the material's width and top/middle placement from
+its reading task; short prose, a comparison, and a figure with interpretation
+need different compositions. Keep explanations and tables near the heading by
+default; short content alone is not a reason for middle placement. Inspect the
+heading/body gap, unused space, hierarchy, and material size as well as clipping.
+Preserve deliberate legacy layouts.
+
 Do not create or synchronize `outline.md` by default. If a legacy outline has
 unique requirements, read them before editing; preserve the file unless its
 removal is requested. Honor an explicitly requested outline deliverable. The

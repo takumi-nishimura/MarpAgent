@@ -165,6 +165,12 @@ typography:
     fontWeight: 700
     lineHeight: "1.2"
     letterSpacing: 0em
+  header-label:
+    fontFamily: Noto Sans JP
+    fontSize: 19.5px
+    fontWeight: 400
+    lineHeight: "1.3"
+    letterSpacing: 0em
 rounded:
   none: 0px
   sm: 4px
@@ -176,10 +182,11 @@ spacing:
   md: 16px
   lg: 24px
   xl: 40px
-  slide-x: 40px
-  header-height: 60px
+  slide-x: 64px
+  header-height: 48px
+  body-top-gap: 24px
   logo-title-size: 80px
-  logo-header-size: 50px
+  logo-header-size: 32px
   rule-width: 1px
   callout-rule-width: 3px
   table-cell-x: 10px
@@ -203,7 +210,7 @@ components:
   header-band:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.on-surface}"
-    typography: "{typography.label-md}"
+    typography: "{typography.header-label}"
     height: "{spacing.header-height}"
   summary-box:
     backgroundColor: "{colors.surface-muted}"
@@ -619,14 +626,21 @@ remain unbroken.
 
 ## Layout
 
-The slide canvas is fixed at **1280 x 720**. The default horizontal safe area is
-40px, with a 60px full-bleed header on non-title slides. Layout should be
-stable under live preview, PDF export, and thumbnail overview rendering.
+The slide canvas is fixed at **1280 x 720**. Regular slides use a horizontal
+safe area of 5% of the canvas width, capped by `spacing.slide-x` at 64px. The
+48px header uses the smaller `header-label` typography to distinguish context
+from the main heading. Header text and body share the horizontal inset; a 24px
+clearance separates the header from content. Title, paper, and scroll layouts
+retain their own frames. Layout stays stable across preview, PDF, and overview.
 
 Use built-in layout primitives before adding scoped CSS:
 
 - `.col` for two or more columns.
-- `.centered` for agenda and closing slides.
+- One direct `.body` wrapper below the heading for regular slide composition.
+- `.body.centered.box.place-top` for a bounded reading width near the heading.
+- `.body.box` to group an explanation or table near its heading.
+- `.body.col.visual` for a main figure and interpretation, with explicit placement.
+- `.centered` also remains available for existing agenda and closing slides.
 - `.summary-box` for a short fit-to-content takeaway.
 - `.fill`, `.place-*`, `.self-*`, and `.box` for placement without scoped CSS.
 - `.col.with-summary` and `.gap-box` for compact column comparison.
@@ -635,8 +649,15 @@ Use built-in layout primitives before adding scoped CSS:
 - `.metric-grid` for compact evidence, KPI, or result tiles.
 - `.timeline` for process and step sequences; `ol` adds simple numeric markers.
 
-Deck-specific visual adjustment should prefer frontmatter CSS variables and
-theme variants. One-off scoped CSS is a last resort.
+Explanations and tables follow the heading at a stable gap by default. Unused
+height remains after the group rather than separating it from its heading. Use
+middle placement for a deliberate focus or alignment to a figure; short text
+alone is not a reason to center it.
+The body uses one gap rhythm between prose, lists, tables, and code. Middle
+placement uses safe alignment: oversized content starts at the body's top and
+remains visible to diagnostics instead of crossing into the heading or shrinking.
+Deck-specific adjustment should prefer the shared variables and placement
+utilities. Scoped CSS is for a concrete remaining need.
 
 ## Elevation & Depth
 

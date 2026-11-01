@@ -21,6 +21,16 @@ do not force the example's row count, point count, or text lengths. For a figure
 put the existing `figure` component inside the wider column and retain its
 source and readable labels.
 
+The recipes reserve the remaining slide height with one direct `.body` wrapper.
+A table and its context form one group; a figure and interpretation share the
+body height. Explanations and tables follow the heading at a stable gap by
+default; unused height stays after the group. Short explanations can use
+`.body.centered.box.place-top` to limit line length while keeping this relation.
+Middle placement can align an interpretation to a figure or create a deliberate
+focal composition. Do not center a body simply because it contains little text.
+Body spacing comes from `--body-gap`, while ordinary Markdown flow retains its
+own block margins.
+
 ## Adjust the structure
 
 - A `grid grid-cols-12 gap-6 items-start` wrapper supports `col-span-8` with

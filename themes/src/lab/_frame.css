@@ -1,0 +1,32 @@
+/* Regular lab slides share one frame. Title, paper, and scroll retain their
+   existing contracts; authors choose the body's composition and placement. */
+section:where(:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header))) {
+    --padding-x: min(var(--spacing-slide-x), 5%);
+    --header-height: var(--spacing-header-height);
+    --body-top-gap: var(--spacing-body-top-gap);
+    --logo-header-size: var(--spacing-logo-header-size);
+}
+
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header) {
+    left: 0;
+    width: 100%;
+    padding-inline: var(--padding-x);
+    color: var(--fg-muted);
+    font-size: var(--text-header-label);
+    font-weight: var(--font-weight-header-label);
+    line-height: var(--leading-header-label);
+}
+
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header)::after {
+    background-position:
+        right var(--padding-x) center,
+        right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing))) center,
+        right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 2) center,
+        right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 3) center,
+        right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 4) center;
+}
+
+/* Legacy Markdown keeps its flow while using the same header clearance. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):not(:has(> .body)) > header:not(.paper-header) + * {
+    margin-top: calc(var(--header-height) + var(--body-top-gap));
+}
