@@ -1,20 +1,20 @@
 ---
 name: slide-review
-description: Review MarpAgent deck content and rendered layout, report actionable findings, and fix them when remediation is requested.
-argument-hint: <deck-name>
+description: Review MarpAgent slide.md content and rendered layout and report actionable findings without editing the deck by default. Apply corrections only when requested, using slide-author.
+argument-hint: <deck-name-or-path/to/slide.md> [review-scope]
 ---
 
 # Review a deck
 
-Resolve `decks/<name>/slide.md` or the explicit deck path. Match the review scope: a report-only request does not authorize editing slides; when fixes are requested, complete them within the agreed content and design constraints. Do not turn a review of a claim into a redesign of the whole deck.
+Resolve `decks/<name>/slide.md` or the explicit deck path and requested review scope. Review without editing the deck by default, including when the request simply says "review" or "check". Run validation without `--autofix`; findings do not authorize repairs. When the user also requests fixes, continue with the correction path below within that scope.
 
 Read the deck and relevant brief/source material, then use [marp-validator](../marp-validator/SKILL.md):
 
 ```sh
-npm run marpx -- decks/<name>/slide.md -v --report-dir out/<review-run>
+npm run marpx -- decks/<name>/slide.md -v --strict
 ```
 
-Use a fresh report directory or a verified directory belonging to this review. Read the findings and actual rendered slides: the validator does not check scientific support, narrative, every collision, or asset meaning. Distinguish pre-existing problems, introduced regressions, and confirmed heuristic false positives.
+Read the findings and actual rendered slides: the validator does not check scientific support, narrative, every collision, or asset meaning. Distinguish pre-existing problems, introduced regressions, and confirmed heuristic false positives. Use `--report-dir` when retained diagnostic evidence is needed, choosing a fresh or verified run-owned directory.
 
 Review `slide.md` as the current presentation and the brief as its purpose and constraints. Do not score compliance with an obsolete outline or regenerate one to match the slides. Read a legacy outline for unique requirements if needed; preserve it unless asked to change it.
 
@@ -22,8 +22,8 @@ Check the whole sequence as well as individual pages, using `--overview` when us
 
 Record visual concerns by page or stable case ID, target region, image, observed effect, candidate remedy, confidence and verification state. Keep measured defects separate from unverified concerns and preferences. Inspect figure labels and legends in the image; zero validator errors do not establish their readability. For a shared layout/theme comparison, use the [baseline comparison method and review template](../../../fixtures/layout-baselines/README.md), preserving the source, images, font/browser conditions and adjustment reasons.
 
-For authorized fixes, group related corrections into coherent passes and edit `slide.md` directly, using [slide-edit](../slide-edit/SKILL.md) for substantial revisions. Trim or split dense text while preserving the claim and its evidence; resize an oversized figure without shrinking body text; correct the layout primitive or source link when that is the cause. If splitting conflicts with a fixed slide count or changes meaning, resolve the concrete tradeoff rather than blindly applying the same remedy to every finding. Update the brief only for changed requirements or source context.
+## When corrections are requested
 
-For layout remediation, inspect default behavior, then existing theme parameters/utilities, before adding justified page-specific CSS. Retain necessary evidence, qualifiers, captions and emphasis rather than hiding them to improve a count. Revalidate and reread affected slides and their neighbors after meaningful edits. Stop repeating a check when it has passed and no new relevant changes were made. If an environment failure or unresolved content decision prevents completion, report the actual state; do not claim a clean rendered deck from `Findings: 0` alone.
+Use [slide-author](../slide-author/SKILL.md) in the same task for the authorized corrections, preserving the review scope, existing sources, and intentional edits. Its editing and verification workflow applies to local fixes as well as structural changes; do not require another review task or a separate reviewer. Complete the corrections, inspect changed pages and neighbors, and report remaining findings. An environment failure or unresolved content decision remains an explicit limit, not a verified clean deck.
 
-Deliver actionable findings or the repaired deck, relevant validation/visual evidence, and remaining limitations. Retain the requested report and screenshots. Do not delete the entire `out/<name>/` directory as a success step; remove only disposable artifacts created by this run when cleanup is appropriate.
+Deliver actionable findings in the response with concrete pages/regions, their effect, evidence, and proportionate remedies. Save a separate review document only when requested. Retain requested reports and screenshots; clean up only task-owned previews and disposable artifacts. Do not delete an existing report directory as a success step.
