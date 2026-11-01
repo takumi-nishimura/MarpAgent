@@ -533,9 +533,7 @@ math: katex
 
 # Body runs into the footnote
 
-<div style="height: 380px"></div>
-
-<p style="margin: 0">This closing sentence runs into the citation.</p>
+<p style="position: absolute; top: 522px; margin: 0">This closing sentence runs into the citation.</p>
 
 <div class="footnote" style="top: 522px; bottom: auto">[1] Citation block placed where the body ends.</div>
 
@@ -575,7 +573,7 @@ $$
       result.slides.map((slide) => [slide.slideNumber, slide]),
     );
 
-    // Body text that runs into an absolutely positioned footnote block.
+    // Explicitly overlap both blocks so theme spacing cannot remove the collision.
     assert.equal(bySlide[1].overlaps.length, 1);
     const [footnote] = bySlide[1].overlaps;
     assert.match(footnote.first, /^"This closing sentence/);
