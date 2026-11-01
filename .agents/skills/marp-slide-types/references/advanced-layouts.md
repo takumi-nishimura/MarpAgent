@@ -75,11 +75,17 @@ See the sequence of rendered pages together.
 
 ### visual variant
 
-Use `.col.visual` for figure/media + interpretation. It extends the standard
+Use `.body.col.visual` for figure/media + interpretation. It extends the standard
 `.col` primitive used by the `two-column` template instead of introducing a
 separate layout primitive. Adjust ratios with CSS variables rather than scoped
 CSS. Give the figure enough space for its labels; use the text to direct
 attention to an observation rather than restating every visible detail.
+
+For a wide screenshot, keep the image and caption together with a
+`.figure-natural` inside a `.place-middle` column. A fitting figure can reserve
+more height than a width-limited image paints, leaving its caption far below the
+visible image. See the [body contract](../../../../docs/theme-contract.md) for
+natural groups and fitting media; inspect their actual edges after rendering.
 
 ```markdown
 ---
@@ -88,12 +94,12 @@ attention to an observation rather than restating every visible detail.
 
 ## Slide Heading
 
-<div class="col visual" style="--visual-left: 1.15; --visual-right: 0.85;">
+<div class="body col visual" style="--visual-left: 1.15; --visual-right: 0.85;">
 <figure>
 <img src="assets/img/example.png" alt="Describe the actual figure" />
 <figcaption>Source and conditions needed to interpret the figure</figcaption>
 </figure>
-<div>
+<div class="place-middle">
 
 **What to notice**
 

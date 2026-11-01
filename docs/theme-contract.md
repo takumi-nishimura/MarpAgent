@@ -191,7 +191,7 @@ Template layout labels such as `two-column` are not theme primitives. The
 | Class | Purpose |
 | :---- | :------ |
 | `.col` | flexible row for two or more columns |
-| `.centered` | body-area vertical centering for agenda/closing slides |
+| `.centered` | bounded-width vertical grouping for short prose, agenda, or closing; combines with `.body` |
 | `.fit` | shrink-to-content block with max-width guard |
 | `.summary-box` | fit-to-content call-to-action or takeaway box |
 | `.box` | content-placement wrapper outside `.col` |
@@ -219,6 +219,12 @@ that wraps to another line reduces the body by that line's height. This
 contract does not estimate a heading's height or change the composition at
 runtime. Title, paper, and `_scroll` slides keep their existing layout systems.
 
+New scaffolds and canonical recipes use this body area by default. Existing
+Markdown without a body wrapper keeps ordinary flow. In Lab's regular frame,
+the horizontal inset is 5% capped at 64px, the context header is 48px high with
+19.5px text, and header clearance is 24px. These are design tokens, not deck-local
+offsets. Title, paper, and scroll retain their existing frame geometry.
+
 ```markdown
 ## Result and interpretation
 
@@ -242,8 +248,22 @@ to the available height. `.box` and `.col > div` keep the existing `.place-*`
 controls: top/middle/bottom/spread vertically and left/center/right horizontally.
 An explicit parent placement takes precedence over a `.fit` component's default
 auto margins; deliberate child `.self-*` placement still takes precedence.
-Use `.body.box` for one content area. Use a nested `.box.fill` or `.col.fill`
+Use `.body.box` for an explanation or table that follows its heading.
+Use a nested `.box.fill` or `.col.fill`
 when another block, such as a column heading, precedes the area that must grow.
+The heading-to-body gap adds `--body-heading-gap` (default `1em`) to the heading
+margin; it does not grow when the content is short. Use
+`.body.centered.box.place-top` for the same placement with a bounded reading
+width. Placement is explicit: middle alignment can serve a focal composition or
+an interpretation beside a figure, while short content alone is not a reason to
+separate it from its heading. Middle placement uses `safe center`, which falls
+back to the start when content is taller than its container. Overflow stays
+visible for validation and does not become a reason to shrink or hide content.
+
+Within the body and its box/column containers, prose, list, table, code, and
+subheading block margins are reset so `--body-gap` provides one spacing rhythm.
+Authored scoped and inline overrides retain precedence. Ordinary flow outside
+the body keeps its Markdown margins.
 An anonymous nested wrapper does not establish the height needed by a figure
 or `h-full`. The height chain must run through the direct `.body`, stretching
 columns, and any nested `.fill` wrappers. Avoid `h-full` beside a heading or
@@ -261,6 +281,7 @@ and overlap diagnostics; the theme does not hide or scroll excess content.
 | Variable | Default | Scope |
 | :------- | :------ | :---- |
 | `--body-top-gap` | `10px` | space below a header, or above the first content without one |
+| `--body-heading-gap` | `1em` | extra separation after a heading before a direct body; independent of content height |
 | `--body-bottom-safe` | `48px` | minimum reserved space above the slide bottom/padding for footnotes, footer, and pagination |
 | `--body-gap` | `0.5em` | vertical gaps in the body and its column boxes |
 | `--col-gap` | `1rem` | column gaps; `.col.visual` accepts its existing `--visual-gap` override |
@@ -304,8 +325,9 @@ The rationale and tradeoffs for measured footnote reservation are recorded in
 [ADR-0013](decisions/ADR-0013-measure-direct-footnotes-when-reserving-opted-in-body-space.md),
 accepted after integrated validation and the 2026-10-31 merge authorization.
 
-Existing `.fill`-only decks retain their header margins, bottom reserve, and
-natural figure behavior. No deck rewrite is required. Opt in one slide at a
+Existing `.fill`-only decks retain legacy flow, bottom reserve, and natural
+figure behavior. Lab's regular frame changes the inset and context hierarchy,
+so existing Lab decks need rendering checks for changed line wraps. Opt in one slide at a
 time by adding `.body` to its direct wrapper (for example,
 `class="box fill"` becomes `class="body box"`, or `class="col visual fill"`
 becomes `class="body col visual"`) and inspect the render. The new defaults
@@ -319,6 +341,14 @@ flow, so the author remains responsible for fitting the group. Explicit inline
 crop remain authored choices. A fitting figure still honors inline crop;
 `.figure-natural` is needed when the inline dimensions themselves must be fixed.
 These overrides do not erase source attribution or caption qualifications.
+
+For a wide screenshot whose caption should follow its visible image, place a
+`.figure-natural` inside a `.place-middle` column. The column reserves the body
+height; the image and caption form one naturally sized group inside it. A fitting
+figure instead reserves a media box for the remaining height: `object-fit:
+contain` can leave space inside that box, even when `--figure-gap` is small.
+Check the painted image edge as well as the element's box. Natural groups still
+need a rendering check when the image, caption, or column width changes.
 
 ## Token Boundary
 
@@ -353,6 +383,12 @@ exports, install the same font version on every rendering machine or provide
 deck-local font files with `@font-face`, and keep the browser version fixed.
 The remote import remains for existing decks; it does not make the rendering
 environment hermetic.
+
+Native Markdown quotations (`>`) use a muted left rule and a subtle surface
+mixed from the current foreground/background, including inverted and named
+color schemes. They have padding and retain the surrounding prose size.
+The first and last child margins are removed so a quotation remains one group
+inside a body layout.
 
 Allowed author-facing text utilities:
 

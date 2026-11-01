@@ -1,0 +1,191 @@
+{
+  "base": "2a4f937bbe6f4565a21ba8c7867e2e30948b3e50",
+  "runtimeRevision": "1f46c8234b7a10c1718563e9e9f2f5ece3b0988f",
+  "worktreeStatusAtStart": "",
+  "environment": {
+    "os": "macOS arm64",
+    "node": "v25.6.0",
+    "uv": "0.13.6",
+    "d2": "0.9.0",
+    "unitFileConcurrency": 1,
+    "browserWorkers": 1,
+    "fontPreparation": "fonttools 4.60.1, wght=400; source TTF checksum matches workflow"
+  },
+  "components": {
+    "records": {
+      "passed": 79
+    },
+    "unit": {
+      "total": 540,
+      "passed": 538,
+      "failed": 0,
+      "skipped": 2
+    },
+    "strictFixtures": {
+      "passed": 18
+    },
+    "strictE2E": {
+      "passed": 156,
+      "failed": 0,
+      "skipped": 1
+    },
+    "fixedD2": {
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0
+    },
+    "portableD2": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "dependencyAudit": {
+      "status": "success",
+      "meaning": "matches reviewed ISS-0042 baseline, not zero vulnerabilities"
+    },
+    "focusedLayoutCases": {
+      "passed": 15
+    },
+    "metadata": {
+      "documents": 8,
+      "frontmatter": "byte-identical to base",
+      "localLinks": 59,
+      "coreProjectionValid": 8
+    }
+  },
+  "commands": [
+    {
+      "label": "records",
+      "status": 0,
+      "strictStage": false,
+      "args": [
+        "run",
+        ".github/records.py",
+        "validate"
+      ]
+    },
+    {
+      "label": "d2-acceptance",
+      "status": 0,
+      "strictStage": false,
+      "args": [
+        "run",
+        "test:d2"
+      ]
+    },
+    {
+      "label": "portable-d2-acceptance",
+      "status": 0,
+      "strictStage": false,
+      "args": [
+        "run",
+        "test:zip:d2"
+      ]
+    },
+    {
+      "label": "unit-serial",
+      "status": 0,
+      "strictStage": true,
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "tests/unit/assets-cli.test.js",
+        "tests/unit/body-class-contract.test.js",
+        "tests/unit/browser-environment.test.js",
+        "tests/unit/budoux-html.test.js",
+        "tests/unit/bundle-references.test.js",
+        "tests/unit/canvas-size.test.js",
+        "tests/unit/ci-workflow.test.js",
+        "tests/unit/class-diagnostics.test.js",
+        "tests/unit/class-validation.test.js",
+        "tests/unit/cli-args.test.js",
+        "tests/unit/conversion-runtime.test.js",
+        "tests/unit/d2-diagnostics.test.js",
+        "tests/unit/d2-plugin.test.js",
+        "tests/unit/d2-process.test.js",
+        "tests/unit/d2-render.test.js",
+        "tests/unit/d2-svg.test.js",
+        "tests/unit/dependency-audit.test.js",
+        "tests/unit/design-cli.test.js",
+        "tests/unit/doctor.test.js",
+        "tests/unit/github-alerts.test.js",
+        "tests/unit/hide-slides.test.js",
+        "tests/unit/layout-baselines.test.js",
+        "tests/unit/lint-deck.test.js",
+        "tests/unit/markdown-slides.test.js",
+        "tests/unit/markdown-source.test.js",
+        "tests/unit/marp-browser.test.js",
+        "tests/unit/marp-engine.test.js",
+        "tests/unit/marp-pagination.test.js",
+        "tests/unit/marp-serve.test.js",
+        "tests/unit/mathjax-cleanup-dependencies.test.js",
+        "tests/unit/media-assets.test.js",
+        "tests/unit/media-catalog.test.js",
+        "tests/unit/media-metadata.test.js",
+        "tests/unit/media-reference-graph.test.js",
+        "tests/unit/media-reuse.test.js",
+        "tests/unit/mermaid-render.test.js",
+        "tests/unit/mise-config.test.js",
+        "tests/unit/new-deck.test.js",
+        "tests/unit/new-theme.test.js",
+        "tests/unit/outline.test.js",
+        "tests/unit/overview-preview.test.js",
+        "tests/unit/package-json.test.js",
+        "tests/unit/portable-bundle.test.js",
+        "tests/unit/portable-cli.test.js",
+        "tests/unit/portable-export.test.js",
+        "tests/unit/presenter-cursor.test.js",
+        "tests/unit/preview-binding.test.js",
+        "tests/unit/preview-cli.test.js",
+        "tests/unit/preview-overview.test.js",
+        "tests/unit/preview-runtime.test.js",
+        "tests/unit/process-failures.test.js",
+        "tests/unit/process-group.test.js",
+        "tests/unit/runtime-version.test.js",
+        "tests/unit/scroll-slides.test.js",
+        "tests/unit/scroll-validation.test.js",
+        "tests/unit/slide-map.test.js",
+        "tests/unit/theme-css.test.js",
+        "tests/unit/theme-process.test.js",
+        "tests/unit/theme-watch.test.js",
+        "tests/unit/validate-deck.test.js",
+        "tests/unit/validate-observability.test.js",
+        "tests/unit/validation-failures.test.js",
+        "tests/unit/validation-process.test.js",
+        "tests/unit/visual-overflow.test.js"
+      ]
+    },
+    {
+      "label": "strict-fixtures",
+      "status": 0,
+      "strictStage": true,
+      "args": [
+        "scripts/ci-validate-fixtures.js"
+      ]
+    },
+    {
+      "label": "strict-e2e",
+      "status": 0,
+      "strictStage": true,
+      "args": [
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "--workers=1",
+        "--reporter=line"
+      ]
+    },
+    {
+      "label": "dependency-audit",
+      "status": 0,
+      "strictStage": false,
+      "args": [
+        "run",
+        "audit:dependencies"
+      ]
+    }
+  ],
+  "method": "Full acceptance component suites were invoked separately, with unit files and browser workers serialized. npm run ci:full was not invoked as one command.",
+  "earlierRunNote": "An initial D2 invocation on the earlier candidate incorrectly inherited the later strict-stage flags and failed an intentional no-browser case. Initial logs and palette contrast failures were preserved. Every final component on runtimeRevision succeeded with per-stage environment flags."
+}

@@ -35,13 +35,17 @@ Use for a point best shown in a single area: a statement, figure, code sample, d
 
 ## Try the actual figure before filling the page
 
+<div class="body box">
+
 Place it at a readable size first. Then add the observation the audience
 should notice and the context needed to interpret it.
+
+</div>
 ```
 
 ### agenda variant
 
-Use when a roadmap helps the audience navigate a longer talk; omit it when the opening already makes the sequence clear. `.centered` centers the list below the heading. List the actual sections, without padding to a target count.
+Use when a roadmap helps the audience navigate a longer talk; omit it when the opening already makes the sequence clear. Keep the list near the heading by default. List the actual sections, without padding to a target count.
 
 ```markdown
 ---
@@ -50,7 +54,7 @@ Use when a roadmap helps the audience navigate a longer talk; omit it when the o
 
 ## Agenda
 
-<div class="centered">
+<div class="body box">
 
 1. The question and the evidence
 2. What to try next
@@ -69,8 +73,12 @@ Use to consolidate an argument that needs a recap. State the conclusion and its 
 
 ## Keep the figure and its explanation together
 
+<div class="body centered box place-top">
+
 Revise the page with the actual material in place.
 Keep conditions and source attribution when shortening the explanation.
+
+</div>
 ```
 
 ### closing variant
@@ -85,7 +93,7 @@ End with the conclusion, open question, or next action that fits this talk. A se
 
 ## Try the central page first
 
-<div class="centered">
+<div class="body centered box place-top">
 
 Bring one figure and the question it should answer to the next review.
 
@@ -106,8 +114,8 @@ same number of sentences or bullets.
 
 ## The same file carries the rough and finished page
 
-<div class="col">
-<div>
+<div class="body col">
+<div class="place-top">
 
 **Rough page**
 
@@ -115,7 +123,7 @@ Put the working heading and source figure in `slide.md`.
 Note the unresolved question beside them while drafting.
 
 </div>
-<div>
+<div class="place-top">
 
 **Revised page**
 
@@ -125,7 +133,9 @@ Refine the heading and annotation after inspecting the render.
 </div>
 ```
 
-To adjust column width ratios, add `style="flex: N"`:
+Use a direct `.body` wrapper to establish the available height. Choose top or
+middle placement from the relationship between the two sides; matching heading
+baselines matters for a comparison. To adjust column width ratios, add `style="flex: N"`:
 
 ```markdown
 <div class="col">
@@ -150,10 +160,10 @@ and `.place-right` control horizontal placement.
 
 ```markdown
 <div class="col fill">
-<div class="place-middle">
+<div class="place-top">
 <div>
 
-Text content centered within its column.
+Text content aligned near the top of its column.
 
 </div>
 </div>

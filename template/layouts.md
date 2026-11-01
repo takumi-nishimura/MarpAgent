@@ -13,6 +13,8 @@ style: |
 
 ## 閲覧にはPDF，共同編集にはMarkdownを渡す
 
+<div class="body box">
+
 同じ判断軸を行に置くと，配布方法ごとの違いを追いやすい．
 
 | 判断軸 | PDF | Markdownと素材一式 |
@@ -24,14 +26,16 @@ style: |
 
 図の出典や数値の条件は，どちらの形式でも資料内に残す．
 
+</div>
+
 ---
 
 <!-- _header: 主資料と補足 -->
 
 ## ページの変更はslide.mdで完結させる
 
-<div class="grid grid-cols-12 gap-6 items-start">
-<div class="col-span-8 min-w-0">
+<div class="body col visual" style="--visual-left: 2; --visual-right: 1;">
+<div>
 
 ### 編集する内容と保存先
 
@@ -42,7 +46,7 @@ style: |
 | 図・写真 | assets/ | 素材を追加・差し替えたとき |
 
 </div>
-<div class="col-span-4 min-w-0">
+<div>
 
 ### 運用上の注意
 
@@ -58,6 +62,8 @@ brief.mdには目的や制約を記録し，ページごとの内容は複製し
 <!-- _header: 工程と成果物 -->
 
 ## 本文を仕上げる前に，重要なページを描画する
+
+<div class="body box">
 
 <div class="grid gap-6">
 <div class="grid grid-cols-12 gap-6 items-start">
@@ -111,4 +117,6 @@ brief.mdには目的や制約を記録し，ページごとの内容は複製し
 
 </div>
 </div>
+</div>
+
 </div>

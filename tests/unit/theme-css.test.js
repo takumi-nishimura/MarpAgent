@@ -179,7 +179,7 @@ test("theme CSS provides reusable layout component classes", () => {
     assert.match(css, /--place-inline:\s*stretch/);
     assert.match(
       css,
-      /\.box\.place-middle,\s*\.col\s*>\s*div\.place-middle\s*\{[\s\S]*--place-block:\s*center/,
+      /\.box\.place-middle,\s*\.col\s*>\s*div\.place-middle\s*\{[\s\S]*--place-block:\s*safe center/,
     );
     assert.match(
       css,

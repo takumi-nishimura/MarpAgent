@@ -20,6 +20,7 @@
 @import "./_shared/_code.css";
 @import "./_shared/_colorschemes.css";
 @import "./_shared/_scroll.css";
+@import "./lab/_frame.css";
 @import "./lab/_visual.css";
 
 /* Lab theme font defaults remain overridable from deck-local styles. */

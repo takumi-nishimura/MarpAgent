@@ -51,7 +51,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: safe center;
     gap: 0.75em;
     width: max-content;
     max-width: min(100%, 720px);
@@ -285,7 +285,7 @@
   }
   .box.place-middle,
   .col > div.place-middle {
-    --place-block: center;
+    --place-block: safe center;
   }
   .box.place-bottom,
   .col > div.place-bottom {
@@ -320,6 +320,10 @@
   margin-bottom: var(--marpagent-body-bottom-reserve, var(--body-bottom-safe));
   gap: var(--body-gap);
 }
+/* Placement boxes must not discard a prose group's reading-width bound. */
+.body.centered {
+  max-width: min(100%, 720px);
+}
 .body.col {
   flex-direction: row;
   align-items: stretch;
@@ -332,6 +336,12 @@
 .body .col > div {
   min-height: 0;
   gap: var(--body-gap);
+}
+/* The body owns its rhythm; Markdown's block margins belong to legacy flow.
+   Keep specificity low enough for authored scoped and inline overrides. */
+.body > :where(p, ul, ol, table, pre, blockquote, h3, h4),
+.body :where(.box, .col > div) > :where(p, ul, ol, table, pre, blockquote, h3, h4) {
+  margin-block: 0;
 }
 /* Fit-to-content components have auto margins in legacy flow. Let an explicit
    parent placement control them, while retaining deliberate self-placement. */

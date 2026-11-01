@@ -37,6 +37,7 @@ section {
 
   /* Opt-in remaining-area body; legacy slide flow keeps its own margins. */
   --body-top-gap: 10px;
+  --body-heading-gap: 1em;
   --body-bottom-safe: 48px;
   --body-gap: 0.5em;
   --col-gap: 1rem;
@@ -119,6 +120,20 @@ section p {
   margin: 0.5em 0;
 }
 
+/* Native Markdown quotations retain their prose size and a visible boundary. */
+section blockquote {
+  margin: 0.5em 0;
+  padding: 0.5em 0.75em;
+  border-inline-start: 0.12em solid var(--fg-muted);
+  background-color: color-mix(in srgb, var(--fg) 5%, var(--bg));
+}
+section blockquote > :first-child {
+  margin-top: 0;
+}
+section blockquote > :last-child {
+  margin-bottom: 0;
+}
+
 /* Native slide footers share the pagination's type scale and bottom inset. */
 section > footer:not(.paper-footer) {
   position: absolute;
@@ -175,6 +190,12 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :first-child,
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header + * {
   margin-top: 0;
+}
+
+/* Keep explanatory content connected to its heading, independently of how much
+   unused body height remains. Explicit middle placement remains available. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > :is(h1, h2, h3, h4) + .body {
+  margin-top: var(--body-heading-gap);
 }
 
 /* Title slide - reduce padding since header is absolute positioned */

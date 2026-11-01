@@ -1,0 +1,1179 @@
+{
+  "base": "2a4f937bbe6f4565a21ba8c7867e2e30948b3e50",
+  "candidate": "1f46c8234b7a10c1718563e9e9f2f5ece3b0988f",
+  "browser": "145.0.7632.6",
+  "node": "v25.6.0",
+  "deviceScaleFactor": 1,
+  "fontSourceSha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+  "fontSha256": "1d006e8fd34c46e74a807f047225451db56485aa0da083c3bac572d88cee00d9",
+  "remoteFonts": "blocked",
+  "rawCaptureManifestSha256": "c853a6231cc2f6ad9ebc1327b25e8d64ba315c8133fde51801fe9dbaec75b54a",
+  "observations": [
+    {
+      "stage": "before",
+      "theme": "lab",
+      "name": "fixed-baselines",
+      "size": "16:9",
+      "sourceSha256": "ddaef1993c7fd8849f8be53600baa6bc8106b5103e5cc51938b1f2d48f12378b",
+      "themeSha256": "4c4641ef8807b8d0ecd792925c2aef12b2248c9bddfcd0414eeca4ea416975c1",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 35
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "body-standard",
+          "body-heading-wrap",
+          "figure-standard",
+          "figure-caption-wrap",
+          "columns-standard",
+          "stack-standard",
+          "stack-taller-media",
+          "results-standard",
+          "results-footnote-wrap",
+          "table-standard",
+          "table-extra-row",
+          "diagram-standard",
+          "diagram-label-wrap"
+        ],
+        "findings": [
+          {
+            "id": "columns-portrait",
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 83
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 47
+              }
+            ],
+            "maxOverflowPx": 83,
+            "overlaps": [],
+            "smallText": [],
+            "crowded": []
+          }
+        ]
+      }
+    },
+    {
+      "stage": "before",
+      "theme": "lab",
+      "name": "controls",
+      "size": "16:9",
+      "sourceSha256": "878ac594ce22cfcc4d4a038ad73cbad6df64ab6dee8fc62e50f980684501b628",
+      "themeSha256": "4c4641ef8807b8d0ecd792925c2aef12b2248c9bddfcd0414eeca4ea416975c1",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 23
+        }
+      ],
+      "controls": [
+        {
+          "id": "short-explanation",
+          "headingGapPx": 9.75,
+          "bodyWidthPx": 1200,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "reading-width",
+          "headingGapPx": 9.75,
+          "bodyWidthPx": 1200,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "quotation",
+          "headingGapPx": 9.75,
+          "bodyWidthPx": 1200,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "natural-caption",
+          "headingGapPx": 243.46875,
+          "bodyWidthPx": 1200,
+          "imageCaptionGapPx": 9.75
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "short-explanation",
+          "reading-width",
+          "quotation",
+          "natural-caption"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "stage": "before",
+      "theme": "lab",
+      "name": "controls-4x3",
+      "size": "4:3",
+      "sourceSha256": "761b1eeac5bffcc398b6225af11f6f8c0cb1bca01d1bbcd3da5e660b5b7066be",
+      "themeSha256": "4c4641ef8807b8d0ecd792925c2aef12b2248c9bddfcd0414eeca4ea416975c1",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 23
+        }
+      ],
+      "controls": [
+        {
+          "id": "short-explanation",
+          "headingGapPx": 12.1875,
+          "bodyWidthPx": 1180,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "reading-width",
+          "headingGapPx": 12.1875,
+          "bodyWidthPx": 1180,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "quotation",
+          "headingGapPx": 12.1875,
+          "bodyWidthPx": 1180,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "natural-caption",
+          "headingGapPx": 334.3359375,
+          "bodyWidthPx": 1180,
+          "imageCaptionGapPx": 12.1875
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "short-explanation",
+          "reading-width",
+          "quotation",
+          "natural-caption"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "stage": "before",
+      "theme": "muji",
+      "name": "fixed-baselines",
+      "size": "16:9",
+      "sourceSha256": "ddaef1993c7fd8849f8be53600baa6bc8106b5103e5cc51938b1f2d48f12378b",
+      "themeSha256": "f2b7fb49fce9d3b054f988dd384bc5aba9507909e0363bff2bd4a7ec58a18e1f",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 21
+        },
+        {
+          "familyName": "Helvetica Neue",
+          "postScriptName": "HelveticaNeue",
+          "isCustomFont": false,
+          "glyphCount": 14
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "body-standard",
+          "body-heading-wrap",
+          "figure-standard",
+          "figure-caption-wrap",
+          "columns-standard",
+          "stack-standard",
+          "stack-taller-media",
+          "results-standard",
+          "results-footnote-wrap",
+          "table-standard",
+          "table-extra-row",
+          "diagram-standard",
+          "diagram-label-wrap"
+        ],
+        "findings": [
+          {
+            "id": "columns-portrait",
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 85
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 58
+              }
+            ],
+            "maxOverflowPx": 85,
+            "overlaps": [],
+            "smallText": [],
+            "crowded": []
+          }
+        ]
+      }
+    },
+    {
+      "stage": "before",
+      "theme": "muji",
+      "name": "controls",
+      "size": "16:9",
+      "sourceSha256": "878ac594ce22cfcc4d4a038ad73cbad6df64ab6dee8fc62e50f980684501b628",
+      "themeSha256": "f2b7fb49fce9d3b054f988dd384bc5aba9507909e0363bff2bd4a7ec58a18e1f",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 19
+        },
+        {
+          "familyName": "Helvetica Neue",
+          "postScriptName": "HelveticaNeue",
+          "isCustomFont": false,
+          "glyphCount": 4
+        }
+      ],
+      "controls": [
+        {
+          "id": "short-explanation",
+          "headingGapPx": 8.09375,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "reading-width",
+          "headingGapPx": 8.09375,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "quotation",
+          "headingGapPx": 8.09375,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "natural-caption",
+          "headingGapPx": 242.734375,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": 7.1875
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "short-explanation",
+          "reading-width",
+          "quotation",
+          "natural-caption"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "stage": "before",
+      "theme": "toshiba",
+      "name": "fixed-baselines",
+      "size": "16:9",
+      "sourceSha256": "ddaef1993c7fd8849f8be53600baa6bc8106b5103e5cc51938b1f2d48f12378b",
+      "themeSha256": "e8938ddd250b6dfc43285b453f578c11afcba3b0d556ef008189da64e460e901",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 35
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "body-standard",
+          "body-heading-wrap",
+          "figure-standard",
+          "figure-caption-wrap",
+          "columns-standard",
+          "stack-standard",
+          "stack-taller-media",
+          "results-standard",
+          "results-footnote-wrap",
+          "table-standard",
+          "table-extra-row",
+          "diagram-standard",
+          "diagram-label-wrap"
+        ],
+        "findings": [
+          {
+            "id": "columns-portrait",
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 98
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 68
+              }
+            ],
+            "maxOverflowPx": 98,
+            "overlaps": [],
+            "smallText": [],
+            "crowded": []
+          }
+        ]
+      }
+    },
+    {
+      "stage": "before",
+      "theme": "toshiba",
+      "name": "controls",
+      "size": "16:9",
+      "sourceSha256": "878ac594ce22cfcc4d4a038ad73cbad6df64ab6dee8fc62e50f980684501b628",
+      "themeSha256": "e8938ddd250b6dfc43285b453f578c11afcba3b0d556ef008189da64e460e901",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 23
+        }
+      ],
+      "controls": [
+        {
+          "id": "short-explanation",
+          "headingGapPx": 9.75,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "reading-width",
+          "headingGapPx": 9.75,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "quotation",
+          "headingGapPx": 9.75,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "natural-caption",
+          "headingGapPx": 238.875,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": 7.796875
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "short-explanation",
+          "reading-width",
+          "quotation",
+          "natural-caption"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "stage": "after",
+      "theme": "lab",
+      "name": "fixed-baselines",
+      "size": "16:9",
+      "sourceSha256": "ddaef1993c7fd8849f8be53600baa6bc8106b5103e5cc51938b1f2d48f12378b",
+      "themeSha256": "c8a007c8e02cd753c28afcce4ba5da90d425c6bacf3ea73cdc7841ae151208eb",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 35
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "body-standard",
+          "body-heading-wrap",
+          "figure-standard",
+          "figure-caption-wrap",
+          "columns-standard",
+          "stack-standard",
+          "stack-taller-media",
+          "results-standard",
+          "results-footnote-wrap",
+          "table-standard",
+          "table-extra-row",
+          "diagram-standard",
+          "diagram-label-wrap"
+        ],
+        "findings": [
+          {
+            "id": "columns-portrait",
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 85
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 49
+              }
+            ],
+            "maxOverflowPx": 85,
+            "overlaps": [],
+            "smallText": [],
+            "crowded": []
+          }
+        ]
+      }
+    },
+    {
+      "stage": "after",
+      "theme": "lab",
+      "name": "controls",
+      "size": "16:9",
+      "sourceSha256": "878ac594ce22cfcc4d4a038ad73cbad6df64ab6dee8fc62e50f980684501b628",
+      "themeSha256": "c8a007c8e02cd753c28afcce4ba5da90d425c6bacf3ea73cdc7841ae151208eb",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 23
+        }
+      ],
+      "controls": [
+        {
+          "id": "short-explanation",
+          "headingGapPx": 35.75,
+          "bodyWidthPx": 1152,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "reading-width",
+          "headingGapPx": 35.75,
+          "bodyWidthPx": 720,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "quotation",
+          "headingGapPx": 35.75,
+          "bodyWidthPx": 1152,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "natural-caption",
+          "headingGapPx": 255.46875,
+          "bodyWidthPx": 1152,
+          "imageCaptionGapPx": 9.75
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "short-explanation",
+          "reading-width",
+          "quotation",
+          "natural-caption"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "stage": "after",
+      "theme": "lab",
+      "name": "controls-4x3",
+      "size": "4:3",
+      "sourceSha256": "761b1eeac5bffcc398b6225af11f6f8c0cb1bca01d1bbcd3da5e660b5b7066be",
+      "themeSha256": "c8a007c8e02cd753c28afcce4ba5da90d425c6bacf3ea73cdc7841ae151208eb",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 23
+        }
+      ],
+      "controls": [
+        {
+          "id": "short-explanation",
+          "headingGapPx": 44.6875,
+          "bodyWidthPx": 1152.03125,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "reading-width",
+          "headingGapPx": 44.6875,
+          "bodyWidthPx": 900,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "quotation",
+          "headingGapPx": 44.6875,
+          "bodyWidthPx": 1152.03125,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "natural-caption",
+          "headingGapPx": 349.3359375,
+          "bodyWidthPx": 1152.03125,
+          "imageCaptionGapPx": 12.1875
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "short-explanation",
+          "reading-width",
+          "quotation",
+          "natural-caption"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "stage": "after",
+      "theme": "muji",
+      "name": "fixed-baselines",
+      "size": "16:9",
+      "sourceSha256": "ddaef1993c7fd8849f8be53600baa6bc8106b5103e5cc51938b1f2d48f12378b",
+      "themeSha256": "b03790b7b14856d5e8e70416a5f8426b4ea7db5877bf02aed6d2553589eefc85",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 21
+        },
+        {
+          "familyName": "Helvetica Neue",
+          "postScriptName": "HelveticaNeue",
+          "isCustomFont": false,
+          "glyphCount": 14
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "body-standard",
+          "body-heading-wrap",
+          "figure-standard",
+          "figure-caption-wrap",
+          "columns-standard",
+          "stack-standard",
+          "stack-taller-media",
+          "results-standard",
+          "results-footnote-wrap",
+          "table-standard",
+          "table-extra-row",
+          "diagram-standard",
+          "diagram-label-wrap"
+        ],
+        "findings": [
+          {
+            "id": "columns-portrait",
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 85
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 58
+              }
+            ],
+            "maxOverflowPx": 85,
+            "overlaps": [],
+            "smallText": [],
+            "crowded": []
+          }
+        ]
+      }
+    },
+    {
+      "stage": "after",
+      "theme": "muji",
+      "name": "controls",
+      "size": "16:9",
+      "sourceSha256": "878ac594ce22cfcc4d4a038ad73cbad6df64ab6dee8fc62e50f980684501b628",
+      "themeSha256": "b03790b7b14856d5e8e70416a5f8426b4ea7db5877bf02aed6d2553589eefc85",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 19
+        },
+        {
+          "familyName": "Helvetica Neue",
+          "postScriptName": "HelveticaNeue",
+          "isCustomFont": false,
+          "glyphCount": 4
+        }
+      ],
+      "controls": [
+        {
+          "id": "short-explanation",
+          "headingGapPx": 32.09375,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "reading-width",
+          "headingGapPx": 32.09375,
+          "bodyWidthPx": 720,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "quotation",
+          "headingGapPx": 32.09375,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "natural-caption",
+          "headingGapPx": 254.734375,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": 7.1875
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "short-explanation",
+          "reading-width",
+          "quotation",
+          "natural-caption"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "stage": "after",
+      "theme": "toshiba",
+      "name": "fixed-baselines",
+      "size": "16:9",
+      "sourceSha256": "ddaef1993c7fd8849f8be53600baa6bc8106b5103e5cc51938b1f2d48f12378b",
+      "themeSha256": "ac11c3382694a08efd29dbab9fa10b7fabb3e0cb6f44d733707defda6467fb06",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 35
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "body-standard",
+          "body-heading-wrap",
+          "figure-standard",
+          "figure-caption-wrap",
+          "columns-standard",
+          "stack-standard",
+          "stack-taller-media",
+          "results-standard",
+          "results-footnote-wrap",
+          "table-standard",
+          "table-extra-row",
+          "diagram-standard",
+          "diagram-label-wrap"
+        ],
+        "findings": [
+          {
+            "id": "columns-portrait",
+            "clipped": [
+              {
+                "label": "\"同じデータを，図と近くの説明で読む．\"",
+                "edge": "bottom",
+                "overflowPx": 98
+              },
+              {
+                "label": "<img data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgMjgwIDY0MCI+CiAgPHRpdGxlPkZpY3Rpb25hbCBjb21wYXJpc29uOiBBIDUyLCBCIDY4LCBhcmJpdHJhcnkgdW5pdHM8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iNjQwIiBmaWxsPSIjZmZmIi8+CiAgPGcgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBKUCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzIwMjIyOCI+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzYiPuaetuepuuOBruavlOi8gzwvdGV4dD48dGV4dCB4PSIyMCIgeT0iNzAiPu+8iOS7u+aEj+WNmOS9je+8iTwvdGV4dD4KICAgIDx0ZXh0IHg9IjIwIiB5PSIxMzAiPuadoeS7tkE8L3RleHQ+PHRleHQgeD0iMjAiIHk9IjIzNiI+NTI8L3RleHQ+CiAgICA8dGV4dCB4PSIyMCIgeT0iMzQwIj7mnaHku7ZCPC90ZXh0Pjx0ZXh0IHg9IjIwIiB5PSI0NDYiPjY4PC90ZXh0PgogICAgPHRleHQgeD0iMjAiIHk9IjU5MCI+5YWl5Yqb5p2h5Lu277ya5YWx6YCaPC90ZXh0PgogIDwvZz4KICA8cGF0aCBkPSJNMjAgMTUwVjIwNkgyNTBNMjAgMzYwVjQxNkgyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIwMjIyOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTIwIDE2MEgxODZWMjAwSDIwWiIgZmlsbD0iIzM3NTc3YiIvPgogIDxwYXRoIGQ9Ik0yMCAzNzBIMjM4VjQxMEgyMFoiIGZpbGw9IiM5YzRhMjAiLz4KPC9zdmc+Cg==>",
+                "edge": "bottom",
+                "overflowPx": 68
+              }
+            ],
+            "maxOverflowPx": 98,
+            "overlaps": [],
+            "smallText": [],
+            "crowded": []
+          }
+        ]
+      }
+    },
+    {
+      "stage": "after",
+      "theme": "toshiba",
+      "name": "controls",
+      "size": "16:9",
+      "sourceSha256": "878ac594ce22cfcc4d4a038ad73cbad6df64ab6dee8fc62e50f980684501b628",
+      "themeSha256": "ac11c3382694a08efd29dbab9fa10b7fabb3e0cb6f44d733707defda6467fb06",
+      "proseFontProbe": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 23
+        }
+      ],
+      "controls": [
+        {
+          "id": "short-explanation",
+          "headingGapPx": 35.75,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "reading-width",
+          "headingGapPx": 35.75,
+          "bodyWidthPx": 720,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "quotation",
+          "headingGapPx": 35.75,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": null
+        },
+        {
+          "id": "natural-caption",
+          "headingGapPx": 251.875,
+          "bodyWidthPx": 1168,
+          "imageCaptionGapPx": 7.796875
+        }
+      ],
+      "audit": {
+        "noReportedFindings": [
+          "short-explanation",
+          "reading-width",
+          "quotation",
+          "natural-caption"
+        ],
+        "findings": []
+      }
+    }
+  ],
+  "palettes": [
+    {
+      "theme": "lab",
+      "variant": "normal",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(32, 34, 40)",
+        "background": "color(srgb 0.956275 0.956667 0.957843)",
+        "fontPx": 26,
+        "ratio": 14.455074868722889
+      },
+      "header": {
+        "foreground": "rgb(32, 34, 40)",
+        "background": "rgb(255, 255, 255)",
+        "fontPx": 19.5,
+        "ratio": 15.898654956654056
+      }
+    },
+    {
+      "theme": "lab",
+      "variant": "invert",
+      "screenshot": "lab-quote-invert.png",
+      "quotation": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "color(srgb 0.169216 0.176667 0.19902)",
+        "fontPx": 26,
+        "ratio": 13.762586446526695
+      },
+      "header": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(32, 34, 40)",
+        "fontPx": 19.5,
+        "ratio": 15.898654956654056
+      }
+    },
+    {
+      "theme": "lab",
+      "variant": "dracula",
+      "screenshot": "lab-quote-dracula.png",
+      "quotation": {
+        "foreground": "rgb(248, 248, 242)",
+        "background": "color(srgb 0.197647 0.205098 0.248627)",
+        "fontPx": 26,
+        "ratio": 11.59806519937482
+      },
+      "header": {
+        "foreground": "rgb(248, 248, 242)",
+        "background": "rgb(40, 42, 54)",
+        "fontPx": 19.5,
+        "ratio": 13.359134716531573
+      }
+    },
+    {
+      "theme": "lab",
+      "variant": "one-dark",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(171, 178, 191)",
+        "background": "color(srgb 0.182549 0.198824 0.231176)",
+        "fontPx": 26,
+        "ratio": 5.943743512423142
+      },
+      "header": {
+        "foreground": "rgb(171, 178, 191)",
+        "background": "rgb(40, 44, 52)",
+        "fontPx": 19.5,
+        "ratio": 6.5676782521903485
+      }
+    },
+    {
+      "theme": "lab",
+      "variant": "nord",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(236, 239, 244)",
+        "background": "color(srgb 0.217647 0.240588 0.286275)",
+        "fontPx": 26,
+        "ratio": 9.459025859914334
+      },
+      "header": {
+        "foreground": "rgb(236, 239, 244)",
+        "background": "rgb(46, 52, 64)",
+        "fontPx": 19.5,
+        "ratio": 10.835925552759116
+      }
+    },
+    {
+      "theme": "lab",
+      "variant": "neogaia",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(255, 248, 225)",
+        "background": "color(srgb 0.307059 0.383922 0.416667)",
+        "fontPx": 26,
+        "ratio": 6.027873422747647
+      },
+      "header": {
+        "foreground": "rgb(255, 248, 225)",
+        "background": "rgb(69, 90, 100)",
+        "fontPx": 19.5,
+        "ratio": 6.8170448157515775
+      }
+    },
+    {
+      "theme": "lab",
+      "variant": "neogaia invert",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(69, 90, 100)",
+        "background": "color(srgb 0.963529 0.941569 0.857843)",
+        "fontPx": 26,
+        "ratio": 6.347756889512397
+      },
+      "header": {
+        "foreground": "rgb(69, 90, 100)",
+        "background": "rgb(255, 248, 225)",
+        "fontPx": 19.5,
+        "ratio": 6.8170448157515775
+      }
+    },
+    {
+      "theme": "lab",
+      "variant": "github-light",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(36, 41, 47)",
+        "background": "color(srgb 0.957059 0.958039 0.959216)",
+        "fontPx": 26,
+        "ratio": 13.3302587132421
+      },
+      "header": {
+        "foreground": "rgb(36, 41, 47)",
+        "background": "rgb(255, 255, 255)",
+        "fontPx": 19.5,
+        "ratio": 14.652157369459891
+      }
+    },
+    {
+      "theme": "muji",
+      "variant": "normal",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(60, 60, 67)",
+        "background": "color(srgb 0.961765 0.961765 0.963137)",
+        "fontPx": 24,
+        "ratio": 10.041143153321922
+      },
+      "header": {
+        "foreground": "rgb(60, 60, 67)",
+        "background": "rgb(255, 255, 255)",
+        "fontPx": 24,
+        "ratio": 10.940207996567228
+      }
+    },
+    {
+      "theme": "muji",
+      "variant": "invert",
+      "screenshot": "muji-quote-invert.png",
+      "quotation": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "color(srgb 0.273529 0.273529 0.299608)",
+        "fontPx": 24,
+        "ratio": 9.371475928824916
+      },
+      "header": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(60, 60, 67)",
+        "fontPx": 24,
+        "ratio": 10.940207996567228
+      }
+    },
+    {
+      "theme": "muji",
+      "variant": "dracula",
+      "screenshot": "muji-quote-dracula.png",
+      "quotation": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "color(srgb 0.273529 0.273529 0.299608)",
+        "fontPx": 24,
+        "ratio": 9.371475928824916
+      },
+      "header": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(60, 60, 67)",
+        "fontPx": 24,
+        "ratio": 10.940207996567228
+      }
+    },
+    {
+      "theme": "muji",
+      "variant": "one-dark",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "color(srgb 0.273529 0.273529 0.299608)",
+        "fontPx": 24,
+        "ratio": 9.371475928824916
+      },
+      "header": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(60, 60, 67)",
+        "fontPx": 24,
+        "ratio": 10.940207996567228
+      }
+    },
+    {
+      "theme": "muji",
+      "variant": "nord",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "color(srgb 0.273529 0.273529 0.299608)",
+        "fontPx": 24,
+        "ratio": 9.371475928824916
+      },
+      "header": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(60, 60, 67)",
+        "fontPx": 24,
+        "ratio": 10.940207996567228
+      }
+    },
+    {
+      "theme": "muji",
+      "variant": "neogaia",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(244, 238, 222)",
+        "background": "color(srgb 0.271373 0.270196 0.293137)",
+        "fontPx": 24,
+        "ratio": 8.219455488626632
+      },
+      "header": {
+        "foreground": "rgb(244, 238, 222)",
+        "background": "rgb(60, 60, 67)",
+        "fontPx": 24,
+        "ratio": 9.445681232137018
+      }
+    },
+    {
+      "theme": "muji",
+      "variant": "neogaia invert",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(60, 60, 67)",
+        "background": "color(srgb 0.920784 0.898431 0.840196)",
+        "fontPx": 24,
+        "ratio": 8.705887236019038
+      },
+      "header": {
+        "foreground": "rgb(60, 60, 67)",
+        "background": "rgb(244, 238, 222)",
+        "fontPx": 24,
+        "ratio": 9.445681232137018
+      }
+    },
+    {
+      "theme": "muji",
+      "variant": "github-light",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(60, 60, 67)",
+        "background": "color(srgb 0.961765 0.961765 0.963137)",
+        "fontPx": 24,
+        "ratio": 10.041143153321922
+      },
+      "header": {
+        "foreground": "rgb(60, 60, 67)",
+        "background": "rgb(255, 255, 255)",
+        "fontPx": 24,
+        "ratio": 10.940207996567228
+      }
+    },
+    {
+      "theme": "toshiba",
+      "variant": "normal",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(0, 0, 0)",
+        "background": "color(srgb 0.95 0.95 0.95)",
+        "fontPx": 26,
+        "ratio": 18.758462357639324
+      },
+      "header": {
+        "foreground": "rgb(0, 0, 0)",
+        "background": "rgb(255, 255, 255)",
+        "fontPx": 26,
+        "ratio": 21
+      }
+    },
+    {
+      "theme": "toshiba",
+      "variant": "invert",
+      "screenshot": "toshiba-quote-invert.png",
+      "quotation": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "color(srgb 0.05 0.05 0.05)",
+        "fontPx": 26,
+        "ratio": 19.435548355403956
+      },
+      "header": {
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(0, 0, 0)",
+        "fontPx": 26,
+        "ratio": 21
+      }
+    },
+    {
+      "theme": "toshiba",
+      "variant": "dracula",
+      "screenshot": "toshiba-quote-dracula.png",
+      "quotation": {
+        "foreground": "rgb(248, 248, 242)",
+        "background": "color(srgb 0.197647 0.205098 0.248627)",
+        "fontPx": 26,
+        "ratio": 11.59806519937482
+      },
+      "header": {
+        "foreground": "rgb(248, 248, 242)",
+        "background": "rgb(40, 42, 54)",
+        "fontPx": 26,
+        "ratio": 13.359134716531573
+      }
+    },
+    {
+      "theme": "toshiba",
+      "variant": "one-dark",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(171, 178, 191)",
+        "background": "color(srgb 0.182549 0.198824 0.231176)",
+        "fontPx": 26,
+        "ratio": 5.943743512423142
+      },
+      "header": {
+        "foreground": "rgb(171, 178, 191)",
+        "background": "rgb(40, 44, 52)",
+        "fontPx": 26,
+        "ratio": 6.5676782521903485
+      }
+    },
+    {
+      "theme": "toshiba",
+      "variant": "nord",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(236, 239, 244)",
+        "background": "color(srgb 0.217647 0.240588 0.286275)",
+        "fontPx": 26,
+        "ratio": 9.459025859914334
+      },
+      "header": {
+        "foreground": "rgb(236, 239, 244)",
+        "background": "rgb(46, 52, 64)",
+        "fontPx": 26,
+        "ratio": 10.835925552759116
+      }
+    },
+    {
+      "theme": "toshiba",
+      "variant": "neogaia",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(255, 248, 225)",
+        "background": "color(srgb 0.307059 0.383922 0.416667)",
+        "fontPx": 26,
+        "ratio": 6.027873422747647
+      },
+      "header": {
+        "foreground": "rgb(255, 248, 225)",
+        "background": "rgb(69, 90, 100)",
+        "fontPx": 26,
+        "ratio": 6.8170448157515775
+      }
+    },
+    {
+      "theme": "toshiba",
+      "variant": "neogaia invert",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(69, 90, 100)",
+        "background": "color(srgb 0.963529 0.941569 0.857843)",
+        "fontPx": 26,
+        "ratio": 6.347756889512397
+      },
+      "header": {
+        "foreground": "rgb(69, 90, 100)",
+        "background": "rgb(255, 248, 225)",
+        "fontPx": 26,
+        "ratio": 6.8170448157515775
+      }
+    },
+    {
+      "theme": "toshiba",
+      "variant": "github-light",
+      "screenshot": null,
+      "quotation": {
+        "foreground": "rgb(36, 41, 47)",
+        "background": "color(srgb 0.957059 0.958039 0.959216)",
+        "fontPx": 26,
+        "ratio": 13.3302587132421
+      },
+      "header": {
+        "foreground": "rgb(36, 41, 47)",
+        "background": "rgb(255, 255, 255)",
+        "fontPx": 26,
+        "ratio": 14.652157369459891
+      }
+    }
+  ]
+}

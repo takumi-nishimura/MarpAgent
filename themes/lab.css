@@ -157,6 +157,7 @@
     --font-caption: "Noto Sans JP";
     --font-footnote: "Noto Sans JP";
     --font-label-md: "Noto Sans JP";
+    --font-header-label: "Noto Sans JP";
     --text-display: 65px;
     --text-headline-lg: 58.5px;
     --text-headline-md: 39px;
@@ -167,6 +168,7 @@
     --text-caption: 19.5px;
     --text-footnote: 14px;
     --text-label-md: 26px;
+    --text-header-label: 19.5px;
     --leading-display: 1.1;
     --leading-headline-lg: 1.15;
     --leading-headline-md: 1.2;
@@ -177,6 +179,7 @@
     --leading-caption: 1.3;
     --leading-footnote: 1.4;
     --leading-label-md: 1.2;
+    --leading-header-label: 1.3;
     --tracking-display: 0em;
     --tracking-headline-lg: 0em;
     --tracking-headline-md: 0em;
@@ -187,6 +190,7 @@
     --tracking-caption: 0em;
     --tracking-footnote: 0em;
     --tracking-label-md: 0em;
+    --tracking-header-label: 0em;
     --font-weight-display: 700;
     --font-weight-headline-lg: 700;
     --font-weight-headline-md: 700;
@@ -197,6 +201,7 @@
     --font-weight-caption: 400;
     --font-weight-footnote: 400;
     --font-weight-label-md: 700;
+    --font-weight-header-label: 400;
     --radius-none: 0px;
     --radius-full: 9999px;
     --spacing-xs: 4px;
@@ -204,10 +209,11 @@
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 40px;
-    --spacing-slide-x: 40px;
-    --spacing-header-height: 60px;
+    --spacing-slide-x: 64px;
+    --spacing-header-height: 48px;
+    --spacing-body-top-gap: 24px;
     --spacing-logo-title-size: 80px;
-    --spacing-logo-header-size: 50px;
+    --spacing-logo-header-size: 32px;
     --spacing-rule-width: 1px;
     --spacing-callout-rule-width: 3px;
     --spacing-table-cell-x: 10px;
@@ -570,6 +576,7 @@ section {
   --padding-bottom: 0;
   --header-height: 60px;
   --body-top-gap: 10px;
+  --body-heading-gap: 1em;
   --body-bottom-safe: 48px;
   --body-gap: 0.5em;
   --col-gap: 1rem;
@@ -635,6 +642,21 @@ section li {
 section p {
   margin: 0.5em 0;
 }
+section blockquote {
+  margin: 0.5em 0;
+  padding: 0.5em 0.75em;
+  border-inline-start: 0.12em solid var(--fg-muted);
+  background-color: var(--fg);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in srgb, var(--fg) 5%, var(--bg));
+  }
+}
+section blockquote > :first-child {
+  margin-top: 0;
+}
+section blockquote > :last-child {
+  margin-bottom: 0;
+}
 section > footer:not(.paper-footer) {
   position: absolute;
   inset-inline: var(--padding-x);
@@ -678,6 +700,9 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
 }
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > :first-child, section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header + * {
   margin-top: 0;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > :is(h1, h2, h3, h4) + .body {
+  margin-top: var(--body-heading-gap);
 }
 section.title {
   padding-top: 20px;
@@ -912,7 +937,7 @@ mjx-container[jax="SVG"]:not([display]) > svg {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: safe center;
     gap: 0.75em;
     width: max-content;
     max-width: min(100%, 720px);
@@ -1123,7 +1148,7 @@ mjx-container[jax="SVG"]:not([display]) > svg {
     --place-block: flex-start;
   }
   .box.place-middle, .col > div.place-middle {
-    --place-block: center;
+    --place-block: safe center;
   }
   .box.place-bottom, .col > div.place-bottom {
     --place-block: flex-end;
@@ -1150,6 +1175,9 @@ mjx-container[jax="SVG"]:not([display]) > svg {
   margin-bottom: var(--marpagent-body-bottom-reserve, var(--body-bottom-safe));
   gap: var(--body-gap);
 }
+.body.centered {
+  max-width: min(100%, 720px);
+}
 .body.col {
   flex-direction: row;
   align-items: stretch;
@@ -1161,6 +1189,9 @@ mjx-container[jax="SVG"]:not([display]) > svg {
 .body .box, .body .col > div {
   min-height: 0;
   gap: var(--body-gap);
+}
+.body > :where(p, ul, ol, table, pre, blockquote, h3, h4), .body :where(.box, .col > div) > :where(p, ul, ol, table, pre, blockquote, h3, h4) {
+  margin-block: 0;
 }
 .body:is(.box.place-left, .box.place-center, .box.place-right) > :not(.self-start, .self-center, .self-end), .body :is(.box, .col > div):is(.place-left, .place-center, .place-right) > :not(.self-start, .self-center, .self-end) {
   margin-inline: 0;
@@ -1769,6 +1800,27 @@ section[data-marpagent-scroll="true"] > .marpagent-scroll-body > :last-child {
 section[data-marpagent-scroll="true"] > .marpagent-scroll-body:focus-visible {
   outline: 2px solid var(--highlight);
   outline-offset: -2px;
+}
+section:where(:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header))) {
+  --padding-x: min(var(--spacing-slide-x), 5%);
+  --header-height: var(--spacing-header-height);
+  --body-top-gap: var(--spacing-body-top-gap);
+  --logo-header-size: var(--spacing-logo-header-size);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header) {
+  left: 0;
+  width: 100%;
+  padding-inline: var(--padding-x);
+  color: var(--fg);
+  font-size: var(--text-header-label);
+  font-weight: var(--font-weight-header-label);
+  line-height: var(--leading-header-label);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header)::after {
+  background-position: right var(--padding-x) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing))) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 2) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 3) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 4) center;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):not(:has(> .body)) > header:not(.paper-header) + * {
+  margin-top: calc(var(--header-height) + var(--body-top-gap));
 }
 section:where(:not(:has(> .paper-header))) {
   --fg-muted: var(--color-muted-ink);

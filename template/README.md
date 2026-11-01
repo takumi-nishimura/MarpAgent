@@ -1,7 +1,9 @@
 # Slide templates
 
-`marpx -n` copies `brief.md` and `slide.md`. The starter keeps the first content
-page open so the material can determine its layout.
+`marpx -n` copies `brief.md` and `slide.md`. The first content page separates its
+heading from a direct `.body` wrapper. Choose the body's composition and reading
+width from the material; the starter uses `.box` to keep a short group near its
+heading. A short body does not imply vertical centering.
 
 [`layouts.md`](layouts.md) is a renderable set of composition recipes. Copy the
 needed page body into the deck, keeping the destination's frontmatter and
@@ -10,7 +12,7 @@ directives. These are independent examples, not a required deck sequence.
 | Page | Relationship | Adaptation |
 | :--- | :----------- | :--------- |
 | 1 — Comparison table | Alternatives share the same decision criteria | Put criteria in rows and alternatives in columns. Keep units and conditions comparable; say when information is missing. |
-| 2 — Main material and context | A table or figure needs an interpretation beside it | Use the wider column for evidence and the narrower one for implications, conditions, or a recommendation. Adjust the 8:4 split when the material needs it. |
+| 2 — Main material and context | A table or figure needs an interpretation beside it | Use the wider column for evidence and the narrower one for implications, conditions, or a recommendation. Adjust the 2:1 split when the material needs it. |
 | 3 — Process and outputs | Ordered work has an action and a review outcome | Keep stage, action, and output on shared column boundaries. Use as many rows as the actual process needs. |
 
 The examples use repository workflow facts so they can be rendered without
@@ -26,6 +28,13 @@ themselves add no decorative surface.
 
 ## Composition rules
 
+- Keep one direct `.body` below the heading. Use `.body.box` for an explanation
+  or table, or `.body.col.visual` for main material with interpretation. Keep
+  explanations near their heading by default; `.body.centered.box.place-top`
+  also bounds their reading width. Select `.place-middle` when the relationship
+  to a figure or a deliberate focal composition needs it. Inspect the gap from
+  heading to body as well as text fit. The body supplies
+  block spacing, so avoid empty spacer elements and duplicate block margins.
 - Use `grid grid-cols-12` with column spans for unequal widths, `grid-cols-2`
   or `grid-cols-3` for genuine peers, and `flex` for an aligned row or stack.
 - Choose gaps from the shared scale. Start with `gap-4` or `gap-6` and inspect
