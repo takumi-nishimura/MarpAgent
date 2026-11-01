@@ -12,331 +12,259 @@ style: |
 
 <!-- _paginate: skip -->
 <!-- _class: title -->
-<!-- _header: 2026-04-07 -->
+<!-- _header: 2026-11-01 -->
 
 # MarpAgent
 
 <div class="author">
 
-Markdownで書いて，見て，直す
+Markdownでスライドを作り，発表・配布する
 
 </div>
 
 ---
 
-<!-- _header: Agenda -->
+<!-- _header: 概要 -->
 
-<div class="centered">
+## MarpAgentの機能
 
-1. MarpAgent とは
-2. ラフから完成までの進め方
-3. Lab テーマとレイアウト
-4. プレゼンモード & バリデーション
-5. AI アシスト & 始め方
+<div class="body box">
 
-</div>
+MarpAgentは，Marpにテーマ・スキル・自動検証を加えたスライド制作環境である．
 
----
+| 作業 | 使う機能 |
+| :--- | :--- |
+| 原稿の作成・改稿 | Markdown原稿，テーマとレイアウト部品，エージェント向けスキル |
+| 表示の確認 | ライブプレビュー，スライド一覧，表示崩れの自動検証 |
+| 発表・配布 | 発表用HTML，PDF・PPTX出力，素材を含むZIP |
 
-<!-- _header: MarpAgent とは -->
-
-## MarpAgent とは
-
-Markdown だけでスライドを作成・検証できるプラットフォーム
-
-- **Marp** ベースの Markdown → スライド変換エンジン
-- **同じ原稿**で構成の検討から改稿まで進める
-- **自動バリデーション**で表示崩れを本番前に検出
-- HTML / PDF / PPTX へのエクスポートに対応
-
-<div class="tip">
-
-VS Code 拡張やCLIで使える OSS ツール
+本文・図表・ページの順序は，`slide.md`で編集する．
 
 </div>
 
 ---
 
-<!-- _header: ワークフロー -->
+<!-- _header: 目的と参照資料 -->
 
-## ラフから完成まで，同じ原稿を育てる
+## 制作を依頼するときに伝えること
 
-重要な図を早めに置き，描画結果を見ながら構成を見直す
+<div class="body box">
 
-<div style="width: 90%">
+**依頼例**
+
+> Markdownの基本を知る学生に，MarpAgentでスライドを作り，配布する手順を10分で紹介したい．
+> READMEと作例をもとに，PDFと発表用HTMLを用意してほしい．
+
+- **brief.md**：目的，聴衆，制約，参照資料を記録する
+- **slide.md**：見出し，本文，図表を作成・改稿する
+
+依頼の条件が変わったときは，`brief.md`も更新する．
+
+</div>
+
+---
+
+<!-- _header: 制作の流れ -->
+
+## 描画・点検・改稿の例
+
+<div class="body box">
+
+PDFとHTMLの違いを説明するページを試作し，比較の観点をそろえる．
+
+<div class="col">
+<div>
+
+### 試作：説明を並べる
+
+- PDFは閲覧・印刷に使う
+- HTMLはブラウザで発表する
+- PDFは1ファイルで渡す
+- HTMLは画像やCSSも一緒に渡す
+
+</div>
+<div>
+
+### 改稿：共通の観点で比較する
+
+| 観点 | PDF | HTML |
+| :--- | :--- | :--- |
+| 主な用途 | 閲覧・印刷 | ブラウザで発表 |
+| 渡すもの | PDF | HTMLと素材 |
+
+</div>
+</div>
+
+**点検**：用途と配布物を，PDFとHTMLで見比べられるか．
+
+**改稿**：観点をそろえて表にまとめ，再描画して収まりを確認する．
+
+</div>
+
+---
+
+<!-- _header: 点検 -->
+
+## 表示の自動検証と内容の点検
+
+<div class="body box">
+
+```bash
+npm run marpx -- decks/example/slide.md -v --strict
+```
+
+| 自動検証で調べること | 人が判断すること |
+| :--- | :--- |
+| 画面端での欠け，文字の重なり | 聴衆に必要な説明・根拠があるか |
+| 小さすぎる文字，画像の読み込み失敗 | 図のラベルや凡例を読めるか |
+| 図・数式の描画エラー | 見出しと本文・図表が対応しているか |
+
+`--strict`を付けると，描画検査を実行できない場合もエラーで終了する．
+
+</div>
+
+---
+
+<!-- _header: デザイン -->
+
+## テーマとレイアウト
+
+<div class="body box">
+
+| テーマ | 外観 |
+| :--- | :--- |
+| lab | 研究発表向けの標準デザイン |
+| muji | 控えめで簡潔なデザイン |
+| toshiba | コントラストの強い技術発表向けデザイン |
+
+この作例では`lab`を使っている．比較表や段組みを使い，内容の関係に合わせて配置できる．
+
+D2・Mermaidの図，数式，コードの構文強調にも対応している．
+
+> [!TIP]
+> 実際に使う図を描画し，ラベルとキャプションが読めるか確かめる．
+
+</div>
+
+---
+
+<!-- _header: 全体構成 -->
+
+## スライド一覧で話の流れを確認する
+
+<div class="body col visual" style="--visual-left: 1.25; --visual-right: 0.75;">
+<figure>
+<img src="assets/img/overview-mode.png" alt="スライドを一覧表示するオーバービューモード" />
+<figcaption>スライド一覧の表示例</figcaption>
+</figure>
+<div class="place-middle">
+
+`--overview`で，全ページの並びを確認できる．
+
+### 構成の点検
+
+- 結論までの説明に不足はないか
+- 説明が重複していないか
+
+原稿に説明を補い，重複をまとめる．必要ならページの順序を変える．
+
+</div>
+</div>
+
+---
+
+<!-- _header: 発表 -->
+
+## 発表用HTMLの操作
+
+<div class="body col visual" style="--visual-left: 1; --visual-right: 1;">
+<div class="place-middle">
+<figure class="figure-natural">
+<img src="assets/img/laser-pointer-demo.png" alt="発表用HTMLでレーザーポインタを表示した例" />
+<figcaption>レーザーポインタの表示例</figcaption>
+</figure>
+</div>
+<div class="place-middle">
+
+### ポインタと本文スクロール
+
+- レーザーポインタで説明箇所を示す
+- 長い表や付録は，本文をスクロールして読む
+
+スクロール位置は，同じ発表セッションの発表者画面と同期する．
+
+PDF・PPTX・画像の出力範囲は，スクロール前に見える部分に限られる．全文を載せるときは，ページを分ける．
+
+</div>
+</div>
+
+---
+
+<!-- _header: 配布 -->
+
+## 配布形式と出力後の確認
+
+<div class="body box">
+<div class="col visual" style="--visual-left: 1; --visual-right: 1;">
+<div>
 
 ```d2
-direction: right
-*.style.font-size: 28
-brief: brief.md
-slide: slide.md
-preview: Preview
-output: HTML / PDF / PPTX
-brief -> slide -> preview -> output
-preview -> slide
+direction: down
+*.style.font-size: 30
+source: slide.md
+pdf: PDF
+pptx: PPTX
+bundle: HTML + assets (ZIP)
+source -> pdf
+source -> pptx
+source -> bundle
 ```
 
 </div>
-
-- **brief.md** — 目的・対象者・制約・資料を記録する
-- **slide.md** — ページ順・本文・図を直接編集する
-
----
-
-<!-- _header: テーマ -->
-
-## Lab テーマ
-
-<div class="col">
 <div>
 
-**カラースキーム (5種)**
+| 配布形式 | 主な用途 |
+| :--- | :--- |
+| PDF | 完成した資料の閲覧・印刷 |
+| PPTX | PowerPointでの発表 |
+| HTMLと素材のZIP | ブラウザでの発表・操作 |
 
-Dracula / One Dark Pro / Nord / Neogaia / GitHub Light
-
-**レイアウト**
-
-title / content / multi-column / visual col / metric-grid / timeline / placement utilities
-
-</div>
-<div>
-
-**組み込みコンポーネント**
-
-- コールアウト (note / tip / warning ...)
-- D2 / Mermaid ダイアグラム & MathJax 数式
-- コードハイライト
+ZIPにMarkdown原稿は含まれない．共同編集をする場合は，原稿と素材を別途渡す．
 
 </div>
 </div>
 
----
+`--pdf`／`--pptx`／`--zip`で，配布形式を指定する．
 
-<!-- _header: レイアウト -->
+### 出力後の確認
 
-## Multi-column
-
-<div class="col with-summary">
-<div>
-
-### 比較
-
-同じ粒度の観点を横並びにして，差分を一目で追えるようにする
-
-<div class="gap-box">短い結論を置く</div>
+PDF・PPTXは出力ファイルを開き，改行と図表の表示を確認する．
+ZIPは展開後に`index.html`を開き，画像の表示と発表操作を確認する．
 
 </div>
-<div>
-
-### 分担
-
-担当・役割・制約など，独立した3要素を等幅で整理する
-
-<div class="gap-box">並列関係を保つ</div>
-
-</div>
-<div>
-
-### 選択肢
-
-候補案を増やしすぎず，3択程度に絞って比較する
-
-<div class="gap-box">判断材料にする</div>
-
-</div>
-</div>
-
----
-
-<!-- _header: レイアウト -->
-
-## Visual column
-
-<div class="col visual" style="--visual-left: 1.2; --visual-right: 0.8;">
-<figure>
-<img src="assets/img/overview-mode.png" />
-<figcaption>視覚情報を大きく見せる</figcaption>
-</figure>
-<div>
-
-**読み取り方**
-
-- 左側に図やスクリーンショットを配置
-- 右側に観察点と判断を短く置く
-
-<div class="summary-box">図を主役にしたいスライド向け</div>
-
-</div>
-</div>
-
----
-
-<!-- _header: レイアウト -->
-
-## Placement utilities
-
-<div class="col fill">
-<div class="place-middle">
-<div>
-
-**inline style を減らす**
-
-- `place-middle` で上下中央
-- `place-center` で左右中央
-- `fill` で下部余白を除いた本文領域を使う
-- 列の `div` に `place-middle place-center` で中身を中央配置
-
-<div class="summary-box self-center">配置を class で指定する</div>
-
-</div>
-</div>
-<div class="place-middle place-center">
-<figure>
-<img src="assets/img/overview-mode.png" />
-<figcaption>図と本文の高さが違っても中央で揃える</figcaption>
-</figure>
-</div>
-
-</div>
-
----
-
-<!-- _header: レイアウト -->
-
-## Metric grid
-
-数値や結果をカードとして並べ，本文より先に量感を見せる
-
-<div class="metric-grid four">
-<div><strong>4</strong><span>追加された標準レイアウト</span></div>
-<div><strong>0</strong><span>deck固有CSSなしで使用</span></div>
-<div><strong>25.x</strong><span>実行時 Node.js の想定範囲</span></div>
-<div><strong>1</strong><span>Markdown を主役に保つ</span></div>
-</div>
-
----
-
-<!-- _header: レイアウト -->
-
-## Timeline
-
-<ol class="timeline">
-<li><strong>ラフ</strong> 見出しと材料を並べる</li>
-<li><strong>試作</strong> 重要な図を実際に置く</li>
-<li><strong>改稿</strong> 描画を見て内容を整える</li>
-<li><strong>検証</strong> 流れと表示を確かめる</li>
-</ol>
-
-<div class="tip">
-
-各段階で同じ slide.md を編集する．必要なら前の段階に戻る
-
-</div>
-
----
-
-<!-- _header: プレゼンモード -->
-
-## プレゼンモード
-
-<div class="col">
-<div>
-
-**発表を支援する機能**
-
-- レーザーポインタ (オレンジカーソル + グロー)
-- ライブリロードで編集即反映
-- オーバービューモードで全体把握
-
-</div>
-<div>
-
-<figure>
-<img src="assets/img/laser-pointer-demo.png" />
-<figcaption>レーザーポインタ付きプレゼンモード</figcaption>
-</figure>
-
-</div>
-</div>
-
----
-
-<!-- _header: バリデーション -->
-
-## 自動バリデーション
-
-<div class="col">
-<div>
-
-**Headless ブラウザで検出**
-
-- はみ出し・文字の重なりを検出
-- 小さすぎる文字や欠落画像を検出
-- 箇条書き数などは任意の補助ヒント
-
-根拠と話の流れは読み直して確認する
-
-</div>
-<div>
-
-<figure>
-<img src="assets/img/overview-mode.png" />
-<figcaption>オーバービューで全スライドを一覧</figcaption>
-</figure>
-
-</div>
-</div>
-
----
-
-<!-- _header: AI 統合 -->
-
-## AI アシスト
-
-エージェントも slide.md を直接編集する
-
-- **`/slide-author`** — 新規作成・改稿・ページ追加
-- **`/slide-review`** — 原稿を変更せず，内容と描画を点検
-
-描画確認と修正は執筆の手順に含まれる
-
-点検後の修正も依頼した場合は，執筆の手順で直す
 
 ---
 
 <!-- _header: 始め方 -->
 
-## 始め方
+## 手元の図や表で，最初の1枚を作る
 
-短いbriefを書き，slide.mdに見出しと材料を置く
+<div class="body box">
+
+環境構築の手順は[README](https://github.com/takumi-nishimura/MarpAgent#prerequisites)を参照する．以下はリポジトリ直下で実行する．
 
 ```bash
-# 1. Create the deck
-marpx -n decks/my-talk
+# Create a deck, then edit brief.md and slide.md.
+npm run marpx -- -n decks/my-talk
 
-# 2. Edit brief.md and slide.md with live preview
-marpx decks/my-talk/slide.md
+# Preview the draft.
+npm run marpx -- decks/my-talk/slide.md
 
-# 3. Validate the rendered deck
-marpx decks/my-talk/slide.md -v
+# Validate and export.
+npm run marpx -- decks/my-talk/slide.md -v --strict
+npm run marpx -- decks/my-talk/slide.md --pdf
 ```
 
-<div class="tip">
-
-全体の流れを見るときは `--overview` を付ける
-
-</div>
-
----
-
-<!-- _paginate: skip -->
-<!-- _header: まとめ -->
-
-<div class="centered">
-
-1. **Markdown**で本文と図を編集
-2. **slide.mdのラフ**を描画しながら育てる
-3. **自動バリデーション**で表示崩れを事前に検出
-4. **AI アシスト**でワークフロー全体を効率化
+図表を実際に表示し，読める大きさか，説明と対応しているかを確かめる．
 
 </div>
