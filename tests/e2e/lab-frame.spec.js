@@ -138,4 +138,32 @@ for (const theme of ["lab", "muji", "toshiba"]) {
         expect(layout.firstMargin).toBe(0);
         expect(layout.lastMargin).toBe(0);
     });
+
+    test(`${theme}: native quotations retain large-text contrast across palettes`, async ({ page }, testInfo) => {
+        const observations = [];
+        for (const variant of ["normal", "invert", "dracula", "one-dark", "nord", "neogaia", "neogaia invert", "github-light"]) {
+            await renderSource(page, `---\ntheme: ${theme}\nclass: ${variant}\n---\n## Request example\n\n<div class="body box">\n\n> Keep the supplied sources and qualifications.\n\n</div>`, theme);
+            const contrast = await page.locator("blockquote").evaluate(quote => {
+                const context = document.createElement("canvas").getContext("2d");
+                const luminance = color => {
+                    context.fillStyle = color;
+                    context.fillRect(0, 0, 1, 1);
+                    const channels = [...context.getImageData(0, 0, 1, 1).data].slice(0, 3).map(value => {
+                        const srgb = value / 255;
+                        return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+                    });
+                    return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+                };
+                const foreground = getComputedStyle(quote.querySelector("p")).color;
+                const background = getComputedStyle(quote).backgroundColor;
+                const a = luminance(foreground), b = luminance(background);
+                return { foreground, background, fontPx: parseFloat(getComputedStyle(quote.querySelector("p")).fontSize), ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) };
+            });
+            // WCAG large-text contrast: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+            expect(contrast.fontPx).toBeGreaterThanOrEqual(24);
+            expect(contrast.ratio, `${theme} ${variant}`).toBeGreaterThanOrEqual(3);
+            observations.push({ variant, ...contrast });
+        }
+        await testInfo.attach("quotation-contrast", { body: JSON.stringify(observations, null, 2), contentType: "application/json" });
+    });
 }

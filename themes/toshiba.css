@@ -620,7 +620,10 @@ section blockquote {
   margin: 0.5em 0;
   padding: 0.5em 0.75em;
   border-inline-start: 0.12em solid var(--fg-muted);
-  background-color: var(--bg-gray-5);
+  background-color: var(--fg);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in srgb, var(--fg) 5%, var(--bg));
+  }
 }
 section blockquote > :first-child {
   margin-top: 0;

@@ -384,8 +384,9 @@ deck-local font files with `@font-face`, and keep the browser version fixed.
 The remote import remains for existing decks; it does not make the rendering
 environment hermetic.
 
-Native Markdown quotations (`>`) use a muted left rule and a subtle surface,
-with padding around the quoted text. They retain the surrounding prose size.
+Native Markdown quotations (`>`) use a muted left rule and a subtle surface
+mixed from the current foreground/background, including inverted and named
+color schemes. They have padding and retain the surrounding prose size.
 The first and last child margins are removed so a quotation remains one group
 inside a body layout.
 
