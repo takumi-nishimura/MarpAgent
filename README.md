@@ -607,10 +607,27 @@ Skills in `.agents/skills/` provide authoring guidance to AI coding agents:
 | `marp-paper` | reference (auto) | A-series paper authoring |
 | `marp-validator` | reference (auto) | Validator rules and hard limits |
 | `theme-new` | task | Create or adapt a theme from a URL, brand guide, or DESIGN.md |
-| `/slide-new <name>` | task | Develop a rough slide.md into a finished deck |
-| `/slide-edit <slide.md>` | task | Revise content, structure, or visuals in place |
-| `/slide-add <slide.md>` | task | Add slides to an existing deck |
-| `/slide-review <name>` | task | Review narrative and renders; fix when requested |
+| `/slide-author <name-or-slide.md>` | task | Create a deck, revise it, or add pages; render and correct as part of authoring |
+| `/slide-review <name-or-slide.md>` | task | Report content and rendering findings; edit only when fixes are requested |
 | `/paper-new <name>` | task | Create a new A-series paper deck end-to-end |
+
+`slide-author` resolves a deck name or `slide.md` path and the requested change
+from the conversation. It can be selected automatically for authoring requests,
+as the former edit/add skills could. It scaffolds only new destinations and
+edits existing decks in place. Rendering, self-checking, and correction belong
+to the same authoring task. A plain `slide-review` request leaves the deck
+unchanged; when fixes are requested too, it uses `slide-author` in the same task.
+
+The old authoring skill names are retired, with no compatibility aliases:
+
+| Former invocation | Replacement |
+| :--- | :--- |
+| `/slide-new my-talk` | `/slide-author my-talk` with the topic and source material |
+| `/slide-edit decks/my-talk/slide.md` | `/slide-author decks/my-talk/slide.md` with the requested revision |
+| `/slide-add decks/my-talk/slide.md` | `/slide-author decks/my-talk/slide.md` with the new content and insertion point |
+
+Update saved prompts and client-local skill links to use `slide-author`.
+Invocation syntax depends on the agent; clients without slash commands can
+read the corresponding `.agents/skills/<name>/SKILL.md` directly.
 
 See `AGENTS.md` for a quick command and directive reference.

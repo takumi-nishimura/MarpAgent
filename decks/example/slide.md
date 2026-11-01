@@ -295,10 +295,12 @@ title / content / multi-column / visual col / metric-grid / timeline / placement
 
 エージェントも slide.md を直接編集する
 
-- **`/slide-new`** — ラフから完成まで作成
-- **`/slide-edit`** — 構成・本文・図を改稿
-- **`/slide-add`** — 既存デッキへのスライド追加
-- **`/slide-review`** — 内容と描画を点検し，依頼に応じて修正
+- **`/slide-author`** — 新規作成・改稿・ページ追加
+- **`/slide-review`** — 原稿を変更せず，内容と描画を点検
+
+描画確認と修正は執筆の手順に含まれる
+
+点検後の修正も依頼した場合は，執筆の手順で直す
 
 ---
 

@@ -9,10 +9,8 @@ Detailed authoring reference is in `.agents/skills/`:
 | `marp-paper` | A-series paper authoring (header/columns/footer) |
 | `marp-validator` | validator rules, hard limits, remediation |
 | `theme-new` | create or adapt a theme from a URL, brand guide, or DESIGN.md |
-| `/slide-new <name>` | create a new deck end-to-end |
-| `/slide-edit <slide.md>` | revise content, structure, or visuals in an existing deck |
-| `/slide-add <slide.md>` | add slides to an existing deck |
-| `/slide-review <name>` | validate and remediate a deck |
+| `/slide-author <name-or-slide.md>` | create, revise, restructure, or add pages to a deck |
+| `/slide-review <name-or-slide.md>` | inspect content and renders; edit only when fixes are requested |
 | `/paper-new <name>` | create a new A-series paper deck end-to-end |
 
 ## File Structure
@@ -27,6 +25,12 @@ decks/<name>/
 ```
 
 ## Authoring Workflow
+
+Use `slide-author` for new and existing slide decks, including page additions.
+It includes rendering, self-checking, and correction. Use `slide-review` for
+findings without edits; requested fixes follow `slide-author` in the same task.
+The former `slide-new`, `slide-edit`, and `slide-add` skills are replaced by
+`slide-author`; see README's AI Agent Usage for migration examples.
 
 Keep purpose, audience, constraints, and sources in a short `brief.md`. Draft the
 sequence directly in `slide.md`, try important or uncertain slides with actual
