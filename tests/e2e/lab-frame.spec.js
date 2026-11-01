@@ -16,6 +16,34 @@ async function renderSource(page, source, theme = "lab") {
     await page.evaluate(() => document.fonts.ready);
 }
 
+function measuredContrast(element) {
+    const context = document.createElement("canvas").getContext("2d");
+    const luminance = color => {
+        context.fillStyle = color;
+        context.fillRect(0, 0, 1, 1);
+        const channels = [...context.getImageData(0, 0, 1, 1).data].slice(0, 3).map(value => {
+            const srgb = value / 255;
+            return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+        });
+        return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+    };
+    const text = element.querySelector("p") || element;
+    const foreground = getComputedStyle(text).color;
+    const paintedBackground = getComputedStyle(element).backgroundColor;
+    const background = paintedBackground === "rgba(0, 0, 0, 0)" ? getComputedStyle(element.closest("section")).backgroundColor : paintedBackground;
+    const a = luminance(foreground), b = luminance(background);
+    return { foreground, background, fontPx: parseFloat(getComputedStyle(text).fontSize), ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) };
+}
+
+test("lab context headers retain small-text contrast across palettes", async ({ page }) => {
+    for (const variant of ["normal", "invert", "dracula", "one-dark", "nord", "neogaia", "neogaia invert", "github-light"]) {
+        await renderSource(page, `---\ntheme: lab\nclass: ${variant}\nheader: Context\n---\n## Evidence\n\n<div class="body box">\n\nKeep the supplied sources.\n\n</div>`);
+        const contrast = await page.locator("header").evaluate(measuredContrast);
+        expect(contrast.fontPx).toBeLessThan(24);
+        expect(contrast.ratio, variant).toBeGreaterThanOrEqual(4.5);
+    }
+});
+
 test("the starter keeps a short explanation connected to its heading", async ({ page }) => {
     await renderSource(page, fs.readFileSync(path.join(__dirname, "../../template/slide.md"), "utf8"));
     await expect(page.locator("section:not(.title) > .body")).toHaveCount(1);
@@ -143,22 +171,7 @@ for (const theme of ["lab", "muji", "toshiba"]) {
         const observations = [];
         for (const variant of ["normal", "invert", "dracula", "one-dark", "nord", "neogaia", "neogaia invert", "github-light"]) {
             await renderSource(page, `---\ntheme: ${theme}\nclass: ${variant}\n---\n## Request example\n\n<div class="body box">\n\n> Keep the supplied sources and qualifications.\n\n</div>`, theme);
-            const contrast = await page.locator("blockquote").evaluate(quote => {
-                const context = document.createElement("canvas").getContext("2d");
-                const luminance = color => {
-                    context.fillStyle = color;
-                    context.fillRect(0, 0, 1, 1);
-                    const channels = [...context.getImageData(0, 0, 1, 1).data].slice(0, 3).map(value => {
-                        const srgb = value / 255;
-                        return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
-                    });
-                    return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
-                };
-                const foreground = getComputedStyle(quote.querySelector("p")).color;
-                const background = getComputedStyle(quote).backgroundColor;
-                const a = luminance(foreground), b = luminance(background);
-                return { foreground, background, fontPx: parseFloat(getComputedStyle(quote.querySelector("p")).fontSize), ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) };
-            });
+            const contrast = await page.locator("blockquote").evaluate(measuredContrast);
             // WCAG large-text contrast: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
             expect(contrast.fontPx).toBeGreaterThanOrEqual(24);
             expect(contrast.ratio, `${theme} ${variant}`).toBeGreaterThanOrEqual(3);

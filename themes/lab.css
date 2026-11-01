@@ -1811,7 +1811,7 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
   left: 0;
   width: 100%;
   padding-inline: var(--padding-x);
-  color: var(--fg-muted);
+  color: var(--fg);
   font-size: var(--text-header-label);
   font-weight: var(--font-weight-header-label);
   line-height: var(--leading-header-label);
