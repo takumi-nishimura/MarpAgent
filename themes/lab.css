@@ -168,7 +168,7 @@
     --text-caption: 19.5px;
     --text-footnote: 14px;
     --text-label-md: 26px;
-    --text-header-label: 19.5px;
+    --text-header-label: 26px;
     --leading-display: 1.1;
     --leading-headline-lg: 1.15;
     --leading-headline-md: 1.2;
@@ -210,7 +210,8 @@
     --spacing-lg: 24px;
     --spacing-xl: 40px;
     --spacing-slide-x: 64px;
-    --spacing-header-height: 48px;
+    --spacing-header-height: 52px;
+    --spacing-header-outdent: 16px;
     --spacing-body-top-gap: 24px;
     --spacing-logo-title-size: 80px;
     --spacing-logo-header-size: 32px;
@@ -792,6 +793,24 @@ th {
 }
 tbody tr:nth-child(even) {
   background: var(--color-table-stripe);
+}
+section[data-marpagent-auto-body] > .slide-logos {
+  position: absolute;
+  left: 55%;
+  right: 80px;
+  bottom: 16px;
+  height: 24px;
+  background-image: var(--logos-dark);
+  background-repeat: no-repeat;
+  background-size: auto 24px;
+  background-position: right center, right 90px center, right 180px center, right 270px center, right 360px center;
+  pointer-events: none;
+}
+section[data-marpagent-auto-body].invert > .slide-logos {
+  background-image: var(--logos-light);
+}
+section[data-marpagent-auto-body]:has(> .slide-logos) > footer {
+  right: 48%;
 }
 @layer utilities {
   .white {
@@ -1958,6 +1977,18 @@ section {
   --bespoke-marp-cursor-glow: var(--color-cursor-glow);
   --bespoke-marp-cursor-duration: 0.35s;
   --bespoke-marp-cursor-idle: 0.75s;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header) {
+  left: 0;
+  width: 100%;
+  padding-inline: var(--padding-x);
+  padding-left: calc(var(--padding-x) - var(--spacing-header-outdent));
+  font-size: var(--text-header-label);
+  font-weight: var(--font-weight-header-label);
+  line-height: var(--leading-header-label);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header)::after {
+  background-position: right var(--padding-x) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing))) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 2) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 3) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 4) center;
 }
 @property --tw-ordinal {
   syntax: "*";

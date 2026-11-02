@@ -159,6 +159,12 @@ typography:
     fontWeight: 700
     lineHeight: 1.4
     letterSpacing: 0em
+  header-label:
+    fontFamily: Helvetica Neue
+    fontSize: 26px
+    fontWeight: 700
+    lineHeight: "1.3"
+    letterSpacing: 0em
 rounded:
   none: 0px
   sm: 4px
@@ -174,7 +180,8 @@ spacing:
   lg: 48px
   xl: 64px
   slide-x: 56px
-  header-height: 56px
+  header-height: 52px
+  header-outdent: 16px
   header-title-inset: 20px
   logo-title-size: 64px
   logo-header-size: 38px
@@ -196,7 +203,7 @@ components:
   header-band:
     backgroundColor: "{colors.background}"
     textColor: "{colors.text-primary}"
-    typography: "{typography.label-md}"
+    typography: "{typography.header-label}"
     height: "{spacing.header-height}"
     padding: "{spacing.header-title-inset}"
   summary-box:
@@ -533,3 +540,6 @@ borders and no shadow. Tables should use light rules and minimal striping.
 - Don't use decorative gradients, heavy shadows, or animation.
 - Don't overuse large rounded corners.
 - Don't compress the layout by shrinking typography.
+
+Regular slide context headers use 26px type in a 52px band, with text 16px
+left of the body inset. Theme colors, weights, and accent marks remain distinct.

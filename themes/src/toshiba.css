@@ -268,3 +268,10 @@ section.invert::after {
   background: var(--color-surface-muted);
   border-radius: var(--radius-none);
 }
+
+@import "./_shared/_context-header.css";
+
+/* Keep the brand marker just before the outdented context label. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header)::before {
+  left: calc(var(--padding-x) - var(--spacing-header-outdent) - var(--spacing-accent-bar-width) - var(--header-title-inset));
+}

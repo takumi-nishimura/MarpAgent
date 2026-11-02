@@ -39,8 +39,10 @@ Evaluate rendered information density, not just Markdown line counts. Do not col
 
 ## Use the slide's body area
 
-For a new regular slide, keep the heading outside one direct `.body` wrapper and
-place the material inside it. Start with the canonical [composition recipes](references/composition.md).
+Ordinary slides use automatic body layout by default. Write the page heading and plain Markdown;
+the renderer supplies `.body.box`. Context headers are optional and should span
+several pages rather than repeat the page title. For columns or custom placement,
+keep the heading outside one explicit direct `.body` wrapper. Use `autoBody: false` in frontmatter to preserve legacy flow; `_autoBody: false` disables it on one slide. Start with the canonical [composition recipes](references/composition.md).
 Choose a reading width and placement for the material. Start explanations and
 tables with `.body.box` so they follow the heading at a stable gap, even when
 short. `.body.centered.box.place-top` also bounds the reading width.

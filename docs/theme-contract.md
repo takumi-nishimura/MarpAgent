@@ -489,3 +489,24 @@ Do not shrink body text or compress Markdown to evade a finding.
 The fixture gate renders `template/layouts.md` along with the regression decks.
 Browser tests measure unequal columns, gaps, and alignment in every shipped
 theme; class-availability tests ensure the documented templates use emitted CSS.
+
+## Automatic ordinary-slide bodies
+
+Automatic body layout is the default; templates need no enabling directive.
+The configured engine
+wraps ordinary content in one `.body.box`, keeping only a leading heading
+outside. Later headings belong to the body. A slide without a leading heading
+wraps all content. Native headers/footers and style/script helpers remain outside.
+Explicit direct `.body` containers take precedence. Title, paper-header, and
+scroll slides are excluded; `_autoBody: false` opts out on one slide. Legacy
+decks without explicit wrappers also receive automatic bodies. Set `autoBody: false`
+in frontmatter to preserve their original flow. This transformation runs on parsed
+tokens, shared by preview, export, and validation through the configured engine.
+
+A page heading is the default title. Optional context headers identify a section
+across multiple pages; do not copy the page title into them. On ordinary
+slides without headers, `.slide-logos` displays decorative logos in the bottom
+safe area (24px high, right aligned); the footer uses the left part of that area.
+No empty header or header-height clearance is introduced. Existing headers keep
+their theme-specific logo treatment. Check unusually wide logos and long footers
+when migrating an existing deck to this layout.

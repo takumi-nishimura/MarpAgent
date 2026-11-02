@@ -1,9 +1,15 @@
 # Slide templates
 
-`marpx -n` copies `brief.md` and `slide.md`. The first content page separates its
-heading from a direct `.body` wrapper. Choose the body's composition and reading
-width from the material; the starter uses `.box` to keep a short group near its
-heading. A short body does not imply vertical centering.
+`marpx -n` copies `brief.md` and `slide.md`. Ordinary slides use automatic body layout by default:
+write a page heading and ordinary Markdown; rendering supplies the `.body.box`
+wrapper. A context `header` is optional and should identify a section spanning
+several pages, not repeat the page title. Headerless pages keep logos in the
+bottom safe area without reserving a header row.
+
+Use an explicit `.body` for columns or custom placement. It takes precedence
+over automatic wrapping. `_autoBody: false` disables wrapping on one slide.
+Title, paper, and scroll slides retain their dedicated layouts. Legacy decks without explicit wrappers also receive automatic bodies. Set
+`autoBody: false` in frontmatter if their original flow must be preserved.
 
 [`layouts.md`](layouts.md) is a renderable set of composition recipes. Copy the
 needed page body into the deck, keeping the destination's frontmatter and
@@ -28,7 +34,8 @@ themselves add no decorative surface.
 
 ## Composition rules
 
-- Keep one direct `.body` below the heading. Use `.body.box` for an explanation
+- Ordinary Markdown needs no wrapper. For explicit layouts,
+  keep one direct `.body` below the heading. Use `.body.box` for an explanation
   or table, or `.body.col.visual` for main material with interpretation. Keep
   explanations near their heading by default; `.body.centered.box.place-top`
   also bounds their reading width. Select `.place-middle` when the relationship

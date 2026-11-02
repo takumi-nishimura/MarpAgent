@@ -24,12 +24,6 @@ affiliation
 
 ---
 
-<!-- _header: Working section -->
-
 ## Working heading
 
-<div class="body box">
-
 Draft the material this page should show.
-
-</div>
