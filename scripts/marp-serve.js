@@ -12,7 +12,7 @@ const { buildDeckUrl, parseDeckAndPageArgs } = require("../src/preview-cli");
 const {
   forwardChildSignals,
   forwardLines,
-  getMarpBin,
+  getMarpCommand,
   isHttpPortConflict,
   isNotifierPortConflict,
   openBrowser,
@@ -77,8 +77,8 @@ function main() {
   }
 
   const deckDir = path.dirname(deckPath);
-  const marpBin = process.env.MARP_AGENT_MARP_BIN || getMarpBin(repoRoot);
   const marpArgs = ["--server", "--watch", "--config", configPath, deckDir];
+  const marpCommand = getMarpCommand(repoRoot, marpArgs);
   warnIfPublic(bindAddress);
 
   // Only an absent PORT opts into the implicit-candidate fallback; explicit
@@ -113,7 +113,7 @@ function main() {
       outputTail = `${outputTail}${line}\n`.slice(-8192);
       tryOpen(line);
     };
-    child = spawn(marpBin, marpArgs, {
+    child = spawn(marpCommand.file, marpCommand.args, {
       cwd: repoRoot,
       stdio: ["inherit", "pipe", "pipe"],
       env: {
@@ -128,7 +128,7 @@ function main() {
     forwardLines(child.stderr, process.stderr, observeLine);
 
     child.once("error", (error) => {
-      console.error(`Error: failed to start ${marpBin}: ${error.message}`);
+      console.error(`Error: failed to start ${marpCommand.file}: ${error.message}`);
       process.exit(1);
     });
 
