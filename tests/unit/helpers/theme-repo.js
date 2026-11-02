@@ -9,7 +9,7 @@ function createThemeRepo({
   linkDependencies = true,
 } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-theme-test-"));
-  for (const name of paths) {
+  for (const name of new Set([...paths, "package.json"])) {
     fs.mkdirSync(path.dirname(path.join(root, name)), { recursive: true });
     fs.cpSync(path.join(repoRoot, name), path.join(root, name), {
       recursive: true,

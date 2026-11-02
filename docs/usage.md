@@ -326,7 +326,7 @@ See the [runnable example](../fixtures/scroll-slide.md) and
 
 For interactive authoring, use `marpx ...`. `.mise.toml` adds the repository
 root to `PATH` when mise is active, and the repo-local wrapper runs the npm
-script through `mise exec`, so it keeps the Node.js 25 runtime pinned by this
+script through `mise exec`, so it uses the Node.js LTS runtime selected by this
 project while still letting the shell complete paths such as
 `decks/example/slide.md`. If the current shell has not loaded mise yet, use
 `./marpx ...` from the repository root.

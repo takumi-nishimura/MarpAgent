@@ -5,7 +5,7 @@ repo_root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$repo_root"
 
 if ! command -v mise >/dev/null 2>&1; then
-  echo "Error: mise is required to run MarpAgent. Install mise or use npm run marpx -- directly with Node.js 25.x." >&2
+  echo "Error: mise is required to run MarpAgent. Install mise or use npm run marpx -- directly with Node.js 26 or newer." >&2
   exit 127
 fi
 

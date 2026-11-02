@@ -25,7 +25,8 @@ evidence, figure labels, and reading order in the rendered slides too.
 
 ## Prerequisites
 
-Use Node.js 25.x. The repository pins Node 25.6.0 and D2 0.9.0 in `.mise.toml`.
+Use the latest Node.js LTS (26 or newer). The repository selects `lts` for Node.js
+and pins D2 0.9.0 in `.mise.toml`. CI follows `lts/*`.
 With [mise](https://mise.jdx.dev/) installed, run from the repository root:
 
 ```bash
@@ -39,6 +40,10 @@ used by the introduction example's distribution diagram. If another tool
 manages Node.js, run `npm ci` and the browser installation command directly;
 install D2 0.9.0 separately and put it on `PATH` or set `MARP_AGENT_D2_PATH`.
 See [D2 setup](docs/d2.md) for explicit tool and font configuration.
+
+Run `mise upgrade node` periodically to install the latest LTS updates;
+the floating selector does not update an installed runtime on every invocation.
+Use `mise exec -- node --version` to check the selected version.
 
 The commands below use `npm run marpx --` and work without mise shell activation.
 With mise active, the repository also provides the shorter `marpx` command.

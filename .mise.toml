@@ -1,5 +1,5 @@
 [tools]
-node = "25.6.0"
+node = "lts"
 d2 = "0.9.0"
 
 [env]

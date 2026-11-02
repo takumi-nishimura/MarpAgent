@@ -13,44 +13,51 @@ test("parseNodeMajor extracts major from semver values", () => {
   assert.equal(parseNodeMajor("not-a-version"), undefined);
 });
 
-test("getRuntimePolicy loads required major from .mise.toml tools.node", () => {
+test("runtime policy separates the LTS selector from the minimum supported major", () => {
   const policy = getRuntimePolicy();
-  assert.equal(typeof policy.requiredMajor, "number");
-  assert.match(policy.configuredVersion, /^\d+\.\d+\.\d+$/);
+  assert.equal(policy.minimumMajor, 26);
+  assert.equal(policy.configuredVersion, "lts");
 });
 
 test("assertSupportedNodeRuntime accepts matching major", () => {
   const policy = getRuntimePolicy();
   assert.doesNotThrow(() => {
     assertSupportedNodeRuntime({
-      currentVersion: `${policy.requiredMajor}.0.0`,
+      currentVersion: `${policy.minimumMajor}.0.0`,
       env: {},
     });
   });
 });
 
-test("assertSupportedNodeRuntime rejects non-matching major", () => {
-  const policy = getRuntimePolicy();
-  const mismatchedMajor = policy.requiredMajor + 1;
-
+test("assertSupportedNodeRuntime rejects the previous EOL runtime", () => {
   assert.throws(
     () =>
       assertSupportedNodeRuntime({
-        currentVersion: `${mismatchedMajor}.0.0`,
+        currentVersion: "25.6.0",
         env: {},
       }),
-    new RegExp(`Required major is ${policy.requiredMajor}`),
+    /Requires Node.js >=26/,
   );
 });
 
 test("assertSupportedNodeRuntime can be skipped via env flag", () => {
-  const policy = getRuntimePolicy();
-  const mismatchedMajor = policy.requiredMajor + 1;
-
   assert.doesNotThrow(() => {
     assertSupportedNodeRuntime({
-      currentVersion: `${mismatchedMajor}.0.0`,
+      currentVersion: "25.6.0",
       env: { MARP_AGENT_SKIP_RUNTIME_VERSION_CHECK: "1" },
     });
   });
+});
+
+test("future majors do not require editing the floating LTS selector", () => {
+  assert.doesNotThrow(() =>
+    assertSupportedNodeRuntime({ currentVersion: "28.0.0", env: {} }),
+  );
+});
+
+test("invalid runtime versions are rejected", () => {
+  assert.throws(
+    () => assertSupportedNodeRuntime({ currentVersion: "unknown", env: {} }),
+    /Unsupported Node.js runtime/,
+  );
 });

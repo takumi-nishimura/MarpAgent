@@ -28,7 +28,7 @@ base が空または全ゼロの初回 push はエンジンを選び，manual �
 
 `workflow_dispatch` は default branch に workflow があることなどの条件があり，新規導入中の PR や権限制約によって利用できない場合がある．[GitHub の手動実行仕様](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch) を参照．その場合は merge 前に，レビュー対象の revision を持つ隔離 checkout／worktree で次の同等な入口を使う．手動実行を有効にするために先に merge する必要はない．
 
-1. Node 25.6.0 と uv を用意し，`npm ci` と `npx playwright install --with-deps chromium firefox` を実行する．CI の uv は既存の 0.13.1 固定である．
+1. 最新の Node.js LTS（26以降）と uv を用意し，`npm ci` と `npx playwright install --with-deps chromium firefox` を実行する．mise は `lts`，CI は `lts/*` と `check-latest: true` でLTSを選択する．ローカルの更新は `mise upgrade node` で行う．CI の uv は既存の 0.13.1 固定である．
 2. [workflow の準備ステップ](../.github/workflows/quality-gate.yml)と同じ D2 0.9.0／font の checksum，fonttools 4.60.1／weight 400 を使う．既存資源を再利用するときも版と由来を確認する．Linux で準備ブロックをそのまま使う場合は，まず `export RUNNER_TEMP="$(mktemp -d)"` を設定し，ブロック全体を `bash -e -o pipefail` で実行して取得や checksum の失敗を無視しない．
 3. 準備した実体とフォントを指定して全ゲートを実行する．
 

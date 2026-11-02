@@ -20,13 +20,17 @@ function getRuntimePolicy() {
     throw new Error("Missing .mise.toml tools.node runtime policy.");
   }
 
-  const requiredMajor = parseNodeMajor(configuredVersion);
-  if (!Number.isInteger(requiredMajor) || requiredMajor < 1) {
-    throw new Error(`Invalid .mise.toml tools.node value: ${configuredVersion}`);
+  const engineRange = require("../package.json").engines.node;
+  const minimumMatch = engineRange.match(/^>=(\d+)$/);
+  if (!minimumMatch) {
+    throw new Error(
+      `Expected a minimum Node.js major in package.json engines.node: ${engineRange}`,
+    );
   }
 
   return {
-    requiredMajor,
+    minimumMajor: Number(minimumMatch[1]),
+    engineRange,
     configuredVersion,
   };
 }
@@ -42,13 +46,13 @@ function assertSupportedNodeRuntime({
   const policy = getRuntimePolicy();
   const currentMajor = parseNodeMajor(currentVersion);
 
-  if (currentMajor === policy.requiredMajor) {
+  if (currentMajor >= policy.minimumMajor) {
     return;
   }
 
   const actual = String(currentVersion || "unknown");
   throw new Error(
-    `Unsupported Node.js runtime ${actual}. Required major is ${policy.requiredMajor}.x (.mise.toml node=${policy.configuredVersion}).`,
+    `Unsupported Node.js runtime ${actual}. Requires Node.js ${policy.engineRange} (package.json engines.node). Use mise install to install the configured ${policy.configuredVersion} runtime.`,
   );
 }
 
