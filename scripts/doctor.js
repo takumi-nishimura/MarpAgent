@@ -49,7 +49,7 @@ async function checkNodeRuntime() {
   return {
     name: "node-runtime",
     status: "pass",
-    detail: `Node ${process.versions.node} matches .mise.toml node ${policy.configuredVersion}.`,
+    detail: `Node ${process.versions.node} satisfies ${policy.engineRange}; mise selects ${policy.configuredVersion}.`,
   };
 }
 

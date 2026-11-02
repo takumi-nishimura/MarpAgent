@@ -10,6 +10,7 @@ function isolatedRepo(t) {
     t.after(() => fs.rmSync(root, { recursive: true, force: true }));
     for (const relative of [
         ".mise.toml",
+        "package.json",
         "src/runtime-version.js",
         "scripts/generate-design-tokens.js",
         "scripts/lint-designs.js",

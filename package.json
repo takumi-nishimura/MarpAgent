@@ -31,7 +31,7 @@
   "license": "ISC",
   "type": "commonjs",
   "engines": {
-    "node": ">=25 <26"
+    "node": ">=26"
   },
   "dependencies": {
     "@marp-team/marp-cli": "4.5.1",
