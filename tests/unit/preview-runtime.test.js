@@ -8,12 +8,42 @@ const {
   forwardChildSignals,
   forwardLines,
   getMarpBin,
+  getMarpCommand,
   openBrowser,
   resolveRequestedSlide,
   resolveRequestedSlideId,
 } = require("../../src/preview-runtime");
 
 const repoRoot = path.join(__dirname, "../..");
+test("Marp server launches JavaScript through Node without a platform shell wrapper", () => {
+  const args = ["--server", "C:/slides with spaces/a & b"];
+  const command = getMarpCommand(repoRoot, args, {});
+  assert.equal(command.file, process.execPath);
+  assert.equal(
+    command.args[0],
+    path.resolve(repoRoot, "node_modules/@marp-team/marp-cli/marp-cli.js"),
+  );
+  assert.deepEqual(command.args.slice(1), args);
+  const { spawnSync } = require("node:child_process");
+  const result = spawnSync(command.file, [command.args[0], "--version"], {
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /@marp-team\/marp-cli/);
+});
+
+test("Marp server preserves an explicitly configured executable", () => {
+  assert.deepEqual(
+    getMarpCommand(repoRoot, ["--server"], {
+      MARP_AGENT_MARP_BIN: "/custom/marp",
+    }),
+    {
+      file: "/custom/marp",
+      args: ["--server"],
+    },
+  );
+});
+
 const configPath = path.join(repoRoot, "marp.config.js");
 const paginationFixtureDeckPath = path.join(
   repoRoot,

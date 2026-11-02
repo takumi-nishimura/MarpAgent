@@ -17,6 +17,17 @@ function getMarpBin(repoRoot) {
   );
 }
 
+function getMarpCommand(repoRoot, args, env = process.env) {
+  if (env.MARP_AGENT_MARP_BIN) {
+    return { file: env.MARP_AGENT_MARP_BIN, args };
+  }
+  // Execute JavaScript directly: Windows cannot spawn .cmd shims without a shell.
+  const cli = require.resolve("@marp-team/marp-cli/marp-cli.js", {
+    paths: [repoRoot],
+  });
+  return { file: process.execPath, args: [cli, ...args] };
+}
+
 function openBrowser(
   url,
   { env = process.env, spawn: spawnBrowser = spawn, warn = console.warn } = {},
@@ -124,6 +135,7 @@ module.exports = {
   forwardChildSignals,
   forwardLines,
   getMarpBin,
+  getMarpCommand,
   isHttpPortConflict,
   isNotifierPortConflict,
   openBrowser,
