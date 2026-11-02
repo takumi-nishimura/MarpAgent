@@ -1,14 +1,14 @@
 const { test, expect } = require("@playwright/test");
 const fs = require("node:fs");
 const path = require("node:path");
-const { Marp } = require("@marp-team/marp-core/full");
+const { createConfiguredMarp } = require("../../src/slide-map");
 
 async function render(page, content, size = "16:9", bodyClass = "body box place-middle") {
     await renderSource(page, `---\ntheme: lab\nsize: ${size}\nheader: Context\npaginate: true\n---\n## Evidence and interpretation\n\n<div class="${bodyClass}">\n\n${content}\n\n</div>`);
 }
 
 async function renderSource(page, source, theme = "lab") {
-    const marp = new Marp({ html: true });
+    const marp = createConfiguredMarp();
     marp.themeSet.add(fs.readFileSync(path.join(__dirname, `../../themes/${theme}.css`), "utf8"));
     const { html, css } = marp.render(source);
     await page.route("https://fonts.googleapis.com/**", route => route.abort());
@@ -35,11 +35,11 @@ function measuredContrast(element) {
     return { foreground, background, fontPx: parseFloat(getComputedStyle(text).fontSize), ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) };
 }
 
-test("lab context headers retain small-text contrast across palettes", async ({ page }) => {
+test("lab context headers retain strong text contrast across palettes", async ({ page }) => {
     for (const variant of ["normal", "invert", "dracula", "one-dark", "nord", "neogaia", "neogaia invert", "github-light"]) {
         await renderSource(page, `---\ntheme: lab\nclass: ${variant}\nheader: Context\n---\n## Evidence\n\n<div class="body box">\n\nKeep the supplied sources.\n\n</div>`);
         const contrast = await page.locator("header").evaluate(measuredContrast);
-        expect(contrast.fontPx).toBeLessThan(24);
+        expect(contrast.fontPx).toBe(26);
         expect(contrast.ratio, variant).toBeGreaterThanOrEqual(4.5);
     }
 });
@@ -88,9 +88,9 @@ for (const size of ["16:9", "4:3"]) {
         expect(layout.heading.left - layout.slide.left).toBeGreaterThanOrEqual(60);
         expect(layout.header.left).toBeCloseTo(layout.slide.left, 0);
         expect(layout.header.right).toBeCloseTo(layout.slide.right, 0);
-        expect(layout.headerTextLeft).toBeCloseTo(layout.heading.left, 0);
+        expect(layout.headerTextLeft).toBeCloseTo(layout.heading.left - 16 * (layout.header.right - layout.header.left) / (size === "4:3" ? 1024 : 1280), 0);
         expect(layout.heading.top - layout.header.bottom).toBeGreaterThanOrEqual(16);
-        expect(layout.headerFont / layout.bodyFont).toBeLessThanOrEqual(0.8);
+        expect(layout.headerFont).toBe(26);
         expect(layout.body.height).toBeGreaterThan(layout.slide.height * 0.5);
         expect(layout.point.left).toBeCloseTo(layout.heading.left, 0);
         expect((layout.point.top + layout.point.bottom) / 2).toBeCloseTo((layout.body.top + layout.body.bottom) / 2, 0);

@@ -101,6 +101,7 @@
   --font-body-sm: "Noto Sans JP";
   --font-caption: "Noto Sans JP";
   --font-label-md: "Noto Sans JP";
+  --font-header-label: "Noto Sans JP";
   --text-display: 72px;
   --text-headline-lg: 56px;
   --text-headline-md: 40px;
@@ -108,6 +109,8 @@
   --text-body-sm: 22.75px;
   --text-caption: 19.5px;
   --text-label-md: 26px;
+  --text-header-label: 26px;
+  --leading-header-label: 1.3;
   --tracking-display: 0em;
   --tracking-headline-lg: 0em;
   --tracking-headline-md: 0em;
@@ -115,6 +118,7 @@
   --tracking-body-sm: 0em;
   --tracking-caption: 0em;
   --tracking-label-md: 0em;
+  --tracking-header-label: 0em;
   --font-weight-display: 700;
   --font-weight-headline-lg: 700;
   --font-weight-headline-md: 700;
@@ -122,6 +126,7 @@
   --font-weight-body-sm: 400;
   --font-weight-caption: 400;
   --font-weight-label-md: 700;
+  --font-weight-header-label: 700;
   --radius-none: 0px;
   --radius-sm: 2px;
   --radius-md: 4px;
@@ -132,7 +137,8 @@
   --spacing-lg: 24px;
   --spacing-xl: 40px;
   --spacing-slide-x: 56px;
-  --spacing-header-height: 64px;
+  --spacing-header-height: 52px;
+  --spacing-header-outdent: 16px;
   --spacing-header-title-inset: 10px;
   --spacing-header-group-left-shift: 20px;
   --spacing-accent-bar-width: 6px;

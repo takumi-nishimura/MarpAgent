@@ -167,7 +167,7 @@ typography:
     letterSpacing: 0em
   header-label:
     fontFamily: Noto Sans JP
-    fontSize: 19.5px
+    fontSize: 26px
     fontWeight: 400
     lineHeight: "1.3"
     letterSpacing: 0em
@@ -183,7 +183,8 @@ spacing:
   lg: 24px
   xl: 40px
   slide-x: 64px
-  header-height: 48px
+  header-height: 52px
+  header-outdent: 16px
   body-top-gap: 24px
   logo-title-size: 80px
   logo-header-size: 32px
@@ -628,8 +629,8 @@ remain unbroken.
 
 The slide canvas is fixed at **1280 x 720**. Regular slides use a horizontal
 safe area of 5% of the canvas width, capped by `spacing.slide-x` at 64px. The
-48px header uses the smaller `header-label` typography to distinguish context
-from the main heading. Header text and body share the horizontal inset; a 24px
+52px header uses the smaller `header-label` typography to distinguish context
+from the main heading. Header text sits 16px left of the body inset; a 24px
 clearance separates the header from content. Title, paper, and scroll layouts
 retain their own frames. Layout stays stable across preview, PDF, and overview.
 
@@ -713,3 +714,6 @@ from the theme before skills recommend it in generated slides.
 - Don't use `.text-xs2`, `.text-xs3`, `<small>`, or tiny inline font sizes as
   authoring escapes.
 - Don't let DESIGN.md prose become Tailwind class detection input.
+
+Regular slide context headers use 26px type in a 52px band, with text 16px
+left of the body inset. Theme colors, weights, and accent marks remain distinct.

@@ -122,7 +122,7 @@
   --text-caption: 19.5px;
   --text-footnote: 14px;
   --text-label-md: 26px;
-  --text-header-label: 19.5px;
+  --text-header-label: 26px;
   --leading-display: 1.1;
   --leading-headline-lg: 1.15;
   --leading-headline-md: 1.2;
@@ -166,7 +166,8 @@
   --spacing-lg: 24px;
   --spacing-xl: 40px;
   --spacing-slide-x: 64px;
-  --spacing-header-height: 48px;
+  --spacing-header-height: 52px;
+  --spacing-header-outdent: 16px;
   --spacing-body-top-gap: 24px;
   --spacing-logo-title-size: 80px;
   --spacing-logo-header-size: 32px;

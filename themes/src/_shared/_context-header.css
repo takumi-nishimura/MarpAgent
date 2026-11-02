@@ -1,0 +1,20 @@
+/* Context labels sit outside the page-heading axis on regular slide canvases. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header) {
+  left: 0;
+  width: 100%;
+  padding-inline: var(--padding-x);
+  padding-left: calc(var(--padding-x) - var(--spacing-header-outdent));
+  font-size: var(--text-header-label);
+  font-weight: var(--font-weight-header-label);
+  line-height: var(--leading-header-label);
+}
+
+/* Keep branding within the same right safe area after normalizing the band. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header)::after {
+  background-position:
+    right var(--padding-x) center,
+    right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing))) center,
+    right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 2) center,
+    right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 3) center,
+    right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 4) center;
+}

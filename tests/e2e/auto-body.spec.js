@@ -52,6 +52,9 @@ Text and supporting evidence.
                 };
                 return {
                     heading: rect("h2"),
+                    header: s.querySelector("header") ? rect("header") : null,
+                    headerFont: s.querySelector("header") ? getComputedStyle(s.querySelector("header")).fontSize : null,
+                    headerLeft: s.querySelector("header") ? s.querySelector("header").getBoundingClientRect().left + parseFloat(getComputedStyle(s.querySelector("header")).paddingLeft) : null,
                     body: rect(".body"),
                     footer: rect("footer"),
                     logo: s.querySelector(".slide-logos")
@@ -65,6 +68,9 @@ Text and supporting evidence.
         expect(layout[0].body.bottom).toBeLessThanOrEqual(layout[0].logo.top);
         expect(layout[0].footer.right).toBeLessThan(layout[0].logo.left);
         expect(layout[1].logo).toBeNull();
+        expect(layout[1].header.bottom - layout[1].header.top).toBe(52);
+        expect(layout[1].headerFont).toBe("26px");
+        expect(layout[1].heading.left - layout[1].headerLeft).toBe(16);
         expect(
             await page.locator("section").first().locator("header").count(),
         ).toBe(0);

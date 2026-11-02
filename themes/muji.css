@@ -166,6 +166,7 @@
     --font-body-sm: "Helvetica Neue";
     --font-caption: "Helvetica Neue";
     --font-label-md: "Helvetica Neue";
+    --font-header-label: "Helvetica Neue";
     --text-display: 52px;
     --text-headline-lg: 44px;
     --text-headline-md: 32px;
@@ -173,6 +174,8 @@
     --text-body-sm: 18px;
     --text-caption: 14px;
     --text-label-md: 24px;
+    --text-header-label: 26px;
+    --leading-header-label: 1.3;
     --tracking-display: 0em;
     --tracking-headline-lg: 0em;
     --tracking-headline-md: 0em;
@@ -180,6 +183,7 @@
     --tracking-body-sm: 0em;
     --tracking-caption: 0em;
     --tracking-label-md: 0em;
+    --tracking-header-label: 0em;
     --font-weight-display: 700;
     --font-weight-headline-lg: 700;
     --font-weight-headline-md: 700;
@@ -187,6 +191,7 @@
     --font-weight-body-sm: 400;
     --font-weight-caption: 400;
     --font-weight-label-md: 700;
+    --font-weight-header-label: 700;
     --radius-none: 0px;
     --radius-full: 9999px;
     --spacing-xxxxs: 4px;
@@ -198,7 +203,8 @@
     --spacing-lg: 48px;
     --spacing-xl: 64px;
     --spacing-slide-x: 56px;
-    --spacing-header-height: 56px;
+    --spacing-header-height: 52px;
+    --spacing-header-outdent: 16px;
     --spacing-header-title-inset: 20px;
     --spacing-logo-title-size: 64px;
     --spacing-logo-header-size: 38px;
@@ -1903,6 +1909,18 @@ section::after {
 .paper-section.highlight > h2 {
   background: var(--color-muji-red);
   color: var(--color-neutral);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header) {
+  left: 0;
+  width: 100%;
+  padding-inline: var(--padding-x);
+  padding-left: calc(var(--padding-x) - var(--spacing-header-outdent));
+  font-size: var(--text-header-label);
+  font-weight: var(--font-weight-header-label);
+  line-height: var(--leading-header-label);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header)::after {
+  background-position: right var(--padding-x) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing))) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 2) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 3) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 4) center;
 }
 @property --tw-ordinal {
   syntax: "*";

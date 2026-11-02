@@ -140,6 +140,12 @@ typography:
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: 0em
+  header-label:
+    fontFamily: Noto Sans JP
+    fontSize: 26px
+    fontWeight: 700
+    lineHeight: "1.3"
+    letterSpacing: 0em
 rounded:
   none: 0px
   sm: 2px
@@ -152,7 +158,8 @@ spacing:
   lg: 24px
   xl: 40px
   slide-x: 56px
-  header-height: 64px
+  header-height: 52px
+  header-outdent: 16px
   header-title-inset: 10px
   header-group-left-shift: 20px
   accent-bar-width: 6px
@@ -187,7 +194,7 @@ components:
   header-band:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.on-surface}"
-    typography: "{typography.label-md}"
+    typography: "{typography.header-label}"
     height: "{spacing.header-height}"
   summary-box:
     backgroundColor: "{colors.surface-muted}"
@@ -529,7 +536,7 @@ short phrases that must remain unbroken.
 ## Layout
 
 The slide canvas is fixed at **1280 x 720**. The horizontal safe area is 56px,
-with a 64px full-bleed header on non-title slides. The extra inset mirrors the
+with a 52px full-bleed header on non-title slides. The extra inset mirrors the
 website's broad content gutters and gives technical figures room to breathe.
 
 Title slides use asymmetry: a left-aligned text block and three cropped
@@ -621,3 +628,6 @@ from the theme before skills recommend it in generated slides.
 - Don't use `.text-xs2`, `.text-xs3`, `<small>`, or tiny inline font sizes as
   authoring escapes.
 - Don't let DESIGN.md prose become Tailwind class detection input.
+
+Regular slide context headers use 26px type in a 52px band, with text 16px
+left of the body inset. Theme colors, weights, and accent marks remain distinct.
