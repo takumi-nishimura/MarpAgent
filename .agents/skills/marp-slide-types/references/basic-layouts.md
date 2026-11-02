@@ -26,21 +26,18 @@ Subtitle or author info here
 
 ## content
 
+Ordinary content needs no wrapper or enabling directive.
+
 Use for a point best shown in a single area: a statement, figure, code sample, diagram, table, or a list when the items are a real set. Start with the material the audience needs, not empty bullet slots.
 
 ```markdown
 ---
 
-<!-- _header: Drafting -->
-
 ## Try the actual figure before filling the page
-
-<div class="body box">
 
 Place it at a readable size first. Then add the observation the audience
 should notice and the context needed to interpret it.
 
-</div>
 ```
 
 ### agenda variant

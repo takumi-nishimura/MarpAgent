@@ -131,7 +131,10 @@ Update saved prompts and client-local skill links to use `slide-author`.
 Choose the structure from what the audience needs to understand: a shared-criteria
 table for comparison, a figure with nearby interpretation for a result, or a
 sequence for a process. Start from the [layout recipes](template/README.md).
-Regular pages use a heading followed by one `.body` wrapper. Keep explanations
+Ordinary slides use automatic body layout by default: write a page heading and plain Markdown; the
+renderer supplies `.body.box`. Use an explicit `.body` for columns or custom
+placement, and `_autoBody: false` to opt out on one page. Use `autoBody: false` in frontmatter to preserve legacy flow. Context headers are optional and should identify
+a section across pages, rather than repeat the page title. Keep explanations
 and tables near the heading; use deliberate middle placement to align related
 material. Inspect spacing and readable figure size across the whole canvas.
 

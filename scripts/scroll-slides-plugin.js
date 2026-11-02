@@ -187,3 +187,7 @@ module.exports = (md) => {
         },
     );
 };
+
+// Shared token grouping keeps raw HTML containers intact in both layouts.
+module.exports.bodyGroups = bodyGroups;
+module.exports.groupTag = groupTag;

@@ -793,6 +793,24 @@ th {
 tbody tr:nth-child(even) {
   background: var(--color-table-stripe);
 }
+section[data-marpagent-auto-body] > .slide-logos {
+  position: absolute;
+  left: 55%;
+  right: 80px;
+  bottom: 16px;
+  height: 24px;
+  background-image: var(--logos-dark);
+  background-repeat: no-repeat;
+  background-size: auto 24px;
+  background-position: right center, right 90px center, right 180px center, right 270px center, right 360px center;
+  pointer-events: none;
+}
+section[data-marpagent-auto-body].invert > .slide-logos {
+  background-image: var(--logos-light);
+}
+section[data-marpagent-auto-body]:has(> .slide-logos) > footer {
+  right: 48%;
+}
 @layer utilities {
   .white {
     color: var(--color-deck-white) !important;

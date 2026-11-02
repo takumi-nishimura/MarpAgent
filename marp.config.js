@@ -9,6 +9,7 @@ const marpHideSlidesPlugin = require("./scripts/hide-slides-plugin");
 const marpMermaidPlugin = require("./scripts/mermaid-plugin");
 const marpD2Plugin = require("./scripts/d2-plugin");
 const { assertD2RenderSucceeded } = require("./src/d2-diagnostics");
+const marpAutoBodyPlugin = require("./scripts/auto-body-plugin");
 const marpScrollSlidesPlugin = require("./scripts/scroll-slides-plugin");
 
 const cursorScript = fs.readFileSync(
@@ -117,7 +118,8 @@ module.exports = {
             .use(marpMermaidPlugin)
             .use(marpD2Plugin)
             .use(marpGithubAlertsPlugin)
-            .use(marpScrollSlidesPlugin);
+            .use(marpScrollSlidesPlugin)
+            .use(marpAutoBodyPlugin);
         // Normalize both rendering and direct markdown.parse calls (slide maps).
         base.markdown.core.ruler.before(
             "normalize",

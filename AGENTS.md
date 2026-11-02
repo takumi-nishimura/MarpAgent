@@ -43,8 +43,12 @@ fill every slide with the same number of bullets, cards, or summary boxes, or
 force layout variety. Follow the user's references and preserve evidence,
 qualifications, and intentional human edits.
 
-New regular slides use one direct `.body` wrapper below the heading, as shown in
-`template/layouts.md`. Choose the material's width and top/middle placement from
+Ordinary slides use automatic body layout by default: write a page heading and plain Markdown;
+the renderer supplies one direct `.body.box`. Use an explicit `.body` for
+columns or custom placement, as shown in `template/layouts.md`. Use optional
+headers only for context spanning several slides, not a second page title.
+Use `autoBody: false` in frontmatter for legacy flow; `_autoBody: false`
+disables automatic layout on one slide. Choose the material's width and top/middle placement from
 its reading task; short prose, a comparison, and a figure with interpretation
 need different compositions. Keep explanations and tables near the heading by
 default; short content alone is not a reason for middle placement. Inspect the
