@@ -221,8 +221,8 @@ runtime. Title, paper, and `_scroll` slides keep their existing layout systems.
 
 New scaffolds and canonical recipes use this body area by default. Existing
 Markdown without a body wrapper keeps ordinary flow. In Lab's regular frame,
-the horizontal inset is 5% capped at 64px, the context header is 48px high with
-19.5px text, and header clearance is 24px. These are design tokens, not deck-local
+the horizontal inset is 5% capped at 64px, the context header is 52px high with
+26px text, and header clearance is 24px. These are design tokens, not deck-local
 offsets. Title, paper, and scroll retain their existing frame geometry.
 
 ```markdown
@@ -251,8 +251,9 @@ auto margins; deliberate child `.self-*` placement still takes precedence.
 Use `.body.box` for an explanation or table that follows its heading.
 Use a nested `.box.fill` or `.col.fill`
 when another block, such as a column heading, precedes the area that must grow.
-The heading-to-body gap adds `--body-heading-gap` (default `1em`) to the heading
-margin; it does not grow when the content is short. Use
+The heading-to-body gap adds `--body-heading-gap` (default `0.5em`) to the heading
+margin; it does not grow when the content is short. With Lab's default type,
+this leaves about 23px before prose and 28px before the first list item. Use
 `.body.centered.box.place-top` for the same placement with a bounded reading
 width. Placement is explicit: middle alignment can serve a focal composition or
 an interpretation beside a figure, while short content alone is not a reason to
@@ -281,7 +282,7 @@ and overlap diagnostics; the theme does not hide or scroll excess content.
 | Variable | Default | Scope |
 | :------- | :------ | :---- |
 | `--body-top-gap` | `10px` | space below a header, or above the first content without one |
-| `--body-heading-gap` | `1em` | extra separation after a heading before a direct body; independent of content height |
+| `--body-heading-gap` | `0.5em` | extra separation after a heading before a direct body; independent of content height |
 | `--body-bottom-safe` | `48px` | minimum reserved space above the slide bottom/padding for footnotes, footer, and pagination |
 | `--body-gap` | `0.5em` | vertical gaps in the body and its column boxes |
 | `--col-gap` | `1rem` | column gaps; `.col.visual` accepts its existing `--visual-gap` override |

@@ -37,7 +37,7 @@ section {
 
   /* Opt-in remaining-area body; legacy slide flow keeps its own margins. */
   --body-top-gap: 10px;
-  --body-heading-gap: 1em;
+  --body-heading-gap: 0.5em;
   --body-bottom-safe: 48px;
   --body-gap: 0.5em;
   --col-gap: 1rem;

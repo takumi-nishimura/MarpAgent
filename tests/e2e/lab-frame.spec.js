@@ -48,8 +48,8 @@ test("the starter keeps a short explanation connected to its heading", async ({ 
     await renderSource(page, fs.readFileSync(path.join(__dirname, "../../template/slide.md"), "utf8"));
     await expect(page.locator("section:not(.title) > .body")).toHaveCount(1);
     const gap = await page.locator("section:not(.title)").evaluate(section => section.querySelector(".body p").getBoundingClientRect().top - section.querySelector("h2").getBoundingClientRect().bottom);
-    expect(gap).toBeGreaterThanOrEqual(24);
-    expect(gap).toBeLessThanOrEqual(52);
+    expect(gap).toBeGreaterThanOrEqual(16);
+    expect(gap).toBeLessThanOrEqual(32);
 });
 
 test("top placement retains a centered explanation's bounded reading width", async ({ page }) => {
@@ -62,8 +62,8 @@ test("top placement retains a centered explanation's bounded reading width", asy
     });
     expect(layout.width).toBeLessThanOrEqual(720);
     expect(layout.left).toBeCloseTo(1280 - layout.right, 0);
-    expect(layout.gap).toBeGreaterThanOrEqual(24);
-    expect(layout.gap).toBeLessThanOrEqual(52);
+    expect(layout.gap).toBeGreaterThanOrEqual(16);
+    expect(layout.gap).toBeLessThanOrEqual(32);
     expect(layout.linesHeight).toBeGreaterThan(50);
 });
 
@@ -104,8 +104,8 @@ for (const size of ["16:9", "4:3"]) {
         for (const count of [1, 5]) {
             await render(page, Array.from({ length: count }, () => "Evidence with its required qualification.").join("\n\n"), size, "body box");
             const gap = await page.evaluate(() => document.querySelector(".body p").getBoundingClientRect().top - document.querySelector("h2").getBoundingClientRect().bottom);
-            expect(gap).toBeGreaterThanOrEqual(24);
-            expect(gap).toBeLessThanOrEqual(52);
+            expect(gap).toBeGreaterThanOrEqual(16);
+            expect(gap).toBeLessThanOrEqual(32);
             gaps.push(gap);
         }
         expect(gaps[0]).toBeCloseTo(gaps[1], 0);

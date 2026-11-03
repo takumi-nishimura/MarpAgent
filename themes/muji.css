@@ -565,7 +565,7 @@ section {
   --padding-bottom: 0;
   --header-height: 60px;
   --body-top-gap: 10px;
-  --body-heading-gap: 1em;
+  --body-heading-gap: 0.5em;
   --body-bottom-safe: 48px;
   --body-gap: 0.5em;
   --col-gap: 1rem;
