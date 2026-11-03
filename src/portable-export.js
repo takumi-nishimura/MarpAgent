@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { runConversionSync } = require("./conversion-runtime");
-const { getMarpBin } = require("./preview-runtime");
+const { getMarpCommand } = require("./preview-runtime");
 const { assertD2RenderSucceeded } = require("./d2-diagnostics");
 const { D2_VERSION } = require("./d2-render");
 const {
@@ -36,8 +36,8 @@ function exportPortableBundle({
     const stage = fs.mkdtempSync(path.join(os.tmpdir(), "marp-bundle-render-"));
     try {
         const htmlPath = path.join(stage, "render.html");
-        convert(
-            getMarpBin(toolRoot),
+        const marpCommand = getMarpCommand(
+            toolRoot,
             [
                 "--config",
                 path.join(toolRoot, "marp.config.js"),
@@ -46,6 +46,11 @@ function exportPortableBundle({
                 htmlPath,
                 deck,
             ],
+            env,
+        );
+        convert(
+            marpCommand.file,
+            marpCommand.args,
             {
                 cwd: toolRoot,
                 env: {

@@ -26,7 +26,11 @@ test("dry-run compiles HTML once through the common config and writes no archive
         dryRun: true,
         convert(command, args) {
             conversions += 1;
-            assert.match(command, /marp/);
+            assert.equal(command, process.execPath);
+            assert.equal(
+                args[0],
+                fs.realpathSync(path.join(__dirname, "../../node_modules/@marp-team/marp-cli/marp-cli.js")),
+            );
             assert.ok(args.includes("--config"));
             assert.ok(args.some((v) => v.endsWith("marp.config.js")));
             assert.ok(!args.includes("--template"));

@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
+const fs = require("node:fs");
 const { PassThrough } = require("node:stream");
 const { EventEmitter } = require("node:events");
 
@@ -21,7 +22,7 @@ test("Marp server launches JavaScript through Node without a platform shell wrap
   assert.equal(command.file, process.execPath);
   assert.equal(
     command.args[0],
-    path.resolve(repoRoot, "node_modules/@marp-team/marp-cli/marp-cli.js"),
+    fs.realpathSync(path.resolve(repoRoot, "node_modules/@marp-team/marp-cli/marp-cli.js")),
   );
   assert.deepEqual(command.args.slice(1), args);
   const { spawnSync } = require("node:child_process");

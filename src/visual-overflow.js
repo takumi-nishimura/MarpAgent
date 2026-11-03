@@ -7,7 +7,7 @@ const {
   runConversionSync,
   withBrowser,
 } = require("./conversion-runtime");
-const { getMarpBin } = require("./preview-runtime");
+const { getMarpCommand } = require("./preview-runtime");
 const { fileURLToPath, pathToFileURL } = require("node:url");
 const { detectHiddenSlides } = require("./hidden-slides");
 const { buildSlideMap, renderedSlides } = require("./slide-map");
@@ -64,7 +64,6 @@ function emitDiagnostic(onDiagnostic, payload) {
  */
 function renderToHtml(deckPath, options = {}) {
   const repoRoot = path.resolve(__dirname, "..");
-  const marpBinary = getMarpBin(repoRoot);
   const configPath = path.join(repoRoot, "marp.config.js");
 
   const tempRoot = fs.mkdtempSync(
@@ -85,8 +84,8 @@ function renderToHtml(deckPath, options = {}) {
       path.basename(deckPath, path.extname(deckPath)) + ".html";
     const outputPath = path.join(copiedDeckDir, outputName);
 
-    runConversionSync(
-      marpBinary,
+    const marpCommand = getMarpCommand(
+      repoRoot,
       [
         "--html",
         "--template",
@@ -98,6 +97,11 @@ function renderToHtml(deckPath, options = {}) {
         "-o",
         outputPath,
       ],
+      options.env || process.env,
+    );
+    runConversionSync(
+      marpCommand.file,
+      marpCommand.args,
       {
         cwd: copiedDeckDir,
         env: {
