@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { runConversionSync } = require("./conversion-runtime");
-const { getMarpBin } = require("./preview-runtime");
+const { getMarpCommand } = require("./preview-runtime");
 const { marpBrowserArgs } = require("./marp-browser");
 const { isASeriesCanvas } = require("./canvas-size");
 const { copyDeckForRender, findMissingAssets } = require("./media-assets");
@@ -571,7 +571,6 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers, slideMap }) {
     slideMap || buildSlideMap(fs.readFileSync(deckPath, "utf8"));
 
   const repoRoot = path.resolve(__dirname, "..");
-  const marpBinary = getMarpBin(repoRoot);
   const tempRoot = fs.mkdtempSync(
     path.join(os.tmpdir(), "marp-agent-validator-"),
   );
@@ -587,23 +586,20 @@ function defaultImageExporter({ deckPath, reportDir, slideNumbers, slideMap }) {
     ensureDir(tempDeckDir);
     copyDeckForRender(deckPath, copiedDeckDir);
 
-    runConversionSync(
-      marpBinary,
-      [
-        "--images",
-        "png",
-        "--allow-local-files",
-        "--config-file",
-        path.join(repoRoot, "marp.config.js"),
-        ...marpBrowserArgs({ repoRoot }),
-        copiedDeckPath,
-      ],
-      {
-        cwd: copiedDeckDir,
-        encoding: "utf8",
-        stdio: "pipe",
-      },
-    );
+    const marpCommand = getMarpCommand(repoRoot, [
+      "--images",
+      "png",
+      "--allow-local-files",
+      "--config-file",
+      path.join(repoRoot, "marp.config.js"),
+      ...marpBrowserArgs({ repoRoot }),
+      copiedDeckPath,
+    ]);
+    runConversionSync(marpCommand.file, marpCommand.args, {
+      cwd: copiedDeckDir,
+      encoding: "utf8",
+      stdio: "pipe",
+    });
 
     ensureDir(screenshotsDir);
     const sourcePrefix = path.basename(deckPath, path.extname(deckPath));

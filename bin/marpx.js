@@ -349,9 +349,9 @@ function runScript(scriptName, args) {
   });
 }
 
-function getMarpBin() {
+function getMarpCommand(args) {
   // Theme commands do not require Marp or its rendering dependencies.
-  return require("../src/preview-runtime").getMarpBin(repoRoot);
+  return require("../src/preview-runtime").getMarpCommand(repoRoot, args);
 }
 
 function discoverThemes() {
@@ -429,12 +429,13 @@ if ([...exportModes, "screenshot", "validate", "lint"].includes(mode)) {
 }
 
 function runMarp(extraArgs, { timeoutMs = null } = {}) {
-  if (!fs.existsSync(getMarpBin())) {
-    console.error(`Error: Marp CLI binary not found: ${getMarpBin()}`);
-    process.exit(1);
-  }
+  let marpCommand;
   let browserArgs;
   try {
+    marpCommand = getMarpCommand([]);
+    if (!fs.existsSync(marpCommand.file)) {
+      throw new Error(`Marp CLI binary not found: ${marpCommand.file}`);
+    }
     browserArgs = mode === "html" ? [] : marpBrowserArgs({ repoRoot });
   } catch (error) {
     console.error(`Error: ${error.message}`);
@@ -442,8 +443,8 @@ function runMarp(extraArgs, { timeoutMs = null } = {}) {
   }
 
   runConversion(
-    getMarpBin(),
-    [...browserArgs, "--config", configPath, ...extraArgs],
+    marpCommand.file,
+    [...marpCommand.args, ...browserArgs, "--config", configPath, ...extraArgs],
     {
       cwd: repoRoot,
       timeoutMs,

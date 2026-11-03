@@ -7,6 +7,41 @@ const { spawnSync } = require("node:child_process");
 
 const repoRoot = path.resolve(__dirname, "../..");
 
+test("conversion runners preserve Windows paths and shell metacharacters as literal arguments", async () => {
+  const {
+    runConversion,
+    runConversionSync,
+  } = require("../../src/conversion-runtime");
+  const args = [
+    String.raw`C:\slides with spaces\a & (b) ^ %PATH% $;.md`,
+    'literal "quotes" | > < && $(echo injected)',
+    "",
+  ];
+  const commandArgs = [
+    "-e",
+    "process.stdout.write(JSON.stringify(process.argv.slice(1)))",
+    ...args,
+  ];
+  assert.deepEqual(
+    JSON.parse(runConversionSync(process.execPath, commandArgs)),
+    args,
+  );
+  // A file descriptor avoids adding stream-handling behavior to the runner.
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-literal-args-"));
+  const output = path.join(root, "args.json");
+  const fd = fs.openSync(output, "w");
+  try {
+    const code = await runConversion(process.execPath, commandArgs, {
+      stdio: ["ignore", fd, "pipe"],
+    });
+    assert.equal(code, 0);
+    assert.deepEqual(JSON.parse(fs.readFileSync(output, "utf8")), args);
+  } finally {
+    fs.closeSync(fd);
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("conversion timeout rejects zero, negative, fractional, and nonnumeric values", (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-invalid-timeout-"));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
@@ -119,7 +154,11 @@ test(
       [0, 1].includes(ps.status),
       `process inspection failed: ${ps.stderr}`,
     );
-    assert.equal(ps.stderr.trim(), "", "process inspection must not emit errors");
+    assert.equal(
+      ps.stderr.trim(),
+      "",
+      "process inspection must not emit errors",
+    );
     assert.ok(
       ps.status === 1 || /^Z/.test(ps.stdout.trim()),
       `descendant ${pid} still runs: ${ps.stdout}`,
