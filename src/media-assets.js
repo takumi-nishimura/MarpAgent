@@ -181,8 +181,10 @@ function isRenderArtifact(fileName) {
  * Copy the deck's directory into `destinationDir` for a render. Export
  * artifacts (PDFs, generated `.*.overview.html`) are skipped unless the deck
  * references them — a PDF embedded via <embed>/<object> still has to load.
- * `fs.cp` resolves symlink targets to absolute paths, so links such as
- * `shared -> ../../assets` keep working inside the temp copy.
+ * On Windows, materialize links at their deck-relative paths so rendering
+ * needs no symlink privilege and nested CSS/media keep their URL bases.
+ * Broken links remain absent; diagnostics inspect the untouched source deck.
+ * Elsewhere, `fs.cp` makes link targets absolute to retain their source bases.
  */
 function copyDeckForRender(deckPath, destinationDir) {
   const deckDir = path.dirname(path.resolve(deckPath));
@@ -194,12 +196,45 @@ function copyDeckForRender(deckPath, destinationDir) {
       .map(({ reference }) => resolveLocalReference(reference, deckDir))
       .filter(Boolean),
   );
+  const dereference = process.platform === "win32";
+  const directories = new Map();
 
   fs.cpSync(deckDir, destinationDir, {
     recursive: true,
-    filter: (source) =>
-      !isRenderArtifact(path.basename(source)) ||
-      referenced.has(path.resolve(source)),
+    dereference,
+    filter: (source) => {
+      if (
+        isRenderArtifact(path.basename(source)) &&
+        !referenced.has(path.resolve(source))
+      )
+        return false;
+      if (!dereference) return true;
+
+      let stats;
+      try {
+        stats = fs.statSync(source);
+      } catch (error) {
+        if (
+          ["ENOENT", "ENOTDIR", "ELOOP"].includes(error.code) &&
+          fs.lstatSync(source).isSymbolicLink()
+        )
+          return false;
+        throw error;
+      }
+      if (stats.isDirectory()) {
+        const realPath = fs.realpathSync.native(source);
+        // Compare only ancestors: independent aliases must still be copied.
+        for (
+          let parent = path.dirname(source);
+          directories.has(parent);
+          parent = path.dirname(parent)
+        ) {
+          if (directories.get(parent) === realPath) return false;
+        }
+        directories.set(source, realPath);
+      }
+      return true;
+    },
   });
 }
 

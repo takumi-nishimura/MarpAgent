@@ -396,68 +396,284 @@ test("findMissingAssets reports nothing when every asset exists", () => {
   }
 });
 
-test("copyDeckForRender skips export artifacts the render does not need", () => {
-  const dir = makeDeck({
-    "assets/img/a.png": "png",
-    "assets/video/clip.mp4": "mp4",
-    "report/out.pdf": "exported report",
-    "slide.pdf": "exported",
-    ".slide.overview.html": "<html></html>",
-    "brief.md": "brief",
+test("Windows render copies load shared and reused media without symlink privilege", (t) => {
+  const root = makeDeck({
+    "assets/css/nested/theme.css": '@import "../base.css";',
+    "assets/css/base.css":
+      'section { background: url("../img/図 with space.svg"); }',
+    "assets/img/図 with space.svg": "shared image",
+    "assets/fonts/font.woff2": "shared font",
+    "decks/owner/assets/img/original.svg": "owner image",
+    "decks/consumer/assets/css/local.css":
+      'section { background: url("../img/reused.svg"); }',
   });
-  const destination = `${dir}-copy`;
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const dir = path.join(root, "decks/consumer");
+  fs.mkdirSync(path.join(dir, "assets/img"));
+  fs.symlinkSync("../../assets", path.join(dir, "shared"), "dir");
+  fs.symlinkSync(
+    "../../../owner/assets/img/original.svg",
+    path.join(dir, "assets/img/reused.svg"),
+    "file",
+  );
+  const markdown =
+    "# Linked\n\n![](shared/img/%E5%9B%B3%20with%20space.svg)\n![](assets/img/reused.svg)\n";
+  const deckPath = writeSlide(dir, markdown);
+  const destination = path.join(root, "render");
 
-  try {
-    const deckPath = writeSlide(
-      dir,
-      "# One\n\n![](assets/img/a.png)\n<video src=\"assets/video/clip.mp4\"></video>\n",
-    );
-    copyDeckForRender(deckPath, destination);
+  t.mock.property(process, "platform", "win32");
+  const cpSync = fs.cpSync;
+  t.mock.method(fs, "cpSync", (source, target, options) => {
+    if (!options?.dereference) {
+      throw Object.assign(new Error("symlink privilege unavailable"), {
+        code: "EPERM",
+        syscall: "symlink",
+      });
+    }
+    return cpSync(source, target, options);
+  });
 
-    assert.deepEqual(fs.readdirSync(destination).sort(), [
-      "assets",
-      "brief.md",
-      "report",
-      "slide.md",
-    ]);
-    assert.deepEqual(fs.readdirSync(path.join(destination, "assets/img")), [
-      "a.png",
-    ]);
-    assert.deepEqual(
-      fs.readdirSync(path.join(destination, "assets/video")),
-      ["clip.mp4"],
+  copyDeckForRender(deckPath, destination);
+
+  for (const [name, expected] of [
+    ["shared/css/nested/theme.css", '@import "../base.css";'],
+    [
+      "shared/css/base.css",
+      'section { background: url("../img/図 with space.svg"); }',
+    ],
+    ["shared/img/図 with space.svg", "shared image"],
+    ["shared/fonts/font.woff2", "shared font"],
+    [
+      "assets/css/local.css",
+      'section { background: url("../img/reused.svg"); }',
+    ],
+    ["assets/img/reused.svg", "owner image"],
+  ]) {
+    assert.equal(
+      fs.readFileSync(path.join(destination, name), "utf8"),
+      expected,
+      name,
     );
-    assert.deepEqual(fs.readdirSync(path.join(destination, "report")), []);
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true });
-    fs.rmSync(destination, { recursive: true, force: true });
   }
+  assert.equal(
+    fs.lstatSync(path.join(destination, "shared")).isSymbolicLink(),
+    false,
+  );
+  assert.equal(
+    fs
+      .lstatSync(path.join(destination, "assets/img/reused.svg"))
+      .isSymbolicLink(),
+    false,
+  );
+  assert.equal(fs.readlinkSync(path.join(dir, "shared")), "../../assets");
+  assert.equal(
+    fs.readlinkSync(path.join(dir, "assets/img/reused.svg")),
+    "../../../owner/assets/img/original.svg",
+  );
+  assert.equal(fs.readFileSync(deckPath, "utf8"), markdown);
+  assert.equal(
+    fs.readFileSync(
+      path.join(root, "decks/owner/assets/img/original.svg"),
+      "utf8",
+    ),
+    "owner image",
+  );
+  assert.deepEqual(findMissingAssets(path.join(destination, "slide.md")), []);
 });
 
-test("copyDeckForRender keeps a PDF the deck embeds", () => {
-  const dir = makeDeck({
-    "assets/doc.pdf": "pdf",
-    "assets/other.pdf": "pdf",
+test("Windows render copies leave broken links missing and preserve source diagnoses", (t) => {
+  const root = makeDeck({
+    "deck/assets/present.svg": "image",
+    "shared/present.svg": "shared image",
   });
-  const destination = `${dir}-copy`;
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const dir = path.join(root, "deck");
+  fs.symlinkSync("gone.svg", path.join(dir, "assets/broken.svg"), "file");
+  fs.symlinkSync("../absent", path.join(dir, "broken-shared"), "dir");
+  fs.symlinkSync("../shared", path.join(dir, "shared"), "dir");
+  fs.symlinkSync("gone.svg", path.join(root, "shared/broken.svg"), "file");
+  const deckPath = writeSlide(
+    dir,
+    "# Missing\n\n![](assets/broken.svg)\n![](broken-shared/img.svg)\n![](shared/broken.svg)\n![](assets/absent.svg)\n",
+  );
+  const before = findMissingAssets(deckPath);
+  const destination = path.join(root, "render");
+  t.mock.property(process, "platform", "win32");
 
-  try {
-    const deckPath = writeSlide(
-      dir,
-      "# One\n\n<object data=\"assets/doc.pdf\"></object>\n",
-    );
-    copyDeckForRender(deckPath, destination);
+  copyDeckForRender(deckPath, destination);
 
-    assert.equal(
-      fs.existsSync(path.join(destination, "assets/doc.pdf")),
-      true,
-    );
-    assert.equal(
-      fs.existsSync(path.join(destination, "assets/other.pdf")),
-      false,
-    );
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true });
-    fs.rmSync(destination, { recursive: true, force: true });
-  }
+  assert.deepEqual(findMissingAssets(deckPath), before);
+  assert.deepEqual(
+    before[0].missing.map(({ reason, target, link }) => ({
+      reason,
+      target,
+      link,
+    })),
+    [
+      { reason: "broken symlink", target: "gone.svg", link: undefined },
+      { reason: "broken symlink", target: "../absent", link: "broken-shared" },
+      { reason: "broken symlink", target: "gone.svg", link: undefined },
+      { reason: "not found", target: undefined, link: undefined },
+    ],
+  );
+  assert.deepEqual(
+    missingBySlide(findMissingAssets(path.join(destination, "slide.md"))),
+    {
+      1: [
+        ["assets/broken.svg", "not found"],
+        ["broken-shared/img.svg", "not found"],
+        ["shared/broken.svg", "not found"],
+        ["assets/absent.svg", "not found"],
+      ],
+    },
+  );
+  assert.equal(
+    fs.readFileSync(path.join(destination, "assets/present.svg"), "utf8"),
+    "image",
+  );
+  assert.equal(
+    fs.readFileSync(path.join(destination, "shared/present.svg"), "utf8"),
+    "shared image",
+  );
 });
+
+test("Windows render copies stop directory cycles without dropping independent aliases", (t) => {
+  const root = makeDeck({ "deck/assets/image.svg": "image" });
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const dir = path.join(root, "deck");
+  fs.symlinkSync("..", path.join(dir, "assets/parent"), "dir");
+  fs.symlinkSync("assets", path.join(dir, "alias"), "dir");
+  fs.symlinkSync("self", path.join(dir, "self"), "dir");
+  const deckPath = writeSlide(dir, "# Linked\n\n![](alias/image.svg)\n");
+  const destination = path.join(root, "render");
+  t.mock.property(process, "platform", "win32");
+
+  copyDeckForRender(deckPath, destination);
+
+  assert.deepEqual(fs.readdirSync(path.join(destination, "assets")), [
+    "image.svg",
+  ]);
+  assert.deepEqual(fs.readdirSync(path.join(destination, "alias")), [
+    "image.svg",
+  ]);
+  assert.equal(
+    fs.readFileSync(path.join(destination, "alias/image.svg"), "utf8"),
+    "image",
+  );
+  assert.equal(fs.existsSync(path.join(destination, "self")), false);
+});
+
+test("Windows render copies propagate permission errors when reading link targets", (t) => {
+  const root = makeDeck({ "deck/slide.md": "# Deck\n", "target.svg": "image" });
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const dir = path.join(root, "deck");
+  const link = path.join(dir, "linked.svg");
+  fs.symlinkSync("../target.svg", link, "file");
+  const denied = Object.assign(new Error("target unreadable"), {
+    code: "EACCES",
+  });
+  const statSync = fs.statSync;
+  t.mock.property(process, "platform", "win32");
+  t.mock.method(fs, "statSync", (source, ...args) => {
+    if (source === link) throw denied;
+    return statSync(source, ...args);
+  });
+
+  assert.throws(
+    () =>
+      copyDeckForRender(path.join(dir, "slide.md"), path.join(root, "render")),
+    (error) => error === denied,
+  );
+});
+
+test("non-Windows render copies preserve links to their original source bases", (t) => {
+  const root = makeDeck({
+    "deck/slide.md": "# Deck\n",
+    "assets/image.svg": "image",
+  });
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const dir = path.join(root, "deck");
+  fs.symlinkSync("../assets", path.join(dir, "shared"), "dir");
+  const destination = path.join(root, "render");
+  t.mock.property(process, "platform", "linux");
+
+  copyDeckForRender(path.join(dir, "slide.md"), destination);
+
+  assert.equal(
+    fs.lstatSync(path.join(destination, "shared")).isSymbolicLink(),
+    true,
+  );
+  assert.equal(
+    fs.readFileSync(path.join(destination, "shared/image.svg"), "utf8"),
+    "image",
+  );
+});
+
+for (const platform of ["linux", "win32"]) {
+  test(`copyDeckForRender skips unused export artifacts on ${platform}`, (t) => {
+    t.mock.property(process, "platform", platform);
+    const dir = makeDeck({
+      "assets/img/a.png": "png",
+      "assets/video/clip.mp4": "mp4",
+      "report/out.pdf": "exported report",
+      "slide.pdf": "exported",
+      ".slide.overview.html": "<html></html>",
+      "brief.md": "brief",
+    });
+    const destination = `${dir}-copy`;
+
+    try {
+      const deckPath = writeSlide(
+        dir,
+        '# One\n\n![](assets/img/a.png)\n<video src="assets/video/clip.mp4"></video>\n',
+      );
+      copyDeckForRender(deckPath, destination);
+
+      assert.deepEqual(fs.readdirSync(destination).sort(), [
+        "assets",
+        "brief.md",
+        "report",
+        "slide.md",
+      ]);
+      assert.deepEqual(fs.readdirSync(path.join(destination, "assets/img")), [
+        "a.png",
+      ]);
+      assert.deepEqual(fs.readdirSync(path.join(destination, "assets/video")), [
+        "clip.mp4",
+      ]);
+      assert.deepEqual(fs.readdirSync(path.join(destination, "report")), []);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+      fs.rmSync(destination, { recursive: true, force: true });
+    }
+  });
+
+  test(`copyDeckForRender keeps an embedded PDF on ${platform}`, (t) => {
+    t.mock.property(process, "platform", platform);
+    const dir = makeDeck({
+      "assets/doc.pdf": "pdf",
+      "assets/other.pdf": "pdf",
+    });
+    const destination = `${dir}-copy`;
+
+    try {
+      const deckPath = writeSlide(
+        dir,
+        '# One\n\n<object data="assets/doc.pdf"></object>\n',
+      );
+      copyDeckForRender(deckPath, destination);
+
+      assert.equal(
+        fs.existsSync(path.join(destination, "assets/doc.pdf")),
+        true,
+      );
+      assert.equal(
+        fs.existsSync(path.join(destination, "assets/other.pdf")),
+        false,
+      );
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+      fs.rmSync(destination, { recursive: true, force: true });
+    }
+  });
+}
