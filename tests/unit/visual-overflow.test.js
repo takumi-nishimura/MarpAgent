@@ -331,6 +331,7 @@ test("measureRenderedSlides reports content crowding the slide edge", async (t) 
 
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marp-agent-crowding-"));
   const deckPath = path.join(dir, "slide.md");
+  // Anchor normal-flow content near the edge without relying on heading metrics.
   fs.writeFileSync(
     deckPath,
     `---
@@ -344,9 +345,7 @@ section, section h1 { line-height: normal; }
 
 # Crowded bottom
 
-<div style="height: 544px"></div>
-
-<p style="margin: 0">This last line sits right above the bottom edge.</p>
+<p style="margin: auto 0 calc(5px - var(--body-bottom-safe))">This last line sits right above the bottom edge.</p>
 
 ---
 
