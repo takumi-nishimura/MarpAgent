@@ -5,6 +5,7 @@ const {
     resolveLocalReference,
 } = require("./media-assets");
 const { buildSlideMap } = require("./slide-map");
+const { resolveSharedPath } = require("./shared-assets");
 
 /** Lexical containment; callers comparing real paths must canonicalize first. */
 function isPathInside(root, candidate) {
@@ -41,7 +42,7 @@ function policyOptions(options) {
  */
 function inspectAssetPath(filePath, options) {
     const { repoRoot, realRoot, deckDir, policy } = policyOptions(options);
-    const absolutePath = path.resolve(filePath);
+    const absolutePath = resolveSharedPath(filePath, deckDir, repoRoot);
     const diagnostics = [];
     const symlinks = [];
     const add = (code, message, details = {}) => {
@@ -170,7 +171,7 @@ function inspectAssetPath(filePath, options) {
             shared,
         };
         symlinks.push(link);
-        if (link.absolute)
+        if (link.absolute && !shared)
             add("absolute-symlink", "Use a relative symlink target.", {
                 link: next,
                 target,
@@ -248,6 +249,7 @@ function resolveAssetReference(reference, options) {
     const filePath = resolveLocalReference(
         value,
         options.deckDir || options.repoRoot,
+        options.repoRoot,
     );
     if (filePath) {
         const result = inspectAssetPath(filePath, options);

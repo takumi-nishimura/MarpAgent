@@ -5,6 +5,7 @@ const { decodeHTMLAttribute } = require("entities");
 const { HTML_PART_RE, parseSource, sourceLines } = require("./markdown-source");
 const { frontmatterForMarkdown } = require("./markdown-input");
 const { buildSlideMap } = require("./slide-map");
+const { sharedAssets, resolveSharedPath } = require("./shared-assets");
 
 // Consume every attribute so strings inside quoted values cannot become
 // attributes themselves (for example title="src='example.png'").
@@ -103,7 +104,7 @@ function extractMediaReferences(raw) {
  * local files: remote `http(s)` and protocol-relative URLs (never fetched),
  * `data:` and other schemes, and bare fragments.
  */
-function resolveLocalReference(reference, deckDir) {
+function resolveLocalReference(reference, deckDir, repoRoot) {
   const value = String(reference || "").trim();
   if (!value || value.startsWith("#") || value.startsWith("//")) return null;
 
@@ -124,9 +125,10 @@ function resolveLocalReference(reference, deckDir) {
   } catch {
     // Keep a malformed escape as written; the browser would too.
   }
-  return path.isAbsolute(decoded)
+  const file = path.isAbsolute(decoded)
     ? path.resolve(decoded)
     : path.resolve(deckDir, decoded);
+  return resolveSharedPath(file, deckDir, repoRoot);
 }
 
 function lstatOrNull(filePath) {
@@ -188,6 +190,13 @@ function isRenderArtifact(fileName) {
  */
 function copyDeckForRender(deckPath, destinationDir) {
   const deckDir = path.dirname(path.resolve(deckPath));
+  let shared;
+  try {
+    shared = sharedAssets(deckDir);
+  } catch (error) {
+    if (error.code !== "INVALID_SHARED_ENTRY") throw error;
+    shared = { virtual: false };
+  }
   const markdown = fs.readFileSync(deckPath, "utf8");
   const references = extractMediaReferences(markdown);
   collectCssUrls(extractFrontmatter(markdown), 0, references);
@@ -197,45 +206,52 @@ function copyDeckForRender(deckPath, destinationDir) {
       .filter(Boolean),
   );
   const dereference = process.platform === "win32";
-  const directories = new Map();
-
-  fs.cpSync(deckDir, destinationDir, {
-    recursive: true,
-    dereference,
-    filter: (source) => {
-      if (
-        isRenderArtifact(path.basename(source)) &&
-        !referenced.has(path.resolve(source))
-      )
-        return false;
-      if (!dereference) return true;
-
-      let stats;
-      try {
-        stats = fs.statSync(source);
-      } catch (error) {
+  const copyTree = (sourceDir, targetDir, dereference) => {
+    const directories = new Map();
+    fs.cpSync(sourceDir, targetDir, {
+      recursive: true,
+      dereference,
+      filter: (source) => {
         if (
-          ["ENOENT", "ENOTDIR", "ELOOP"].includes(error.code) &&
-          fs.lstatSync(source).isSymbolicLink()
+          isRenderArtifact(path.basename(source)) &&
+          !referenced.has(path.resolve(source))
         )
           return false;
-        throw error;
-      }
-      if (stats.isDirectory()) {
-        const realPath = fs.realpathSync.native(source);
-        // Compare only ancestors: independent aliases must still be copied.
-        for (
-          let parent = path.dirname(source);
-          directories.has(parent);
-          parent = path.dirname(parent)
-        ) {
-          if (directories.get(parent) === realPath) return false;
+        if (!dereference) return true;
+
+        let stats;
+        try {
+          stats = fs.statSync(source);
+        } catch (error) {
+          if (
+            ["ENOENT", "ENOTDIR", "ELOOP"].includes(error.code) &&
+            fs.lstatSync(source).isSymbolicLink()
+          )
+            return false;
+          throw error;
         }
-        directories.set(source, realPath);
-      }
-      return true;
-    },
-  });
+        if (stats.isDirectory()) {
+          const realPath = fs.realpathSync.native(source);
+          // Compare only ancestors: independent aliases must still be copied.
+          for (
+            let parent = path.dirname(source);
+            directories.has(parent);
+            parent = path.dirname(parent)
+          ) {
+            if (directories.get(parent) === realPath) return false;
+          }
+          directories.set(source, realPath);
+        }
+        return true;
+      },
+    });
+  };
+  copyTree(deckDir, destinationDir, dereference);
+  if (shared.virtual && fs.existsSync(shared.directory)) {
+    const target = path.join(destinationDir, "shared");
+    if (shared.placeholder) fs.unlinkSync(target);
+    copyTree(shared.directory, target, true);
+  }
 }
 
 function extractFrontmatter(markdown) {
@@ -253,7 +269,9 @@ function extractDeckMediaReferences(markdown) {
     const opening = /^\uFEFF?-{3,}[ \t]*(?:\r\n|\r|\n)/.exec(markdown);
     const globals = [];
     collectCssUrls(frontmatter, opening?.[0].length || 0, globals);
-    references.push(...globals.map((item) => ({ ...item, scope: "frontmatter" })));
+    references.push(
+      ...globals.map((item) => ({ ...item, scope: "frontmatter" })),
+    );
   }
   return references.sort((a, b) => a.index - b.index);
 }

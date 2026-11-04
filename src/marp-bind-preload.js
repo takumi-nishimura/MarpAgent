@@ -3,6 +3,7 @@
 // Marp child and supplies a host only for TCP listeners without one.
 const net = require("node:net");
 const { getBindAddress } = require("./preview-binding");
+const { createSharedAssetsHandler } = require("./shared-assets-http");
 const host = getBindAddress();
 const listen = net.Server.prototype.listen;
 
@@ -24,3 +25,15 @@ net.Server.prototype.listen = function (...args) {
   }
   return listen.apply(this, args);
 };
+
+if (process.env.MARP_AGENT_SHARED_DECK_DIR) {
+  const http = require("node:http");
+  const serveShared = createSharedAssetsHandler(
+    process.env.MARP_AGENT_SHARED_DECK_DIR,
+  );
+  const emit = http.Server.prototype.emit;
+  http.Server.prototype.emit = function (event, ...args) {
+    if (event === "request" && serveShared(...args)) return true;
+    return emit.call(this, event, ...args);
+  };
+}

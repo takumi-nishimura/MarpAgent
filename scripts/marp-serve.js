@@ -120,6 +120,8 @@ function main() {
         ...process.env,
         ...(implicitPort ? { PORT: String(httpPort) } : {}),
         MARP_AGENT_BIND_ADDRESS: bindAddress,
+        MARP_AGENT_SHARED_DECK_DIR: deckDir,
+        MARP_AGENT_SHARED_HTTP: "1",
         NODE_OPTIONS: `${process.env.NODE_OPTIONS || ""} --require ${JSON.stringify(path.join(repoRoot, "src/marp-bind-preload.js"))}`,
       },
     });

@@ -450,6 +450,7 @@ function runMarp(extraArgs, { timeoutMs = null } = {}) {
       timeoutMs,
       env: {
         ...process.env,
+        MARP_AGENT_SHARED_DECK_DIR: path.dirname(path.resolve(positionals[0])),
         MARP_AGENT_D2_CWD: process.env.MARP_AGENT_D2_CWD || process.cwd(),
         ...(exportModes.has(mode) ? { MARP_AGENT_D2_STRICT: "1" } : {}),
       },

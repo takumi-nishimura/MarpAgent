@@ -1,5 +1,6 @@
 const path = require("node:path");
 const { randomUUID } = require("node:crypto");
+const { SHARED_LIVE_SCRIPT } = require("./shared-assets-http");
 
 function getOverviewOutputPath(deckPath) {
   const deckDir = path.dirname(deckPath);
@@ -9,9 +10,7 @@ function getOverviewOutputPath(deckPath) {
 }
 
 function readAttribute(tag, attributeName) {
-  const match = tag.match(
-    new RegExp(`${attributeName}=(["'])(.*?)\\1`, "i"),
-  );
+  const match = tag.match(new RegExp(`${attributeName}=(["'])(.*?)\\1`, "i"));
   return match?.[2];
 }
 
@@ -105,7 +104,8 @@ function extractSlides(renderedHtml) {
 function buildOverviewCards(slideSvgList) {
   return slideSvgList
     .map((slideSvg, index) => {
-      const sectionTag = slideSvg.match(/<section\b[^>]*>/i)?.[0] ?? "<section>";
+      const sectionTag =
+        slideSvg.match(/<section\b[^>]*>/i)?.[0] ?? "<section>";
       const slideId = readAttribute(sectionTag, "id") || String(index + 1);
       const displayedPage = readAttribute(sectionTag, "data-marpit-pagination");
       const label = displayedPage
@@ -133,7 +133,10 @@ function buildOverviewCards(slideSvgList) {
     .join("\n");
 }
 
-function buildOverviewDocument(renderedHtml, { reloadToken, targetSlideId }) {
+function buildOverviewDocument(
+  renderedHtml,
+  { reloadToken, targetSlideId, sharedAssets = false },
+) {
   const title = extractTitle(renderedHtml);
   const slides = extractSlides(renderedHtml);
   const cards = buildOverviewCards(slides);
@@ -361,6 +364,7 @@ function buildOverviewDocument(renderedHtml, { reloadToken, targetSlideId }) {
         ${buildReloadScript("/__marp_agent__/meta")}
       })();
     </script>
+    ${sharedAssets ? `<script>${SHARED_LIVE_SCRIPT}</script>` : ""}
   </body>
 </html>`;
 }

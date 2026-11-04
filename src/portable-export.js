@@ -55,6 +55,7 @@ function exportPortableBundle({
                 cwd: toolRoot,
                 env: {
                     ...env,
+                    MARP_AGENT_SHARED_DECK_DIR: path.dirname(deck),
                     MARP_AGENT_D2_CWD:
                         env.MARP_AGENT_D2_CWD || path.dirname(deck),
                     MARP_AGENT_D2_STRICT: "1",
