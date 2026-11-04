@@ -68,6 +68,6 @@ Windows等でsymlink作成権限や機能が不足する場合は理由を報告
 
 ## 診断とAPI
 
-`doctor` は欠落，broken/cyclic/absolute symlink，repo外参照，別デッキへの直接参照，ディレクトリ単位の流用，symlink checkoutを診断し，findingがあればexit 1を返す．相対ファイル流用と許容される `shared -> repo/assets` を区別する．doctorは素材内容のhash・寸法計測を省く．`--format json` も利用できる．
+`doctor` は欠落，broken/cyclic/absolute symlink，repo外参照，別デッキへの直接参照，ディレクトリ単位の流用，symlink checkoutを診断し，findingがあればexit 1を返す．`shared/...` は実体のsharedディレクトリを優先し，なければrepo assetsへ解決する．canonical sharedのGit checkout placeholderは認識し，通常の素材ファイルとは扱わない．相対ファイル流用と許容される `shared -> repo/assets` を区別する．doctorは素材内容のhash・寸法計測を省く．`--format json` も利用できる．
 
 通常validatorの既存挙動は維持し，この操作の規約診断やZIPのstrict policyを通常検証へ追加しない．APIとJSONのデータ形式は [media-reference-api.md](media-reference-api.md) を参照する．`node scripts/media-assets.js <command> ...` でも同じCLIを実行できる．my-decksの個別リンク修正・元素材の移動はこの機能の実装に含まない．

@@ -15,7 +15,7 @@ Inspect the destination first: the scaffolder overwrites existing files. Use a n
 npm run marpx -- -n decks/<name> --paper
 ```
 
-The scaffold creates `paper.md`, an informational `README.md`, assets, and a shared-assets link. It has no brief/outline pipeline. Replace placeholder authors, text, contacts, and assets with verified content; omit unknown optional details rather than inventing them. Do not delete a README merely because the template once generated it.
+The scaffold creates `paper.md`, an informational `README.md`, and local assets. `shared/...` resolves through marpx without a shared-assets link. It has no brief/outline pipeline. Replace placeholder authors, text, contacts, and assets with verified content; omit unknown optional details rather than inventing them. Do not delete a README merely because the template once generated it.
 
 Keep one canvas with header, paper columns, and footer, with no body-level slide separators. Use result emphasis only when supported: a headline metric belongs inside its Results card; a qualitative contribution needs no invented number. Preserve source attribution and readable figures.
 

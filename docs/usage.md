@@ -339,8 +339,7 @@ MarpAgent/
 │   └── <name>/
 │       ├── brief.md
 │       ├── slide.md
-│       ├── assets/
-│       └── shared -> ../../assets
+│       └── assets/
 ├── assets/             # Shared assets (logos, fonts)
 ├── themes/             # Marp entries and surfaces built with Tailwind CSS v4
 ├── src/                # Rendering, previews, validation, and CLI support
@@ -353,6 +352,28 @@ MarpAgent/
 
 ### Media ownership and reuse
 
+`shared/...` is marpx's deck-relative name for the source project's root
+`assets/` directory. New decks do not create a symlink, junction, or copied
+`shared/`. Project discovery uses the nearest Git/Jujutsu/config root, or an
+ancestor containing both `decks/` and `assets/`.
+
+An existing deck-local `shared/` directory is authoritative: all references use
+it, and missing files never fall back to project assets. Put the required files
+there with the same folder structure to use the original Markdown with plain
+Marp or another renderer. Updating that copy is the author's responsibility.
+marpx never overwrites or synchronizes an authored `shared/`.
+
+Legacy directory links remain supported. A Git symlink checked out as a plain
+file is accepted only when its index mode is `120000` and its contents point to
+the project's canonical `assets/`; an arbitrary text file or broken link blocks
+the alias. The source checkout is not repaired or changed automatically.
+
+Live and overview previews serve `shared/...` from the selected directory and
+reload when requested shared files change. File exports rewrite virtual shared
+references to ordinary relative URLs. Rendered validation materializes virtual
+shared assets in its temporary deck and removes the temporary tree after use.
+Portable ZIP export uses the same resolver and collects referenced resources.
+
 Keep presentation-specific images and videos under the deck that owns them. When another deck reuses a file, add a named relative symlink for that file in the corresponding local media directory instead of copying it, linking the owner's complete `assets/` directory, or using a raw `../other-deck/` path. For example, from the repository root:
 
 ```bash
@@ -363,7 +384,7 @@ ln -s ../../../source-deck/assets/img/example.png \
 
 The consuming deck can then use a stable path such as `assets/img/from-source-example.png`. Add another symlink only when it reuses another file. Before renaming or deleting owned media, search the repository for symlinks and Markdown references that consume it.
 
-Use the repository-level `assets/` directory only for stable resources with no single owning deck, such as shared logos and fonts. On Windows, enable symlink support before checkout and verify that Git did not materialize a link as an ordinary file or copied directory.
+Use the repository-level `assets/` directory only for stable resources with no single owning deck, such as shared logos and fonts. Its `shared/...` references need no OS links or symlink privileges. Individual cross-deck file symlinks still require platform support and valid checkout; the shared-directory alias does not infer arbitrary file aliases.
 
 ## Theme
 
