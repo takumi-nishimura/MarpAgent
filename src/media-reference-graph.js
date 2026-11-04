@@ -159,9 +159,18 @@ function inspectAssetPath(filePath, options) {
         } catch {
             /* Diagnosed during traversal. */
         }
-        const shared =
-            next === path.join(realDeckDir, "shared") &&
-            resolvedPath === path.join(realRoot, "assets");
+        let shared = false;
+        if (directory && next === path.join(realDeckDir, "shared")) {
+            try {
+                // Compare physical directories: junctions may name the same
+                // project through a Windows short name or an OS root alias.
+                shared =
+                    fs.realpathSync.native(next) ===
+                    fs.realpathSync.native(path.join(realRoot, "assets"));
+            } catch {
+                /* Broken or cyclic links retain the normal diagnostics. */
+            }
+        }
         const link = {
             path: next,
             target,
@@ -176,7 +185,7 @@ function inspectAssetPath(filePath, options) {
                 link: next,
                 target,
             });
-        if (!isPathInside(realRoot, resolvedPath))
+        if (!shared && !isPathInside(realRoot, resolvedPath))
             add("outside-repo", "Symlink target is outside the repository.", {
                 link: next,
                 target,
@@ -192,6 +201,12 @@ function inspectAssetPath(filePath, options) {
                 "Reuse individual files instead of another directory.",
                 { link: next, target },
             );
+        }
+        if (shared) {
+            // Walk assets itself so its links and boundary are still checked.
+            current = realRoot;
+            pending.unshift("assets");
+            continue;
         }
         if (link.absolute) current = path.parse(target).root;
         pending.unshift(

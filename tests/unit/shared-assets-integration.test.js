@@ -47,7 +47,8 @@ test("source diagnostics and the media catalog agree on virtual shared resources
     references.every(
       (ref) =>
         ref.allowed &&
-        ref.realPath === fs.realpathSync(path.join(root, "assets/logo.svg")),
+        ref.realPath ===
+          fs.realpathSync.native(path.join(root, "assets/logo.svg")),
     ),
   );
   const catalog = buildMediaCatalog({ repoRoot: root, metadata: false });
@@ -57,17 +58,51 @@ test("source diagnostics and the media catalog agree on virtual shared resources
 
 test("canonical shared directory links accept Windows junction targets", (t) => {
   const { root, deck, file } = fixture(t);
+  const alias = `${root}-alias`;
+  const linkType = process.platform === "win32" ? "junction" : "dir";
+  fs.symlinkSync(root, alias, linkType);
+  t.after(() => fs.rmSync(alias, { recursive: true, force: true }));
   fs.symlinkSync(
-    path.join(root, "assets"),
+    path.join(alias, "assets"),
     path.join(deck, "shared"),
-    process.platform === "win32" ? "junction" : "dir",
+    linkType,
   );
   const references = collectDeckReferences(file, undefined, {
     repoRoot: root,
     policy: "bundle",
   });
   assert.ok(references.length > 0);
-  assert.ok(references.every(ref => ref.allowed), JSON.stringify(references));
+  assert.ok(
+    references.every((ref) => ref.allowed),
+    JSON.stringify(references),
+  );
+});
+
+test("canonical shared links still reject project assets redirected outside the root", (t) => {
+  const { root, deck, file } = fixture(t);
+  const outside = `${root}-outside`;
+  fs.renameSync(path.join(root, "assets"), outside);
+  t.after(() => fs.rmSync(outside, { recursive: true, force: true }));
+  const linkType = process.platform === "win32" ? "junction" : "dir";
+  fs.symlinkSync(outside, path.join(root, "assets"), linkType);
+  fs.symlinkSync(
+    path.join(root, "assets"),
+    path.join(deck, "shared"),
+    linkType,
+  );
+  const references = collectDeckReferences(file, undefined, {
+    repoRoot: root,
+    policy: "bundle",
+  });
+  assert.ok(references.length > 0);
+  assert.ok(
+    references.every(
+      (ref) =>
+        !ref.allowed &&
+        ref.diagnostics.some((item) => item.code === "outside-repo"),
+    ),
+    JSON.stringify(references),
+  );
 });
 
 test("temporary render copies materialize shared without ever creating symlinks", (t) => {
