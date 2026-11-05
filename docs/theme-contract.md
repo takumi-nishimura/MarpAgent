@@ -511,3 +511,18 @@ safe area (24px high, right aligned); the footer uses the left part of that area
 No empty header or header-height clearance is introduced. Existing headers keep
 their theme-specific logo treatment. Check unusually wide logos and long footers
 when migrating an existing deck to this layout.
+### 列の割合と残り幅の配分
+
+`.col.shares` は各列の `--col-share` を0より大きく1以下の数で指定し，未指定列へ残りを均等に配分する．例えば3列の先頭だけ `--col-share: 0.5` とすれば50％・25％・25％，先頭0.5と中央0.3なら50％・30％・20％になる．指定なしは列数に応じて均等になる．割合はgapを除いた幅に対する値である．
+
+```html
+<div class="col shares">
+<div class="box" style="--col-share: 0.5;">左50％</div>
+<div class="box">中央25％</div>
+<div class="box">右25％</div>
+</div>
+```
+
+MarpAgentが描画時にgridの列配分へ変換するため，HTMLと静的出力で共通の配置を使う．plain Marpで原稿を直接描画する場合はこの変換を利用できない．直接の子要素を列として数え，入れ子の `.col.shares` は独立して扱う．割合は数値リテラルで指定し，`calc()`やCSS変数参照は受け付けない．指定合計が1を超える場合，未指定列の残りがない場合，全列指定で合計が1でない場合は描画エラーにする．
+
+新方式では `--visual-left`／`--visual-right` や列幅utilityを混在させず，割合だけを指定する．`.shares` のない既存の `.col`／`.col.visual` とその重み指定は維持する．以前の試作 `--visual-split` は使用しない．

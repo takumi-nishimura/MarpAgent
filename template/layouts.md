@@ -34,8 +34,8 @@ style: |
 
 ## ページの変更はslide.mdで完結させる
 
-<div class="body col visual" style="--visual-left: 2; --visual-right: 1;">
-<div>
+<div class="body col visual shares">
+<div style="--col-share: 0.6666666667">
 
 ### 編集する内容と保存先
 
