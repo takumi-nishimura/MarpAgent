@@ -42,6 +42,8 @@ function baselineMarkdown() {
     // without needing a server or file:// access from about:blank.
     return fs
         .readFileSync(deckPath, "utf8")
+        // Preserve the historical baseline layout before automatic body wrapping.
+        .replace(/^theme: lab$/m, "theme: lab\nautoBody: false")
         .replace(
             /src="(assets\/img\/[^\"]+\.svg)"/g,
             (_, asset) =>

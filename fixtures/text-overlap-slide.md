@@ -1,6 +1,7 @@
 ---
 marp: true
 theme: lab
+autoBody: false
 ---
 
 ## Remote work support
