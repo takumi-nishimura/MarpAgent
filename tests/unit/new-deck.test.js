@@ -42,12 +42,7 @@ test("new-deck scaffolds brief and slide templates", () => {
     assert.match(brief, new RegExp(`Generated: ${today}`));
     assert.match(slide, new RegExp(`_header: ${today}`));
 
-    const sharedStat = fs.lstatSync(sharedPath);
-    if (os.platform() === "win32") {
-      assert.equal(sharedStat.isDirectory(), true);
-    } else {
-      assert.equal(sharedStat.isSymbolicLink(), true);
-    }
+    assert.equal(fs.existsSync(sharedPath), false);
   } finally {
     fs.rmSync(deckDir, { recursive: true, force: true });
   }
@@ -174,7 +169,7 @@ test("new-deck --force overwrites existing scaffold files", () => {
   }
 });
 
-test("new-deck reports a non-symlink shared entry and leaves it untouched", () => {
+test("new-deck accepts an authored shared directory and preserves its files", () => {
   const deckName = `decks/test-shared-dir-${process.pid}-${Date.now()}`;
   const deckDir = path.join(repoRoot, deckName);
 
@@ -194,15 +189,12 @@ test("new-deck reports a non-symlink shared entry and leaves it untouched", () =
         },
       );
 
-      assert.equal(result.status, 1);
-      assert.match(result.stderr, /shared/);
-      assert.match(result.stderr, /not a symlink/);
+      assert.equal(result.status, 0, result.stderr);
       assert.equal(
         fs.readFileSync(path.join(deckDir, "shared", "keep.txt"), "utf8"),
         "keep me\n",
       );
-      // The refusal happens before any scaffold file is written.
-      assert.equal(fs.existsSync(path.join(deckDir, "brief.md")), false);
+      assert.equal(fs.existsSync(path.join(deckDir, "brief.md")), true);
     }
   } finally {
     fs.rmSync(deckDir, { recursive: true, force: true });

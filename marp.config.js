@@ -3,6 +3,11 @@ const path = require("node:path");
 const { Marp } = require("@marp-team/marp-core/full");
 const { ensureCustomSizesForMarkdown } = require("./src/canvas-size");
 const { normalizeMarkdown } = require("./src/markdown-input");
+const {
+    rewriteSharedResources,
+    sharedContext,
+} = require("./src/shared-assets");
+const { SHARED_LIVE_SCRIPT } = require("./src/shared-assets-http");
 const { loadDefaultJapaneseParser } = require("budoux");
 const marpGithubAlertsPlugin = require("./scripts/github-alerts-plugin");
 const marpHideSlidesPlugin = require("./scripts/hide-slides-plugin");
@@ -82,7 +87,9 @@ function applyBudoux(html) {
     );
     // BudouX translates one root element. CLI output has sibling SVG slides,
     // so wrap the fragment temporarily and remove that root after translation.
-    const translated = budouxJa.translateHTMLString(`<div>${protectedHtml}</div>`);
+    const translated = budouxJa.translateHTMLString(
+        `<div>${protectedHtml}</div>`,
+    );
     const contents = translated.slice(
         translated.indexOf(">") + 1,
         translated.lastIndexOf("</div>"),
@@ -132,16 +139,23 @@ module.exports = {
         base.render = (markdown, env) => {
             ensureCustomSizesForMarkdown(base, markdown);
             const result = _render(markdown, env);
+            const resources = sharedContext(env);
             if (process.env.MARP_AGENT_D2_STRICT === "1") {
                 assertD2RenderSucceeded(result.html);
             }
             const html =
                 applyBudoux(result.html) +
-                `\n<script>${cursorScript}</script>\n<script>${scrollScript}</script>\n<script>${bodyFootnoteScript}</script>`;
+                `\n<script>${cursorScript}</script>\n<script>${scrollScript}</script>\n<script>${bodyFootnoteScript}</script>` +
+                (resources.http && /shared\//.test(result.html + result.css)
+                    ? `\n<script>${SHARED_LIVE_SCRIPT}</script>`
+                    : "");
             return {
                 ...result,
-                html,
-                css: result.css + marpD2Plugin.D2_CSS,
+                html: rewriteSharedResources(html, resources),
+                css: rewriteSharedResources(result.css + marpD2Plugin.D2_CSS, {
+                    ...resources,
+                    kind: "css",
+                }),
                 d2Diagnostics: [...base.markdown.marpagentD2Diagnostics],
             };
         };

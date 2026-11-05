@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const os = require("os");
+const { sharedAssets } = require("../src/shared-assets");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 
 enforceSupportedNodeRuntime();
@@ -86,9 +86,7 @@ for (const [templateName] of templateFiles) {
 // lstat also catches broken symlinks that existsSync would miss.
 const existingTargets = templateFiles
   .map(([, outputName]) => path.join(deckDir, outputName))
-  .filter((targetPath) =>
-    fs.lstatSync(targetPath, { throwIfNoEntry: false }),
-  );
+  .filter((targetPath) => fs.lstatSync(targetPath, { throwIfNoEntry: false }));
 if (!force && existingTargets.length > 0) {
   console.error("Error: refusing to overwrite existing files:");
   for (const targetPath of existingTargets) {
@@ -98,12 +96,13 @@ if (!force && existingTargets.length > 0) {
   process.exit(1);
 }
 
-// A non-symlink `shared` entry may hold authored content; never remove it.
+// Shared is a virtual namespace by default. Preserve any authored directory.
 const sharedPath = path.join(deckDir, "shared");
-const sharedStat = fs.lstatSync(sharedPath, { throwIfNoEntry: false });
-if (sharedStat && !sharedStat.isSymbolicLink()) {
+try {
+  sharedAssets(deckDir, repoRoot);
+} catch (error) {
   console.error(
-    `Error: ${path.relative(repoRoot, sharedPath)} exists and is not a symlink; leaving it untouched.`,
+    `Error: ${path.relative(repoRoot, sharedPath)}: ${error.message}`,
   );
   process.exit(1);
 }
@@ -124,19 +123,7 @@ fs.mkdirSync(path.join(deckDir, "assets", "img"), { recursive: true });
 fs.mkdirSync(path.join(deckDir, "assets", "video"), { recursive: true });
 fs.writeFileSync(path.join(deckDir, "assets", "video", ".gitkeep"), "");
 
-// Create shared symlink to global assets
-const assetsDir = path.join(repoRoot, "assets");
-const relativePath = path.relative(deckDir, assetsDir);
-
-// Remove existing symlink if present; non-symlinks were rejected above.
-if (sharedStat) {
-  fs.unlinkSync(sharedPath);
-}
-
-// Create symlink with OS-specific handling
-try {
-  const symlinkType = os.platform() === "win32" ? "junction" : "dir";
-  fs.symlinkSync(relativePath, sharedPath, symlinkType);
+{
   const relativeToRepo = path.relative(repoRoot, deckDir);
   console.log(`✓ Created${paperMode ? " paper deck" : ""}: ${relativeToRepo}/`);
   for (const [, outputName] of templateFiles) {
@@ -144,7 +131,7 @@ try {
   }
   console.log(`  - assets/img/`);
   console.log(`  - assets/video/`);
-  console.log(`  - shared -> ${relativePath}`);
+  console.log("  - shared/... resolves to project assets/ (no link required)");
   if (paperMode) {
     console.log(`\nEdit ${relativeToRepo}/paper.md, then:`);
     console.log(`  marpx ${relativeToRepo}/paper.md       # live preview`);
@@ -163,16 +150,4 @@ try {
     );
     console.log(`  marpx ${relativeToRepo}/slide.md -v         # validate`);
   }
-} catch (err) {
-  console.error(`Error creating symlink: ${err.message}`);
-  if (os.platform() === "win32") {
-    console.error(
-      "\nNote: On Windows, you may need to run as Administrator or enable Developer Mode.",
-    );
-    console.error("Alternatively, manually create the symlink:");
-    console.error(
-      `  mklink /J "${sharedPath}" "${path.resolve(deckDir, relativePath)}"`,
-    );
-  }
-  process.exit(1);
 }

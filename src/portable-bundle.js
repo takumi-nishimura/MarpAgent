@@ -120,13 +120,13 @@ function planPortableBundle({
         if (!Number.isSafeInteger(value) || value < 1)
             throw new TypeError(`${name} must be a positive safe integer`);
     }
-    const root = fs.realpathSync(repoRoot);
+    const root = fs.realpathSync.native(repoRoot);
     const requestedRoot = path.resolve(repoRoot);
     const requestedDeck = path.resolve(deckPath);
     const deck = inside(requestedRoot, requestedDeck)
         ? path.resolve(root, path.relative(requestedRoot, requestedDeck))
         : requestedDeck;
-    const realDeck = fs.realpathSync(deck);
+    const realDeck = fs.realpathSync.native(deck);
     if (!inside(root, deck) || !inside(root, realDeck))
         throw new Error("Deck is outside the bundle root");
     const relative = (file) =>
@@ -657,7 +657,10 @@ function writePortableBundle(plan, { outputPath, force = false } = {}) {
             "Cannot write an invalid bundle plan with resource errors",
         );
     const output = path.resolve(outputPath);
-    if (fs.existsSync(output) && plan.sourcePaths?.has(fs.realpathSync(output)))
+    if (
+        fs.existsSync(output) &&
+        plan.sourcePaths?.has(fs.realpathSync.native(output))
+    )
         throw new Error("Output would overwrite a source file or resource");
     if (fs.existsSync(output) && !force)
         throw new Error(

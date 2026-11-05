@@ -14,6 +14,8 @@
 
 `test:ci` は runtime／mise 設定，Markdown／slide map／canvas，audit 比較ロジック，D2 診断，workflow の回帰テストを選んだ軽量入口である．ブラウザを起動せず，実際の dependency audit も実行しない．全 unit，fixture/example の実測，Chromium／Firefox E2E，実 D2，portable ZIP は完全受入れに残る．スライドの内容や見た目は smoke の対象外なので，変更した deck の描画確認も別途行う．
 
+`Shared Assets Portability` は関連するengine変更に対し，Windows／macOS／Linuxでshared alias，実体ディレクトリ優先，Gitのsymlink checkout placeholder，HTTP配信，一時配置，新規作成，通常HTML変換を検証する．ブラウザ・PDF・D2を含む完全受入れではない．OSのsymlink作成権限がない場合，既存リンクだけを対象とするテストは対象外skipとし，リンク不要の経路は必ず実行する．
+
 ## 差分と失敗の扱い
 
 パス判定には PR の `base.sha` と `head.sha`，push の `before` と `sha` を使う．checkout の合成 merge commit や最後の1 commitだけでは判定しない．shallow checkout に端点がなければ `git fetch --no-tags --depth=1 origin <SHA>` で取得する．

@@ -142,7 +142,11 @@ function openingTagEnd(source, start) {
 /** Rewrite static resource references without serializing markup or executing scripts. */
 function rewriteReferences(
     source,
-    { kind = "html", onReference = (value) => value } = {},
+    {
+        kind = "html",
+        onReference = (value) => value,
+        includeLinks = false,
+    } = {},
 ) {
     const unsupported = [];
     if (kind === "css")
@@ -217,6 +221,9 @@ function rewriteReferences(
             else if (name === "srcset" && ["img", "source"].includes(tag))
                 rewritten = rewriteSrcset(value, onReference, attributeContext);
             else if (
+                (includeLinks &&
+                    name === "href" &&
+                    ["a", "area"].includes(tag)) ||
                 (name === "src" &&
                     [
                         "img",

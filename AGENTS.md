@@ -20,9 +20,13 @@ decks/<name>/
 ├── brief.md        # Purpose, audience, constraints, sources
 ├── slide.md        # Working draft and finished slides (Marp Markdown)
 ├── assets/img/     # Deck-local images
-├── assets/video/   # Deck-local videos
-└── shared -> ../../assets  # Shared assets (logos, fonts, etc.)
+└── assets/video/   # Deck-local videos
 ```
+
+`shared/...` resolves to the project's root `assets/` through marpx without an
+OS link. An existing deck-local `shared/` directory takes precedence as a whole;
+missing files there do not fall back to project assets. For plain Marp, place
+the required files under that directory with the same relative layout.
 
 ## Authoring Workflow
 

@@ -1,0 +1,48 @@
+name: Shared Assets Portability
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'marp.config.js'
+      - 'bin/**'
+      - 'package*.json'
+      - '.github/workflows/shared-assets.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'marp.config.js'
+      - 'bin/**'
+      - 'package*.json'
+      - '.github/workflows/shared-assets.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shared-assets-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shared-assets:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          check-latest: true
+          cache: npm
+      - run: npm ci
+      - name: Verify aliases, physical shared, HTTP, staging, and plain HTML
+        run: node --test tests/unit/shared-assets.test.js tests/unit/shared-assets-http.test.js tests/unit/shared-assets-integration.test.js tests/unit/new-deck.test.js

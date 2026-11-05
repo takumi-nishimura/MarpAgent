@@ -1,6 +1,6 @@
 # Media reference API
 
-CommonJS module: `src/media-reference-graph.js`．#58 の一覧・検索と #59 の bundle 収集で共用する．既存の `findMissingAssets` と `copyDeckForRender` の挙動は変更しない．
+CommonJS module: `src/media-reference-graph.js`．一覧・検索，通常validation，bundle収集で共通のshared参照解決を使用する．
 
 ```js
 const {
@@ -60,7 +60,9 @@ const resolution = resolveAssetReference("assets/img/figure.png", {
 
 `permissive` は既存の通常ファイルなら規約診断があっても allowed とし，bundle は診断のあるローカル参照を拒否する．欠落・循環・ディレクトリ・非ローカルはどちらも allowed=false．リモート等の許容・strictOffline の判定は bundle 呼出側が行う．
 
-bundle は repo root とファイルの実体を比較し，親ディレクトリを含めた symlink を検査する．repo root 自身の alias は canonicalize する．symlink target の `link/..` はlinkの展開後に親へ進み，OSと同じ意味で解決する．最終パスは `fs.realpathSync.native` で照合する．repo 内の相対ファイルリンクと，deck 直下の `shared -> repo/assets` を許容する．絶対リンク，repo 外へ出る経路，別デッキへの直接参照，別ディレクトリ単位の流用は拒否する．
+bundle は repo root とファイルの実体を比較し，親ディレクトリを含めた symlink を検査する．repo root 自身の alias は canonicalize する．symlink target の `link/..` はlinkの展開後に親へ進み，OSと同じ意味で解決する．最終パスは `fs.realpathSync.native` で照合する．repo 内の相対ファイルリンクと，deck 直下の `shared -> repo/assets` を許容する．このcanonicalなsharedディレクトリリンクは，Windowsのjunctionが絶対targetになる場合も許容する．それ以外の絶対リンク，repo 外へ出る経路，別デッキへの直接参照，別ディレクトリ単位の流用は拒否する．
+
+`shared/...` はdeck直下にsharedディレクトリがなければrepo rootの `assets/` へ解決する．`reference` は元表記を保ち，`path`／`realPath` は参照先を示す．実体のsharedディレクトリは全体として優先し，その中の欠落をrepo assetsで補わない．既存リンクと，Git index mode `120000` かつcanonical targetに一致するcheckout placeholderも互換入力として扱う．原稿やリンクの書換えは行わない．[ADR-0014](decisions/ADR-0014-resolve-shared-assets-without-filesystem-links.md)を参照．
 
 診断 code: `missing`，`broken-symlink`，`symlink-cycle`，`unreadable`，`outside-repo`，`absolute-symlink`，`directory-reuse`，`cross-deck-reference`，`not-file`．通常 validator は引き続き既存の `findMissingAssets` を使用するため，この API の strict 判定を適用しない．
 

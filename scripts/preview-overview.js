@@ -1,5 +1,7 @@
 const fs = require("node:fs");
 const http = require("node:http");
+const { withSharedContext } = require("../src/shared-assets");
+const { createSharedAssetsHandler } = require("../src/shared-assets-http");
 const path = require("node:path");
 const { marpCli } = require("@marp-team/marp-cli");
 const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
@@ -69,13 +71,10 @@ async function renderDeck({ configPath, deckPath, outputPath }) {
   let exitCode;
 
   try {
-    exitCode = await marpCli([
-      "--config",
-      configPath,
-      deckPath,
-      "-o",
-      renderingPath,
-    ]);
+    exitCode = await withSharedContext(
+      { deckDir: path.dirname(deckPath), http: true },
+      () => marpCli(["--config", configPath, deckPath, "-o", renderingPath]),
+    );
   } catch (error) {
     console.error(`[preview:overview] Render failed: ${error.message}`);
     exitCode = 1;
@@ -225,6 +224,7 @@ function resolveStaticPath(deckDir, requestPath) {
 }
 
 function createServer({ deckDir, deckPath, outputPath, targetSlideId }) {
+  const serveShared = createSharedAssetsHandler(deckDir);
   const failRequest = (response, error) => {
     const missing = ["ENOENT", "ENOTDIR", "EISDIR"].includes(error.code);
     if (!missing)
@@ -241,6 +241,7 @@ function createServer({ deckDir, deckPath, outputPath, targetSlideId }) {
   };
   const server = http.createServer((request, response) => {
     try {
+      if (serveShared(request, response)) return;
       const requestUrl = new URL(request.url || "/", "http://127.0.0.1");
 
       if (requestUrl.pathname === "/__marp_agent__/meta") {
@@ -268,6 +269,7 @@ function createServer({ deckDir, deckPath, outputPath, targetSlideId }) {
         const document = buildOverviewDocument(renderedHtml, {
           reloadToken,
           targetSlideId,
+          sharedAssets: /shared\//.test(renderedHtml),
         });
         response.writeHead(200, {
           "Content-Type": "text/html; charset=utf-8",

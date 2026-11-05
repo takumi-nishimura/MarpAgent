@@ -1,4 +1,5 @@
 const fs = require("node:fs");
+const { sharedAssets } = require("./shared-assets");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 const {
@@ -81,6 +82,17 @@ function buildMediaCatalog({
         for (const entry of entries) {
             const file = path.join(dir, entry.name);
             if (!isVisible(file)) continue;
+            if (
+                entry.name === "shared" &&
+                entry.isFile() &&
+                visibility.checkoutLinks.has(file)
+            ) {
+                try {
+                    if (sharedAssets(dir, root).virtual) continue;
+                } catch {
+                    /* Keep invalid entries for diagnostics. */
+                }
+            }
             if (entry.isSymbolicLink()) {
                 discovered.add(file);
                 continue;
