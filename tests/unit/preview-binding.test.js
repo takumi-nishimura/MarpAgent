@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+const fs = require("node:fs");
 const net = require("node:net");
 const os = require("node:os");
 const path = require("node:path");
@@ -27,6 +28,10 @@ function request(host, port, route) {
 }
 
 async function preview(t, mode, bindAddress) {
+  // Only exercise binding; unrelated fixture renders must not delay startup.
+  const deckDir = fs.mkdtempSync(path.join(os.tmpdir(), "preview-binding-"));
+  const deckPath = path.join(deckDir, "slide.md");
+  fs.copyFileSync(path.join(repoRoot, "fixtures/clean-slide.md"), deckPath);
   const reservation = net.createServer();
   reservation.listen(0, "127.0.0.1");
   await once(reservation, "listening");
@@ -34,7 +39,7 @@ async function preview(t, mode, bindAddress) {
   await new Promise((resolve) => reservation.close(resolve));
   const child = spawn(
     process.execPath,
-    ["bin/marpx.js", "fixtures/clean-slide.md", ...mode],
+    ["bin/marpx.js", deckPath, ...mode],
     {
       cwd: repoRoot,
       env: {
@@ -52,6 +57,7 @@ async function preview(t, mode, bindAddress) {
       child.kill("SIGTERM");
       await closed;
     }
+    fs.rmSync(deckDir, { recursive: true, force: true });
   });
   let output = "";
   const url = await new Promise((resolve, reject) => {
