@@ -1,6 +1,7 @@
 ---
 marp: true
 theme: lab
+autoBody: false
 ---
 
 <!-- Keep the crowding probe independent of the theme's default leading. -->

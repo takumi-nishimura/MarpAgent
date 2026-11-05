@@ -65,7 +65,7 @@ Before $x^2$ after.
             route.abort(),
         );
         await page.setContent(`<style>${css}</style>${html}`);
-        const paragraph = page.locator("section > p");
+        const paragraph = page.locator("section > .body > p");
         const metrics = await paragraph.evaluate((element) => ({
             height: element.getBoundingClientRect().height,
             fontSize: parseFloat(getComputedStyle(element).fontSize),
