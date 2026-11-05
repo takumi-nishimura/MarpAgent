@@ -16,6 +16,9 @@
     gap: var(--col-gap, 1rem);
     align-items: flex-start;
   }
+  .col.shares {
+    display: grid;
+  }
   .col > * {
     flex: 1;
     min-width: 0;

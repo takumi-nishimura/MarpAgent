@@ -8,6 +8,7 @@ const landscape = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://w
 
 async function render(page, content, { theme = "lab", size = "16:9", header = true } = {}) {
     const marp = new Marp({ html: true });
+    marp.use(require("../../scripts/column-shares-plugin"));
     marp.themeSet.add(fs.readFileSync(path.join(__dirname, `../../themes/${theme}.css`), "utf8"));
     const { html, css } = marp.render(`---\ntheme: ${theme}\nsize: ${size}\npaginate: true\n${header ? 'header: "Layout contract"\n' : ""}footer: "Source and conditions"\n---\n${content}`);
     await page.route("https://fonts.googleapis.com/**", (route) => route.abort());
@@ -194,3 +195,17 @@ test("natural figures keep authored inline dimensions and fitting figures keep e
         expect(image.position).toBe("25% 30%");
     }
 });
+
+for (const theme of ["lab", "muji", "toshiba"]) {
+    test(`${theme}: column shares distribute remaining width for any column count`, async ({ page }) => {
+        for (const [shares, expected] of [[[.6,null],[.6,.4]], [[.5,null,null],[.5,.25,.25]], [[.5,.3,null],[.5,.3,.2]], [[null,null,null,null],[.25,.25,.25,.25]], [[.4,null,null,null,null],[.4,.15,.15,.15,.15]]]) {
+            await render(page, `<h2>Columns</h2><div class="body col visual shares" style="--visual-gap:30px">${shares.map((share,i) => `<div class="box" style="padding:${i*3}px;${share === null ? "" : `--col-share:${share}`}">Column ${i}</div>`).join("")}</div>`, { theme });
+            for (const width of [1280, 900]) {
+                await page.setViewportSize({ width, height:720 });
+                const widths = await page.locator(".body > div").evaluateAll(nodes => nodes.map(n => n.getBoundingClientRect().width));
+                const available = widths.reduce((a,b) => a+b, 0);
+                widths.forEach((w,i) => expect(Math.abs(w - expected[i]*available)).toBeLessThan(.1));
+            }
+        }
+    });
+}

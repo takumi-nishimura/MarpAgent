@@ -152,8 +152,8 @@ D2・Mermaidの図，数式，コードの構文強調にも対応している�
 
 ## スライド一覧で話の流れを確認する
 
-<div class="body col visual" style="--visual-left: 1.25; --visual-right: 0.75;">
-<figure>
+<div class="body col visual shares">
+<figure style="--col-share: 0.625">
 <img src="assets/img/overview-mode.png" alt="スライドを一覧表示するオーバービューモード" />
 <figcaption>スライド一覧の表示例</figcaption>
 </figure>
@@ -177,8 +177,8 @@ D2・Mermaidの図，数式，コードの構文強調にも対応している�
 
 ## 発表用HTMLの操作
 
-<div class="body col visual" style="--visual-left: 1; --visual-right: 1;">
-<div class="place-middle">
+<div class="body col visual shares">
+<div style="--col-share: 0.5" class="place-middle">
 <figure class="figure-natural">
 <img src="assets/img/laser-pointer-demo.png" alt="発表用HTMLでレーザーポインタを表示した例" />
 <figcaption>レーザーポインタの表示例</figcaption>
@@ -205,8 +205,8 @@ PDF・PPTX・画像の出力範囲は，スクロール前に見える部分に�
 ## 配布形式と出力後の確認
 
 <div class="body box">
-<div class="col visual" style="--visual-left: 1; --visual-right: 1;">
-<div>
+<div class="col visual shares">
+<div style="--col-share: 0.5">
 
 ```d2
 direction: down
