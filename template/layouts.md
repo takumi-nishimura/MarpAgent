@@ -35,7 +35,7 @@ style: |
 ## ページの変更はslide.mdで完結させる
 
 <div class="body col visual shares">
-<div style="--col-share: 0.6666666667">
+<div style="--col-width: 66.66666667%">
 
 ### 編集する内容と保存先
 

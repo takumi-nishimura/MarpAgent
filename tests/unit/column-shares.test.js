@@ -2,13 +2,13 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const { createConfiguredMarp } = require("../../src/slide-map");
 const { parseDocument } = require("htmlparser2");
-function columns(shares) {
+function columns(shares, property = "--col-share") {
     const source =
         '<div class="col shares">\n' +
         shares
             .map(
                 (value) =>
-                    `<div${value === null ? "" : ` style="--col-share:${value}"`}>Column</div>`,
+                    `<div${value === null ? "" : ` style="${property}:${value}"`}>Column</div>`,
             )
             .join("\n") +
         "\n</div>";
@@ -81,4 +81,48 @@ test("legacy columns retain explicit weights and unspecified markup", () => {
     );
     assert.doesNotMatch(html, /grid-template-columns/);
     assert.match(html, /--visual-left:.9/);
+});
+
+test("percentage widths match legacy shares and reject invalid widths", () => {
+    for (const shares of [
+        [0.6, null],
+        [0.5, 0.3, null],
+        [null, null, null],
+        [0.25, null, 0.25, null],
+    ]) {
+        assert.equal(
+            columns(
+                shares.map((v) => (v === null ? null : `${v * 100}%`)),
+                "--col-width",
+            ),
+            columns(shares),
+        );
+    }
+    for (const input of [
+        ["60", null],
+        ["-1%", null],
+        ["101%", null],
+        ["80%", "30%", null],
+        ["100%", null],
+        ["calc(50%)", null],
+    ])
+        assert.throws(
+            () => columns(input, "--col-width"),
+            /column (width|shares)/i,
+        );
+});
+
+test("mixing old and new declarations on one column is an error", () => {
+    for (const style of [
+        "--col-share:.6;--col-width:60%",
+        "--col-width:60%;--col-share:.6",
+    ]) {
+        assert.throws(
+            () =>
+                createConfiguredMarp().render(
+                    `<div class="col shares"><div style="${style}">A</div><div>B</div></div>`,
+                ),
+            /cannot be set/,
+        );
+    }
 });

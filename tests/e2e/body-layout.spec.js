@@ -199,7 +199,7 @@ test("natural figures keep authored inline dimensions and fitting figures keep e
 for (const theme of ["lab", "muji", "toshiba"]) {
     test(`${theme}: column shares distribute remaining width for any column count`, async ({ page }) => {
         for (const [shares, expected] of [[[.6,null],[.6,.4]], [[.5,null,null],[.5,.25,.25]], [[.5,.3,null],[.5,.3,.2]], [[null,null,null,null],[.25,.25,.25,.25]], [[.4,null,null,null,null],[.4,.15,.15,.15,.15]]]) {
-            await render(page, `<h2>Columns</h2><div class="body col visual shares" style="--visual-gap:30px">${shares.map((share,i) => `<div class="box" style="padding:${i*3}px;${share === null ? "" : `--col-share:${share}`}">Column ${i}</div>`).join("")}</div>`, { theme });
+            await render(page, `<h2>Columns</h2><div class="body col visual shares" style="--visual-gap:30px">${shares.map((share,i) => `<div class="box" style="padding:${i*3}px;${share === null ? "" : `--col-width:${share*100}%`}">Column ${i}</div>`).join("")}</div>`, { theme });
             for (const width of [1280, 900]) {
                 await page.setViewportSize({ width, height:720 });
                 const widths = await page.locator(".body > div").evaluateAll(nodes => nodes.map(n => n.getBoundingClientRect().width));
