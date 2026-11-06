@@ -1,0 +1,194 @@
+{
+  "engineRevision": "4dc09bc5eae10c81e57b4a3ce9a8eb8ba85ae951",
+  "privateRevision": "b407f3d64d4193b05a91a50d8f7b829b0a466f98",
+  "fontSha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+  "viewport": [
+    1280,
+    720
+  ],
+  "conditions": "autoBody:false; same current theme; Noto Sans JP embedded and FONTCONFIG aliases for SVG; HTTP blocked; greedy deletion plus placement utility; current content only",
+  "cases": [
+    {
+      "deck": "06-22-lab-seminar",
+      "page": 3,
+      "theme": "lab",
+      "sourceHash": "7c502ff88c895da2ff43bf5f6eb61690245a97a4cf3221b0818a4049f69a3d9a",
+      "counts": {
+        "original": {
+          "wrappers": 3,
+          "classes": 1,
+          "inline": 12
+        },
+        "legacy": {
+          "wrappers": 3,
+          "classes": 2,
+          "inline": 3
+        },
+        "modern": {
+          "wrappers": 3,
+          "classes": 3,
+          "inline": 3
+        }
+      },
+      "legacyEquivalent": true,
+      "modernEquivalent": true,
+      "maxGeometryDeltaPx": {
+        "legacy": 0.0,
+        "modern": 0.0
+      },
+      "diagnostics": {
+        "baseline": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "legacy": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "modern": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        }
+      },
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": true,
+          "glyphCount": 22
+        }
+      ]
+    },
+    {
+      "deck": "06-22-lab-seminar",
+      "page": 5,
+      "theme": "lab",
+      "sourceHash": "7b9633e7cec4a163797382a07f5b639797996e6c4f7de1cfd56da81f3597639f",
+      "counts": {
+        "original": {
+          "wrappers": 4,
+          "classes": 3,
+          "inline": 9
+        },
+        "legacy": {
+          "wrappers": 4,
+          "classes": 4,
+          "inline": 4
+        },
+        "modern": {
+          "wrappers": 4,
+          "classes": 5,
+          "inline": 4
+        }
+      },
+      "legacyEquivalent": true,
+      "modernEquivalent": true,
+      "maxGeometryDeltaPx": {
+        "legacy": 0.0,
+        "modern": 0.01544189453125
+      },
+      "diagnostics": {
+        "baseline": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "legacy": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "modern": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        }
+      },
+      "fonts": [
+        {
+          "familyName": "DejaVu Sans",
+          "postScriptName": "DejaVuSans-Bold",
+          "isCustomFont": false,
+          "glyphCount": 10
+        },
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": false,
+          "glyphCount": 7
+        }
+      ]
+    },
+    {
+      "deck": "08-24-toshiba-research-introduction",
+      "page": 2,
+      "theme": "toshiba",
+      "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+      "counts": {
+        "original": {
+          "wrappers": 3,
+          "classes": 5,
+          "inline": 5
+        },
+        "legacy": {
+          "wrappers": 3,
+          "classes": 5,
+          "inline": 5
+        },
+        "modern": {
+          "wrappers": 3,
+          "classes": 6,
+          "inline": 4
+        }
+      },
+      "legacyEquivalent": true,
+      "modernEquivalent": true,
+      "maxGeometryDeltaPx": {
+        "legacy": 0.0,
+        "modern": 0.0
+      },
+      "diagnostics": {
+        "baseline": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "legacy": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "modern": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        }
+      },
+      "fonts": [
+        {
+          "familyName": "Noto Sans JP Thin",
+          "postScriptName": "NotoSansJP-Thin",
+          "isCustomFont": false,
+          "glyphCount": 12
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "chromium": "145.0.7632.6",
+    "node": "v26.13.0",
+    "playwright": "1.58.2"
+  }
+}
