@@ -19,9 +19,28 @@ module.exports = (md) => {
                     throw new Error("Column share layout requires columns.");
                 const shares = children.map((child) => {
                     let value = null;
+                    let width = null;
                     postcss
                         .parse(`x {${child.attribs.style || ""}}`)
-                        .walkDecls("--col-share", (decl) => {
+                        .walkDecls((decl) => {
+                            if (decl.prop === "--col-width") {
+                                const match = decl.value
+                                    .trim()
+                                    .match(/^(\d+(?:\.\d*)?|\.\d+)%$/);
+                                if (
+                                    !match ||
+                                    !(
+                                        Number(match[1]) > 0 &&
+                                        Number(match[1]) <= 100
+                                    )
+                                )
+                                    throw new Error(
+                                        "Column width must be a percentage greater than 0% and at most 100%.",
+                                    );
+                                width = Number(match[1]) / 100;
+                                return;
+                            }
+                            if (decl.prop !== "--col-share") return;
                             if (
                                 !/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(
                                     decl.value.trim(),
@@ -36,7 +55,11 @@ module.exports = (md) => {
                                     "Column share must be greater than 0 and at most 1.",
                                 );
                         });
-                    return value;
+                    if (width !== null && value !== null)
+                        throw new Error(
+                            "Column width and column share cannot be set on the same column.",
+                        );
+                    return width ?? value;
                 });
                 const total = shares.reduce(
                     (sum, value) => sum + (value ?? 0),
