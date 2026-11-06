@@ -7,6 +7,7 @@ Use existing theme primitives before considering scoped layout CSS. Preserve rea
 | Class / Element | Purpose |
 | :-------------- | :------ |
 | `.col` | Flex row container for two or more columns |
+| `.col.shares` | Grid row with optional `--col-width` percentages and equal sharing of the remainder |
 | `.centered` | Centers content vertically and horizontally |
 | `.fit` | Center a content-width inline block, capped at the available width; does not scale text |
 | `style="flex: N"` | Override column width ratio inside `.col` |
@@ -26,8 +27,10 @@ For remaining-area media, add `.body` to the direct wrapper and use `.fill`
 only for nested growing areas. `.body.col` stretches its column boxes, so
 `.place-top/middle/bottom` align their content within the same height. Use
 `.place-left/center/right` for the other axis. These controls do not change
-column ratios: use the existing `--visual-left/right` on `.col.visual`, or
-`style="flex: N"` on individual columns. `--col-gap` (or `--visual-gap` on
+column ratios: for new layouts use `.col.shares` and set `--col-width` only
+on columns needing a specific percentage. Leave the others unspecified to
+share the remainder. Existing `.col.visual` weights and `style="flex: N"`
+remain valid for preserving legacy layouts. `--col-gap` (or `--visual-gap` on
 `.col.visual`) controls the space between columns; `--body-gap` controls
 the space between a column's content blocks.
 

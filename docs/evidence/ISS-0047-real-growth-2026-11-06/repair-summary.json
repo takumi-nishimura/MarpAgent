@@ -1,0 +1,926 @@
+[
+  {
+    "deck": "08-24-toshiba-research-introduction",
+    "page": 2,
+    "theme": "toshiba",
+    "condition": "base",
+    "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "3c61853eb3b6826d38dd368b410d3961bc5000577c201834fdc5185a2845366b",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "b693cd5cb885fb1723075adfa7eababae13ee02c902cb3764474a9eea5cb6ff5",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "8a0a260a6bdb3df7bd908c5f98e9f44e04fc3a6cad86f5df5b4d7c014014b314",
+        "counts": {
+          "inline": 4,
+          "classes": 6,
+          "wrappers": 3
+        },
+        "pngHash": "b693cd5cb885fb1723075adfa7eababae13ee02c902cb3764474a9eea5cb6ff5",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "body": {
+        "sourceHash": "a47ca676448923abfa660d172c0f6be9eca4c75f458ff029310402c2c90c23d8",
+        "counts": {
+          "inline": 1,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "4bf41295531eeed52e11cacc5c1e4e361ec37c6b551043e79ec7c3ccd8bb1421",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            63.29999923706055,
+            146.99063110351562,
+            620.2426147460938,
+            389.3527526855469
+          ],
+          [
+            709.2175903320312,
+            355.322265625,
+            507.48236083984375,
+            281.7152099609375
+          ]
+        ]
+      },
+      "fixed": {
+        "sourceHash": "c82884466383e53a767779f7da020582a82fb16e4f191015aff1202fb1543f9c",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "5b746311a0b4cc6309e1fca6449c14177f0191edd87af33c48377f2501cf8a50",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 118.5,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            154.14999389648438,
+            153.9031219482422,
+            438.5271301269531,
+            296.23455810546875
+          ],
+          [
+            814.8338012695312,
+            390.4710998535156,
+            296.24993896484375,
+            197.49996948242188
+          ]
+        ]
+      },
+      "w-full": {
+        "sourceHash": "07927d625871e96a6d020fc27e3c7560d5ac89a9e80e5bb065f115f824632870",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "3aaf95ba8c90d718670554ee4c39c34ebd992fafd5e8242dd4c06ed21e9cd45e",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 1,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 2
+        },
+        "imageBoxes": [
+          [
+            63.3154296875,
+            153.9031219482422,
+            620.2117309570312,
+            418.9622802734375
+          ],
+          [
+            709.2175903320312,
+            377.63360595703125,
+            507.48236083984375,
+            338.31134033203125
+          ]
+        ]
+      },
+      "w-3-4": {
+        "sourceHash": "ca0b0f86b02ba2eff3b135469d528851dcef92dc676c741577adba08ea6b227c",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "60518bf7fcaf859c3ea6d2d9d0995d7e40eadce6f20cad9c4a348a008d54f6cd",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 206.61886596679688,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            198.97323608398438,
+            153.9031219482422,
+            348.8652648925781,
+            314.2255859375
+          ],
+          [
+            803.6935424804688,
+            377.63360595703125,
+            318.53045654296875,
+            253.72576904296875
+          ]
+        ]
+      },
+      "w-2-3": {
+        "sourceHash": "f374e97c549fe128071b21444650d20f7cb24e4da87a66b190fbc27a4817bcfd",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "3aaf95ba8c90d718670554ee4c39c34ebd992fafd5e8242dd4c06ed21e9cd45e",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 1,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 2
+        },
+        "imageBoxes": [
+          [
+            63.3154296875,
+            153.9031219482422,
+            620.2117309570312,
+            418.9622802734375
+          ],
+          [
+            709.2175903320312,
+            377.63360595703125,
+            507.46697998046875,
+            338.31134033203125
+          ]
+        ]
+      },
+      "w-1-2": {
+        "sourceHash": "dfba84906814cb08cba3a9ecfcf2da53487ca6da0d9005ffd5ab48a79ddbad96",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "32cf883e7e3a0fb834660ea3d88ccbdb53c29a3e4f84566981fed22473bf19b1",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 400.4466247558594,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            295.8871154785156,
+            153.9031219482422,
+            155.03750610351562,
+            209.4734344482422
+          ],
+          [
+            875.2718505859375,
+            377.63360595703125,
+            175.3739013671875,
+            169.1556396484375
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "08-24-toshiba-research-introduction",
+    "page": 2,
+    "theme": "toshiba",
+    "condition": "heading",
+    "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "34f27f04633b5141ead11ed7ad101239fada2c308f8a4ce1697014e0c9e0da2a",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "1b728220505efb743a46ce850c0d567f78722105f722e9df72e812df04451c63",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 2,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            209.203125,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            445.7710876464844,
+            414.74993896484375,
+            276.5000305175781
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "34f27f04633b5141ead11ed7ad101239fada2c308f8a4ce1697014e0c9e0da2a",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "1b728220505efb743a46ce850c0d567f78722105f722e9df72e812df04451c63",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 2,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            209.203125,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            445.7710876464844,
+            414.74993896484375,
+            276.5000305175781
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "65602e7d5744bcda4e32759e020e4aa261cbecebd2c9f793bfd3922254d05d48",
+        "counts": {
+          "inline": 4,
+          "classes": 6,
+          "wrappers": 3
+        },
+        "pngHash": "1b728220505efb743a46ce850c0d567f78722105f722e9df72e812df04451c63",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 2,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            209.203125,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            445.7710876464844,
+            414.74993896484375,
+            276.5000305175781
+          ]
+        ]
+      },
+      "body": {
+        "sourceHash": "1e73ca2e33accff99272856e3bc7f79293da031a11b3ccb73be0efd12fc553d6",
+        "counts": {
+          "inline": 1,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "174558fc84d2f35ccd6aa94a8d7a001c62f234beb62572ef629272f6902ec417",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            63.29999923706055,
+            202.29061889648438,
+            620.2426147460938,
+            334.0527648925781
+          ],
+          [
+            709.2175903320312,
+            410.62225341796875,
+            507.48236083984375,
+            226.41522216796875
+          ]
+        ]
+      },
+      "fixed": {
+        "sourceHash": "d2c4d367bb574c82605ac385b0504f6db00106b69fe77a151a8b5624e345a570",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "7146386fecd0e9265a8d9ca28c533004bed8de273579ebbfa02242ccbdbd171a",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 118.5,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            154.14999389648438,
+            209.203125,
+            438.5271301269531,
+            296.23455810546875
+          ],
+          [
+            814.8338012695312,
+            445.7710876464844,
+            296.24993896484375,
+            197.50003051757812
+          ]
+        ]
+      },
+      "w-full": {
+        "sourceHash": "9d38d314345cd1c9a29bf46ce0a2ead7c916d20ff7995fe33f2acbe86256ac02",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "d3fc0c70cf85fbede4dac067b79fc2b15cf63887501229cd394fe2492dfef452",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 3,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            63.3154296875,
+            209.203125,
+            620.2117309570312,
+            418.9622802734375
+          ],
+          [
+            709.2175903320312,
+            432.93359375,
+            507.48236083984375,
+            338.31134033203125
+          ]
+        ]
+      },
+      "w-3-4": {
+        "sourceHash": "cee2a9035504af241774343dd2b56d5b5928c6b17d7deea2505ab814163cd121",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "dc0267ecb59a5127b67329b86c5275241378ad28a234a6d6293116bd1b9ffe6b",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 206.61886596679688,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            198.97323608398438,
+            209.203125,
+            348.8652648925781,
+            314.2255859375
+          ],
+          [
+            803.6935424804688,
+            432.93359375,
+            318.53045654296875,
+            253.72576904296875
+          ]
+        ]
+      },
+      "w-2-3": {
+        "sourceHash": "35a003ee638d31ecb2a9b3c0e5ed8a1d7c1d475559b61635a8e1d2e4dbcb8547",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "d3fc0c70cf85fbede4dac067b79fc2b15cf63887501229cd394fe2492dfef452",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 3,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            63.3154296875,
+            209.203125,
+            620.2117309570312,
+            418.9622802734375
+          ],
+          [
+            709.2175903320312,
+            432.93359375,
+            507.46697998046875,
+            338.31134033203125
+          ]
+        ]
+      },
+      "w-1-2": {
+        "sourceHash": "dbaf65a4592cea9fc2a83a95819549322233c257c0c9aba9ac62f089fab6e8e1",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "70ff5abf487adab4aa80f2977d59577256b439418ad411e15edcb4968ca0fbaa",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 400.4466247558594,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            295.8871154785156,
+            209.203125,
+            155.03750610351562,
+            209.47344970703125
+          ],
+          [
+            875.2718505859375,
+            432.93359375,
+            175.3739013671875,
+            169.1556396484375
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "08-24-toshiba-research-introduction",
+    "page": 2,
+    "theme": "toshiba",
+    "condition": "caption",
+    "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "9efcafe2f7cdda25a3e487cf7d6e6830d9cd69b67565a8c79634ec8e2eb689f6",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "e8208acab30f4604dd96404ade28edfefbb9e8a03e84068992fd0fbbd253f545",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "9efcafe2f7cdda25a3e487cf7d6e6830d9cd69b67565a8c79634ec8e2eb689f6",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "e8208acab30f4604dd96404ade28edfefbb9e8a03e84068992fd0fbbd253f545",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "7a9a029dcb999a3b6f8c9c974eeb1c814acbcae5b881a334cda9beb2404beb9e",
+        "counts": {
+          "inline": 4,
+          "classes": 6,
+          "wrappers": 3
+        },
+        "pngHash": "e8208acab30f4604dd96404ade28edfefbb9e8a03e84068992fd0fbbd253f545",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "body": {
+        "sourceHash": "e6d67a38f09f83a1f9d7e55fb8dca8ab1ae526156023f1fe35985ef514b6aabe",
+        "counts": {
+          "inline": 1,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "db4f350d0f9d362625a8e8197daefc9439939cb0ef053cdb8b8ea9b53e781796",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            63.29999923706055,
+            146.99063110351562,
+            620.2426147460938,
+            389.3527526855469
+          ],
+          [
+            709.2175903320312,
+            355.322265625,
+            507.48236083984375,
+            259.990234375
+          ]
+        ]
+      },
+      "fixed": {
+        "sourceHash": "6d4d0241f6d2dd963c691755c4e828638c245843a1ee3eceea327d15b304f5da",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "73876bb600133e6bbe85d1c2ec2c1780e5a24b8a37ee54666f2371fa515a9236",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 118.5,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            154.14999389648438,
+            153.9031219482422,
+            438.5271301269531,
+            296.23455810546875
+          ],
+          [
+            814.8338012695312,
+            390.4710998535156,
+            296.24993896484375,
+            197.49996948242188
+          ]
+        ]
+      },
+      "w-full": {
+        "sourceHash": "36526684d5d4c63cb7e743d06f7475c45b92e831bce4626c95da3bf185c9aef6",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "3aaf95ba8c90d718670554ee4c39c34ebd992fafd5e8242dd4c06ed21e9cd45e",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 2,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 2
+        },
+        "imageBoxes": [
+          [
+            63.3154296875,
+            153.9031219482422,
+            620.2117309570312,
+            418.9622802734375
+          ],
+          [
+            709.2175903320312,
+            377.63360595703125,
+            507.48236083984375,
+            338.31134033203125
+          ]
+        ]
+      },
+      "w-3-4": {
+        "sourceHash": "ac5a7dc604a08fa16475cf235d1ad49a452838ded9d161bbe82787d68c70dec2",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "4d031f4da55be89e5751bc7335dcfd9d0c28c7f7d67f3de79019175896016bf4",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 206.61886596679688,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            198.97323608398438,
+            153.9031219482422,
+            348.8652648925781,
+            314.2255859375
+          ],
+          [
+            791.4732666015625,
+            377.63360595703125,
+            342.9710693359375,
+            253.72576904296875
+          ]
+        ]
+      },
+      "w-2-3": {
+        "sourceHash": "6741bc37ff6cc14462b943ee5565a67084b7f464d6828a526232a0376adae08f",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "3aaf95ba8c90d718670554ee4c39c34ebd992fafd5e8242dd4c06ed21e9cd45e",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 92.732421875,
+        "audit": {
+          "clipped": 2,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 2
+        },
+        "imageBoxes": [
+          [
+            63.3154296875,
+            153.9031219482422,
+            620.2117309570312,
+            418.9622802734375
+          ],
+          [
+            709.2175903320312,
+            377.63360595703125,
+            507.46697998046875,
+            338.31134033203125
+          ]
+        ]
+      },
+      "w-1-2": {
+        "sourceHash": "cd002fa46b0c8c3ea0c34365c4bdbd4c78feb157affe98f304386bac019899bd",
+        "counts": {
+          "inline": 2,
+          "classes": 7,
+          "wrappers": 3
+        },
+        "pngHash": "0bc61b076850f6dc819a3c6ac42a3617982e299ece04f14f324771e75733614d",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 400.4466247558594,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            295.8871154785156,
+            153.9031219482422,
+            155.03750610351562,
+            209.4734344482422
+          ],
+          [
+            875.2718505859375,
+            377.63360595703125,
+            175.3739013671875,
+            169.1556396484375
+          ]
+        ]
+      }
+    }
+  }
+]

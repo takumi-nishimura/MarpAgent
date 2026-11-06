@@ -1,0 +1,938 @@
+[
+  {
+    "deck": "06-22-lab-seminar",
+    "page": 3,
+    "theme": "lab",
+    "condition": "base",
+    "sourceHash": "7c502ff88c895da2ff43bf5f6eb61690245a97a4cf3221b0818a4049f69a3d9a",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "7c502ff88c895da2ff43bf5f6eb61690245a97a4cf3221b0818a4049f69a3d9a",
+        "counts": {
+          "inline": 12,
+          "classes": 1,
+          "wrappers": 3
+        },
+        "pngHash": "1acc6b4a75baa7c6d39c01e922f65032256f3506b97cc6c8b7f2e79a349da829",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            234.61581420898438,
+            681.06640625,
+            316.2005920410156
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "90cbf6d23918614ff6b7e8909b06d5972f37800d62913da5c985ff7a7465d6ff",
+        "counts": {
+          "inline": 3,
+          "classes": 2,
+          "wrappers": 3
+        },
+        "pngHash": "9031ad1a09d1c36ed47df2ffcb2bab619807f26ffb1f757c222745bb600d0e90",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            234.61581420898438,
+            681.06640625,
+            316.2005920410156
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "5ca2786ae297c5bef580c63f695bc229c56925b957ae9de6cfa590bc31363b92",
+        "counts": {
+          "inline": 3,
+          "classes": 3,
+          "wrappers": 3
+        },
+        "pngHash": "9031ad1a09d1c36ed47df2ffcb2bab619807f26ffb1f757c222745bb600d0e90",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            234.61581420898438,
+            681.06640625,
+            316.2005920410156
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "06-22-lab-seminar",
+    "page": 3,
+    "theme": "lab",
+    "condition": "heading",
+    "sourceHash": "7c502ff88c895da2ff43bf5f6eb61690245a97a4cf3221b0818a4049f69a3d9a",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "5ac7d64373adb681cfb3dade1947de9dbe4f7d234783bdd991c382b8a2663a39",
+        "counts": {
+          "inline": 12,
+          "classes": 1,
+          "wrappers": 3
+        },
+        "pngHash": "21627b7a042bf281af1de86267876659b0e66655fffea55352843c977f44e6ad",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            280.8277282714844,
+            681.06640625,
+            316.2005920410156
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "70f18b24fffdcc5600a8df49ac3591353f84b2cc3aa62ccde18110d0b8734f8d",
+        "counts": {
+          "inline": 3,
+          "classes": 2,
+          "wrappers": 3
+        },
+        "pngHash": "21627b7a042bf281af1de86267876659b0e66655fffea55352843c977f44e6ad",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            280.8277282714844,
+            681.06640625,
+            316.2005920410156
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "5726c13a8a2c43759776062915d91b8a32e12067f9ec1518f4ea8c0e553a92ab",
+        "counts": {
+          "inline": 3,
+          "classes": 3,
+          "wrappers": 3
+        },
+        "pngHash": "21627b7a042bf281af1de86267876659b0e66655fffea55352843c977f44e6ad",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            280.8277282714844,
+            681.06640625,
+            316.2005920410156
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "06-22-lab-seminar",
+    "page": 3,
+    "theme": "lab",
+    "condition": "caption",
+    "sourceHash": "7c502ff88c895da2ff43bf5f6eb61690245a97a4cf3221b0818a4049f69a3d9a",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "9cd642a407bf0e8934dcfb51cf35d95c967db3d1eea020110c7bff44f49af185",
+        "counts": {
+          "inline": 12,
+          "classes": 1,
+          "wrappers": 3
+        },
+        "pngHash": "71593754ae040db7caaf1abc3cfb2e20dda3d6364a463b9426ae0eb24aa6bffc",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            217.2882843017578,
+            681.06640625,
+            316.20062255859375
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "8b0e53191c5130709574a401b198bb0e6c1aff9e361ae91b07d73f35f7f268ed",
+        "counts": {
+          "inline": 3,
+          "classes": 2,
+          "wrappers": 3
+        },
+        "pngHash": "71593754ae040db7caaf1abc3cfb2e20dda3d6364a463b9426ae0eb24aa6bffc",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            217.2882843017578,
+            681.06640625,
+            316.20062255859375
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "5e1c38598adbba75346976ede6619fe644d7b4709f4504ab59ecc08a7324cfe9",
+        "counts": {
+          "inline": 3,
+          "classes": 3,
+          "wrappers": 3
+        },
+        "pngHash": "71593754ae040db7caaf1abc3cfb2e20dda3d6364a463b9426ae0eb24aa6bffc",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            73.7767562866211,
+            217.2882843017578,
+            681.06640625,
+            316.20062255859375
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "06-22-lab-seminar",
+    "page": 5,
+    "theme": "lab",
+    "condition": "base",
+    "sourceHash": "7b9633e7cec4a163797382a07f5b639797996e6c4f7de1cfd56da81f3597639f",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "7b9633e7cec4a163797382a07f5b639797996e6c4f7de1cfd56da81f3597639f",
+        "counts": {
+          "inline": 9,
+          "classes": 3,
+          "wrappers": 4
+        },
+        "pngHash": "5715b1e881a5be4f35abcddf6ea91a7ec56e686ad32c4c9b339f278acaf2691b",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.9841766357422,
+            172.37246704101562,
+            296.25,
+            444.3749694824219
+          ],
+          [
+            536.6982421875,
+            436.6830139160156,
+            644.096923828125,
+            71.10000610351562
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "f0ef54262f556f4a8dafd1b45383c6ea0a06794a1470e2dbcd3da2fe3177bc53",
+        "counts": {
+          "inline": 4,
+          "classes": 4,
+          "wrappers": 4
+        },
+        "pngHash": "5715b1e881a5be4f35abcddf6ea91a7ec56e686ad32c4c9b339f278acaf2691b",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.9841766357422,
+            172.37246704101562,
+            296.25,
+            444.3749694824219
+          ],
+          [
+            536.6982421875,
+            436.6830139160156,
+            644.096923828125,
+            71.10000610351562
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "c07b46493d307521ca718a4397be74dbbe6585790ef5268a9b4f9442349ad925",
+        "counts": {
+          "inline": 4,
+          "classes": 5,
+          "wrappers": 4
+        },
+        "pngHash": "bd6096885a75a37fee4e859f9dac36b8e30219623909d3329c5e961b704b5fc6",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0.01544189453125,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.96875,
+            172.37246704101562,
+            296.25,
+            444.3749694824219
+          ],
+          [
+            536.6828002929688,
+            436.6830139160156,
+            644.1123657226562,
+            71.10000610351562
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "06-22-lab-seminar",
+    "page": 5,
+    "theme": "lab",
+    "condition": "heading",
+    "sourceHash": "7b9633e7cec4a163797382a07f5b639797996e6c4f7de1cfd56da81f3597639f",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "f0661fff1e61bd8a39404b7aef65f18d0aea9928ec770fa874322c317f8d80b3",
+        "counts": {
+          "inline": 9,
+          "classes": 3,
+          "wrappers": 4
+        },
+        "pngHash": "48468c0347fd156871a010b6de356e4c2710d731440d5e94fcffd17fd256d473",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.9841766357422,
+            218.58438110351562,
+            296.25,
+            444.3749694824219
+          ],
+          [
+            536.6982421875,
+            482.8949279785156,
+            644.096923828125,
+            71.10000610351562
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "7076ab2c6a82098e947c0bbd9a55bb8ffce3da6ef7be0f480b099e802ef1b332",
+        "counts": {
+          "inline": 4,
+          "classes": 4,
+          "wrappers": 4
+        },
+        "pngHash": "48468c0347fd156871a010b6de356e4c2710d731440d5e94fcffd17fd256d473",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.9841766357422,
+            218.58438110351562,
+            296.25,
+            444.3749694824219
+          ],
+          [
+            536.6982421875,
+            482.8949279785156,
+            644.096923828125,
+            71.10000610351562
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "c3cfae1949764cd934dee9b64e76361b40974aa999b5db256dc254bb6a508a75",
+        "counts": {
+          "inline": 4,
+          "classes": 5,
+          "wrappers": 4
+        },
+        "pngHash": "b036d97f11cb754ed294e4954f48ed2e86ff2c4dc42d62a4dd98dab6b7a6f340",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0.01544189453125,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.96875,
+            218.58438110351562,
+            296.25,
+            444.3749694824219
+          ],
+          [
+            536.6828002929688,
+            482.8949279785156,
+            644.1123657226562,
+            71.10000610351562
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "06-22-lab-seminar",
+    "page": 5,
+    "theme": "lab",
+    "condition": "caption",
+    "sourceHash": "7b9633e7cec4a163797382a07f5b639797996e6c4f7de1cfd56da81f3597639f",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "1336a104af00abfce286811f157fe082c492a3e85b475b23a4052707b7816218",
+        "counts": {
+          "inline": 9,
+          "classes": 3,
+          "wrappers": 4
+        },
+        "pngHash": "d6fe1d1944b197e2ee9304e86fc66f83f183654d8a086d068d682260c873c196",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.9841766357422,
+            164.56503295898438,
+            296.25,
+            444.3750305175781
+          ],
+          [
+            536.6982421875,
+            436.6830139160156,
+            644.096923828125,
+            71.10000610351562
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "123bd7918a45314ff06584fc1a2d212beefc5a008a7e45298c885f231365dc2a",
+        "counts": {
+          "inline": 4,
+          "classes": 4,
+          "wrappers": 4
+        },
+        "pngHash": "d6fe1d1944b197e2ee9304e86fc66f83f183654d8a086d068d682260c873c196",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.9841766357422,
+            164.56503295898438,
+            296.25,
+            444.3750305175781
+          ],
+          [
+            536.6982421875,
+            436.6830139160156,
+            644.096923828125,
+            71.10000610351562
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "f9cba25443008bb522058705f89180f9e578230d9c830f420101680c51290e2c",
+        "counts": {
+          "inline": 4,
+          "classes": 5,
+          "wrappers": 4
+        },
+        "pngHash": "d39b373b4059d9240efe260be99efd068b813cab295c9fb7b82c69320c6b1107",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0.01544189453125,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            128.96875,
+            164.56503295898438,
+            296.25,
+            444.3750305175781
+          ],
+          [
+            536.6828002929688,
+            436.6830139160156,
+            644.1123657226562,
+            71.10000610351562
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "08-24-toshiba-research-introduction",
+    "page": 2,
+    "theme": "toshiba",
+    "condition": "base",
+    "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "b693cd5cb885fb1723075adfa7eababae13ee02c902cb3764474a9eea5cb6ff5",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "b693cd5cb885fb1723075adfa7eababae13ee02c902cb3764474a9eea5cb6ff5",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "8a0a260a6bdb3df7bd908c5f98e9f44e04fc3a6cad86f5df5b4d7c014014b314",
+        "counts": {
+          "inline": 4,
+          "classes": 6,
+          "wrappers": 3
+        },
+        "pngHash": "b693cd5cb885fb1723075adfa7eababae13ee02c902cb3764474a9eea5cb6ff5",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 0
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "08-24-toshiba-research-introduction",
+    "page": 2,
+    "theme": "toshiba",
+    "condition": "heading",
+    "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "34f27f04633b5141ead11ed7ad101239fada2c308f8a4ce1697014e0c9e0da2a",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "1b728220505efb743a46ce850c0d567f78722105f722e9df72e812df04451c63",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 2,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            209.203125,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            445.7710876464844,
+            414.74993896484375,
+            276.5000305175781
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "34f27f04633b5141ead11ed7ad101239fada2c308f8a4ce1697014e0c9e0da2a",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "1b728220505efb743a46ce850c0d567f78722105f722e9df72e812df04451c63",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 2,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            209.203125,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            445.7710876464844,
+            414.74993896484375,
+            276.5000305175781
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "65602e7d5744bcda4e32759e020e4aa261cbecebd2c9f793bfd3922254d05d48",
+        "counts": {
+          "inline": 4,
+          "classes": 6,
+          "wrappers": 3
+        },
+        "pngHash": "1b728220505efb743a46ce850c0d567f78722105f722e9df72e812df04451c63",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 2,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            209.203125,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            445.7710876464844,
+            414.74993896484375,
+            276.5000305175781
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "deck": "08-24-toshiba-research-introduction",
+    "page": 2,
+    "theme": "toshiba",
+    "condition": "caption",
+    "sourceHash": "5c4a718a72fd63b53b0fc30b125b3ecad874e2b40c48f51df1d0359b9bdde26b",
+    "legacyEquivalent": true,
+    "modernEquivalent": true,
+    "arms": {
+      "original": {
+        "sourceHash": "9efcafe2f7cdda25a3e487cf7d6e6830d9cd69b67565a8c79634ec8e2eb689f6",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "e8208acab30f4604dd96404ade28edfefbb9e8a03e84068992fd0fbbd253f545",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "legacy": {
+        "sourceHash": "9efcafe2f7cdda25a3e487cf7d6e6830d9cd69b67565a8c79634ec8e2eb689f6",
+        "counts": {
+          "inline": 5,
+          "classes": 5,
+          "wrappers": 3
+        },
+        "pngHash": "e8208acab30f4604dd96404ade28edfefbb9e8a03e84068992fd0fbbd253f545",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      },
+      "modern": {
+        "sourceHash": "7a9a029dcb999a3b6f8c9c974eeb1c814acbcae5b881a334cda9beb2404beb9e",
+        "counts": {
+          "inline": 4,
+          "classes": 6,
+          "wrappers": 3
+        },
+        "pngHash": "e8208acab30f4604dd96404ade28edfefbb9e8a03e84068992fd0fbbd253f545",
+        "contentPreserved": true,
+        "typographyPreserved": true,
+        "imagesPreserved": true,
+        "maxGeometryDeltaPx": 0,
+        "audit": {
+          "clipped": 0,
+          "overlaps": 0,
+          "smallText": 0,
+          "crowded": 1
+        },
+        "imageBoxes": [
+          [
+            95.6714859008789,
+            153.9031219482422,
+            555.484130859375,
+            375.23455810546875
+          ],
+          [
+            755.5838012695312,
+            390.4710998535156,
+            414.74993896484375,
+            276.4999694824219
+          ]
+        ]
+      }
+    }
+  }
+]
