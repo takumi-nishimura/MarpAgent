@@ -2,9 +2,11 @@
 id: ISS-0047
 title: "Improve body figure and caption layout defaults"
 type: issue
-status: in-progress
+status: closed
+resolution: completed
+resolved: "2026-11-06"
 date: "2026-10-21"
-updated: "2026-10-30"
+updated: "2026-11-06"
 authors:
   - codex-main-leader
 scope:
@@ -48,6 +50,25 @@ artifacts:
 # Improve body figure and caption layout defaults
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/55
+
+## 最終受入れ 2026-11-06
+
+[XR-0012](../explorations/XR-0012-verify-layout-acceptance-across-real-and-standard-compositions.md)で，既存標準構図の受入れと3実原稿の36描画比較を合わせて完了条件を確認した．元のinline26件は旧方式で整理すると12件，bodyと列幅指定を使うと4件になった．classは9→15，wrapperは10のまま．本文・文字設定・画像内容を保ち，元内容・見出し追加・caption追加の全9条件で追加の寸法調整なし，4診断とも0件だった．単なる宣言削減ではなく，境界条件での収まりと画像も確認した．
+
+| 完了条件 | 確認根拠 |
+| --- | --- |
+| 標準4構図の成立 | fixtures/layout-baselines，XR-0009，現行composition/body試験．既に個別調整0の例は0を維持し，削減実績に加算しない |
+| 見出し・caption増加と過密診断 | XR-0012の実原稿9条件，body-layoutの3テーマ×2比率と過密本文試験 |
+| 縦横比・明示crop保持 | body-layout／layout-compatibilityのcontain・crop・固定寸法試験 |
+| 調整手順 | theme-contractの「既存原稿の重複指定を減らす手順」，media／placement参照．重複除去→整列→必要な列幅→内容増加を含む描画確認 |
+| 整列と静的出力 | body-layout，body-exports，body-footnote-exportsのHTML／PNG／PDF試験 |
+| 互換性 | 既存統合gate，現行layout-compatibility，自動bodyのtitle／paper／scroll除外unit，3テーマの配置試験 |
+| 明示移行と旧原稿の保持 | autoBody:falseを固定した比較，明示body優先とopt-outのunit．元private repoを変更していない |
+| 個別指定削減と例外の簡潔な調整 | XR-0010〜0012の原稿hash・変換コード・描画集計．3実ページで26→4，内容増加時の再調整0，wrapper増加0 |
+
+今回の対象browser68件・unit16件が成功し，production codeは既に受入れ済みmainと同一である．原稿の配置や図の表示寸法が意図的に変わるため，既存原稿を一括変換しない．旧方式でも整理できる分，class追加，元から小さい図内文字，有限の比較候補という制約はXRに残した．任意の原稿での最少指定数や全素材の投影可読性を保証するものではない．
+
+以下の「未達」「in-progress」は各日付時点の履歴であり，この最終受入れが現在の状態である．過去の数値や結論は変更しない．
 
 ## 最終統合受入れ 2026-10-30
 
@@ -216,7 +237,7 @@ my-decksでは，図の中央揃えや列幅に対して `display:flex`，`align
 - [x] 列の上端・中央・下端揃えと，図と説明の組が，指定どおり描画されることをブラウザで測る．HTML/画像/PDFの同じ内容でも確認する．
 - [x] 既存lab/muji/toshiba，16:9・4:3，paper・opt-in scroll・表紙の既存テストを確認する．共通CSSの変更が意図的な既存配置へ与える差を列挙する．
 - [x] 旧原稿で実質的な見た目の変更が必要な場合は，互換動作または明示選択と移行例を提示し，元デッキを一括書換えしない．
-- [ ] 標準例の個別指定が減り，例外の調整手順が短く明確になったことを，原稿差分と描画で示す．指定数の削減だけを合格理由にしない．
+- [x] 標準例の個別指定が減り，例外の調整手順が短く明確になったことを，原稿差分と描画で示す．指定数の削減だけを合格理由にしない．
 
 ## 対象外
 
@@ -260,3 +281,9 @@ repo内ISSは未起票．実装開始時に現行記録を照合し，記録CLI�
 ## 2026-11-06 実原稿3ページの比較
 
 XR-0010で固定内容の3ページを比較した．inline指定は元26件→既存CSSによる整理12件→shares方式11件，classは9→11→14，wrapperは全群10件．新方式の追加削減は両側比率指定1件に限られた．本文・画像・文字設定を保持し，主要要素の矩形差は最大約0.016px，最終9描画の診断は0件だった．図内細字は残り，可読性改善を達成したとは扱わない．一般化と内容増加時の再調整は未評価で，最後のACとin-progressを維持する．
+
+## 内容増加条件と修復比較 2026-11-06
+
+[XR-0011](../explorations/XR-0011-evaluate-real-layout-robustness-under-added-headings-and-captions.md)で3実ページの内容増加27描画と，toshibaの修復27描画を比較した．整理したlabの2ページでは追加調整が不要だった．toshibaは列幅指定への移行だけでは見出し増加時のclipping2件を修復できないが，本文領域を使い図の個別最大高さを外すことで，inline5→1，class5・wrapper3のまま全3条件の診断を0件にできた．本文・文字設定・画像内容は保持した．
+
+既存utilityの対照も含め，単に収まるだけでは図内ラベルが小さくなる案を同等の解としない．新方式の修復効果はまだ1ページの確認であり，最終ACは未チェックを維持する．手順書に残っていた両側比率指定の推奨を修正し，重複指定の削除→意味のある整列class→必要な列幅だけの指定→内容増加を含む描画確認，という手順をtheme contractへ追記した．
