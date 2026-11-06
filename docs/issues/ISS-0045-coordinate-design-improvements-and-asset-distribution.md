@@ -2,7 +2,9 @@
 id: ISS-0045
 title: "Coordinate design improvements and asset distribution"
 type: issue
-status: in-progress
+status: closed
+resolution: completed
+resolved: "2026-11-06"
 date: "2026-10-21"
 updated: "2026-10-30"
 authors:
@@ -38,6 +40,14 @@ artifacts:
 # Coordinate design improvements and asset distribution
 
 GitHub: https://github.com/takumi-nishimura/MarpAgent/issues/53
+
+## 最終受入れ 2026-11-06
+
+残っていたISS-0047の個別指定削減と例外時の手順を，XR-0012で3実原稿の36描画と既存標準構図の試験により確認した．本文・文字設定・画像を保持した全9条件で再調整なしに収まり，inline26→4，wrapper増加0だった．宣言数だけで判断せず，境界の診断と描画を確認した．現行browser68件とunit16件が成功した．
+
+#54・#56・#57・#58・#59・#60・#61はGitHubとローカル正本のclosedを確認した．それぞれのCSS／診断／外観／素材／ZIP／port／D2の差分確認・限定レビュー・統合gateは既存の受入れを再利用する．今回production codeを変更せず，手順書と証跡を更新した．新たな独立レビューを実施したとは扱わない．ISS-0047の完了により親の最後の条件も満たす．
+
+最終対応表は[統合文書](../design-assets-integration.md)，配置の条件別根拠は[ISS-0047](ISS-0047-improve-body-figure-and-caption-layout-defaults.md)を参照する．以下の未達・in-progressは各日付時点の履歴として保持する．
 
 ## 最終統合受入れ 2026-10-30
 
@@ -154,7 +164,7 @@ ZIPの具体的なCLI名，収集方式，CSSクラス名，実装順序は助�
 - [x] テーマと配置の変更を一度に混ぜず，効果・回帰を個別に判定する．
 - [x] ZIPは収集範囲と外部依存を説明でき，欠落や危険な参照を隠したまま配布成功としない．
 - [x] 最新方針に基づくD2コードブロック描画を#61で実装・検証し，共通engine，失敗伝達，既存Mermaidの回帰，配布物の閲覧をmainが統合確認する．
-- [ ] 各作業の実装・検証・レビューを子Issueで確認した後に，親Issueの完了を判断する．Issue登録だけでは機能完了にしない．
+- [x] 各作業の実装・検証・レビューを子Issueで確認した後に，親Issueの完了を判断する．Issue登録だけでは機能完了にしない．
 
 ## 記録の扱い
 

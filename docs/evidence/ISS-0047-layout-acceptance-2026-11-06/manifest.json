@@ -1,0 +1,42 @@
+{
+  "engine_revision": "2d7a16211ff1b0cdd8f61638a2388c9eb7bc5c82",
+  "source_revision": "b407f3d64d4193b05a91a50d8f7b829b0a466f98",
+  "comparison": {
+    "pages": 3,
+    "conditions": [
+      "base",
+      "heading",
+      "caption"
+    ],
+    "arms": [
+      "original",
+      "legacy",
+      "modern",
+      "body"
+    ],
+    "renders": 36,
+    "body_invariants_passed": 9,
+    "body_findings": 0
+  },
+  "checks": [
+    {
+      "kind": "unit",
+      "command": "node --test --test-isolation=none tests/unit/auto-body.test.js tests/unit/body-class-contract.test.js tests/unit/column-shares.test.js",
+      "passed": 16,
+      "failed": 0,
+      "log_sha256": "2b86da8d0bc59c816c243fccc024bb7d1eb622801b57e676ac112f188d90fa78"
+    },
+    {
+      "kind": "browser",
+      "command": "MARP_AGENT_REQUIRE_VISUAL=1 MARP_AGENT_STRICT_E2E=1 npm run test:e2e -- tests/e2e/body-layout.spec.js tests/e2e/layout-compatibility.spec.js tests/e2e/composition-utilities.spec.js tests/e2e/body-exports.spec.js tests/e2e/body-footnotes.spec.js tests/e2e/body-footnote-exports.spec.js tests/e2e/auto-body.spec.js --project=chromium --workers=1",
+      "passed": 68,
+      "failed": 0,
+      "log_sha256": "b1881076afe7d0aa1b454273941c7a29fd47c6e5cd7b296c14d8c8d49e34e469"
+    }
+  ],
+  "files": {
+    "compare.cjs": "93c2cf43f0a0aee56d281f5b9768ca44fbf399b44ce8ddd2c3843635ef4d73a4",
+    "summary.json": "279896749dfe9a279d745b068859d6cdcad67f8f91ada44926ac9bc996095a93"
+  },
+  "font_sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f"
+}
