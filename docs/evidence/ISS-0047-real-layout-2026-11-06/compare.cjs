@@ -161,6 +161,19 @@ let browser;
         }
         const baseline = await measure(original, "original");
         const trials = [];
+        async function reducePlacement(s) {
+            const candidate = s.replace(
+                /<div([^>]*?)style="([^"]*?)justify-content: center;([^"]*)"([^>]*)>/g,
+                (_, a, b, c, d) => {
+                    let tag = "<div" + a + 'style="' + b + c + '"' + d + ">";
+                    return tag.includes('class="')
+                        ? tag.replace('class="', 'class="place-middle ')
+                        : tag.replace("<div", '<div class="place-middle"');
+                },
+            );
+            if (same(baseline, await measure(candidate))) s = candidate;
+            return s;
+        }
         async function minimize(s, mode) {
             if (process.env.RECHECK_CANDIDATES) {
                 s = fs.readFileSync(
@@ -169,18 +182,7 @@ let browser;
                 );
                 if (!same(baseline, await measure(s)))
                     throw Error("Cached reduction changed geometry");
-                const candidate = s.replace(
-                    /<div([^>]*?)style="([^"]*?)justify-content: center;([^"]*)"([^>]*)>/g,
-                    (_, a, b, c, d) => {
-                        let tag =
-                            "<div" + a + 'style="' + b + c + '"' + d + ">";
-                        return tag.includes('class="')
-                            ? tag.replace('class="', 'class="place-middle ')
-                            : tag.replace("<div", '<div class="place-middle"');
-                    },
-                );
-                if (same(baseline, await measure(candidate))) s = candidate;
-                return s;
+                return reducePlacement(s);
             }
             let changed = true;
             while (changed) {
@@ -225,7 +227,7 @@ let browser;
                     }
                 }
             }
-            return s;
+            return reducePlacement(s);
         }
         const legacy = await minimize(original, "legacy");
         let modern = original.replace(
