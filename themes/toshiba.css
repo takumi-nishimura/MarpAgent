@@ -1939,6 +1939,7 @@ section.invert::after {
   border-radius: var(--radius-none);
 }
 section.title:where(:not(.cover-plain)) {
+  padding-top: 20px;
   background-color: var(--bg);
   background-image: linear-gradient( 135deg, transparent 0 var(--title-stripe-start), var(--action-blue-soft) var(--title-stripe-start) var(--title-stripe-light-end), var(--color-tertiary) var(--title-stripe-light-end) var(--title-stripe-blue-end), var(--color-accent-strong) var(--title-stripe-blue-end) var(--title-stripe-red-end), transparent var(--title-stripe-red-end) );
 }

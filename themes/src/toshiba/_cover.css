@@ -1,4 +1,5 @@
 section.title:where(:not(.cover-plain)) {
+  padding-top: 20px;
   background-color: var(--bg);
   background-image: linear-gradient(
     135deg,
