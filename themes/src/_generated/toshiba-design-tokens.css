@@ -102,6 +102,9 @@
   --font-caption: "Noto Sans JP";
   --font-label-md: "Noto Sans JP";
   --font-header-label: "Noto Sans JP";
+  --text-slide-heading: 44px;
+  --text-slide-body: 32px;
+  --text-slide-table: 28px;
   --text-display: 72px;
   --text-headline-lg: 56px;
   --text-headline-md: 40px;

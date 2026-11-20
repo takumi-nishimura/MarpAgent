@@ -94,59 +94,6 @@ section .underline {
   text-underline-offset: 0.2em;
 }
 
-section.title {
-  background-color: var(--bg);
-  background-image: linear-gradient(
-    135deg,
-    transparent 0 var(--title-stripe-start),
-    var(--action-blue-soft) var(--title-stripe-start)
-      var(--title-stripe-light-end),
-    var(--color-tertiary) var(--title-stripe-light-end)
-      var(--title-stripe-blue-end),
-    var(--color-accent-strong) var(--title-stripe-blue-end)
-      var(--title-stripe-red-end),
-    transparent var(--title-stripe-red-end)
-  );
-}
-
-section.title h1 {
-  box-sizing: border-box;
-  max-width: var(--spacing-title-copy-width);
-  margin-top: var(--spacing-title-heading-top);
-  margin-left: 0;
-  margin-right: auto;
-  padding: 0 0 0 var(--spacing-title-heading-inset);
-  border: 0;
-  border-left: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
-  color: var(--color-on-surface);
-  font-size: var(--text-display);
-  font-weight: var(--font-weight-display);
-  text-align: left;
-}
-
-section.title > p,
-section.title .author {
-  max-width: var(--spacing-title-copy-width);
-  margin-top: var(--spacing-title-subtitle-top);
-  margin-left: calc(
-    var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset)
-  );
-  margin-right: auto;
-  color: var(--color-secondary);
-  font-size: var(--text-body-md);
-  text-align: left;
-  align-items: flex-start;
-}
-
-section.title.invert h1 {
-  color: var(--color-on-primary);
-}
-
-section.title.invert > p,
-section.title.invert .author {
-  color: var(--color-muted-invert);
-}
-
 section:not(.title) > header:not(.paper-header) + * {
   margin-top: var(--spacing-content-top-gap);
 }
@@ -269,6 +216,9 @@ section.invert::after {
   border-radius: var(--radius-none);
 }
 
+@import "./_shared/_covers.css";
+@import "./_shared/_cover-choices.css";
+@import "./_shared/_cover-plain.css";
 @import "./_shared/_context-header.css";
 
 /* Keep the brand marker just before the outdented context label. */

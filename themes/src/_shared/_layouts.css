@@ -332,9 +332,6 @@
   align-items: stretch;
   gap: var(--col-gap);
 }
-.body.col.visual {
-  gap: var(--visual-gap, var(--col-gap));
-}
 .body .box,
 .body .col > div {
   min-height: 0;
@@ -372,6 +369,28 @@
   margin-bottom: 0;
 }
 
+/* A nested row keeps its horizontal direction, even as a direct column.
+   A growing row stretches each cell to give its figures a definite height. */
+.body .col {
+  flex-direction: row;
+  gap: var(--col-gap);
+}
+.body.col.visual,
+.body .col.visual {
+  gap: var(--visual-gap, var(--col-gap));
+}
+.body .col:has(.fill),
+.body .col.fill {
+  align-items: stretch;
+}
+.body :is(.box, .col):has(.fill) {
+  flex: 1 1 0;
+  min-height: 0;
+}
+.body .col.fill {
+  grid-template-rows: minmax(0, 1fr);
+}
+
 /* .author paragraph reset — outside @layer so it wins over unlayered section p rule */
 .author p {
   margin: 0;
@@ -400,7 +419,7 @@ figure video {
 }
 
 figcaption {
-  font-size: 0.6em;
+  font-size: calc(var(--marpagent-canvas-text, 1em) * 0.6);
   text-align: center;
   margin-top: 0.5em;
   color: var(--fg-muted);
@@ -474,4 +493,26 @@ figure img[style*="width"] {
   max-width: var(--mermaid-max-width, 100%);
   max-height: var(--mermaid-max-height, 500px);
   height: auto;
+}
+
+/* The agenda can live in an authored column or in the automatic body. */
+section .section-contents {
+  font-size: calc(var(--text-slide-body, var(--text-body-md)) + 4px);
+  line-height: 1.45;
+}
+section .section-contents > li {
+  margin-block: 8px;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> header, > .paper-header)):has(> .body):has(.section-contents) {
+  padding-top: 48px;
+}
+
+.toc-group > :is(h1, h2, h3, h4, h5, h6) {
+  margin-block: 0;
+  max-inline-size: 100%;
+  text-align: center;
+}
+.toc-group > .section-contents {
+  max-inline-size: 100%;
+  text-align: start;
 }

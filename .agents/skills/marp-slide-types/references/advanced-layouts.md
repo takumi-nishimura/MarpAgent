@@ -87,7 +87,7 @@ more height than a width-limited image paints, leaving its caption far below the
 visible image. See the [body contract](../../../../docs/theme-contract.md) for
 natural groups and fitting media; inspect their actual edges after rendering.
 
-For new proportional columns, use `.col.shares` (optionally `.visual` for media).
+For new proportional columns, use `.col` with a direct child `--col-width`.
 Set `style="--col-width: 50%"` only on columns with a required width; omit it on
 other columns so they divide the remainder equally. With three columns, one
 50% width gives 50/25/25; no shares gives equal widths for any column count.
@@ -102,7 +102,7 @@ MarpAgent renderer; preserve existing legacy layouts when no revision is needed.
 
 ## Slide Heading
 
-<div class="body col visual shares">
+<div class="body col">
 <figure style="--col-width: 57.5%">
 <img src="assets/img/example.png" alt="Describe the actual figure" />
 <figcaption>Source and conditions needed to interpret the figure</figcaption>

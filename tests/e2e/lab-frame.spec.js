@@ -91,6 +91,7 @@ for (const size of ["16:9", "4:3"]) {
         expect(layout.headerTextLeft).toBeCloseTo(layout.heading.left - 16 * (layout.header.right - layout.header.left) / (size === "4:3" ? 1024 : 1280), 0);
         expect(layout.heading.top - layout.header.bottom).toBeGreaterThanOrEqual(16);
         expect(layout.headerFont).toBe(26);
+        expect(layout.bodyFont).toBe(32);
         expect(layout.body.height).toBeGreaterThan(layout.slide.height * 0.5);
         expect(layout.point.left).toBeCloseTo(layout.heading.left, 0);
         expect((layout.point.top + layout.point.bottom) / 2).toBeCloseTo((layout.body.top + layout.body.bottom) / 2, 0);
@@ -103,7 +104,13 @@ for (const size of ["16:9", "4:3"]) {
         const gaps = [];
         for (const count of [1, 5]) {
             await render(page, Array.from({ length: count }, () => "Evidence with its required qualification.").join("\n\n"), size, "body box");
-            const gap = await page.evaluate(() => document.querySelector(".body p").getBoundingClientRect().top - document.querySelector("h2").getBoundingClientRect().bottom);
+            const gap = await page.evaluate(() => {
+                const section = document.querySelector("section");
+                const scale = section.getBoundingClientRect().width / section.offsetWidth;
+                const prose = section.querySelector(".body p").getBoundingClientRect();
+                const heading = section.querySelector("h2").getBoundingClientRect();
+                return (prose.top - heading.bottom) / scale;
+            });
             expect(gap).toBeGreaterThanOrEqual(16);
             expect(gap).toBeLessThanOrEqual(32);
             gaps.push(gap);
@@ -141,7 +148,7 @@ test("a body group uses one spacing rhythm between prose and a comparison table"
         return children.slice(1).map((rect, i) => rect.top - children[i].bottom);
     });
     expect(gaps).toHaveLength(2);
-    for (const gap of gaps) expect(gap).toBeCloseTo(13, 0);
+    for (const gap of gaps) expect(gap).toBeCloseTo(16, 0);
 });
 
 for (const theme of ["lab", "muji", "toshiba"]) {

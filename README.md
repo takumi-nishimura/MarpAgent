@@ -11,6 +11,8 @@ its [Markdown source](decks/example/slide.md), and its [brief](decks/example/bri
 The Japanese example follows a concrete request through drafting, inspection,
 revision, presentation, and distribution. It uses the default `lab` theme.
 
+Compare the built-in themes in the [cover and body gallery](designs/README.md#cover-and-body-gallery).
+
 ## Overview
 
 | Work | What MarpAgent provides |
@@ -200,3 +202,42 @@ Automatic PR checks validate records and, for engine-related paths, a lightweigh
 smoke suite. They do not replace rendered deck inspection or full acceptance.
 Contributors should follow the CI guide for Chromium/Firefox, D2/font preparation,
 `npm run ci:full`, and the separate dependency audit.
+
+### 自動目次
+
+[自動目次の標準配置・中央配置の見本と原稿](designs/README.md#automatic-contents-gallery)を確認できる．
+
+目次を置くページに `<!-- _toc: true -->` を書く．通常は各ページに
+適用されたヘッダーを原稿順に並べ，同じ表示名が続く区間を1項目にする．
+たとえば「背景，背景，手法，背景」の目次は「背景，手法，背景」となる．
+ヘッダーのないページ，表紙のヘッダー，目次ページは読み飛ばす．
+ページ見出しは自由に変更できる．
+
+```markdown
+<!-- _toc: true -->
+
+## 発表の流れ
+
+---
+
+<!-- header: 手法 -->
+
+## 入力を記録する
+
+---
+
+## 二人の入力を統合する
+```
+
+目次と表示用ヘッダーの粒度を分けたいときは，章の開始ページに
+`<!-- section: 評価実験 -->` と一度書く．章を一つでも指定すると，
+デッキ全体の目次は章タイトルを使う．ヘッダーを別に指定しなければ
+章タイトルを表示し，`<!-- _header: 実験条件 -->` でそのページの表示を変更できる．
+`<!-- section: "" -->` で章の範囲を終える．章に属するページがすべて非表示なら
+その章は目次に載らない．原稿を並べ替えたり改題したりすると，次の描画に反映される．
+
+目次ページに `<!-- _class: toc-center -->` を加えると，見出しと番号付きリストを一組として本文領域の中央に置く．見出しは中央揃え，項目は左揃えになる．
+
+独自の段組みに合わせる場合は，原稿に `.body` を書くとその中にリストを生成する．
+二段組みの片側に入れたい場合は，その列内で前後に空行を置いて
+`<!-- _toc: true -->` を独立した行に書く．

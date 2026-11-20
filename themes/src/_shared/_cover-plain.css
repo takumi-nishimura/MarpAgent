@@ -1,0 +1,19 @@
+/* Opt into this cover without changing the deck's body theme. */
+section.title.cover-plain {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-inline: var(--padding-x);
+}
+section.title.cover-plain > h1 {
+  font-size: var(--text-display, 2.5em);
+  line-height: var(--leading-display, 1.15);
+  margin: 0;
+}
+section.title.cover-plain > p,
+section.title.cover-plain .author {
+  text-align: start;
+  align-items: flex-start;
+  margin: 1em 0 0;
+}

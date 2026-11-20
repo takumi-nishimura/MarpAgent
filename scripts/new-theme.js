@@ -71,12 +71,6 @@ function ensureWritable(targetPath, force) {
   throw new Error(`Refusing to overwrite existing path: ${targetPath}`);
 }
 
-function writeFile(targetPath, content, force) {
-  ensureWritable(targetPath, force);
-  fs.mkdirSync(path.dirname(targetPath), { recursive: true });
-  fs.writeFileSync(targetPath, content);
-}
-
 function titleCaseName(name) {
   return name
     .split("-")
@@ -85,61 +79,10 @@ function titleCaseName(name) {
     .join(" ");
 }
 
-function replaceRequired(content, pattern, replacement, label) {
-  const next = content.replace(pattern, replacement);
-  if (next === content) {
-    throw new Error(`Failed to replace ${label} in lab DESIGN.md scaffold.`);
-  }
-  return next;
-}
-
 function buildDesignContent(repoRoot, name, sourceUrl = "") {
-  const labDesignPath = path.join(repoRoot, "designs", "lab", "DESIGN.md");
-  if (!fs.existsSync(labDesignPath)) {
-    throw new Error(`Missing base design scaffold: ${path.relative(repoRoot, labDesignPath)}`);
-  }
-
-  const title = titleCaseName(name);
-  const sourceLine = sourceUrl
-    ? `Scaffold source: ${sourceUrl}. Replace this note with extracted design rationale before finalizing the theme.`
-    : "Replace this scaffold note with the source design rationale before finalizing the theme.";
-  const overview = [
-    "## Overview",
-    "",
-    sourceLine,
-    "",
-    `${title} is a MarpAgent design scaffold. Replace this overview with source-derived audience, tone, and authoring constraints before using the theme for production decks.`,
-    "",
-    "Keep the token schema complete while editing so shared slide and A-series paper components continue to compile.",
-    "",
-    "## Colors",
-  ].join("\n");
-
-  let design = fs.readFileSync(labDesignPath, "utf8");
-  design = replaceRequired(design, /^name: .+$/m, `name: ${title}`, "name");
-  design = replaceRequired(
-    design,
-    /^description: .+$/m,
-    `description: ${title} presentation design system for MarpAgent slides and A-series paper layouts.`,
-    "description",
-  );
-  design = replaceRequired(design, /^# .+ Design$/m, `# ${title} Design`, "title");
-  design = replaceRequired(
-    design,
-    /## Overview\n\n[\s\S]*?\n\n## Colors/,
-    overview,
-    "overview",
-  );
-
-  return design
-    .replace(
-      "Utility colors preserve the existing lab theme vocabulary",
-      "Utility colors preserve MarpAgent's shared theme vocabulary",
-    )
-    .replace(
-      "The current lab slide system is mostly square and utilitarian.",
-      "This scaffold starts from a mostly square and utilitarian component system.",
-    );
+  const template = fs.readFileSync(path.join(repoRoot, "template/theme-design.md"), "utf8");
+  const source = sourceUrl ? `Scaffold source: ${sourceUrl}` : "Describe the audience and visual references here.";
+  return template.replaceAll("{{name}}", titleCaseName(name)).replace("{{source}}", () => source);
 }
 
 function themeCssTemplate(name) {
@@ -154,6 +97,8 @@ function themeCssTemplate(name) {
 @import "tailwindcss" source(none);
 @import "./_shared/_safelist.css";
 
+@import "./_generated/_components-design-tokens.css" theme(static);
+
 @import "./_generated/${name}-design-tokens.css" theme(static);
 @import "./_shared/_base.css";
 @import "./_shared/_colors.css";
@@ -163,6 +108,14 @@ function themeCssTemplate(name) {
 @import "./_shared/_callouts.css";
 @import "./_shared/_code.css";
 @import "./_shared/_colorschemes.css";
+@import "./_shared/_scroll.css";
+@import "./_shared/_context-header.css";
+@import "./${name}/_body.css";
+@import "./_shared/_covers.css";
+@import "./_shared/_cover-standard.css";
+@import "./_shared/_cover-choices.css";
+@import "./${name}/_cover.css";
+@import "./_shared/_cover-plain.css";
 
 section {
   --fg: var(--color-on-surface);
@@ -174,9 +127,11 @@ section {
   --color-em: var(--color-emphasis);
   --color-strong: var(--color-accent-strong);
   --padding-x: var(--spacing-slide-x);
-  --header-height: var(--spacing-header-height);
-  --logo-title-size: var(--spacing-logo-title-size);
-  --logo-header-size: var(--spacing-logo-header-size);
+  font-family: var(--font-body-md), sans-serif;
+  font-size: var(--text-body-md);
+  --header-height: var(--spacing-header-height, 60px);
+  --logo-title-size: var(--spacing-logo-title-size, 80px);
+  --logo-header-size: var(--spacing-logo-header-size, 40px);
 }
 `;
 }
@@ -188,6 +143,8 @@ marp: true
 theme: ${name}
 paginate: true
 ---
+
+<!-- _class: title -->
 
 # ${title} Theme
 
@@ -221,12 +178,31 @@ function createThemeFiles(options) {
       content: themeCssTemplate(name),
     },
     {
+      path: path.join(repoRoot, "themes", "src", name, "_cover.css"),
+      content: `/* Refine the standard cover's typography and spacing here. */
+section.title:where(:not(.cover-plain, .cover-photo, .cover-lab, .cover-muji, .cover-toshiba, :has(> .paper-header, > .fill))) {
+  --cover-copy-width: 92%;
+}
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo, .cover-lab, .cover-muji, .cover-toshiba)) > h1 {
+  font-size: var(--text-display);
+}
+`,
+    },
+    {
+      path: path.join(repoRoot, "themes", "src", name, "_body.css"),
+      content: "section:not(.title) > :is(h1, h2) {\n  color: var(--fg);\n}\n",
+    },
+    {
       path: path.join(repoRoot, "fixtures", `${name}-slide.md`),
       content: fixtureTemplate(name),
     },
   ];
 
-  for (const file of files) writeFile(file.path, file.content, force);
+  for (const file of files) ensureWritable(file.path, force);
+  for (const file of files) {
+    fs.mkdirSync(path.dirname(file.path), { recursive: true });
+    fs.writeFileSync(file.path, file.content);
+  }
   return files.map((file) => file.path);
 }
 

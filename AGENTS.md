@@ -48,8 +48,7 @@ force layout variety. Follow the user's references and preserve evidence,
 qualifications, and intentional human edits.
 
 Ordinary slides use automatic body layout by default: write a page heading and plain Markdown;
-the renderer supplies one direct `.body.box`. Use an explicit `.body` for
-columns or custom placement, as shown in `template/layouts.md`. Use optional
+the renderer supplies one direct `.body.box`. Use `.col.fill` inside ordinary Markdown for a growing row, or an explicit `.body` for custom placement, as shown in `template/layouts.md`. Use optional
 headers only for context spanning several slides, not a second page title.
 Use `autoBody: false` in frontmatter for legacy flow; `_autoBody: false`
 disables automatic layout on one slide. Choose the material's width and top/middle placement from
@@ -99,6 +98,8 @@ to keep it on one line. Applies to lab slide and paper layouts (see `marp-compon
 
 | Directive | Purpose |
 | :-------- | :------ |
+| `<!-- _toc: true -->` | Insert an automatically updated contents list on this slide. Add `<!-- _class: toc-center -->` to center the heading and list together in the automatic body |
+| `<!-- section: Chapter title -->` | Start a chapter. Any named chapter selects chapter-based contents for the entire deck; otherwise use runs of visible body slide headers |
 | `<!-- _paginate: skip -->` | Hide page number (title/close slides) |
 | `<!-- _class: title -->` | Apply title layout |
 | `<!-- _header: <text> -->` | Set slide header text |

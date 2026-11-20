@@ -11,10 +11,11 @@ module.exports = (md) => {
         const edits = [];
         function walk(node) {
             const classes = (node.attribs?.class || "").split(/\s+/);
-            if (classes.includes("col") && classes.includes("shares")) {
-                const children = (node.children || []).filter(
-                    (child) => child.type === "tag",
-                );
+            const children = (node.children || []).filter((child) => child.type === "tag");
+            const hasWidths = classes.includes("shares") || children.some(
+                (child) => /--col-width\s*:/.test(child.attribs.style || ""),
+            );
+            if (classes.includes("col") && hasWidths) {
                 if (!children.length)
                     throw new Error("Column share layout requires columns.");
                 const shares = children.map((child) => {

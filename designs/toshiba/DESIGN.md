@@ -98,6 +98,12 @@ colors:
   code-dark-builtin: "#E6C07B"
   code-dark-meta: "#56B6C2"
 typography:
+  slide-heading:
+    fontSize: 44px
+  slide-body:
+    fontSize: 32px
+  slide-table:
+    fontSize: 28px
   display:
     fontFamily: Noto Sans JP
     fontSize: 72px
@@ -580,8 +586,8 @@ transitions.
 Components are author-facing class contracts. A component should be available
 from the theme before skills recommend it in generated slides.
 
-- **Title composition:** a left-aligned black headline with equal-width pale
-  blue, action-blue, and brand-red diagonal stripes cropped at the right edge.
+- **Title composition:** a broad left-aligned title block with a red vertical
+  rule, closely grouped author details, and full-size diagonal stripes.
   It creates identity without an external logo dependency.
 - **Header band:** white, separated by a fine gray rule, with one short red
   vertical marker before the context label. Logos may occupy the existing

@@ -5,7 +5,7 @@ const path = require("node:path");
 const repoRoot = path.resolve(__dirname, "../../..");
 
 function createThemeRepo({
-  paths = ["bin", "scripts", "src", "themes/src", "designs/lab", ".mise.toml"],
+  paths = ["bin", "scripts", "src", "themes/src", "designs/lab", "template/theme-design.md", ".mise.toml"],
   linkDependencies = true,
 } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "marpx-theme-test-"));

@@ -1,0 +1,89 @@
+section.title:where(.cover-muji:not(:has(> .paper-header)),
+  [data-theme="muji"]:not(.cover-lab, .cover-muji, .cover-toshiba)
+):where(:not(.cover-plain, .cover-photo)) {
+  /* Set the title against a quiet field with a narrow kinari edge. */
+  &:where(:not(:has(> .paper-header, > .fill))) {
+    @apply cover-layout;
+    --cover-inset: max(var(--padding-x), 8%);
+    --cover-edge-start: 83%;
+    --cover-content-end: calc(100% - var(--cover-edge-start) + 5%);
+    --cover-heading-size: calc(var(--text-display) * 1.16);
+    --cover-edge: var(--color-kinari);
+    background-image: linear-gradient(
+      to right,
+      transparent var(--cover-edge-start),
+      var(--cover-edge) var(--cover-edge-start)
+    );
+
+    > h1 {
+      text-wrap: balance;
+    }
+  }
+
+  /* Keep the event label with the title and the cover logos at the top. */
+  &:where(:not(:has(> .paper-header, > .fill))) > header {
+    position: static;
+    align-self: stretch;
+    min-height: 0;
+    max-inline-size: 100%;
+    padding-inline-end: 16px;
+    text-align: end;
+    overflow-wrap: anywhere;
+    background-size: 0;
+
+    &:not(:empty) {
+      /* Keep the title in place as the caption moves up. */
+      margin-block: -28px 42px;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 20px var(--padding-x) auto var(--cover-inset);
+      block-size: calc(var(--logo-title-size) + 20px);
+      background-image: inherit;
+      background-position: inherit;
+      background-repeat: inherit;
+      background-size: var(--logo-title-background-size);
+      pointer-events: none;
+    }
+  }
+
+  &.invert:where(:not(:has(> .paper-header, > .fill))) {
+    --cover-edge: color-mix(in srgb, var(--color-kinari) 14%, var(--bg));
+  }
+
+  /* Preserve the authored placement on covers that opt into legacy fill. */
+  &:where(:has(> .fill)) {
+    padding-top: 44px;
+  }
+
+  &:where(:has(> .fill)) h1 {
+    font-size: 2.5em;
+    text-align: left;
+    margin-top: 120px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &:where(:has(> .fill)) > p {
+    font-size: 1.2em;
+  }
+
+  &:where(:has(> .fill)) > p,
+  &:where(:has(> .fill)) .author {
+    text-align: left;
+    margin-top: 56px;
+    margin-right: 0;
+    color: var(--fg-muted);
+  }
+
+  &:where(:has(> .fill)) header {
+    background-position:
+      left var(--padding-x) top 16px,
+      left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px,
+      left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px,
+      left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px,
+      left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
+  }
+}

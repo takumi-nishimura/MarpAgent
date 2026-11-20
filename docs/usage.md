@@ -438,8 +438,9 @@ edit the generated `DESIGN.md` as the token source of truth:
 marpx --theme-new <name> --source-url <url> --no-build
 ```
 
-The scaffold creates `designs/<name>/DESIGN.md`, `themes/src/<name>.css`, and
-`fixtures/<name>-slide.md`. The `theme-new` agent skill describes the full
+The scaffold creates a neutral `designs/<name>/DESIGN.md`, a theme entry,
+separate `themes/src/<name>/_cover.css` and `_body.css` files, and a preview
+deck at `fixtures/<name>-slide.md`. The `theme-new` agent skill describes the full
 extract-adapt-validate workflow for URL, brand-guide, and existing DESIGN.md
 sources.
 

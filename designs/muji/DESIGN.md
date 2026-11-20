@@ -117,6 +117,12 @@ colors:
   code-dark-builtin: "#FFFFFF"
   code-dark-meta: "#C4C4C6"
 typography:
+  slide-heading:
+    fontSize: 40px
+  slide-body:
+    fontSize: 30px
+  slide-table:
+    fontSize: 27px
   display:
     fontFamily: Helvetica Neue
     fontSize: 52px
@@ -513,6 +519,9 @@ Use more whitespace than the lab theme. Slides should feel sparse and ordered:
 one message, simple rules, and flat sections. Do not make nested cards or
 decorative panels. Paper layouts use A4 as the authoring base and may be scaled
 at print time.
+
+On the standard cover, the title and author details align to a broad left
+inset. A flat kinari field at the right edge spans 17% of the cover.
 
 ## Elevation & Depth
 

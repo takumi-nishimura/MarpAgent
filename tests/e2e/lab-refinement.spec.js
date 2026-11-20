@@ -90,16 +90,16 @@ test("plain lab uses readable type roles and preserves colored emphasis", async 
 }) => {
     const value = await render(page);
     expect(value.strong.weight).toBe("700");
-    expect(value.body.size).toBe(26);
-    expect(value.body.leading).toBe(39);
-    expect(value.heading.size).toBe(39);
-    expect(value.heading.leading).toBeCloseTo(46.8, 1);
+    expect(value.body.size).toBe(32);
+    expect(value.body.leading).toBe(48);
+    expect(value.heading.size).toBe(44);
+    expect(value.heading.leading).toBeCloseTo(52.8, 1);
     expect(value.strong.color).not.toBe(value.body.color);
     expect(value.caption.size).toBe(19.5);
     expect(value.caption.leading).toBeCloseTo(25.35, 1);
     expect(value.footnote.size).toBe(14);
     expect(value.footnote.leading).toBeCloseTo(19.6, 1);
-    expect(value.table.size).toBe(22.75);
+    expect(value.table.size).toBe(28);
     expect(value.emphasis.background).toContain("linear-gradient");
     expect(value.marker.background).toContain("linear-gradient");
     expect(value.emphasis.decoration).toBe("clone");
@@ -165,6 +165,7 @@ test("lab mark references use an inset fill across wrapped lines while em stays 
                 const end = stops.length > 2 ? stops.at(-1) : 1;
                 return {
                     weight: style.fontWeight,
+                    size: parseFloat(style.fontSize),
                     fill: style.backgroundColor,
                     color: style.color,
                     display: style.display,
@@ -229,8 +230,8 @@ test("lab mark references use an inset fill across wrapped lines while em stays 
         expect(value.mark.display).toBe("inline");
         expect(value.mark.padding[0]).toBe(0);
         expect(value.mark.padding[2]).toBe(0);
-        expect(value.mark.padding[1]).toBeCloseTo(2.08, 2);
-        expect(value.mark.padding[3]).toBeCloseTo(2.08, 2);
+        expect(value.mark.padding[1]).toBeCloseTo(value.mark.size * 0.08, 2);
+        expect(value.mark.padding[3]).toBeCloseTo(value.mark.size * 0.08, 2);
         expect(value.strong).toBe("700");
     }
 });
@@ -277,22 +278,23 @@ test("plain lab preserves deck overrides and the independent paper and other-the
     expect(paper.strong.weight).toBe("500");
     expect(paper.caption.size).toBe(7);
     expect(paper.footnote.size).toBe(4);
-    for (const [theme, bodySize, strongWeight] of [
-        ["muji", 24, "500"],
-        ["toshiba", 26, "700"],
+    for (const [theme, bodySize, canvasSize, strongWeight] of [
+        ["muji", 30, 24, "500"],
+        ["toshiba", 32, 26, "700"],
     ]) {
         const value = await render(page, { theme });
         expect(value.body.size).toBe(bodySize);
         expect(value.strong.weight).toBe(strongWeight);
-        expect(value.caption.size).toBeCloseTo(bodySize * 0.6, 1);
-        expect(value.footnote.size).toBeCloseTo(bodySize * 0.4, 1);
+        expect(value.caption.size).toBeCloseTo(canvasSize * 0.6, 1);
+        expect(value.footnote.size).toBeCloseTo(canvasSize * 0.4, 1);
     }
     await render(page, {
-        style: "section { --font-body: serif; font-size: 28px; line-height: 1.6; } section h2 { font-size: 44px; } section figcaption { font-size: 21px; } section .footnote { font-size: 16px; }",
+        style: "section { --font-body: serif; font-size: 28px; line-height: 1.6; } section h2 { font-size: 60px; } section figcaption { font-size: 21px; } section .footnote { font-size: 16px; }",
     });
-    await expect(page.locator("h2")).toHaveCSS("font-size", "44px");
+    await expect(page.locator("h2")).toHaveCSS("font-size", "60px");
     await expect(page.locator("section")).toHaveCSS("font-family", "serif");
     await expect(page.locator("section")).toHaveCSS("font-size", "28px");
+    await expect(page.locator(".body")).toHaveCSS("font-size", "28px");
     await expect(page.locator("section")).toHaveCSS("line-height", "44.8px");
     await expect(page.locator("figcaption")).toHaveCSS("font-size", "21px");
     await expect(page.locator(".footnote")).toHaveCSS("font-size", "16px");

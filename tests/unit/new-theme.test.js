@@ -21,18 +21,14 @@ function withTempRepo(fn) {
   }
 }
 
-function seedLabDesign(tempRoot) {
-  const labDir = path.join(tempRoot, "designs", "lab");
-  fs.mkdirSync(labDir, { recursive: true });
-  fs.copyFileSync(
-    path.join(repoRoot, "designs", "lab", "DESIGN.md"),
-    path.join(labDir, "DESIGN.md"),
-  );
+function seedDesignTemplate(tempRoot) {
+  fs.mkdirSync(path.join(tempRoot, "template"));
+  fs.copyFileSync(path.join(repoRoot, "template/theme-design.md"), path.join(tempRoot, "template/theme-design.md"));
 }
 
 test("new-theme scaffolds design, theme source, and fixture", () => {
   withTempRepo((tempRoot) => {
-    seedLabDesign(tempRoot);
+    seedDesignTemplate(tempRoot);
 
     const created = createThemeFiles({
       repoRoot: tempRoot,
@@ -46,6 +42,8 @@ test("new-theme scaffolds design, theme source, and fixture", () => {
         "designs/plain/DESIGN.md",
         "fixtures/plain-slide.md",
         "themes/src/plain.css",
+        "themes/src/plain/_body.css",
+        "themes/src/plain/_cover.css",
       ],
     );
 
@@ -56,7 +54,7 @@ test("new-theme scaffolds design, theme source, and fixture", () => {
     assert.match(design, /^name: Plain$/m);
     assert.match(design, /^# Plain Design$/m);
     assert.match(design, /Scaffold source: https:\/\/example\.com\/brand/);
-    assert.match(design, /^  code-comment:/m);
+    assert.match(design, /^  accent-strong:/m);
     assert.doesNotMatch(design, /MarpAgent Lab is/);
 
     const css = fs.readFileSync(
@@ -73,6 +71,15 @@ test("new-theme scaffolds design, theme source, and fixture", () => {
     assert.doesNotMatch(css, /@source\s+"/);
     assert.match(css, /@import "\.\/_shared\/_safelist\.css";/);
 
+    assert.match(css, /@import "\.\/_shared\/_covers\.css";/);
+
+    const cover = fs.readFileSync(
+      path.join(tempRoot, "themes", "src", "plain", "_cover.css"),
+      "utf8",
+    );
+    assert.match(cover, /section\.title:where\(:not\(\.cover-plain, \.cover-photo/);
+    assert.match(cover, /--cover-copy-width: 92%/);
+
     const fixture = fs.readFileSync(
       path.join(tempRoot, "fixtures", "plain-slide.md"),
       "utf8",
@@ -82,9 +89,9 @@ test("new-theme scaffolds design, theme source, and fixture", () => {
   });
 });
 
-test("new-theme reuses lab DESIGN.md as the complete token scaffold", () => {
+test("new-theme scaffolds an independent design without the lab theme", () => {
   withTempRepo((tempRoot) => {
-    seedLabDesign(tempRoot);
+    seedDesignTemplate(tempRoot);
 
     const design = buildDesignContent(
       tempRoot,
@@ -95,7 +102,7 @@ test("new-theme reuses lab DESIGN.md as the complete token scaffold", () => {
     assert.match(design, /^name: Source Heavy$/m);
     assert.match(design, /^# Source Heavy Design$/m);
     assert.match(design, /Scaffold source: https:\/\/example\.com\/design/);
-    assert.match(design, /^  code-dark-meta:/m);
+    assert.match(design, /^  display:/m);
   });
 });
 
@@ -110,7 +117,7 @@ test("new-theme validates and normalizes theme names", () => {
 
 test("new-theme refuses to overwrite scaffold files unless forced", () => {
   withTempRepo((tempRoot) => {
-    seedLabDesign(tempRoot);
+    seedDesignTemplate(tempRoot);
     createThemeFiles({ repoRoot: tempRoot, name: "plain" });
 
     assert.throws(

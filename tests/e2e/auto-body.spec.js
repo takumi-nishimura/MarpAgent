@@ -68,9 +68,10 @@ Text and supporting evidence.
         expect(layout[0].body.bottom).toBeLessThanOrEqual(layout[0].logo.top);
         expect(layout[0].footer.right).toBeLessThan(layout[0].logo.left);
         expect(layout[1].logo).toBeNull();
-        expect(layout[1].header.bottom - layout[1].header.top).toBe(52);
+        expect(layout[1].header.bottom - layout[1].header.top).toBeGreaterThanOrEqual(52);
+        expect(layout[1].heading.top - layout[1].header.bottom).toBeCloseTo(24, 1);
         expect(layout[1].headerFont).toBe("26px");
-        expect(layout[1].heading.left - layout[1].headerLeft).toBe(16);
+        expect(layout[1].heading.left - layout[1].headerLeft).toBeCloseTo(16, 1);
         expect(
             await page.locator("section").first().locator("header").count(),
         ).toBe(0);
@@ -81,3 +82,33 @@ Text and supporting evidence.
                 .screenshot({ path: "/tmp/marpagent-auto-body.png" });
     });
 }
+
+test("a growing comparison row fits captions between the page header and multiline footer", async ({ page }) => {
+    const marp = createConfiguredMarp();
+    marp.themeSet.add(fs.readFileSync(path.join(__dirname, "../../themes/lab.css"), "utf8"));
+    const image = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'/%3E";
+    const figure = (caption) => `<figure><img alt="Device" src="${image}"><figcaption>${caption}</figcaption></figure>`;
+    const { html, css } = marp.render([
+        "---", "theme: lab", "header: Comparison", "---",
+        "## Equipment", "", "Controls.", "", "---",
+        "<!-- _footer: Source<br>Conditions<br>Limitations -->", "",
+        "Upper row.", "",
+        '<div class="col fill"><div><p>Detail view</p><div class="col fill">',
+        figure("Input"), figure("Display<br>Second line"), "</div></div>",
+        figure("Overview"), "</div>",
+    ].join("\n"));
+    await page.route("https://fonts.googleapis.com/**", route => route.abort());
+    await page.setContent(`<style>${css}</style>${html}`);
+    const headers = await page.locator("section > header").evaluateAll(nodes =>
+        nodes.map(node => parseFloat(getComputedStyle(node).fontSize)));
+    expect(headers[1]).toBeGreaterThan(headers[0]);
+    const slide = page.locator("section").last();
+    const footer = await slide.locator("footer").boundingBox();
+    for (const figure of await slide.locator("figure").all()) {
+        const media = await figure.locator("img").boundingBox();
+        const caption = await figure.locator("figcaption").boundingBox();
+        expect(media.height).toBeGreaterThan(100);
+        expect(media.y + media.height).toBeLessThanOrEqual(caption.y + 1);
+        expect(caption.y + caption.height).toBeLessThan(footer.y);
+    }
+});

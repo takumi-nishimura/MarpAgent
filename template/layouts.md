@@ -34,7 +34,7 @@ style: |
 
 ## ページの変更はslide.mdで完結させる
 
-<div class="body col visual shares">
+<div class="body col">
 <div style="--col-width: 66.66666667%">
 
 ### 編集する内容と保存先
@@ -119,4 +119,23 @@ brief.mdには目的や制約を記録し，ページごとの内容は複製し
 </div>
 </div>
 
+</div>
+
+---
+
+<!-- _header: 図の配置 -->
+
+## 二つの図をキャプション付きで比較する
+
+入力・処理・出力を示す同じ図で，上下の余白だけを変えている．
+
+<div class="col fill">
+  <figure>
+    <img src="assets/img/from-layout-baselines-stage.svg" alt="横長の枠に並ぶ入力・処理・出力">
+    <figcaption>上下の余白を絞った図</figcaption>
+  </figure>
+  <figure>
+    <img src="assets/img/from-layout-baselines-stage-tall.svg" alt="同じ3工程の上下に余白を加えた図">
+    <figcaption>同じ幅で高さを2倍にした図</figcaption>
+  </figure>
 </div>

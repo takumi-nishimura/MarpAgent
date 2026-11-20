@@ -18,7 +18,7 @@
                 const body = section.querySelector(":scope > .body");
                 if (!body || !section.isConnected) continue;
                 const notes = section.matches(selector)
-                    ? [...section.querySelectorAll(":scope > .footnote")]
+                    ? [...section.querySelectorAll(":scope > .footnote, :scope > footer, :scope > .slide-logos")]
                     : [];
                 const slide = section.getBoundingClientRect();
                 // Rectangles include presentation/overview scaling; margins use
@@ -32,6 +32,7 @@
                         mutation.observe(note, { attributes: true, childList: true, characterData: true, subtree: true });
                         observed.add(note);
                     }
+                    if (note.classList.contains("slide-logos") && getComputedStyle(note).backgroundImage === "none") continue;
                     const rect = note.getBoundingClientRect();
                     if (rect.height > 0 && rect.width > 0) tops.push((rect.top - slide.top) / scale);
                 }

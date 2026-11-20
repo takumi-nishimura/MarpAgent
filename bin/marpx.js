@@ -692,8 +692,9 @@ switch (mode) {
       process.exit(1);
     }
 
+    const designs = [...new Set([...themes, "lab", "muji", "toshiba"])];
     try {
-      for (const name of themes) generateDesignTokens(name);
+      for (const name of designs) generateDesignTokens(name);
     } catch (error) {
       console.error(`Error: failed to generate design tokens: ${error.message}`);
       process.exit(1);
@@ -703,7 +704,7 @@ switch (mode) {
     const watchFlag = values.watch;
     const children = [];
 
-    const stopWatching = watchFlag ? watchDesignTokens(themes) : () => {};
+    const stopWatching = watchFlag ? watchDesignTokens(designs) : () => {};
     let exitCode = 0;
     let exited = 0;
     let shutdownTimer;

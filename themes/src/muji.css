@@ -68,34 +68,6 @@ section h3 {
   letter-spacing: 0.09em;
 }
 
-section.title {
-  padding-top: 44px;
-}
-
-section.title h1 {
-  text-align: left;
-  margin-top: 120px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-section.title > p,
-section.title .author {
-  text-align: left;
-  margin-top: 56px;
-  margin-right: 0;
-  color: var(--fg-muted);
-}
-
-section.title header {
-  background-position:
-    left var(--padding-x) top 16px,
-    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px,
-    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px,
-    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px,
-    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
-}
-
 section:not(.title) > header:not(.paper-header) + * {
   margin-top: 78px;
 }
@@ -152,4 +124,7 @@ section::after {
   color: var(--color-neutral);
 }
 
+@import "./_shared/_covers.css";
+@import "./_shared/_cover-choices.css";
+@import "./_shared/_cover-plain.css";
 @import "./_shared/_context-header.css";

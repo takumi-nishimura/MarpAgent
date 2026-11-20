@@ -18,3 +18,55 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
     right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 3) center,
     right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 4) center;
 }
+
+/* The in-flow header spans the canvas. Inset its siblings so percentage
+   padding uses the same reference width for the heading and header label. */
+section:where(:not(.title, [data-marpagent-scroll="true"], :has(> .paper-header)):has(> .body):has(> header)) {
+  padding-inline: 0;
+}
+section:where(:not(.title, [data-marpagent-scroll="true"], :has(> .paper-header)):has(> .body):has(> header))
+  > :where(:not(header, footer, .footnote, .slide-logos, script, style)) {
+  margin-inline: var(--padding-x);
+}
+section:where(:not(.title, [data-marpagent-scroll="true"], :has(> .paper-header)):has(> .body):has(> header))
+  > :is(.centered, .fit) {
+  align-self: center;
+  max-width: calc(100% - 2 * var(--padding-x));
+}
+section:where(:not(.title, [data-marpagent-scroll="true"], :has(> .paper-header)):has(> .body):has(> header))
+  > .body.centered {
+  max-width: min(720px, 100% - 2 * var(--padding-x));
+}
+
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-bottom: var(--body-top-gap);
+  min-height: var(--header-height);
+  height: auto;
+}
+
+/* Set the projected type defaults at the same specificity as authored rules.
+   Body text inherits slide-level font size overrides. */
+section:where(:not(.title, :has(> .paper-header)):has(> .body)) {
+  --marpagent-canvas-text: var(--text-body-md);
+  font-size: var(--text-slide-body, var(--text-body-md));
+}
+section:where(:not(.title, :has(> .paper-header)):has(> .body)) > h2,
+section > :where(.toc-group) > h2 {
+  font-size: var(--text-slide-heading, var(--text-headline-md, 1.5em));
+}
+
+/* When the header names the page itself, use the theme's heading scale. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):not(:has(> :is(h1, h2, h3, h4, h5, h6), > .toc-group > :is(h1, h2, h3, h4, h5, h6))) > header:not(.paper-header) {
+  font-size: var(--text-headline-md, 1.5em);
+  line-height: var(--leading-headline-md, 1.2);
+  font-weight: var(--font-weight-headline-md, 700);
+}
+
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body)
+  > header:has(+ :is(h1, h2, h3, h4, h5, h6)) {
+  margin-bottom: var(--header-heading-gap, 24px);
+}

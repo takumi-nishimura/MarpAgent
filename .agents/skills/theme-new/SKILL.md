@@ -31,3 +31,7 @@ npm run marpx -- fixtures/<name>-slide.md -v --strict
 Inspect the rendered fixture and any relevant paper layout, plus the generated token CSS and compiled theme. Keep smoke content focused on stable theme primitives. If shared CSS/runtime behavior changes, run the affected unit tests and `validate:fixtures`/Playwright checks; a theme-token edit does not require unrelated test cycles after its relevant checks pass. Report pre-existing failures separately from regressions.
 
 Preserve default theme selection and deck templates unless their change is requested. Use supported canvas sizes and shared paper components rather than inventing a separate poster theme. Do not use deck-local CSS or unreadably small type to make the fixture pass. Deliver the design source, CSS, generated artifacts, fixture, and actual validation status.
+
+The scaffold also creates `themes/src/<name>/_cover.css` and `_body.css`.
+Edit cover composition and body presentation independently. Use the
+theme-independent `title cover-plain` class on a cover for a neutral layout.

@@ -126,3 +126,11 @@ test("mixing old and new declarations on one column is an error", () => {
         );
     }
 });
+
+
+test("a plain col resolves child widths without an extra class", () => {
+    const { html } = createConfiguredMarp().render(
+        '<div class="col fill"><figure style="--col-width:60%"></figure><figure></figure><figure></figure></div>',
+    );
+    assert.match(html, /grid-template-columns:minmax\(0, 0.6fr\) minmax\(0, 0.2fr\) minmax\(0, 0.2fr\)/);
+});
