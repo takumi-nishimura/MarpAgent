@@ -111,9 +111,9 @@ function themeCssTemplate(name) {
 @import "./_shared/_scroll.css";
 @import "./_shared/_context-header.css";
 @import "./${name}/_body.css";
+@import "./_shared/_covers.css";
 @import "./${name}/_cover.css";
 @import "./_shared/_cover-plain.css";
-@import "./_shared/_cover-variants.css";
 
 section {
   --fg: var(--color-on-surface);
@@ -177,13 +177,9 @@ function createThemeFiles(options) {
     },
     {
       path: path.join(repoRoot, "themes", "src", name, "_cover.css"),
-      content: `section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) > h1 {
-  font-size: var(--text-display);
+      content: `/* Refine the standard cover's typography and spacing here. */
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --cover-copy-width: 92%;
 }
 `,
     },

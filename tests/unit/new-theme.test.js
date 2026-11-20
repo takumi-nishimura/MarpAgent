@@ -71,11 +71,14 @@ test("new-theme scaffolds design, theme source, and fixture", () => {
     assert.doesNotMatch(css, /@source\s+"/);
     assert.match(css, /@import "\.\/_shared\/_safelist\.css";/);
 
+    assert.match(css, /@import "\.\/_shared\/_covers\.css";/);
+
     const cover = fs.readFileSync(
       path.join(tempRoot, "themes", "src", "plain", "_cover.css"),
       "utf8",
     );
-    assert.match(cover, /section\.title:where\(:not\(\.cover-plain, \.cover-photo, \.cover-typographic\)\) > h1\s*\{[^}]*font-size: var\(--text-display\)/);
+    assert.match(cover, /section\.title:where\(:not\(\.cover-plain, \.cover-photo/);
+    assert.match(cover, /--cover-copy-width: 92%/);
 
     const fixture = fs.readFileSync(
       path.join(tempRoot, "fixtures", "plain-slide.md"),

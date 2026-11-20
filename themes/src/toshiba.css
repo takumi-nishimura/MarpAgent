@@ -216,9 +216,9 @@ section.invert::after {
   border-radius: var(--radius-none);
 }
 
+@import "./_shared/_covers.css";
 @import "./toshiba/_cover.css";
 @import "./_shared/_cover-plain.css";
-@import "./_shared/_cover-variants.css";
 @import "./_shared/_context-header.css";
 
 /* Keep the brand marker just before the outdented context label. */

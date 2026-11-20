@@ -514,6 +514,9 @@ one message, simple rules, and flat sections. Do not make nested cards or
 decorative panels. Paper layouts use A4 as the authoring base and may be scaled
 at print time.
 
+On the standard cover, the title and author details align to a broad left
+inset. A narrow, flat kinari field at the right edge gives the cover warmth.
+
 ## Elevation & Depth
 
 Avoid shadows. Most surfaces are flat with thin borders. When depth is needed,

@@ -1,8 +1,6 @@
-/* Shared cover layouts use the active theme's typography and colors. */
-section.title:where(.cover-photo, .cover-typographic) {
+/* Use the same title and author markup across the standard and photo covers. */
+section.title:where(:not(.cover-plain, :has(> .paper-header))) {
   --cover-inset: max(var(--padding-x), 6%);
-  --cover-gutter: 4%;
-  --cover-photo-width: 44%;
   --cover-content-end: var(--cover-inset);
   --cover-heading-size: var(--text-display, 2.5em);
   --cover-copy-width: 100%;
@@ -10,15 +8,15 @@ section.title:where(.cover-photo, .cover-typographic) {
   display: flex;
   flex-direction: column;
   justify-content: safe center;
-  align-items: flex-start;
+  align-items: var(--cover-items, flex-start);
   padding: 60px var(--cover-content-end) 60px var(--cover-inset);
 }
 
-section.title:where(.cover-photo, .cover-typographic):has(> header) {
+section.title:where(:not(.cover-plain, :has(> .paper-header))):has(> header) {
   padding-top: calc(var(--logo-title-size) + 52px);
 }
 
-section.title:where(.cover-photo, .cover-typographic) > header {
+section.title:where(:not(.cover-plain, :has(> .paper-header))) > header {
   position: absolute;
   inset: 20px var(--cover-content-end) auto var(--cover-inset);
   width: auto;
@@ -32,34 +30,44 @@ section.title:where(.cover-photo, .cover-typographic) > header {
     left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
 }
 
-section.title:where(.cover-photo, .cover-typographic) > h1 {
+section.title:where(:not(.cover-plain, :has(> .paper-header))) > h1 {
   max-inline-size: var(--cover-copy-width);
   margin: 0;
   font-size: var(--cover-heading-size);
   line-height: var(--leading-display, 1.14);
   font-weight: var(--font-weight-display, 700);
   letter-spacing: var(--tracking-display, normal);
+  text-align: var(--cover-align, start);
   overflow-wrap: anywhere;
 }
 
-section.title:where(.cover-photo, .cover-typographic) > :is(p, .author) {
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) > h1 {
+  text-wrap: balance;
+}
+
+section.title:where(:not(.cover-plain, :has(> .paper-header))) > :is(p, .author) {
   max-inline-size: var(--cover-copy-width);
-  align-items: flex-start;
+  align-items: var(--cover-items, flex-start);
   margin: 24px 0 0;
   color: var(--fg-muted);
   font-size: var(--text-body-md, 1em);
-  text-align: start;
+  text-align: var(--cover-align, start);
   overflow-wrap: anywhere;
 }
 
-section.title:where(.cover-photo, .cover-typographic) > p:has(~ h1) {
+section.title:where(:not(.cover-plain, :has(> .paper-header))) > p:has(~ h1) {
   margin: 0 0 22px;
   font-size: 0.82em;
   font-weight: 600;
 }
 
-section.title:where(.cover-photo, .cover-typographic) > footer {
+section.title:where(:not(.cover-plain, :has(> .paper-header))) > footer {
   inset-inline: var(--cover-inset) var(--cover-content-end);
+}
+
+section.title.cover-photo {
+  --cover-gutter: 4%;
+  --cover-photo-width: 44%;
 }
 
 section.title.cover-photo:has(> img.cover-image) {
@@ -79,17 +87,4 @@ section.title.cover-photo > img.cover-image {
 
 section.title.cover-photo:has(> img.cover-image)::after {
   right: var(--cover-photo-width);
-}
-
-/* Place the graphic at the lower corner, away from the reading area. */
-section.title.cover-typographic {
-  --cover-copy-width: 88%;
-  --cover-heading-size: calc(var(--text-display, 2.5em) * 1.13);
-  background-image: radial-gradient(
-    circle at right bottom,
-    color-mix(in srgb, var(--highlight) 26%, var(--bg)) 0 8.5%,
-    transparent 8.6% 12%,
-    color-mix(in srgb, var(--highlight) 13%, var(--bg)) 12.1% 19%,
-    transparent 19.1%
-  );
 }

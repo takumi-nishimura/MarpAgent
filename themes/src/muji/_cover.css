@@ -1,32 +1,12 @@
-section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) {
-  padding-top: 44px;
+/* Set the title against a quiet field with a narrow kinari edge. */
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --cover-inset: max(var(--padding-x), 8%);
+  --cover-content-end: 18%;
+  --cover-heading-size: calc(var(--text-display) * 1.16);
+  --cover-edge: var(--color-kinari);
+  background-image: linear-gradient(to right, transparent 87%, var(--cover-edge) 87%);
 }
 
-section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) h1 {
-  font-size: 2.5em;
-  text-align: left;
-  margin-top: 120px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) > p {
-  font-size: 1.2em;
-}
-
-section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) > p,
-section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) .author {
-  text-align: left;
-  margin-top: 56px;
-  margin-right: 0;
-  color: var(--fg-muted);
-}
-
-section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) header {
-  background-position:
-    left var(--padding-x) top 16px,
-    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px,
-    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px,
-    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px,
-    left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
+section.title.invert:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --cover-edge: color-mix(in srgb, var(--color-kinari) 14%, var(--bg));
 }
