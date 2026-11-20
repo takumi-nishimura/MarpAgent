@@ -41,13 +41,6 @@ section:where(:not(:has(> .paper-header))) h1 {
     letter-spacing: var(--tracking-headline-lg);
 }
 
-section.title:where(:not(:has(> .paper-header))) h1 {
-    font-size: var(--text-display);
-    font-weight: var(--font-weight-display);
-    line-height: var(--leading-display);
-    letter-spacing: var(--tracking-display);
-}
-
 section:where(:not(:has(> .paper-header))) h2 {
     font-size: var(--text-headline-md);
     font-weight: var(--font-weight-headline-md);

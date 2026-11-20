@@ -198,24 +198,6 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
   margin-top: var(--body-heading-gap);
 }
 
-/* Title slide - reduce padding since header is absolute positioned */
-section.title {
-  padding-top: 20px;
-}
-section.title h1 {
-  font-size: 2.5em;
-  text-align: center;
-  margin-top: 150px;
-  padding-bottom: 20px;
-  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
-}
-section.title > p {
-  text-align: right;
-  font-size: 1.2em;
-  margin-top: 100px;
-  margin-right: 50px;
-}
-
 /* Title slide header - uses contrasting logo on background */
 section.title header {
   background-image: var(--logos-dark);

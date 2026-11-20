@@ -693,22 +693,6 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > :is(h1, h2, h3, h4) + .body {
   margin-top: var(--body-heading-gap);
 }
-section.title {
-  padding-top: 20px;
-}
-section.title h1 {
-  font-size: 2.5em;
-  text-align: center;
-  margin-top: 150px;
-  padding-bottom: 20px;
-  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
-}
-section.title > p {
-  text-align: right;
-  font-size: 1.2em;
-  margin-top: 100px;
-  margin-right: 50px;
-}
 section.title header {
   background-image: var(--logos-dark);
   background-repeat: no-repeat;
@@ -1851,24 +1835,6 @@ section h3 {
   line-height: 1.15;
   letter-spacing: 0.09em;
 }
-section.title {
-  padding-top: 44px;
-}
-section.title h1 {
-  text-align: left;
-  margin-top: 120px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--color-border);
-}
-section.title > p, section.title .author {
-  text-align: left;
-  margin-top: 56px;
-  margin-right: 0;
-  color: var(--fg-muted);
-}
-section.title header {
-  background-position: left var(--padding-x) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
-}
 section:not(.title) > header:not(.paper-header) + * {
   margin-top: 78px;
 }
@@ -1912,6 +1878,41 @@ section::after {
 .paper-section.highlight > h2 {
   background: var(--color-muji-red);
   color: var(--color-neutral);
+}
+section.title:where(:not(.cover-plain)) {
+  padding-top: 44px;
+}
+section.title:where(:not(.cover-plain)) h1 {
+  text-align: left;
+  margin-top: 120px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+section.title:where(:not(.cover-plain)) > p, section.title:where(:not(.cover-plain)) .author {
+  text-align: left;
+  margin-top: 56px;
+  margin-right: 0;
+  color: var(--fg-muted);
+}
+section.title:where(:not(.cover-plain)) header {
+  background-position: left var(--padding-x) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
+}
+section.title.cover-plain {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-inline: var(--padding-x);
+}
+section.title.cover-plain > h1 {
+  font-size: var(--text-display, 2.5em);
+  line-height: var(--leading-display, 1.15);
+  margin: 0;
+}
+section.title.cover-plain > p, section.title.cover-plain .author {
+  text-align: start;
+  align-items: flex-start;
+  margin: 1em 0 0;
 }
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header) {
   left: 0;

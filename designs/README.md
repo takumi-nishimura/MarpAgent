@@ -25,3 +25,15 @@ Designs and surfaces are separate concepts:
 
 Paper layout components are shared by the `lab`, `muji`, and `toshiba` design
 implementations, not exposed as a separate design system or Marp theme.
+
+### Cover and body styles
+
+Use `theme:` for the deck identity. On the cover, `<!-- _class: title -->`
+uses the theme cover. Switch just that page to `<!-- _class: title cover-plain -->`
+for a left-aligned cover without a title rule. Both use the same title,
+author and affiliation markup. The body pages keep their theme.
+
+New themes have independent `_cover.css` and `_body.css` files alongside
+their entry stylesheet. Shared layout rules provide columns, figures and paper
+canvases. Put identity tokens in DESIGN.md and keep cover-only placement in
+the cover stylesheet. New themes start with a neutral design.

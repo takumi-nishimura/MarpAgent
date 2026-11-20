@@ -43,3 +43,10 @@ Rendering, self-checking, and correction are part of authoring; they do not requ
 Compare findings by rule and affected content after renumbering; unchanged totals can hide a regression. Correct introduced problems and report pre-existing ones separately. Preserve evidence when trimming or splitting, and readable body type when resizing figures. Recheck after meaningful corrections; stop repeating passed checks when no new relevant changes were made. A validator pass does not establish narrative, scientific support, or figure readability; disclose unavailable rendering rather than claiming visual success.
 
 Replace scaffold placeholders, resolve or disclose missing source material, and remove temporary drafting comments or convert them into intentional speaker notes. Export the requested formats and summarize substantive changes, actual checks, and remaining limitations. For additions, state the insertion and resulting page-count change. Start a persistent preview only when needed or requested, and clean up task-owned previews and disposable check artifacts while retaining requested outputs and evidence.
+
+Choose the composition from the brief. In a research talk, keep the
+experimental condition and caption beside the evidence; retain condition
+colors across figures. For a decision meeting, give the recommendation and
+the comparison that supports it prominence. For a workshop, keep the task,
+time and expected output visible while people work. A single deck may need
+all three approaches. Choose the cover independently of these body layouts.

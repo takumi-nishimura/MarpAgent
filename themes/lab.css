@@ -705,22 +705,6 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > :is(h1, h2, h3, h4) + .body {
   margin-top: var(--body-heading-gap);
 }
-section.title {
-  padding-top: 20px;
-}
-section.title h1 {
-  font-size: 2.5em;
-  text-align: center;
-  margin-top: 150px;
-  padding-bottom: 20px;
-  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
-}
-section.title > p {
-  text-align: right;
-  font-size: 1.2em;
-  margin-top: 100px;
-  margin-right: 50px;
-}
 section.title header {
   background-image: var(--logos-dark);
   background-repeat: no-repeat;
@@ -1871,12 +1855,6 @@ section:where(:not(:has(> .paper-header))) h1 {
   line-height: var(--leading-headline-lg);
   letter-spacing: var(--tracking-headline-lg);
 }
-section.title:where(:not(:has(> .paper-header))) h1 {
-  font-size: var(--text-display);
-  font-weight: var(--font-weight-display);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
-}
 section:where(:not(:has(> .paper-header))) h2 {
   font-size: var(--text-headline-md);
   font-weight: var(--font-weight-headline-md);
@@ -1980,6 +1958,45 @@ section {
   --bespoke-marp-cursor-glow: var(--color-cursor-glow);
   --bespoke-marp-cursor-duration: 0.35s;
   --bespoke-marp-cursor-idle: 0.75s;
+}
+section.title:where(:not(.cover-plain)) {
+  padding-top: 20px;
+}
+section.title:where(:not(.cover-plain)) h1 {
+  font-size: 2.5em;
+  text-align: center;
+  margin-top: 150px;
+  padding-bottom: 20px;
+  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
+}
+section.title:where(:not(.cover-plain)) > p {
+  text-align: right;
+  font-size: 1.2em;
+  margin-top: 100px;
+  margin-right: 50px;
+}
+section.title:where(:not(.cover-plain)):where(:not(:has(> .paper-header))) h1 {
+  font-size: var(--text-display);
+  font-weight: var(--font-weight-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+section.title.cover-plain {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-inline: var(--padding-x);
+}
+section.title.cover-plain > h1 {
+  font-size: var(--text-display, 2.5em);
+  line-height: var(--leading-display, 1.15);
+  margin: 0;
+}
+section.title.cover-plain > p, section.title.cover-plain .author {
+  text-align: start;
+  align-items: flex-start;
+  margin: 1em 0 0;
 }
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header) {
   left: 0;

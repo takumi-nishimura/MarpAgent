@@ -284,17 +284,17 @@ test("normal slide header uses a flat surface with an accent rule", () => {
 
 test("title and normal slide rules share the same accent treatment", () => {
   for (const relativePath of [
-    "themes/src/_shared/_base.css",
+    "themes/src/lab/_cover.css",
     "themes/lab.css",
   ]) {
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
     assert.match(
       css,
-      /section\.title h1\s*\{[\s\S]*border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/,
+      /section\.title:where\(:not\(\.cover-plain\)\) h1\s*\{[\s\S]*border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/,
     );
     assert.doesNotMatch(
       css,
-      /section\.title h1\s*\{[\s\S]*border-bottom:\s*1px solid var\(--fg\)/,
+      /section\.title:where\(:not\(\.cover-plain\)\) h1\s*\{[\s\S]*border-bottom:\s*1px solid var\(--fg\)/,
     );
   }
 });
