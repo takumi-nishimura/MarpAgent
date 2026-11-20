@@ -6,10 +6,11 @@ PDF, PPTX, and portable HTML ZIPs from the same source.
 
 [![Pages from the introduction example](decks/example/assets/img/introduction-preview.png)](decks/example/slide.pdf)
 
-Start with the **[10-slide introduction (PDF)](decks/example/slide.pdf)**,
+Start with the **[11-slide introduction (PDF)](decks/example/slide.pdf)**,
 its [Markdown source](decks/example/slide.md), and its [brief](decks/example/brief.md).
-The Japanese example follows a concrete request through drafting, inspection,
-revision, presentation, and distribution. It uses the default `lab` theme.
+The Japanese introduction explains how MarpAgent extends Marp with authoring
+skills, shared themes, and rendered checks. Its MUJI cover, Lab body, and
+automatic contents demonstrate those design options in the deck itself.
 
 Compare the built-in themes in the [cover and body gallery](designs/README.md#cover-and-body-gallery).
 
