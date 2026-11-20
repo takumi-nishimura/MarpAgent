@@ -1965,7 +1965,7 @@ section.title:where(:not(.cover-plain)) {
 section.title:where(:not(.cover-plain)) h1 {
   font-size: 2.5em;
   text-align: center;
-  margin-top: 150px;
+  margin-top: 182px;
   padding-bottom: 20px;
   border-bottom: var(--accent-rule-width) solid var(--accent-rule);
 }
