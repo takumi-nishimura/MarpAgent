@@ -36,6 +36,40 @@ the selected theme's typography and colors.
 | :--- | :--- |
 | `title cover-plain` | Left-aligned title without the standard cover decoration. |
 | `title cover-photo` | Title and author information on the left, full-height photo on the right. |
+| `title cover-lab` | Lab standard cover with a centered title and a horizontal rule. |
+| `title cover-muji` | MUJI standard cover with a kinari band and right-aligned event information above the title. |
+| `title cover-toshiba` | Toshiba standard cover with diagonal stripes and a red vertical title rule. |
+
+Each named cover uses its own typography, colors, and layout. Pick one
+cover class on the title slide. The `theme:` directive sets the body style
+for the deck. For example, a Lab deck can open with the MUJI cover.
+
+```markdown
+---
+marp: true
+theme: lab
+---
+
+<!-- _class: title cover-muji -->
+<!-- _header: Robotics Seminar · 2026.11.20 -->
+
+# Research title
+
+<div class="author">
+
+Presenter name
+
+Robotics Laboratory
+
+</div>
+
+---
+
+## Body heading
+
+The body uses the Lab theme.
+```
+
 
 Use an H1 for the title, an optional paragraph before it for the event name,
 and a paragraph or `.author` block below it for the presenter and affiliation.
