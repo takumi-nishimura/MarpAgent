@@ -27,6 +27,32 @@ test("inherited and spot headers form ordered runs across visible content pages"
     assert.deepEqual(render(pages).lists, Array(2).fill(["Background & context", "Methods", "Background & context"]));
 });
 
+test("math in headers survives rendering and distinguishes consecutive contents entries", () => {
+    for (const engine of ["mathjax", "katex"]) {
+        const pages = [
+            `---\nmath: ${engine}\n---\n\n${toc}`,
+            "<!-- header: 'Model $x^2$' -->\n## Quadratic model",
+            "## Another quadratic slide",
+            "<!-- header: 'Model $x^3$' -->\n## Cubic model",
+            "<!-- header: '$x^2$' -->\n## Formula only",
+        ];
+        const { html } = createConfiguredMarp().render(pages.join("\n\n---\n\n"));
+        const list = DomUtils.findOne(
+            node => node.attribs.class === "section-contents",
+            parseDocument(html).children,
+        );
+        const formulas = list.children.map(item => {
+            const formula = DomUtils.findOne(
+                node => node.name === "annotation" || node.attribs["data-mml-node"] === "math",
+                item.children,
+            );
+            return formula?.attribs["data-latex"] ?? (formula && DomUtils.textContent(formula));
+        });
+        assert.deepEqual(formulas, ["x^2", "x^3", "x^2"], engine);
+        assert.equal(list.children[0].children[0].data, "Model ");
+    }
+});
+
 test("one explicit section switches the whole deck; local headers can vary", () => {
     const pages = [toc, "<!-- _header: Preface -->\n## Intro",
         "<!-- section: Study -->\n## Apparatus",

@@ -5,6 +5,32 @@ const { parseDocument, DomUtils } = require("htmlparser2");
 const { groupClasses } = require("./auto-body-plugin");
 const { bodyGroups } = require("./scroll-slides-plugin");
 
+function headerLabel(inline, md, env) {
+    const tokens = inline.children || [];
+    const render = part => md.renderer.renderInline(part, md.options, env);
+    const text = part => DomUtils.innerText(parseDocument(render(part)).children)
+        .replace(/\s+/g, " ");
+
+    // MathJax's SVG has no text and KaTeX includes multiple representations.
+    // Keep math tokens intact while reducing the rest of the header to text.
+    const parts = [];
+    let start = 0;
+    for (const [index, token] of tokens.entries()) {
+        if (token.type !== "marp_math_inline") continue;
+        parts.push(text(tokens.slice(start, index)), token);
+        start = index + 1;
+    }
+    parts.push(text(tokens.slice(start)));
+    parts[0] = parts[0].trimStart();
+    parts[parts.length - 1] = parts.at(-1).trimEnd();
+    if (!parts.some(Boolean)) return;
+
+    return {
+        key: JSON.stringify(parts.map(part => typeof part === "string" ? part : [part.content])),
+        html: parts.map(part => typeof part === "string" ? md.utils.escapeHtml(part) : render([part])).join(""),
+    };
+}
+
 function insertContents(tokens, list, Token) {
     const groups = bodyGroups(tokens, Token);
     const body = groups.find(group => groupClasses(group).includes("body"));
@@ -64,16 +90,14 @@ module.exports = (md) => {
         let previous = "";
         let current;
         let start;
-        let header = "";
+        let header;
         for (const [index, token] of state.tokens.entries()) {
             if (token.type === "marpit_slide_open") {
                 current = token;
                 start = index + 1;
-                header = "";
+                header = undefined;
             } else if (token.type === "marpit_header_open" && !state.hasContentsSections) {
-                const inline = state.tokens[index + 1];
-                const html = md.renderer.renderInline(inline.children || [], md.options, state.env);
-                header = DomUtils.innerText(parseDocument(html).children).replace(/\s+/g, " ").trim();
+                header = headerLabel(state.tokens[index + 1], md, state.env);
             } else if (token.type === "marpit_slide_close") {
                 const { contentsPage, contentsSection } = current.meta.marpitDirectives;
                 if (contentsPage) {
@@ -81,13 +105,15 @@ module.exports = (md) => {
                     continue;
                 }
                 if (!state.hasContentsSections && (current.attrGet("class") || "").split(/\s+/).includes("title")) continue;
-                const label = state.hasContentsSections ? contentsSection : header;
-                if (label && label !== previous) labels.push(label);
-                if (label || state.hasContentsSections) previous = label;
+                const key = state.hasContentsSections ? contentsSection : header?.key;
+                if (key && key !== previous) {
+                    labels.push(state.hasContentsSections ? md.utils.escapeHtml(contentsSection) : header.html);
+                }
+                if (key || state.hasContentsSections) previous = key;
             }
         }
         if (!labels.length) return;
-        const items = labels.map(label => `<li>${md.utils.escapeHtml(label)}</li>`).join("");
+        const items = labels.map(label => `<li>${label}</li>`).join("");
         for (const [start, end] of insertions.reverse()) {
             const list = new state.Token("html_block", "", 0);
             list.content = `<ol class="section-contents">${items}</ol>\n`;
