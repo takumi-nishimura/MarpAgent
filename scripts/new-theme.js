@@ -178,8 +178,11 @@ function createThemeFiles(options) {
     {
       path: path.join(repoRoot, "themes", "src", name, "_cover.css"),
       content: `/* Refine the standard cover's typography and spacing here. */
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
   --cover-copy-width: 92%;
+}
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) > h1 {
+  font-size: var(--text-display);
 }
 `,
     },

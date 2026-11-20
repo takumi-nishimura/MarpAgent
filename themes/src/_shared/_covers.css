@@ -1,5 +1,5 @@
 /* Use the same title and author markup across the standard and photo covers. */
-section.title:where(:not(.cover-plain, :has(> .paper-header))) {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) {
   --cover-inset: max(var(--padding-x), 6%);
   --cover-content-end: var(--cover-inset);
   --cover-heading-size: var(--text-display, 2.5em);
@@ -12,11 +12,11 @@ section.title:where(:not(.cover-plain, :has(> .paper-header))) {
   padding: 60px var(--cover-content-end) 60px var(--cover-inset);
 }
 
-section.title:where(:not(.cover-plain, :has(> .paper-header))):has(> header) {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))):has(> header) {
   padding-top: calc(var(--logo-title-size) + 52px);
 }
 
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > header {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > header {
   position: absolute;
   inset: 20px var(--cover-content-end) auto var(--cover-inset);
   width: auto;
@@ -30,7 +30,7 @@ section.title:where(:not(.cover-plain, :has(> .paper-header))) > header {
     left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
 }
 
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > h1 {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > h1 {
   max-inline-size: var(--cover-copy-width);
   margin: 0;
   font-size: var(--cover-heading-size);
@@ -41,11 +41,11 @@ section.title:where(:not(.cover-plain, :has(> .paper-header))) > h1 {
   overflow-wrap: anywhere;
 }
 
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) > h1 {
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > h1 {
   text-wrap: balance;
 }
 
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > :is(p, .author) {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > :is(p, .author) {
   max-inline-size: var(--cover-copy-width);
   align-items: var(--cover-items, flex-start);
   margin: 24px 0 0;
@@ -55,13 +55,13 @@ section.title:where(:not(.cover-plain, :has(> .paper-header))) > :is(p, .author)
   overflow-wrap: anywhere;
 }
 
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > p:has(~ h1) {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > p:has(~ h1) {
   margin: 0 0 22px;
   font-size: 0.82em;
   font-weight: 600;
 }
 
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > footer {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > footer {
   inset-inline: var(--cover-inset) var(--cover-content-end);
 }
 

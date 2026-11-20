@@ -1879,7 +1879,7 @@ section::after {
   background: var(--color-muji-red);
   color: var(--color-neutral);
 }
-section.title:where(:not(.cover-plain, :has(> .paper-header))) {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) {
   --cover-inset: max(var(--padding-x), 6%);
   --cover-content-end: var(--cover-inset);
   --cover-heading-size: var(--text-display, 2.5em);
@@ -1891,10 +1891,10 @@ section.title:where(:not(.cover-plain, :has(> .paper-header))) {
   align-items: var(--cover-items, flex-start);
   padding: 60px var(--cover-content-end) 60px var(--cover-inset);
 }
-section.title:where(:not(.cover-plain, :has(> .paper-header))):has(> header) {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))):has(> header) {
   padding-top: calc(var(--logo-title-size) + 52px);
 }
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > header {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > header {
   position: absolute;
   inset: 20px var(--cover-content-end) auto var(--cover-inset);
   width: auto;
@@ -1902,7 +1902,7 @@ section.title:where(:not(.cover-plain, :has(> .paper-header))) > header {
   font-size: 0.75em;
   background-position: left 0 top 10px, left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
 }
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > h1 {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > h1 {
   max-inline-size: var(--cover-copy-width);
   margin: 0;
   font-size: var(--cover-heading-size);
@@ -1912,10 +1912,10 @@ section.title:where(:not(.cover-plain, :has(> .paper-header))) > h1 {
   text-align: var(--cover-align, start);
   overflow-wrap: anywhere;
 }
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) > h1 {
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > h1 {
   text-wrap: balance;
 }
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > :is(p, .author) {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > :is(p, .author) {
   max-inline-size: var(--cover-copy-width);
   align-items: var(--cover-items, flex-start);
   margin: 24px 0 0;
@@ -1924,12 +1924,12 @@ section.title:where(:not(.cover-plain, :has(> .paper-header))) > :is(p, .author)
   text-align: var(--cover-align, start);
   overflow-wrap: anywhere;
 }
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > p:has(~ h1) {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > p:has(~ h1) {
   margin: 0 0 22px;
   font-size: 0.82em;
   font-weight: 600;
 }
-section.title:where(:not(.cover-plain, :has(> .paper-header))) > footer {
+section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > footer {
   inset-inline: var(--cover-inset) var(--cover-content-end);
 }
 section.title.cover-photo {
@@ -1955,18 +1955,40 @@ section.title.cover-photo > img.cover-image {
 section.title.cover-photo:has(> img.cover-image)::after {
   right: var(--cover-photo-width);
 }
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
   --cover-inset: max(var(--padding-x), 8%);
   --cover-content-end: 18%;
   --cover-heading-size: calc(var(--text-display) * 1.16);
   --cover-edge: var(--color-kinari);
   background-image: linear-gradient(to right, transparent 87%, var(--cover-edge) 87%);
 }
-section.title.invert:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+section.title.invert:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
   --cover-edge: #f4eede;
   @supports (color: color-mix(in lab, red, red)) {
     --cover-edge: color-mix(in srgb, var(--color-kinari) 14%, var(--bg));
   }
+}
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) {
+  padding-top: 44px;
+}
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) h1 {
+  font-size: 2.5em;
+  text-align: left;
+  margin-top: 120px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) > p {
+  font-size: 1.2em;
+}
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) > p, section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) .author {
+  text-align: left;
+  margin-top: 56px;
+  margin-right: 0;
+  color: var(--fg-muted);
+}
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) header {
+  background-position: left var(--padding-x) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
 }
 section.title.cover-plain {
   display: flex;
