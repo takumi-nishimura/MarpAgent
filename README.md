@@ -205,6 +205,8 @@ Contributors should follow the CI guide for Chromium/Firefox, D2/font preparatio
 
 ### 自動目次
 
+[3テーマの自動目次の表示見本と原稿](designs/README.md#automatic-contents-gallery)を確認できる．
+
 目次を置くページに `<!-- _toc: true -->` を書く．通常は各ページに
 適用されたヘッダーを原稿順に並べ，同じ表示名が続く区間を1項目にする．
 たとえば「背景，背景，手法，背景」の目次は「背景，手法，背景」となる．

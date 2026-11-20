@@ -8,6 +8,16 @@ Available designs:
 | `muji` | `designs/muji/DESIGN.md` | `themes/src/_generated/muji-design-tokens.css` | `theme: muji` |
 | `toshiba` | `designs/toshiba/DESIGN.md` | `themes/src/_generated/toshiba-design-tokens.css` | `theme: toshiba` |
 
+## Automatic contents gallery
+
+The [sample manuscript](contents/slide.md) puts `<!-- _toc: true -->` on its first slide. The four body slides use three distinct header runs. The two consecutive slides about choosing a question contribute a single entry, followed by the sections on figures and conclusions. The slide heading is ordinary Markdown, and MarpAgent generates the numbered list beneath it.
+
+| `lab` | `muji` | `toshiba` |
+| :--- | :--- | :--- |
+| [![lab automatic contents](contents/lab-contents.png)](contents/lab-contents.png) | [![muji automatic contents](contents/muji-contents.png)](contents/muji-contents.png) | [![toshiba automatic contents](contents/toshiba-contents.png)](contents/toshiba-contents.png) |
+
+Open a thumbnail for the 1280 × 720 render. Run `npm run marpx -- designs/contents/slide.md --overview` to see the list alongside the pages that supply its entries. Change the frontmatter `theme:` value to reproduce each column. The previews use Chromium with Noto Sans JP available.
+
 Create another design with:
 
 ```bash
