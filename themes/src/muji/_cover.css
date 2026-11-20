@@ -18,12 +18,14 @@ section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fi
   align-self: stretch;
   min-height: 0;
   max-inline-size: 100%;
+  padding-inline-end: 16px;
   text-align: end;
   overflow-wrap: anywhere;
   background-size: 0;
 
   &:not(:empty) {
-    margin-block-end: 14px;
+    /* Keep the title in place as the caption moves up. */
+    margin-block: -16px 30px;
   }
 
   &::before {
