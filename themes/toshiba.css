@@ -1310,6 +1310,16 @@ figure img[style*="width"] {
   max-height: var(--mermaid-max-height, 500px);
   height: auto;
 }
+section .section-contents {
+  font-size: calc(var(--text-slide-body, var(--text-body-md)) + 4px);
+  line-height: 1.45;
+}
+section .section-contents > li {
+  margin-block: 8px;
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> header, > .paper-header)):has(> .body):has(.section-contents) {
+  padding-top: 48px;
+}
 section:has(> .paper-header) {
   --paper-accent: var(--highlight);
   --paper-accent-soft: var(--paper-accent);

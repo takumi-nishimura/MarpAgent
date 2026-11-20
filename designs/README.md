@@ -16,7 +16,9 @@ The [sample manuscript](contents/slide.md) puts `<!-- _toc: true -->` on its fir
 | :--- | :--- | :--- |
 | [![lab automatic contents](contents/lab-contents.png)](contents/lab-contents.png) | [![muji automatic contents](contents/muji-contents.png)](contents/muji-contents.png) | [![toshiba automatic contents](contents/toshiba-contents.png)](contents/toshiba-contents.png) |
 
-Open a thumbnail for the 1280 × 720 render. Run `npm run marpx -- designs/contents/slide.md --overview` to see the list alongside the pages that supply its entries. Change the frontmatter `theme:` value to reproduce each column. The previews use Chromium with Noto Sans JP available.
+The generated entries are 36 px in lab and toshiba and 34 px in MUJI. A headerless contents page leaves 48 px above the heading. Open a thumbnail for the 1280 × 720 render. Run `npm run marpx -- designs/contents/slide.md --overview` to see the list alongside the pages that supply its entries. Change the frontmatter `theme:` value to reproduce each column. The previews use Chromium with Noto Sans JP available.
+
+## Creating a design
 
 Create another design with:
 
