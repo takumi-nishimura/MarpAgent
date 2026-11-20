@@ -8,17 +8,20 @@ style: |
     section {
       --logos-dark: url(shared/logos/marp-logo.svg);
     }
+    section:not(.title, .toc-center) {
+      --text-slide-body: 28px;
+    }
 ---
 
 <!-- _paginate: skip -->
 <!-- _class: title cover-muji -->
-<!-- _header: 2026-11-01 -->
+<!-- _header: 2026-11-20 -->
 
 # MarpAgent
 
 <div class="author">
 
-Markdownでスライドを作り，発表・配布する
+Marpに制作スキル・テーマ・描画検証を加えたスライド制作環境
 
 </div>
 
@@ -31,247 +34,193 @@ Markdownでスライドを作り，発表・配布する
 
 ---
 
-<!-- section: 原稿を作り，改稿する -->
-<!-- _header: 概要 -->
+<!-- header: MarpAgentの概要 -->
 
-## MarpAgentの機能
-
-<div class="body box">
-
-MarpAgentは，Marpにテーマ・スキル・自動検証を加えたスライド制作環境である．
-
-| 作業 | 使う機能 |
-| :--- | :--- |
-| 原稿の作成・改稿 | Markdown原稿，テーマとレイアウト部品，エージェント向けスキル |
-| 表示の確認 | ライブプレビュー，スライド一覧，表示崩れの自動検証 |
-| 発表・配布 | 発表用HTML，PDF・PPTX出力，素材を含むZIP |
-
-本文・図表・ページの順序は，`slide.md`で編集する．
-
-</div>
-
----
-
-<!-- _header: 目的と参照資料 -->
-
-## 制作を依頼するときに伝えること
+## MarpAgentとは
 
 <div class="body box">
 
-**依頼例**
+Marpでスライドを描画し，原稿の編集と表示の点検を支える制作環境．
 
-> Markdownの基本を知る学生に，MarpAgentでスライドを作り，配布する手順を10分で紹介したい．
-> READMEと作例をもとに，PDFと発表用HTMLを用意してほしい．
-
-- **brief.md**：目的，聴衆，制約，参照資料を記録する
-- **slide.md**：見出し，本文，図表を作成・改稿する
-
-依頼の条件が変わったときは，`brief.md`も更新する．
-
-</div>
-
----
-
-<!-- _header: 制作の流れ -->
-
-## 描画・点検・改稿の例
-
-<div class="body box">
-
-PDFとHTMLの違いを説明するページを試作し，比較の観点をそろえる．
-
-<div class="col">
-<div>
-
-### 試作：説明を並べる
-
-- PDFは閲覧・印刷に使う
-- HTMLはブラウザで発表する
-- PDFは1ファイルで渡す
-- HTMLは画像やCSSも一緒に渡す
-
-</div>
-<div>
-
-### 改稿：共通の観点で比較する
-
-| 観点 | PDF | HTML |
-| :--- | :--- | :--- |
-| 主な用途 | 閲覧・印刷 | ブラウザで発表 |
-| 渡すもの | PDF | HTMLと素材 |
-
-</div>
-</div>
-
-**点検**：用途と配布物を，PDFとHTMLで見比べられるか．
-
-**改稿**：観点をそろえて表にまとめ，再描画して収まりを確認する．
-
-</div>
-
----
-
-<!-- section: 表示と構成を点検する -->
-<!-- _header: 点検 -->
-
-## 表示の自動検証と内容の点検
-
-<div class="body box">
-
-```bash
-npm run marpx -- decks/example/slide.md -v --strict
+```d2
+direction: right
+*.style.font-size: 27
+edit: slide-author
+source: slide.md
+slide: Slides
+check: Rendered checks
+edit -> source
+source -> slide: Marp + theme
+slide -> check
 ```
 
-| 自動検証で調べること | 人が判断すること |
-| :--- | :--- |
-| 画面端での欠け，文字の重なり | 聴衆に必要な説明・根拠があるか |
-| 小さすぎる文字，画像の読み込み失敗 | 図のラベルや凡例を読めるか |
-| 図・数式の描画エラー | 見出しと本文・図表が対応しているか |
-
-`--strict`を付けると，描画検査を実行できない場合もエラーで終了する．
-
 </div>
 
 ---
 
-<!-- _header: デザイン -->
+<!-- header: 原稿とデザイン -->
 
-## テーマとレイアウト
+## 手元の資料からスライドを作る
 
 <div class="body box">
 
-| テーマ | 外観 |
+エージェントに元資料を渡し，誰に何を伝えたいかを添える．
+
+| 渡す資料 | 作りたいスライドの例 |
 | :--- | :--- |
-| lab | 研究発表向けの標準デザイン |
-| muji | 控えめで簡潔なデザイン |
-| toshiba | コントラストの強い技術発表向けデザイン |
-
-この作例は本文に `theme: lab` を使い，表紙の1枚だけに `title cover-muji` を指定している．
-
-> [!TIP]
-> 実際に使う図を描画し，ラベルとキャプションが読めるか確かめる．
+| 技術資料 | 新しく参加した開発者に，システムの仕組みを紹介する |
+| 論文原稿 | 学会発表で，研究の問いと主要な結果を伝える |
+| 実験レポート | 研究室の進捗報告で，条件ごとの結果を見比べる |
 
 </div>
 
 ---
 
-<!-- _header: 全体構成 -->
+<style scoped>
+.body h3 { font-size: 1em; }
+</style>
 
-## スライド一覧で話の流れを確認する
+## 技術資料から紹介スライドを作る例
+
+<div class="body col">
+<div>
+
+### 初稿を頼む
+
+> この設計書を，新しく入った開発者向けの紹介スライドにしてください．
+
+エージェントが `slide.md` に初稿を書く．
+
+</div>
+<div>
+
+### 初稿を見て直す
+
+> 部品名が出てくる前に，設計書の構成図を見せてください．
+
+図を移した原稿を，著者がプレビューで読む．
+
+</div>
+</div>
+
+---
+
+## 表紙はMUJI，本文はLab
+
+<div class="body col visual">
+<figure>
+<img src="assets/img/example-cover.png" alt="右に生成り色の帯を置いたこの資料の表紙" />
+<figcaption>表紙の指定　<code>title cover-muji</code></figcaption>
+</figure>
+<figure>
+<img src="assets/img/example-body-detail.png" alt="Labテーマで描画した初稿と改稿の依頼例" />
+<figcaption>本文の指定　<code>theme: lab</code></figcaption>
+</figure>
+</div>
+
+---
+
+## 本文の章名から目次ができる
 
 <div class="body col visual shares">
-<figure style="--col-width: 62.5%">
-<img src="assets/img/overview-mode.png" alt="スライドを一覧表示するオーバービューモード" />
-<figcaption>スライド一覧の表示例</figcaption>
+<figure style="--col-width: 47%">
+<img src="assets/img/example-contents.png" alt="この資料の目次に並ぶ3章" />
+<figcaption>自動生成した目次（2枚目）</figcaption>
 </figure>
 <div class="place-middle">
 
-`--overview`で，全ページの並びを確認できる．
+章の先頭で名前を指定する．
 
-### 構成の点検
+```markdown
+<!-- header: 原稿とデザイン -->
+```
 
-- 結論までの説明に不足はないか
-- 説明が重複していないか
-
-原稿に説明を補い，重複をまとめる．必要ならページの順序を変える．
+`_toc: true` を置いたページに，各章の名前が順に並ぶ．
 
 </div>
 </div>
 
 ---
 
-<!-- section: 発表し，配布する -->
-<!-- _header: 発表 -->
+<!-- header: 表示の確認と出力 -->
 
-## 発表用HTMLの操作
+## 一覧でページの順序を確かめる
 
 <div class="body col visual shares">
-<div style="--col-width: 50%" class="place-middle">
-<figure class="figure-natural">
-<img src="assets/img/laser-pointer-demo.png" alt="発表用HTMLでレーザーポインタを表示した例" />
-<figcaption>レーザーポインタの表示例</figcaption>
+<figure style="--col-width: 60%">
+<img src="assets/img/overview-mode.png" alt="スライドを原稿順に並べた一覧" />
+<figcaption>オーバービューの表示例</figcaption>
 </figure>
-</div>
 <div class="place-middle">
 
-### ポインタと本文スクロール
+`--overview` でデッキを見渡せる．
 
-- レーザーポインタで説明箇所を示す
-- 長い表や付録は，本文をスクロールして読む
-
-スクロール位置は，同じセッションの発表者画面と同期する．
-
-PDF・PPTX・画像は初期表示のみ．全文を載せる場合はページを分ける．
+図のラベルや表の文字は，個々のページを開いて読む．
 
 </div>
 </div>
 
 ---
 
-<!-- _header: 配布 -->
-
-## 配布形式と用途
+## 自動検証は描画したページを調べる
 
 <div class="body box">
-<div class="col visual shares">
-<div style="--col-width: 50%">
+
+```sh
+marpx decks/example/slide.md -v --strict
+```
+
+| 検査対象 | 検出する例 |
+| :--- | :--- |
+| 本文・図表 | ページ端での欠け，文字の重なり |
+| 画像・数式 | 画像の読み込み失敗，数式の描画エラー |
+
+</div>
+
+---
+
+## ブラウザで使える発表機能
+
+<div class="body col visual shares">
+<figure style="--col-width: 60%">
+<img src="assets/img/laser-pointer-demo.png" alt="表のPDF行に赤いレーザーポインタがある" />
+<figcaption>レーザーポインタで表の1行を示す</figcaption>
+</figure>
+<div class="place-middle">
+
+長い表や付録には，本文だけをスクロールする設定もある．
+
+PDFやPPTXに全行を載せるには，原稿でページを分ける．
+
+</div>
+</div>
+
+---
+
+## ひとつの原稿から用途別に書き出す
+
+<div class="body col visual shares">
+<div style="--col-width: 55%">
 
 ```d2
 direction: down
-*.style.font-size: 30
+*.style.font-size: 27
 source: slide.md
 pdf: PDF
-pptx: PPTX
-bundle: HTML + assets (ZIP)
-source -> pdf
-source -> pptx
-source -> bundle
+pptx: PowerPoint
+zip: HTML + assets
+source -> pdf: --pdf
+source -> pptx: --pptx
+source -> zip: --zip
 ```
 
 </div>
-<div>
+<div class="place-middle">
 
-| 配布形式 | 主な用途 |
-| :--- | :--- |
-| PDF | 完成した資料の閲覧・印刷 |
-| PPTX | PowerPointでの発表 |
-| HTMLと素材のZIP | ブラウザでの発表・操作 |
+閲覧・印刷にはPDF，ブラウザでの発表にはZIPを使う．
 
-ZIPにMarkdown原稿は含まれない．共同編集をする場合は，原稿と素材を別途渡す．
+共同編集者には原稿と素材も渡す．
 
 </div>
-</div>
-</div>
-
----
-
-<!-- _header: 配布 -->
-
-## 出力ファイルで表示と操作を確認する
-
-`--pdf`／`--pptx`／`--zip`で，配布形式を指定する．
-
-- PDF・PPTXは出力ファイルを開き，改行と図表の表示を確認する．
-- ZIPは展開後に`index.html`を開き，画像の表示と発表操作を確認する．
-
----
-
-<!-- section: 最初の1枚を作る -->
-<!-- _header: 始め方 -->
-
-## 手元の図や表で，最初の1枚を作る
-
-<div class="body box">
-
-環境構築は[README](https://github.com/takumi-nishimura/MarpAgent#prerequisites)を参照する．リポジトリ直下でデッキを作り，`brief.md`と`slide.md`を編集する．
-
-```bash
-npm run marpx -- -n decks/my-talk
-npm run marpx -- decks/my-talk/slide.md
-npm run marpx -- decks/my-talk/slide.md -v --strict
-npm run marpx -- decks/my-talk/slide.md --pdf
-```
-
-図表を実際に表示し，読める大きさか，説明と対応しているかを確かめる．
 
 </div>
