@@ -112,6 +112,7 @@ function themeCssTemplate(name) {
 @import "./_shared/_context-header.css";
 @import "./${name}/_body.css";
 @import "./_shared/_covers.css";
+@import "./_shared/_cover-standard.css";
 @import "./${name}/_cover.css";
 @import "./_shared/_cover-plain.css";
 

@@ -1,10 +1,15 @@
 /* Set the title against a quiet field with a narrow kinari edge. */
 section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
   --cover-inset: max(var(--padding-x), 8%);
-  --cover-content-end: 18%;
+  --cover-edge-start: 83%;
+  --cover-content-end: calc(100% - var(--cover-edge-start) + 5%);
   --cover-heading-size: calc(var(--text-display) * 1.16);
   --cover-edge: var(--color-kinari);
-  background-image: linear-gradient(to right, transparent 87%, var(--cover-edge) 87%);
+  background-image: linear-gradient(
+    to right,
+    transparent var(--cover-edge-start),
+    var(--cover-edge) var(--cover-edge-start)
+  );
 }
 
 section.title.invert:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {

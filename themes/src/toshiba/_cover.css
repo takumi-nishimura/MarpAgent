@@ -1,25 +1,5 @@
-/* Keep the brand stripes in the lower corner and give the headline a broad field. */
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
-  --cover-content-end: 19%;
-  background-image: linear-gradient(
-    135deg,
-    transparent 0 var(--title-stripe-start),
-    var(--action-blue-soft) var(--title-stripe-start)
-      var(--title-stripe-light-end),
-    var(--color-tertiary) var(--title-stripe-light-end)
-      var(--title-stripe-blue-end),
-    var(--color-accent-strong) var(--title-stripe-blue-end)
-      var(--title-stripe-red-end),
-    transparent var(--title-stripe-red-end)
-  );
-  background-position: right bottom;
-  background-repeat: no-repeat;
-  background-size: 40% 88%;
-}
-
-/* Preserve the authored placement on covers that opt into legacy fill. */
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) {
-  padding-top: 20px;
+/* Keep the full-size brand stripes on the standard and legacy fill covers. */
+section.title:where(:not(.cover-plain, .cover-photo)) {
   background-color: var(--bg);
   background-image: linear-gradient(
     135deg,
@@ -32,6 +12,28 @@ section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) {
       var(--title-stripe-red-end),
     transparent var(--title-stripe-red-end)
   );
+}
+
+/* Give the title more room beside the stripes and keep the author nearby. */
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
+  --cover-inset: var(--padding-x);
+  --cover-content-end: 30%;
+  --cover-header-end: var(--cover-inset);
+  --cover-heading-size: calc(var(--text-display) * 0.92);
+}
+
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > h1 {
+  padding-inline-start: var(--spacing-title-heading-inset);
+  border-inline-start: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+}
+
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > :is(p, .author) {
+  margin-inline-start: calc(var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset));
+}
+
+/* Preserve the authored placement on covers that opt into legacy fill. */
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) {
+  padding-top: 20px;
 }
 
 section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) h1 {

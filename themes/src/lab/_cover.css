@@ -1,39 +1,22 @@
-/* Center the research title and group the author information underneath. */
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
-  --cover-items: center;
-  --cover-align: center;
-  --cover-copy-width: 92%;
-  --cover-heading-size: calc(var(--text-display) * 1.06);
-}
-
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > h1::after {
-  content: "";
-  display: block;
-  inline-size: min(128px, 30%);
-  block-size: var(--accent-rule-width);
-  margin: 26px auto 0;
-  background: var(--accent-rule);
-}
-
-/* Preserve the authored placement on covers that opt into legacy fill. */
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) {
+/* Title slide - reduce padding since header is absolute positioned */
+section.title:where(:not(.cover-plain, .cover-photo)) {
   padding-top: 20px;
 }
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) h1 {
+section.title:where(:not(.cover-plain, .cover-photo)) h1 {
   font-size: 2.5em;
   text-align: center;
   margin-top: 182px;
   padding-bottom: 20px;
   border-bottom: var(--accent-rule-width) solid var(--accent-rule);
 }
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) > p {
+section.title:where(:not(.cover-plain, .cover-photo)) > p {
   text-align: right;
   font-size: 1.2em;
   margin-top: 100px;
   margin-right: 50px;
 }
 
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)):where(:not(:has(> .paper-header))) h1 {
+section.title:where(:not(.cover-plain, .cover-photo)):where(:not(:has(> .paper-header))) h1 {
     font-size: var(--text-display);
     font-weight: var(--font-weight-display);
     line-height: var(--leading-display);

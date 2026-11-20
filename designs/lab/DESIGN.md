@@ -660,9 +660,6 @@ remains visible to diagnostics instead of crossing into the heading or shrinking
 Deck-specific adjustment should prefer the shared variables and placement
 utilities. Scoped CSS is for a concrete remaining need.
 
-The standard cover centers the title and author information as a group.
-A short warm rule marks the space between the title and its supporting details.
-
 ## Elevation & Depth
 
 Depth is intentionally flat. Visual hierarchy comes from type scale, spacing,

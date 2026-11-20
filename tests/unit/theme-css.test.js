@@ -288,10 +288,9 @@ test("the Lab cover rule uses the shared accent treatment", () => {
     "themes/lab.css",
   ]) {
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
-    const rule = /h1::after\s*\{([^}]*--accent-rule[^}]*)\}/.exec(css)?.[1];
+    const rule = /\) h1\s*\{([^}]*--accent-rule[^}]*)\}/.exec(css)?.[1];
     assert.ok(rule, relativePath);
-    assert.match(rule, /block-size:\s*var\(--accent-rule-width\)/);
-    assert.match(rule, /background:\s*var\(--accent-rule\)/);
+    assert.match(rule, /border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/);
   }
 });
 

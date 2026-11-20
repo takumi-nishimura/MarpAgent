@@ -1938,7 +1938,7 @@ section.invert::after {
   background: var(--color-surface-muted);
   border-radius: var(--radius-none);
 }
-section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) {
+section.title:where(.cover-photo) {
   --cover-inset: max(var(--padding-x), 6%);
   --cover-content-end: var(--cover-inset);
   --cover-heading-size: var(--text-display, 2.5em);
@@ -1947,49 +1947,46 @@ section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fi
   display: flex;
   flex-direction: column;
   justify-content: safe center;
-  align-items: var(--cover-items, flex-start);
+  align-items: flex-start;
   padding: 60px var(--cover-content-end) 60px var(--cover-inset);
-}
-section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))):has(> header) {
-  padding-top: calc(var(--logo-title-size) + 52px);
-}
-section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > header {
-  position: absolute;
-  inset: 20px var(--cover-content-end) auto var(--cover-inset);
-  width: auto;
-  padding-inline-end: 0;
-  font-size: 0.75em;
-  background-position: left 0 top 10px, left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
-}
-section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > h1 {
-  max-inline-size: var(--cover-copy-width);
-  margin: 0;
-  font-size: var(--cover-heading-size);
-  line-height: var(--leading-display, 1.14);
-  font-weight: var(--font-weight-display, 700);
-  letter-spacing: var(--tracking-display, normal);
-  text-align: var(--cover-align, start);
-  overflow-wrap: anywhere;
-}
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > h1 {
-  text-wrap: balance;
-}
-section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > :is(p, .author) {
-  max-inline-size: var(--cover-copy-width);
-  align-items: var(--cover-items, flex-start);
-  margin: 24px 0 0;
-  color: var(--fg-muted);
-  font-size: var(--text-body-md, 1em);
-  text-align: var(--cover-align, start);
-  overflow-wrap: anywhere;
-}
-section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > p:has(~ h1) {
-  margin: 0 0 22px;
-  font-size: 0.82em;
-  font-weight: 600;
-}
-section.title:where(.cover-photo, :not(.cover-plain, :has(> .paper-header, > .fill))) > footer {
-  inset-inline: var(--cover-inset) var(--cover-content-end);
+  &:has(> header) {
+    padding-top: calc(var(--logo-title-size) + 52px);
+  }
+  & > header {
+    position: absolute;
+    inset: 20px var(--cover-header-end, var(--cover-content-end)) auto var(--cover-inset);
+    width: auto;
+    padding-inline-end: 0;
+    font-size: 0.75em;
+    background-position: left 0 top 10px, left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
+  }
+  & > h1 {
+    max-inline-size: var(--cover-copy-width);
+    margin: 0;
+    font-size: var(--cover-heading-size);
+    line-height: var(--leading-display, 1.14);
+    font-weight: var(--font-weight-display, 700);
+    letter-spacing: var(--tracking-display, normal);
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+  & > :is(p, .author) {
+    max-inline-size: var(--cover-copy-width);
+    align-items: flex-start;
+    margin: 24px 0 0;
+    color: var(--fg-muted);
+    font-size: var(--text-body-md, 1em);
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+  & > p:has(~ h1) {
+    margin: 0 0 22px;
+    font-size: 0.82em;
+    font-weight: 600;
+  }
+  & > footer {
+    inset-inline: var(--cover-inset) var(--cover-content-end);
+  }
 }
 section.title.cover-photo {
   --cover-gutter: 4%;
@@ -2015,16 +2012,77 @@ section.title.cover-photo:has(> img.cover-image)::after {
   right: var(--cover-photo-width);
 }
 section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
-  --cover-content-end: 19%;
+  --cover-inset: max(var(--padding-x), 6%);
+  --cover-content-end: var(--cover-inset);
+  --cover-heading-size: var(--text-display, 2.5em);
+  --cover-copy-width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  align-items: flex-start;
+  padding: 60px var(--cover-content-end) 60px var(--cover-inset);
+  &:has(> header) {
+    padding-top: calc(var(--logo-title-size) + 52px);
+  }
+  & > header {
+    position: absolute;
+    inset: 20px var(--cover-header-end, var(--cover-content-end)) auto var(--cover-inset);
+    width: auto;
+    padding-inline-end: 0;
+    font-size: 0.75em;
+    background-position: left 0 top 10px, left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
+  }
+  & > h1 {
+    max-inline-size: var(--cover-copy-width);
+    margin: 0;
+    font-size: var(--cover-heading-size);
+    line-height: var(--leading-display, 1.14);
+    font-weight: var(--font-weight-display, 700);
+    letter-spacing: var(--tracking-display, normal);
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+  & > :is(p, .author) {
+    max-inline-size: var(--cover-copy-width);
+    align-items: flex-start;
+    margin: 24px 0 0;
+    color: var(--fg-muted);
+    font-size: var(--text-body-md, 1em);
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+  & > p:has(~ h1) {
+    margin: 0 0 22px;
+    font-size: 0.82em;
+    font-weight: 600;
+  }
+  & > footer {
+    inset-inline: var(--cover-inset) var(--cover-content-end);
+  }
+  > h1 {
+    text-wrap: balance;
+  }
+}
+section.title:where(:not(.cover-plain, .cover-photo)) {
+  background-color: var(--bg);
   background-image: linear-gradient( 135deg, transparent 0 var(--title-stripe-start), var(--action-blue-soft) var(--title-stripe-start) var(--title-stripe-light-end), var(--color-tertiary) var(--title-stripe-light-end) var(--title-stripe-blue-end), var(--color-accent-strong) var(--title-stripe-blue-end) var(--title-stripe-red-end), transparent var(--title-stripe-red-end) );
-  background-position: right bottom;
-  background-repeat: no-repeat;
-  background-size: 40% 88%;
+}
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
+  --cover-inset: var(--padding-x);
+  --cover-content-end: 30%;
+  --cover-header-end: var(--cover-inset);
+  --cover-heading-size: calc(var(--text-display) * 0.92);
+}
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > h1 {
+  padding-inline-start: var(--spacing-title-heading-inset);
+  border-inline-start: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+}
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > :is(p, .author) {
+  margin-inline-start: calc(var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset));
 }
 section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) {
   padding-top: 20px;
-  background-color: var(--bg);
-  background-image: linear-gradient( 135deg, transparent 0 var(--title-stripe-start), var(--action-blue-soft) var(--title-stripe-start) var(--title-stripe-light-end), var(--color-tertiary) var(--title-stripe-light-end) var(--title-stripe-blue-end), var(--color-accent-strong) var(--title-stripe-blue-end) var(--title-stripe-red-end), transparent var(--title-stripe-red-end) );
 }
 section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) h1 {
   box-sizing: border-box;

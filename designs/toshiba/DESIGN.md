@@ -540,7 +540,7 @@ with a 52px full-bleed header on non-title slides. The extra inset mirrors the
 website's broad content gutters and gives technical figures room to breathe.
 
 Title slides use asymmetry: a left-aligned text block and three cropped
-diagonal stripes—pale blue, action blue, and brand red—in the lower right. Normal
+diagonal stripes—pale blue, action blue, and brand red—on the right. Normal
 slides return to a white field, a fine gray header separator, and one short red
 vertical marker. Do not repeat the title geometry behind charts or dense
 content.
@@ -580,8 +580,8 @@ transitions.
 Components are author-facing class contracts. A component should be available
 from the theme before skills recommend it in generated slides.
 
-- **Title composition:** a large left-aligned headline with pale blue, action-blue,
-  and brand-red diagonal stripes confined to the lower-right edge.
+- **Title composition:** a broad left-aligned title block with a red vertical
+  rule, closely grouped author details, and full-size diagonal stripes.
   It creates identity without an external logo dependency.
 - **Header band:** white, separated by a fine gray rule, with one short red
   vertical marker before the context label. Logos may occupy the existing
