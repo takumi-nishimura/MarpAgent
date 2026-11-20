@@ -36,7 +36,6 @@ the selected theme's typography and colors.
 | :--- | :--- |
 | `title cover-plain` | Left-aligned title without the standard cover decoration. |
 | `title cover-photo` | Title and author information on the left, full-height photo on the right. |
-| `title cover-typographic` | Large title across a wide text area, with an accent graphic in the lower corner. |
 
 Use an H1 for the title, an optional paragraph before it for the event name,
 and a paragraph or `.author` block below it for the presenter and affiliation.
@@ -56,22 +55,16 @@ the cover stylesheet. New themes start with a neutral design.
 
 ## Cover and body gallery
 
-| Theme | Standard cover · `title` | Plain cover · `title cover-plain` | Body |
-| :--- | :--- | :--- | :--- |
-| `lab` | [![lab standard cover](previews/lab-title.png)](previews/lab-title.png) | [![lab plain cover](previews/lab-cover-plain.png)](previews/lab-cover-plain.png) | [![lab body slide](previews/lab-body.png)](previews/lab-body.png) |
-| `muji` | [![muji standard cover](previews/muji-title.png)](previews/muji-title.png) | [![muji plain cover](previews/muji-cover-plain.png)](previews/muji-cover-plain.png) | [![muji body slide](previews/muji-body.png)](previews/muji-body.png) |
-| `toshiba` | [![toshiba standard cover](previews/toshiba-title.png)](previews/toshiba-title.png) | [![toshiba plain cover](previews/toshiba-cover-plain.png)](previews/toshiba-cover-plain.png) | [![toshiba body slide](previews/toshiba-body.png)](previews/toshiba-body.png) |
-
-| Theme | Photo · `title cover-photo` | Typography · `title cover-typographic` |
-| :--- | :--- | :--- |
-| `lab` | [![Lab photo cover](previews/lab-cover-photo.jpg)](previews/lab-cover-photo.jpg) | [![Lab typographic cover](previews/lab-cover-typographic.png)](previews/lab-cover-typographic.png) |
-| `muji` | [![MUJI photo cover](previews/muji-cover-photo.jpg)](previews/muji-cover-photo.jpg) | [![MUJI typographic cover](previews/muji-cover-typographic.png)](previews/muji-cover-typographic.png) |
-| `toshiba` | [![Toshiba photo cover](previews/toshiba-cover-photo.jpg)](previews/toshiba-cover-photo.jpg) | [![Toshiba typographic cover](previews/toshiba-cover-typographic.png)](previews/toshiba-cover-typographic.png) |
+| Theme | Standard cover · `title` | Plain cover · `title cover-plain` | Photo cover · `title cover-photo` | Body |
+| :--- | :--- | :--- | :--- | :--- |
+| `lab` | [![Lab standard cover](previews/lab-title.png)](previews/lab-title.png) | [![Lab plain cover](previews/lab-cover-plain.png)](previews/lab-cover-plain.png) | [![Lab photo cover](previews/lab-cover-photo.jpg)](previews/lab-cover-photo.jpg) | [![Lab body slide](previews/lab-body.png)](previews/lab-body.png) |
+| `muji` | [![MUJI standard cover](previews/muji-title.png)](previews/muji-title.png) | [![MUJI plain cover](previews/muji-cover-plain.png)](previews/muji-cover-plain.png) | [![MUJI photo cover](previews/muji-cover-photo.jpg)](previews/muji-cover-photo.jpg) | [![MUJI body slide](previews/muji-body.png)](previews/muji-body.png) |
+| `toshiba` | [![Toshiba standard cover](previews/toshiba-title.png)](previews/toshiba-title.png) | [![Toshiba plain cover](previews/toshiba-cover-plain.png)](previews/toshiba-cover-plain.png) | [![Toshiba photo cover](previews/toshiba-cover-photo.jpg)](previews/toshiba-cover-photo.jpg) | [![Toshiba body slide](previews/toshiba-body.png)](previews/toshiba-body.png) |
 
 Open a thumbnail for the 1280 × 720 render. The
-[shared manuscript](previews/slide.md) compares the standard and plain covers,
-the two new layouts with a Japanese research title, and a body slide. The
-photo is a generated illustration for layout comparison.
+[shared manuscript](previews/slide.md) shows the standard, plain, and photo
+covers followed by a body slide. The standard and photo covers set the same
+Japanese research title. The photo is a generated illustration for comparison.
 
 To try the example, run `npm run marpx -- designs/previews/slide.md --overview`
 from the repository root. For the other rows, set the manuscript's frontmatter
