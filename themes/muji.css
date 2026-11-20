@@ -2009,6 +2009,7 @@ section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fi
   --cover-inset: max(var(--padding-x), 8%);
   --cover-edge-start: 83%;
   --cover-content-end: calc(100% - var(--cover-edge-start) + 5%);
+  --cover-header-end: var(--padding-x);
   --cover-heading-size: calc(var(--text-display) * 1.16);
   --cover-edge: var(--color-kinari);
   background-image: linear-gradient( to right, transparent var(--cover-edge-start), var(--cover-edge) var(--cover-edge-start) );
