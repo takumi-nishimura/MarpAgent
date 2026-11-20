@@ -332,9 +332,6 @@
   align-items: stretch;
   gap: var(--col-gap);
 }
-.body.col.visual {
-  gap: var(--visual-gap, var(--col-gap));
-}
 .body .box,
 .body .col > div {
   min-height: 0;
@@ -377,6 +374,10 @@
 .body .col {
   flex-direction: row;
   gap: var(--col-gap);
+}
+.body.col.visual,
+.body .col.visual {
+  gap: var(--visual-gap, var(--col-gap));
 }
 .body .col:has(.fill),
 .body .col.fill {
