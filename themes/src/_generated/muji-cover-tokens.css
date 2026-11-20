@@ -1,0 +1,29 @@
+/* Generated from designs/muji/DESIGN.md by scripts/generate-design-tokens.js. Do not edit. */
+section.title:where(.cover-muji:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --color-primary: #3c3c43;
+  --color-secondary: #6d6d72;
+  --color-tertiary: #7f0019;
+  --color-neutral: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #3c3c43;
+  --color-accent-strong: #7f0019;
+  --color-muted-invert: #c4c4c6;
+  --color-highlight-invert: #e0ceaa;
+  --color-emphasis: #f4eede;
+  --font-body-md: "Helvetica Neue";
+  --text-body-md: 24px;
+  --text-display: 52px;
+  --leading-display: initial;
+  --tracking-display: 0em;
+  --font-weight-display: 700;
+  --color-muji-red: #7f0019;
+  --color-kinari: #f4eede;
+  --color-beige: #e0ceaa;
+  --color-background: #ffffff;
+  --color-text-primary: #3c3c43;
+  --color-text-secondary: #6d6d72;
+  --color-text-tertiary: #76767b;
+  --color-border: #d8d8d9;
+  --spacing-slide-x: 56px;
+  --spacing-logo-title-size: 64px;
+}

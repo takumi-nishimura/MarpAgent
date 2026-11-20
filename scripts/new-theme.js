@@ -113,6 +113,7 @@ function themeCssTemplate(name) {
 @import "./${name}/_body.css";
 @import "./_shared/_covers.css";
 @import "./_shared/_cover-standard.css";
+@import "./_shared/_cover-choices.css";
 @import "./${name}/_cover.css";
 @import "./_shared/_cover-plain.css";
 
@@ -179,10 +180,10 @@ function createThemeFiles(options) {
     {
       path: path.join(repoRoot, "themes", "src", name, "_cover.css"),
       content: `/* Refine the standard cover's typography and spacing here. */
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-lab, .cover-muji, .cover-toshiba, :has(> .paper-header, > .fill))) {
   --cover-copy-width: 92%;
 }
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) > h1 {
+section.title:where(:has(> .fill):not(.cover-plain, .cover-photo, .cover-lab, .cover-muji, .cover-toshiba)) > h1 {
   font-size: var(--text-display);
 }
 `,

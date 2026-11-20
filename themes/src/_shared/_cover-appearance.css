@@ -1,0 +1,93 @@
+/* Apply a cover's identity on that slide without changing the deck's theme. */
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  &:where(.cover-lab, .cover-muji, .cover-toshiba) {
+    --color-deck-white: var(--color-neutral);
+    --color-deck-black: var(--color-primary);
+    --color-deck-gray: var(--color-secondary);
+    --font-body: var(--font-body-md), sans-serif;
+    --font-display: var(--font-body);
+    --highlight: var(--color-accent-strong);
+    --accent-rule: color-mix(in srgb, var(--highlight) 40%, transparent);
+    --accent-rule-width: 2px;
+    --color-em: var(--color-emphasis);
+    --color-strong: var(--color-accent-strong);
+    font-family: var(--font-body);
+    font-size: var(--text-body-md);
+    line-height: 1.5;
+
+    &::after {
+      color: var(--cover-page-number-color, var(--fg-muted));
+    }
+  }
+
+  &:where(.cover-lab) {
+    --fg: var(--color-deck-black);
+    --bg: var(--color-deck-white);
+    --fg-muted: var(--color-muted-ink);
+    --color-strong: var(--color-strong-ink);
+    --padding-x: 40px;
+    --logo-title-size: 80px;
+  }
+
+  &:where(.cover-muji, .cover-toshiba) {
+    --padding-x: var(--spacing-slide-x);
+    --logo-title-size: var(--spacing-logo-title-size);
+  }
+
+  &:where(.cover-muji) {
+    --fg: var(--color-text-primary);
+    --bg: var(--color-background);
+    --fg-muted: var(--color-text-secondary);
+    --highlight: var(--color-muji-red);
+    --color-em: var(--color-kinari);
+    --color-strong: var(--color-muji-red);
+    --cover-page-number-color: var(--color-text-tertiary);
+    --font-body: var(--font-body-md), Arial, "Noto Sans JP", "Noto Sans JP Fallback", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    line-height: 1.6;
+  }
+
+  &:where(.cover-toshiba) {
+    --fg: var(--color-on-surface);
+    --bg: var(--color-neutral);
+    --fg-muted: var(--color-secondary);
+    --color-strong: var(--color-on-surface);
+    --accent-rule: var(--color-accent-strong);
+    --accent-rule-width: var(--spacing-line-width);
+    --cover-page-number-color: var(--color-secondary);
+    --action-blue-soft: color-mix(in srgb, var(--color-tertiary) 12%, var(--color-neutral));
+    --title-stripe-start: var(--spacing-title-stripe-start);
+    --title-stripe-light-end: var(--spacing-title-stripe-light-end);
+    --title-stripe-blue-end: var(--spacing-title-stripe-blue-end);
+    --title-stripe-red-end: var(--spacing-title-stripe-red-end);
+    line-height: normal;
+  }
+
+  &.invert:where(.cover-lab) {
+    --highlight: var(--color-highlight-invert);
+    --color-strong: var(--color-highlight-invert);
+  }
+
+  &.invert:where(.cover-muji) {
+    --highlight: var(--color-beige);
+  }
+
+  &.invert:where(.cover-toshiba) {
+    --highlight: var(--color-light-blue);
+    --accent-rule: var(--color-light-blue);
+    --cover-page-number-color: var(--color-muted-invert);
+  }
+
+  &:where(.cover-lab, .cover-muji) strong {
+    font-weight: 500;
+    color: var(--color-strong);
+  }
+
+  &:where(.cover-toshiba) strong {
+    font-weight: var(--font-weight-label-md);
+    color: var(--color-strong);
+  }
+
+  &.invert:where(.cover-toshiba) strong {
+    color: var(--color-on-primary);
+  }
+}

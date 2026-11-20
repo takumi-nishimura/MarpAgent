@@ -2011,108 +2011,408 @@ section.title.cover-photo > img.cover-image {
 section.title.cover-photo:has(> img.cover-image)::after {
   right: var(--cover-photo-width);
 }
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
-  --cover-inset: max(var(--padding-x), 6%);
-  --cover-content-end: var(--cover-inset);
-  --cover-heading-size: var(--text-display, 2.5em);
-  --cover-copy-width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: safe center;
-  align-items: flex-start;
-  padding: 60px var(--cover-content-end) 60px var(--cover-inset);
-  &:has(> header) {
-    padding-top: calc(var(--logo-title-size) + 52px);
+section.title:where(.cover-lab:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --color-primary: #202228;
+  --color-secondary: #7f7f7f;
+  --color-tertiary: #0969da;
+  --color-neutral: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #202228;
+  --color-accent-strong: #d97706;
+  --color-muted-invert: #aaaaaa;
+  --color-highlight-invert: #fdba74;
+  --color-emphasis: #d1c600;
+  --font-body-md: "Noto Sans JP";
+  --text-body-md: 26px;
+  --text-display: 65px;
+  --leading-display: 1.1;
+  --tracking-display: 0em;
+  --font-weight-display: 700;
+  --color-strong-ink: #b45309;
+  --color-muted-ink: #626872;
+}
+section.title:where(.cover-muji:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --color-primary: #3c3c43;
+  --color-secondary: #6d6d72;
+  --color-tertiary: #7f0019;
+  --color-neutral: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #3c3c43;
+  --color-accent-strong: #7f0019;
+  --color-muted-invert: #c4c4c6;
+  --color-highlight-invert: #e0ceaa;
+  --color-emphasis: #f4eede;
+  --font-body-md: "Helvetica Neue";
+  --text-body-md: 24px;
+  --text-display: 52px;
+  --leading-display: initial;
+  --tracking-display: 0em;
+  --font-weight-display: 700;
+  --color-muji-red: #7f0019;
+  --color-kinari: #f4eede;
+  --color-beige: #e0ceaa;
+  --color-background: #ffffff;
+  --color-text-primary: #3c3c43;
+  --color-text-secondary: #6d6d72;
+  --color-text-tertiary: #76767b;
+  --color-border: #d8d8d9;
+  --spacing-slide-x: 56px;
+  --spacing-logo-title-size: 64px;
+}
+section.title:where(.cover-toshiba:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --color-primary: #000000;
+  --color-secondary: #505054;
+  --color-tertiary: #0064d2;
+  --color-neutral: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #000000;
+  --color-accent-strong: #e61e1e;
+  --color-muted-invert: #d8d8d8;
+  --color-highlight-invert: #64afe1;
+  --color-emphasis: #e61e1e;
+  --font-body-md: "Noto Sans JP";
+  --text-body-md: 26px;
+  --text-display: 72px;
+  --leading-display: initial;
+  --tracking-display: 0em;
+  --font-weight-display: 700;
+  --color-light-blue: #64afe1;
+  --spacing-slide-x: 56px;
+  --spacing-logo-title-size: 80px;
+  --spacing-line-width: 1px;
+  --spacing-accent-bar-width: 6px;
+  --spacing-title-heading-top: 150px;
+  --spacing-title-heading-inset: 24px;
+  --spacing-title-subtitle-top: 44px;
+  --spacing-title-copy-width: 760px;
+  --spacing-title-stripe-start: 70%;
+  --spacing-title-stripe-light-end: 78%;
+  --spacing-title-stripe-blue-end: 86%;
+  --spacing-title-stripe-red-end: 94%;
+  --font-weight-label-md: 700;
+}
+section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  &:where(.cover-lab, .cover-muji, .cover-toshiba) {
+    --color-deck-white: var(--color-neutral);
+    --color-deck-black: var(--color-primary);
+    --color-deck-gray: var(--color-secondary);
+    --font-body: var(--font-body-md), sans-serif;
+    --font-display: var(--font-body);
+    --highlight: var(--color-accent-strong);
+    --accent-rule: var(--highlight);
+    @supports (color: color-mix(in lab, red, red)) {
+      --accent-rule: color-mix(in srgb, var(--highlight) 40%, transparent);
+    }
+    --accent-rule-width: 2px;
+    --color-em: var(--color-emphasis);
+    --color-strong: var(--color-accent-strong);
+    font-family: var(--font-body);
+    font-size: var(--text-body-md);
+    line-height: 1.5;
+    &::after {
+      color: var(--cover-page-number-color, var(--fg-muted));
+    }
   }
-  & > header {
-    position: absolute;
-    inset: 20px var(--cover-header-end, var(--cover-content-end)) auto var(--cover-inset);
-    width: auto;
-    padding-inline-end: 0;
-    font-size: 0.75em;
-    background-position: left 0 top 10px, left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
+  &:where(.cover-lab) {
+    --fg: var(--color-deck-black);
+    --bg: var(--color-deck-white);
+    --fg-muted: var(--color-muted-ink);
+    --color-strong: var(--color-strong-ink);
+    --padding-x: 40px;
+    --logo-title-size: 80px;
   }
-  & > h1 {
-    max-inline-size: var(--cover-copy-width);
-    margin: 0;
-    font-size: var(--cover-heading-size);
-    line-height: var(--leading-display, 1.14);
-    font-weight: var(--font-weight-display, 700);
-    letter-spacing: var(--tracking-display, normal);
-    text-align: start;
-    overflow-wrap: anywhere;
+  &:where(.cover-muji, .cover-toshiba) {
+    --padding-x: var(--spacing-slide-x);
+    --logo-title-size: var(--spacing-logo-title-size);
   }
-  & > :is(p, .author) {
-    max-inline-size: var(--cover-copy-width);
-    align-items: flex-start;
-    margin: 24px 0 0;
-    color: var(--fg-muted);
-    font-size: var(--text-body-md, 1em);
-    text-align: start;
-    overflow-wrap: anywhere;
+  &:where(.cover-muji) {
+    --fg: var(--color-text-primary);
+    --bg: var(--color-background);
+    --fg-muted: var(--color-text-secondary);
+    --highlight: var(--color-muji-red);
+    --color-em: var(--color-kinari);
+    --color-strong: var(--color-muji-red);
+    --cover-page-number-color: var(--color-text-tertiary);
+    --font-body: var(--font-body-md), Arial, "Noto Sans JP", "Noto Sans JP Fallback", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    line-height: 1.6;
   }
-  & > p:has(~ h1) {
-    margin: 0 0 22px;
-    font-size: 0.82em;
-    font-weight: 600;
+  &:where(.cover-toshiba) {
+    --fg: var(--color-on-surface);
+    --bg: var(--color-neutral);
+    --fg-muted: var(--color-secondary);
+    --color-strong: var(--color-on-surface);
+    --accent-rule: var(--color-accent-strong);
+    --accent-rule-width: var(--spacing-line-width);
+    --cover-page-number-color: var(--color-secondary);
+    --action-blue-soft: color-mix(in srgb, #0064d2 12%, #ffffff);
+    @supports (color: color-mix(in lab, red, red)) {
+      --action-blue-soft: color-mix(in srgb, var(--color-tertiary) 12%, var(--color-neutral));
+    }
+    --title-stripe-start: var(--spacing-title-stripe-start);
+    --title-stripe-light-end: var(--spacing-title-stripe-light-end);
+    --title-stripe-blue-end: var(--spacing-title-stripe-blue-end);
+    --title-stripe-red-end: var(--spacing-title-stripe-red-end);
+    line-height: normal;
   }
-  & > footer {
-    inset-inline: var(--cover-inset) var(--cover-content-end);
+  &.invert:where(.cover-lab) {
+    --highlight: var(--color-highlight-invert);
+    --color-strong: var(--color-highlight-invert);
   }
-  > h1 {
-    text-wrap: balance;
+  &.invert:where(.cover-muji) {
+    --highlight: var(--color-beige);
+  }
+  &.invert:where(.cover-toshiba) {
+    --highlight: var(--color-light-blue);
+    --accent-rule: var(--color-light-blue);
+    --cover-page-number-color: var(--color-muted-invert);
+  }
+  &:where(.cover-lab, .cover-muji) strong {
+    font-weight: 500;
+    color: var(--color-strong);
+  }
+  &:where(.cover-toshiba) strong {
+    font-weight: var(--font-weight-label-md);
+    color: var(--color-strong);
+  }
+  &.invert:where(.cover-toshiba) strong {
+    color: var(--color-on-primary);
   }
 }
-section.title:where(:not(.cover-plain, .cover-photo)) {
+section.title:where(.cover-lab:not(:has(> .paper-header)), [data-theme="lab"]:not(.cover-lab, .cover-muji, .cover-toshiba) ):where(:not(.cover-plain, .cover-photo)) {
+  padding-top: 20px;
+  & h1 {
+    font-size: 2.5em;
+    text-align: center;
+    margin-top: 182px;
+    padding-bottom: 20px;
+    border-bottom: var(--accent-rule-width) solid var(--accent-rule);
+  }
+  & > p {
+    text-align: right;
+    font-size: 1.2em;
+    margin-top: 100px;
+    margin-right: 50px;
+  }
+  &:where(:not(:has(> .paper-header))) h1 {
+    font-size: var(--text-display);
+    font-weight: var(--font-weight-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+  }
+}
+section.title:where(.cover-muji:not(:has(> .paper-header)), [data-theme="muji"]:not(.cover-lab, .cover-muji, .cover-toshiba) ):where(:not(.cover-plain, .cover-photo)) {
+  &:where(:not(:has(> .paper-header, > .fill))) {
+    --cover-inset: max(var(--padding-x), 6%);
+    --cover-content-end: var(--cover-inset);
+    --cover-heading-size: var(--text-display, 2.5em);
+    --cover-copy-width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    align-items: flex-start;
+    padding: 60px var(--cover-content-end) 60px var(--cover-inset);
+    &:has(> header) {
+      padding-top: calc(var(--logo-title-size) + 52px);
+    }
+    & > header {
+      position: absolute;
+      inset: 20px var(--cover-header-end, var(--cover-content-end)) auto var(--cover-inset);
+      width: auto;
+      padding-inline-end: 0;
+      font-size: 0.75em;
+      background-position: left 0 top 10px, left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
+    }
+    & > h1 {
+      max-inline-size: var(--cover-copy-width);
+      margin: 0;
+      font-size: var(--cover-heading-size);
+      line-height: var(--leading-display, 1.14);
+      font-weight: var(--font-weight-display, 700);
+      letter-spacing: var(--tracking-display, normal);
+      text-align: start;
+      overflow-wrap: anywhere;
+    }
+    & > :is(p, .author) {
+      max-inline-size: var(--cover-copy-width);
+      align-items: flex-start;
+      margin: 24px 0 0;
+      color: var(--fg-muted);
+      font-size: var(--text-body-md, 1em);
+      text-align: start;
+      overflow-wrap: anywhere;
+    }
+    & > p:has(~ h1) {
+      margin: 0 0 22px;
+      font-size: 0.82em;
+      font-weight: 600;
+    }
+    & > footer {
+      inset-inline: var(--cover-inset) var(--cover-content-end);
+    }
+    --cover-inset: max(var(--padding-x), 8%);
+    --cover-edge-start: 83%;
+    --cover-content-end: calc(100% - var(--cover-edge-start) + 5%);
+    --cover-heading-size: calc(var(--text-display) * 1.16);
+    --cover-edge: var(--color-kinari);
+    background-image: linear-gradient( to right, transparent var(--cover-edge-start), var(--cover-edge) var(--cover-edge-start) );
+    > h1 {
+      text-wrap: balance;
+    }
+  }
+  &:where(:not(:has(> .paper-header, > .fill))) > header {
+    position: static;
+    align-self: stretch;
+    min-height: 0;
+    max-inline-size: 100%;
+    padding-inline-end: 16px;
+    text-align: end;
+    overflow-wrap: anywhere;
+    background-size: 0;
+    &:not(:empty) {
+      margin-block: -28px 42px;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 20px var(--padding-x) auto var(--cover-inset);
+      block-size: calc(var(--logo-title-size) + 20px);
+      background-image: inherit;
+      background-position: inherit;
+      background-repeat: inherit;
+      background-size: var(--logo-title-background-size);
+      pointer-events: none;
+    }
+  }
+  &.invert:where(:not(:has(> .paper-header, > .fill))) {
+    --cover-edge: var(--color-kinari);
+    @supports (color: color-mix(in lab, red, red)) {
+      --cover-edge: color-mix(in srgb, var(--color-kinari) 14%, var(--bg));
+    }
+  }
+  &:where(:has(> .fill)) {
+    padding-top: 44px;
+  }
+  &:where(:has(> .fill)) h1 {
+    font-size: 2.5em;
+    text-align: left;
+    margin-top: 120px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  &:where(:has(> .fill)) > p {
+    font-size: 1.2em;
+  }
+  &:where(:has(> .fill)) > p, &:where(:has(> .fill)) .author {
+    text-align: left;
+    margin-top: 56px;
+    margin-right: 0;
+    color: var(--fg-muted);
+  }
+  &:where(:has(> .fill)) header {
+    background-position: left var(--padding-x) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 16px, left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 16px;
+  }
+}
+section.title:where(.cover-toshiba:not(:has(> .paper-header)), [data-theme="toshiba"]:not(.cover-lab, .cover-muji, .cover-toshiba) ):where(:not(.cover-plain, .cover-photo)) {
   background-color: var(--bg);
   background-image: linear-gradient( 135deg, transparent 0 var(--title-stripe-start), var(--action-blue-soft) var(--title-stripe-start) var(--title-stripe-light-end), var(--color-tertiary) var(--title-stripe-light-end) var(--title-stripe-blue-end), var(--color-accent-strong) var(--title-stripe-blue-end) var(--title-stripe-red-end), transparent var(--title-stripe-red-end) );
-}
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) {
-  --cover-inset: var(--padding-x);
-  --cover-content-end: 30%;
-  --cover-header-end: var(--cover-inset);
-  --cover-heading-size: calc(var(--text-display) * 0.92);
-}
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > h1 {
-  padding-inline-start: var(--spacing-title-heading-inset);
-  border-inline-start: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
-}
-section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > :is(p, .author) {
-  margin-inline-start: calc(var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset));
-}
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) {
-  padding-top: 20px;
-}
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) h1 {
-  box-sizing: border-box;
-  max-width: var(--spacing-title-copy-width);
-  margin-top: var(--spacing-title-heading-top);
-  margin-left: 0;
-  margin-right: auto;
-  padding: 0 0 0 var(--spacing-title-heading-inset);
-  border: 0;
-  border-left: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
-  color: var(--color-on-surface);
-  font-size: var(--text-display);
-  font-weight: var(--font-weight-display);
-  text-align: left;
-}
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) > p, section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)) .author {
-  max-width: var(--spacing-title-copy-width);
-  margin-top: var(--spacing-title-subtitle-top);
-  margin-left: calc( var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset) );
-  margin-right: auto;
-  color: var(--color-secondary);
-  font-size: var(--text-body-md);
-  text-align: left;
-  align-items: flex-start;
-}
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)).invert h1 {
-  color: var(--color-on-primary);
-}
-section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)).invert > p, section.title:where(:has(> .fill):not(.cover-plain, .cover-photo)).invert .author {
-  color: var(--color-muted-invert);
+  &:where(:not(:has(> .paper-header, > .fill))) {
+    --cover-inset: max(var(--padding-x), 6%);
+    --cover-content-end: var(--cover-inset);
+    --cover-heading-size: var(--text-display, 2.5em);
+    --cover-copy-width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    align-items: flex-start;
+    padding: 60px var(--cover-content-end) 60px var(--cover-inset);
+    &:has(> header) {
+      padding-top: calc(var(--logo-title-size) + 52px);
+    }
+    & > header {
+      position: absolute;
+      inset: 20px var(--cover-header-end, var(--cover-content-end)) auto var(--cover-inset);
+      width: auto;
+      padding-inline-end: 0;
+      font-size: 0.75em;
+      background-position: left 0 top 10px, left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
+    }
+    & > h1 {
+      max-inline-size: var(--cover-copy-width);
+      margin: 0;
+      font-size: var(--cover-heading-size);
+      line-height: var(--leading-display, 1.14);
+      font-weight: var(--font-weight-display, 700);
+      letter-spacing: var(--tracking-display, normal);
+      text-align: start;
+      overflow-wrap: anywhere;
+    }
+    & > :is(p, .author) {
+      max-inline-size: var(--cover-copy-width);
+      align-items: flex-start;
+      margin: 24px 0 0;
+      color: var(--fg-muted);
+      font-size: var(--text-body-md, 1em);
+      text-align: start;
+      overflow-wrap: anywhere;
+    }
+    & > p:has(~ h1) {
+      margin: 0 0 22px;
+      font-size: 0.82em;
+      font-weight: 600;
+    }
+    & > footer {
+      inset-inline: var(--cover-inset) var(--cover-content-end);
+    }
+    --cover-inset: var(--padding-x);
+    --cover-content-end: 30%;
+    --cover-header-end: var(--cover-inset);
+    --cover-heading-size: calc(var(--text-display) * 0.92);
+    > h1 {
+      text-wrap: balance;
+    }
+  }
+  &:where(:not(:has(> .paper-header, > .fill))) > h1 {
+    padding-inline-start: var(--spacing-title-heading-inset);
+    border-inline-start: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+  }
+  &:where(:not(:has(> .paper-header, > .fill))) > :is(p, .author) {
+    margin-inline-start: calc(var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset));
+  }
+  &:where(:has(> .fill)) {
+    padding-top: 20px;
+  }
+  &:where(:has(> .fill)) h1 {
+    box-sizing: border-box;
+    max-width: var(--spacing-title-copy-width);
+    margin-top: var(--spacing-title-heading-top);
+    margin-left: 0;
+    margin-right: auto;
+    padding: 0 0 0 var(--spacing-title-heading-inset);
+    border: 0;
+    border-left: var(--spacing-accent-bar-width) solid var(--color-accent-strong);
+    color: var(--color-on-surface);
+    font-size: var(--text-display);
+    font-weight: var(--font-weight-display);
+    text-align: left;
+  }
+  &:where(:has(> .fill)) > p, &:where(:has(> .fill)) .author {
+    max-width: var(--spacing-title-copy-width);
+    margin-top: var(--spacing-title-subtitle-top);
+    margin-left: calc( var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset) );
+    margin-right: auto;
+    color: var(--color-secondary);
+    font-size: var(--text-body-md);
+    text-align: left;
+    align-items: flex-start;
+  }
+  &:where(:has(> .fill)).invert h1 {
+    color: var(--color-on-primary);
+  }
+  &:where(:has(> .fill)).invert > p, &:where(:has(> .fill)).invert .author {
+    color: var(--color-muted-invert);
+  }
 }
 section.title.cover-plain {
   display: flex;
