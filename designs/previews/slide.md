@@ -19,6 +19,42 @@ theme: lab
 
 ---
 
+<!-- _class: title cover-photo -->
+<!-- _header: 2026.11.20 -->
+
+<img class="cover-image" src="shared-control-cover.jpg" alt="木製の円筒を人の手とロボットのグリッパーが支える場面のイメージ">
+
+ロボティクス研究セミナー
+
+# 人とロボットの協調操作を支える意図推定と共有制御
+
+<div class="author">
+
+山田 花子・佐藤 太郎
+
+ロボティクス研究室
+
+</div>
+
+---
+
+<!-- _class: title cover-typographic -->
+<!-- _header: 2026.11.20 -->
+
+ロボティクス研究セミナー
+
+# 人とロボットの協調操作を支える意図推定と共有制御
+
+<div class="author">
+
+山田 花子・佐藤 太郎
+
+ロボティクス研究室
+
+</div>
+
+---
+
 <!-- _header: 構成 -->
 
 ## 図を選ぶ前に，伝えたいことを決める
