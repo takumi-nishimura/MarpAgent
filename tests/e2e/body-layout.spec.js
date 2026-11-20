@@ -16,6 +16,17 @@ async function render(page, content, { theme = "lab", size = "16:9", header = tr
     await page.locator("img").evaluateAll((images) => Promise.all(images.map((img) => img.decode())));
 }
 
+for (const theme of ["lab", "muji", "toshiba"]) {
+    test(`direct body columns use the body gap between blocks in ${theme}`, async ({ page }) => {
+        await render(page, '<h2>Example</h2><div class="body col" style="--body-gap:18px;--col-gap:40px"><div><h3>Request</h3><blockquote>Quote</blockquote><p>Explanation</p></div><div>Revision</div></div>', { theme });
+        const gaps = await page.locator(".body.col > div").first().evaluate(column => {
+            const [heading, quote, paragraph] = Array.from(column.children, el => el.getBoundingClientRect());
+            return [quote.top - heading.bottom, paragraph.top - quote.bottom];
+        });
+        expect(gaps).toEqual([18, 18]);
+    });
+}
+
 async function boxes(page) {
     return page.evaluate(() => {
         const rect = (element) => {
