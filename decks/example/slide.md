@@ -27,7 +27,7 @@ Markdownでスライドを作り，発表・配布する
 <!-- _class: toc-center -->
 <!-- _toc: true -->
 
-## 発表の流れ
+## 目次
 
 ---
 
