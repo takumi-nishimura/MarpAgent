@@ -37,3 +37,15 @@ New themes have independent `_cover.css` and `_body.css` files alongside
 their entry stylesheet. Shared layout rules provide columns, figures and paper
 canvases. Put identity tokens in DESIGN.md and keep cover-only placement in
 the cover stylesheet. New themes start with a neutral design.
+
+## Cover and body gallery
+
+| Theme | Standard cover · `title` | Plain cover · `title cover-plain` | Body |
+| :--- | :--- | :--- | :--- |
+| `lab` | [![lab standard cover](previews/lab-title.png)](previews/lab-title.png) | [![lab plain cover](previews/lab-cover-plain.png)](previews/lab-cover-plain.png) | [![lab body slide](previews/lab-body.png)](previews/lab-body.png) |
+| `muji` | [![muji standard cover](previews/muji-title.png)](previews/muji-title.png) | [![muji plain cover](previews/muji-cover-plain.png)](previews/muji-cover-plain.png) | [![muji body slide](previews/muji-body.png)](previews/muji-body.png) |
+| `toshiba` | [![toshiba standard cover](previews/toshiba-title.png)](previews/toshiba-title.png) | [![toshiba plain cover](previews/toshiba-cover-plain.png)](previews/toshiba-cover-plain.png) | [![toshiba body slide](previews/toshiba-body.png)](previews/toshiba-body.png) |
+
+Open a thumbnail for the 1280 × 720 render. Each row uses the [same three-slide manuscript](previews/slide.md). The first two slides have identical text. On the second slide, `cover-plain` groups the title and subtitle at the left, vertically centers them, and removes the theme's cover decoration. Type and color still come from the selected theme. The third slide compares a context header, a heading, emphasis, and a table.
+
+To try the example, run `npm run marpx -- designs/previews/slide.md --overview` from the repository root. For the other rows, set the manuscript's frontmatter to `theme: muji` or `theme: toshiba`. Export the three pages with `npm run marpx -- designs/previews/slide.md --images png --output out/cover-body.png`. The saved previews use Chromium at 1280 × 720 with Noto Sans JP available.

@@ -11,6 +11,8 @@ its [Markdown source](decks/example/slide.md), and its [brief](decks/example/bri
 The Japanese example follows a concrete request through drafting, inspection,
 revision, presentation, and distribution. It uses the default `lab` theme.
 
+Compare the built-in themes in the [cover and body gallery](designs/README.md#cover-and-body-gallery).
+
 ## Overview
 
 | Work | What MarpAgent provides |
