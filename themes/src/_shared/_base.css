@@ -146,13 +146,13 @@ section > footer:not(.paper-footer) {
   bottom: 20px;
   margin: 0;
   padding: 0;
-  font-size: 0.5em;
+  font-size: calc(var(--marpagent-canvas-text, 1em) * 0.5);
   color: var(--fg-muted);
 }
 
 /* Pagination */
 section::after {
-  font-size: 0.5em;
+  font-size: calc(var(--marpagent-canvas-text, 1em) * 0.5);
   color: var(--fg-muted);
   content: attr(data-marpit-pagination) " / " attr(data-marpit-pagination-total);
   padding-right: 20px;
@@ -303,7 +303,7 @@ section:not(.title).invert header:not(.paper-header)::after {
   left: 2.0rem;
   right: 2.0rem;
   bottom: 0.5rem;
-  font-size: 0.4em;
+  font-size: calc(var(--marpagent-canvas-text, 1em) * 0.4);
   color: var(--fg-muted);
 }
 
@@ -350,14 +350,6 @@ section[data-marpagent-auto-body]:has(> .slide-logos) > footer {
   right: 48%;
 }
 
-/* Projected slide text. Keep the canvas size as the basis for covers,
-   captions and furniture. Prose inherits the body scale in nested layouts. */
-section:where(:not(.title):not(:has(> .paper-header))):has(> .body) > h2 {
-  font-size: var(--text-slide-heading, var(--text-headline-md, 1.5em));
-}
-section:where(:not(.title):not(:has(> .paper-header))) > .body {
-  font-size: var(--text-slide-body, var(--text-body-md));
-}
 section:where(:not(.title):not(:has(> .paper-header))) > .body :where(table) {
   font-size: var(--text-slide-table, var(--text-body-md));
 }

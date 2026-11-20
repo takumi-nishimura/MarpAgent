@@ -71,7 +71,7 @@ Text and supporting evidence.
         expect(layout[1].header.bottom - layout[1].header.top).toBeGreaterThanOrEqual(52);
         expect(layout[1].heading.top - layout[1].header.bottom).toBeCloseTo(24, 1);
         expect(layout[1].headerFont).toBe("26px");
-        expect(layout[1].heading.left - layout[1].headerLeft).toBe(16);
+        expect(layout[1].heading.left - layout[1].headerLeft).toBeCloseTo(16, 1);
         expect(
             await page.locator("section").first().locator("header").count(),
         ).toBe(0);

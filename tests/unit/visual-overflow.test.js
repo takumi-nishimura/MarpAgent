@@ -438,7 +438,7 @@ Body text on a smaller base
 
 # Transformed
 
-<div style="transform: scale(0.4); transform-origin: left top">Scaled down text</div>
+<div style="transform: scale(0.3); transform-origin: left top">Scaled down text</div>
 `,
   );
 
@@ -463,8 +463,8 @@ Body text on a smaller base
     ]);
 
     // The theme's small utilities stay above the body floor.
-    assert.equal(sizeOf(2, "Extra small utility").fontPx, 19.5);
-    assert.equal(sizeOf(2, "Smallest utility").fontPx, 13);
+    assert.equal(sizeOf(2, "Extra small utility").fontPx, 24);
+    assert.equal(sizeOf(2, "Smallest utility").fontPx, 16);
     assert.deepEqual(bySlide[2].smallText, []);
 
     // Footnotes, citation markers, and captions use the lower floor, and
@@ -489,7 +489,7 @@ Body text on a smaller base
 
     // Transforms count toward the rendered size.
     assert.deepEqual(bySlide[5].smallText, [
-      { label: '"Scaled down text"', fontPx: 10.4, floorPx: 12, secondary: false },
+      { label: '"Scaled down text"', fontPx: 9.6, floorPx: 12, secondary: false },
     ]);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
