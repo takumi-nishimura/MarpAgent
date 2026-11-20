@@ -75,7 +75,7 @@ test("new-theme scaffolds design, theme source, and fixture", () => {
       path.join(tempRoot, "themes", "src", "plain", "_cover.css"),
       "utf8",
     );
-    assert.match(cover, /section\.title:where\(:not\(\.cover-plain\)\) > h1\s*\{[^}]*font-size: var\(--text-display\)/);
+    assert.match(cover, /section\.title:where\(:not\(\.cover-plain, \.cover-photo, \.cover-typographic\)\) > h1\s*\{[^}]*font-size: var\(--text-display\)/);
 
     const fixture = fs.readFileSync(
       path.join(tempRoot, "fixtures", "plain-slide.md"),

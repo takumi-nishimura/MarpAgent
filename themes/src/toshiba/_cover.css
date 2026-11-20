@@ -1,4 +1,4 @@
-section.title:where(:not(.cover-plain)) {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) {
   padding-top: 20px;
   background-color: var(--bg);
   background-image: linear-gradient(
@@ -14,7 +14,7 @@ section.title:where(:not(.cover-plain)) {
   );
 }
 
-section.title:where(:not(.cover-plain)) h1 {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) h1 {
   box-sizing: border-box;
   max-width: var(--spacing-title-copy-width);
   margin-top: var(--spacing-title-heading-top);
@@ -29,8 +29,8 @@ section.title:where(:not(.cover-plain)) h1 {
   text-align: left;
 }
 
-section.title:where(:not(.cover-plain)) > p,
-section.title:where(:not(.cover-plain)) .author {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) > p,
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) .author {
   max-width: var(--spacing-title-copy-width);
   margin-top: var(--spacing-title-subtitle-top);
   margin-left: calc(
@@ -43,11 +43,11 @@ section.title:where(:not(.cover-plain)) .author {
   align-items: flex-start;
 }
 
-section.title:where(:not(.cover-plain)).invert h1 {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)).invert h1 {
   color: var(--color-on-primary);
 }
 
-section.title:where(:not(.cover-plain)).invert > p,
-section.title:where(:not(.cover-plain)).invert .author {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)).invert > p,
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)).invert .author {
   color: var(--color-muted-invert);
 }

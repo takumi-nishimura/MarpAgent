@@ -1938,12 +1938,12 @@ section.invert::after {
   background: var(--color-surface-muted);
   border-radius: var(--radius-none);
 }
-section.title:where(:not(.cover-plain)) {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) {
   padding-top: 20px;
   background-color: var(--bg);
   background-image: linear-gradient( 135deg, transparent 0 var(--title-stripe-start), var(--action-blue-soft) var(--title-stripe-start) var(--title-stripe-light-end), var(--color-tertiary) var(--title-stripe-light-end) var(--title-stripe-blue-end), var(--color-accent-strong) var(--title-stripe-blue-end) var(--title-stripe-red-end), transparent var(--title-stripe-red-end) );
 }
-section.title:where(:not(.cover-plain)) h1 {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) h1 {
   box-sizing: border-box;
   max-width: var(--spacing-title-copy-width);
   margin-top: var(--spacing-title-heading-top);
@@ -1957,7 +1957,7 @@ section.title:where(:not(.cover-plain)) h1 {
   font-weight: var(--font-weight-display);
   text-align: left;
 }
-section.title:where(:not(.cover-plain)) > p, section.title:where(:not(.cover-plain)) .author {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) > p, section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) .author {
   max-width: var(--spacing-title-copy-width);
   margin-top: var(--spacing-title-subtitle-top);
   margin-left: calc( var(--spacing-accent-bar-width) + var(--spacing-title-heading-inset) );
@@ -1967,10 +1967,10 @@ section.title:where(:not(.cover-plain)) > p, section.title:where(:not(.cover-pla
   text-align: left;
   align-items: flex-start;
 }
-section.title:where(:not(.cover-plain)).invert h1 {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)).invert h1 {
   color: var(--color-on-primary);
 }
-section.title:where(:not(.cover-plain)).invert > p, section.title:where(:not(.cover-plain)).invert .author {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)).invert > p, section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)).invert .author {
   color: var(--color-muted-invert);
 }
 section.title.cover-plain {
@@ -1989,6 +1989,84 @@ section.title.cover-plain > p, section.title.cover-plain .author {
   text-align: start;
   align-items: flex-start;
   margin: 1em 0 0;
+}
+section.title:where(.cover-photo, .cover-typographic) {
+  --cover-inset: max(var(--padding-x), 6%);
+  --cover-gutter: 4%;
+  --cover-photo-width: 44%;
+  --cover-content-end: var(--cover-inset);
+  --cover-heading-size: var(--text-display, 2.5em);
+  --cover-copy-width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  align-items: flex-start;
+  padding: 60px var(--cover-content-end) 60px var(--cover-inset);
+}
+section.title:where(.cover-photo, .cover-typographic):has(> header) {
+  padding-top: calc(var(--logo-title-size) + 52px);
+}
+section.title:where(.cover-photo, .cover-typographic) > header {
+  position: absolute;
+  inset: 20px var(--cover-content-end) auto var(--cover-inset);
+  width: auto;
+  padding-inline-end: 0;
+  font-size: 0.75em;
+  background-position: left 0 top 10px, left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px, left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
+}
+section.title:where(.cover-photo, .cover-typographic) > h1 {
+  max-inline-size: var(--cover-copy-width);
+  margin: 0;
+  font-size: var(--cover-heading-size);
+  line-height: var(--leading-display, 1.14);
+  font-weight: var(--font-weight-display, 700);
+  letter-spacing: var(--tracking-display, normal);
+  overflow-wrap: anywhere;
+}
+section.title:where(.cover-photo, .cover-typographic) > :is(p, .author) {
+  max-inline-size: var(--cover-copy-width);
+  align-items: flex-start;
+  margin: 24px 0 0;
+  color: var(--fg-muted);
+  font-size: var(--text-body-md, 1em);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+section.title:where(.cover-photo, .cover-typographic) > p:has(~ h1) {
+  margin: 0 0 22px;
+  font-size: 0.82em;
+  font-weight: 600;
+}
+section.title:where(.cover-photo, .cover-typographic) > footer {
+  inset-inline: var(--cover-inset) var(--cover-content-end);
+}
+section.title.cover-photo:has(> img.cover-image) {
+  --cover-content-end: calc(var(--cover-photo-width) + var(--cover-gutter));
+  --cover-heading-size: min(var(--text-display, 2.5em), 54px);
+  background-color: var(--bg);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in srgb, var(--bg) 96%, var(--highlight));
+  }
+}
+section.title.cover-photo > img.cover-image {
+  position: absolute;
+  inset: 0 0 0 auto;
+  inline-size: var(--cover-photo-width);
+  max-inline-size: none;
+  block-size: 100%;
+  object-fit: cover;
+}
+section.title.cover-photo:has(> img.cover-image)::after {
+  right: var(--cover-photo-width);
+}
+section.title.cover-typographic {
+  --cover-copy-width: 88%;
+  --cover-heading-size: calc(var(--text-display, 2.5em) * 1.13);
+  background-image: radial-gradient( circle at right bottom, var(--highlight) 0 8.5%, transparent 8.6% 12%, var(--highlight) 12.1% 19%, transparent 19.1% );
+  @supports (color: color-mix(in lab, red, red)) {
+    background-image: radial-gradient( circle at right bottom, color-mix(in srgb, var(--highlight) 26%, var(--bg)) 0 8.5%, transparent 8.6% 12%, color-mix(in srgb, var(--highlight) 13%, var(--bg)) 12.1% 19%, transparent 19.1% );
+  }
 }
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header) {
   left: 0;

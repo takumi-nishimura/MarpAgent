@@ -48,4 +48,5 @@ section {
 
 @import "./lab/_cover.css";
 @import "./_shared/_cover-plain.css";
+@import "./_shared/_cover-variants.css";
 @import "./_shared/_context-header.css";

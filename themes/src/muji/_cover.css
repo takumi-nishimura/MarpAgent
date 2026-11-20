@@ -1,8 +1,8 @@
-section.title:where(:not(.cover-plain)) {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) {
   padding-top: 44px;
 }
 
-section.title:where(:not(.cover-plain)) h1 {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) h1 {
   font-size: 2.5em;
   text-align: left;
   margin-top: 120px;
@@ -10,19 +10,19 @@ section.title:where(:not(.cover-plain)) h1 {
   border-bottom: 1px solid var(--color-border);
 }
 
-section.title:where(:not(.cover-plain)) > p {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) > p {
   font-size: 1.2em;
 }
 
-section.title:where(:not(.cover-plain)) > p,
-section.title:where(:not(.cover-plain)) .author {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) > p,
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) .author {
   text-align: left;
   margin-top: 56px;
   margin-right: 0;
   color: var(--fg-muted);
 }
 
-section.title:where(:not(.cover-plain)) header {
+section.title:where(:not(.cover-plain, .cover-photo, .cover-typographic)) header {
   background-position:
     left var(--padding-x) top 16px,
     left calc(var(--padding-x) + (var(--logo-title-size) + var(--logo-title-spacing))) top 16px,
