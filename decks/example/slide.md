@@ -137,9 +137,7 @@ npm run marpx -- decks/example/slide.md -v --strict
 | muji | 控えめで簡潔なデザイン |
 | toshiba | コントラストの強い技術発表向けデザイン |
 
-この作例では`lab`を使っている．比較表や段組みを使い，内容の関係に合わせて配置できる．
-
-D2・Mermaidの図，数式，コードの構文強調にも対応している．
+この作例は`lab`で，比較表や段組みを使っている．D2・Mermaidの図，数式，コードの構文強調にも対応する．
 
 > [!TIP]
 > 実際に使う図を描画し，ラベルとキャプションが読めるか確かめる．
@@ -191,9 +189,9 @@ D2・Mermaidの図，数式，コードの構文強調にも対応している�
 - レーザーポインタで説明箇所を示す
 - 長い表や付録は，本文をスクロールして読む
 
-スクロール位置は，同じ発表セッションの発表者画面と同期する．
+スクロール位置は，同じセッションの発表者画面と同期する．
 
-PDF・PPTX・画像の出力範囲は，スクロール前に見える部分に限られる．全文を載せるときは，ページを分ける．
+PDF・PPTX・画像は初期表示のみ．全文を載せる場合はページを分ける．
 
 </div>
 </div>
@@ -202,7 +200,7 @@ PDF・PPTX・画像の出力範囲は，スクロール前に見える部分に�
 
 <!-- _header: 配布 -->
 
-## 配布形式と出力後の確認
+## 配布形式と用途
 
 <div class="body box">
 <div class="col visual shares">
@@ -233,15 +231,18 @@ ZIPにMarkdown原稿は含まれない．共同編集をする場合は，原稿
 
 </div>
 </div>
+</div>
+
+---
+
+<!-- _header: 配布 -->
+
+## 出力ファイルで表示と操作を確認する
 
 `--pdf`／`--pptx`／`--zip`で，配布形式を指定する．
 
-### 出力後の確認
-
-PDF・PPTXは出力ファイルを開き，改行と図表の表示を確認する．
-ZIPは展開後に`index.html`を開き，画像の表示と発表操作を確認する．
-
-</div>
+- PDF・PPTXは出力ファイルを開き，改行と図表の表示を確認する．
+- ZIPは展開後に`index.html`を開き，画像の表示と発表操作を確認する．
 
 ---
 
@@ -251,16 +252,11 @@ ZIPは展開後に`index.html`を開き，画像の表示と発表操作を確�
 
 <div class="body box">
 
-環境構築の手順は[README](https://github.com/takumi-nishimura/MarpAgent#prerequisites)を参照する．以下はリポジトリ直下で実行する．
+環境構築は[README](https://github.com/takumi-nishimura/MarpAgent#prerequisites)を参照する．リポジトリ直下でデッキを作り，`brief.md`と`slide.md`を編集する．
 
 ```bash
-# Create a deck, then edit brief.md and slide.md.
 npm run marpx -- -n decks/my-talk
-
-# Preview the draft.
 npm run marpx -- decks/my-talk/slide.md
-
-# Validate and export.
 npm run marpx -- decks/my-talk/slide.md -v --strict
 npm run marpx -- decks/my-talk/slide.md --pdf
 ```
