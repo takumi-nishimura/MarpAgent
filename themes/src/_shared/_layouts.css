@@ -333,6 +333,7 @@
   gap: var(--col-gap);
 }
 .body .box,
+.body.col > :where(div),
 .body .col > div {
   min-height: 0;
   gap: var(--body-gap);
