@@ -1,0 +1,33 @@
+/* Generated from designs/toshiba/DESIGN.md by scripts/generate-design-tokens.js. Do not edit. */
+section.title:where(.cover-toshiba:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --color-primary: #000000;
+  --color-secondary: #505054;
+  --color-tertiary: #0064d2;
+  --color-neutral: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #000000;
+  --color-accent-strong: #e61e1e;
+  --color-muted-invert: #d8d8d8;
+  --color-highlight-invert: #64afe1;
+  --color-emphasis: #e61e1e;
+  --font-body-md: "Noto Sans JP";
+  --text-body-md: 26px;
+  --text-display: 72px;
+  --leading-display: initial;
+  --tracking-display: 0em;
+  --font-weight-display: 700;
+  --color-light-blue: #64afe1;
+  --spacing-slide-x: 56px;
+  --spacing-logo-title-size: 80px;
+  --spacing-line-width: 1px;
+  --spacing-accent-bar-width: 6px;
+  --spacing-title-heading-top: 150px;
+  --spacing-title-heading-inset: 24px;
+  --spacing-title-subtitle-top: 44px;
+  --spacing-title-copy-width: 760px;
+  --spacing-title-stripe-start: 70%;
+  --spacing-title-stripe-light-end: 78%;
+  --spacing-title-stripe-blue-end: 86%;
+  --spacing-title-stripe-red-end: 94%;
+  --font-weight-label-md: 700;
+}

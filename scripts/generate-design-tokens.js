@@ -76,17 +76,59 @@ function exportTokens(name) {
   ].join("\n");
 }
 
-function generateOne(name) {
-  const outputPath = getOutputPath(name);
-  const generated = exportTokens(name);
+const coverTokens = {
+  lab: ["color-strong-ink", "color-muted-ink"],
+  muji: [
+    "color-muji-red", "color-kinari", "color-beige", "color-background",
+    "color-text-primary", "color-text-secondary", "color-text-tertiary",
+    "color-border", "spacing-slide-x", "spacing-logo-title-size",
+  ],
+  toshiba: [
+    "color-light-blue", "spacing-slide-x", "spacing-logo-title-size",
+    "spacing-line-width", "spacing-accent-bar-width", "spacing-title-heading-top",
+    "spacing-title-heading-inset", "spacing-title-subtitle-top",
+    "spacing-title-copy-width", "spacing-title-stripe-start",
+    "spacing-title-stripe-light-end", "spacing-title-stripe-blue-end",
+    "spacing-title-stripe-red-end", "font-weight-label-md",
+  ],
+};
 
+const commonCoverTokens = [
+  "color-primary", "color-secondary", "color-tertiary", "color-neutral",
+  "color-on-primary", "color-on-surface", "color-accent-strong",
+  "color-muted-invert", "color-highlight-invert", "color-emphasis",
+  "font-body-md", "text-body-md", "text-display", "leading-display",
+  "tracking-display", "font-weight-display",
+];
+
+function exportCoverTokens(name, designCss) {
+  const values = new Map();
+  require("postcss").parse(designCss).walkDecls(/^--/, ({ prop, value }) => {
+    values.set(prop, value);
+  });
+  const declarations = [...commonCoverTokens, ...coverTokens[name]].map((token) => {
+    const property = `--${token}`;
+    const value = values.get(property) ?? (token === "leading-display" ? "initial" : undefined);
+    if (value === undefined) throw new Error(`Missing ${name} cover token ${property}`);
+    return `  ${property}: ${value};`;
+  });
+  return [
+    designCss.split("\n", 1)[0],
+    `section.title:where(.cover-${name}:not(.cover-plain, .cover-photo, :has(> .paper-header))) {`,
+    ...declarations,
+    "}",
+    "",
+  ].join("\n");
+}
+
+function writeGeneratedFile(outputPath, generated) {
   if (checkOnly) {
     const current = fs.existsSync(outputPath)
       ? fs.readFileSync(outputPath, "utf8")
       : "";
     if (current !== generated) {
       console.error(
-        `Generated ${name} design tokens are stale. Run \`npm run design:tokens\`.`,
+        `Generated ${path.basename(outputPath)} is stale. Run \`npm run design:tokens\`.`,
       );
       process.exitCode = 1;
     }
@@ -96,6 +138,17 @@ function generateOne(name) {
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, generated);
   console.log(`Generated ${path.relative(repoRoot, outputPath)}`);
+}
+
+function generateOne(name) {
+  const outputPath = getOutputPath(name);
+  const designCss = exportTokens(name);
+  const coverCss = Object.hasOwn(coverTokens, name) ? exportCoverTokens(name, designCss) : "";
+  writeGeneratedFile(outputPath, designCss);
+  if (coverCss) {
+    const coverPath = path.join(path.dirname(outputPath), `${name}-cover-tokens.css`);
+    writeGeneratedFile(coverPath, coverCss);
+  }
 }
 
 try {
