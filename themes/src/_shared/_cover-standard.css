@@ -1,0 +1,8 @@
+/* The theme supplies the standard cover's visual treatment. */
+section.title:where(:not(.cover-plain, .cover-photo, .cover-lab, .cover-muji, .cover-toshiba, :has(> .paper-header, > .fill))) {
+  @apply cover-layout;
+
+  > h1 {
+    text-wrap: balance;
+  }
+}

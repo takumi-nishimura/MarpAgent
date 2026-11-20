@@ -1,24 +1,28 @@
-/* Title slide - reduce padding since header is absolute positioned */
-section.title:where(:not(.cover-plain)) {
-  padding-top: 20px;
-}
-section.title:where(:not(.cover-plain)) h1 {
-  font-size: 2.5em;
-  text-align: center;
-  margin-top: 182px;
-  padding-bottom: 20px;
-  border-bottom: var(--accent-rule-width) solid var(--accent-rule);
-}
-section.title:where(:not(.cover-plain)) > p {
-  text-align: right;
-  font-size: 1.2em;
-  margin-top: 100px;
-  margin-right: 50px;
-}
+section.title:where(.cover-lab:not(:has(> .paper-header)),
+  [data-theme="lab"]:not(.cover-lab, .cover-muji, .cover-toshiba)
+):where(:not(.cover-plain, .cover-photo)) {
+  /* Title slide - reduce padding since header is absolute positioned */
+  & {
+    padding-top: 20px;
+  }
+  & h1 {
+    font-size: 2.5em;
+    text-align: center;
+    margin-top: 182px;
+    padding-bottom: 20px;
+    border-bottom: var(--accent-rule-width) solid var(--accent-rule);
+  }
+  & > p {
+    text-align: right;
+    font-size: 1.2em;
+    margin-top: 100px;
+    margin-right: 50px;
+  }
 
-section.title:where(:not(.cover-plain)):where(:not(:has(> .paper-header))) h1 {
-    font-size: var(--text-display);
-    font-weight: var(--font-weight-display);
-    line-height: var(--leading-display);
-    letter-spacing: var(--tracking-display);
+  &:where(:not(:has(> .paper-header))) h1 {
+      font-size: var(--text-display);
+      font-weight: var(--font-weight-display);
+      line-height: var(--leading-display);
+      letter-spacing: var(--tracking-display);
+  }
 }

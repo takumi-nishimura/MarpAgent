@@ -1,0 +1,21 @@
+/* Generated from designs/lab/DESIGN.md by scripts/generate-design-tokens.js. Do not edit. */
+section.title:where(.cover-lab:not(.cover-plain, .cover-photo, :has(> .paper-header))) {
+  --color-primary: #202228;
+  --color-secondary: #7f7f7f;
+  --color-tertiary: #0969da;
+  --color-neutral: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #202228;
+  --color-accent-strong: #d97706;
+  --color-muted-invert: #aaaaaa;
+  --color-highlight-invert: #fdba74;
+  --color-emphasis: #d1c600;
+  --font-body-md: "Noto Sans JP";
+  --text-body-md: 26px;
+  --text-display: 65px;
+  --leading-display: 1.1;
+  --tracking-display: 0em;
+  --font-weight-display: 700;
+  --color-strong-ink: #b45309;
+  --color-muted-ink: #626872;
+}

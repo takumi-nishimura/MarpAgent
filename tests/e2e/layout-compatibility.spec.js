@@ -189,7 +189,7 @@ header: Legacy composition
         expect(caption.bottom).toBeLessThanOrEqual(figure.bottom + 1);
     });
 
-    test(`${theme}: legacy title fill stays on canvas without resetting title margins`, async ({
+    test(`${theme}: legacy title fill keeps its title placement when artwork is added`, async ({
         page,
     }) => {
         const marp = new Marp({ html: true });
@@ -206,6 +206,8 @@ class: title
 # Legacy title
 
 Author and affiliation
+
+<div class="fill" style="position: absolute;"></div>
 
 ---
 
@@ -261,7 +263,7 @@ Author and affiliation
                     };
                 }),
         );
-        // Compare margins, not collapsed block gaps: adding .fill opts into flex.
+        // The empty fill opts into the legacy layout without using any room.
         expect(placed.headingMarginTop).toBeGreaterThan(0);
         expect(placed.subtitleMarginTop).toBeGreaterThan(0);
         for (const margin of [
