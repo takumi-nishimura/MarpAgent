@@ -260,3 +260,49 @@ test("new-deck rejects absolute paths", () => {
   assert.equal(result.status, 1);
   assert.match(result.stderr, /must be inside decks\//);
 });
+
+test("marpx scaffolds each audience profile and rejects invalid combinations before writing", () => {
+    const deckDir = fs.mkdtempSync(
+        path.join(repoRoot, "decks", "test-profile-"),
+    );
+    const cli = path.join(repoRoot, "bin", "marpx.js");
+    try {
+        for (const args of [
+            ["--profile", "../slide"],
+            ["--profile", "business", "--paper"],
+        ]) {
+            const result = spawnSync(
+                process.execPath,
+                [cli, "-n", deckDir, ...args],
+                { encoding: "utf8" },
+            );
+            assert.equal(result.status, 1);
+            assert.match(result.stderr, /--profile/);
+            assert.deepEqual(fs.readdirSync(deckDir), []);
+        }
+        for (const profile of ["conference", "business", "workshop"]) {
+            const dest = path.join(deckDir, profile);
+            execFileSync(process.execPath, [
+                cli,
+                "--profile",
+                profile,
+                "-n",
+                dest,
+            ]);
+            assert.equal(
+                fs.readFileSync(path.join(dest, "slide.md"), "utf8"),
+                fs.readFileSync(
+                    path.join(
+                        repoRoot,
+                        "template",
+                        "profiles",
+                        profile + ".md",
+                    ),
+                    "utf8",
+                ),
+            );
+        }
+    } finally {
+        fs.rmSync(deckDir, { recursive: true, force: true });
+    }
+});

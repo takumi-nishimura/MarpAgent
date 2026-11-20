@@ -99,6 +99,8 @@ to keep it on one line. Applies to lab slide and paper layouts (see `marp-compon
 
 | Directive | Purpose |
 | :-------- | :------ |
+| `<!-- _toc: true -->` | Render a contents list from visible section slides |
+| `<!-- _section: true -->` | Use this slide’s first Markdown heading in the contents |
 | `<!-- _paginate: skip -->` | Hide page number (title/close slides) |
 | `<!-- _class: title -->` | Apply title layout |
 | `<!-- _header: <text> -->` | Set slide header text |
@@ -121,6 +123,7 @@ resize. Scale the rendered SVG/container instead, e.g.
 | Command | Description |
 | :------ | :---------- |
 | `npm run marpx -- -n decks/<path>` | Scaffold a new deck |
+| `npm run marpx -- -n decks/<path> --profile conference` | Start from a worked example (conference, business, workshop) |
 | `npm run marpx -- -n decks/<path> --paper` | Scaffold a new A-series paper deck |
 | `npm run marpx -- decks/<name>/slide.md -v` | Validate slide.md (`--lint` is a deprecated alias) |
 | `npm run marpx -- decks/<name>/slide.md -v --autofix` | Apply safe autofixes, then validate |

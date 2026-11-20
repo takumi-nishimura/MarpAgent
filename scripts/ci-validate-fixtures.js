@@ -34,6 +34,9 @@ const expectations = [
   { fixture: "fixtures/paginate-skip-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/muji-slide.md", errors: [], hints: [] },
   { fixture: "fixtures/toshiba-slide.md", errors: [], hints: [] },
+  ...["conference", "business", "workshop"].map(profile => ({
+    fixture: `template/profiles/${profile}.md`, errors: [], hints: [],
+  })),
   { fixture: "template/layouts.md", errors: [], hints: [] },
   { fixture: "template/core5-components.md", errors: [], hints: [] },
   {

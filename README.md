@@ -61,8 +61,8 @@ npm run marpx -- decks/example/slide.md
 Then create a new destination and edit its `brief.md` and `slide.md`:
 
 ```bash
-# Create a deck.
-npm run marpx -- -n decks/my-talk
+# Start from a conference talk; use business or workshop for other audiences.
+npm run marpx -- -n decks/my-talk --profile conference
 
 # After adding your text and figures, preview the draft.
 npm run marpx -- decks/my-talk/slide.md
@@ -74,6 +74,8 @@ npm run marpx -- decks/my-talk/slide.md --overview
 npm run marpx -- decks/my-talk/slide.md -v --strict
 npm run marpx -- decks/my-talk/slide.md --pdf
 ```
+
+Choose a [presentation starter](template/README.md#presentation-starters) by the task facing the audience. Each is an editable five-slide Japanese example on the same topic. The agenda follows the marked section headings whenever the deck renders. Omit `--profile` for a blank deck.
 
 Preview and overview keep running until stopped with Ctrl+C. Start each command
 after stopping the previous preview, or use another terminal. The PDF is written

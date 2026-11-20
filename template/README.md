@@ -1,5 +1,21 @@
 # Slide templates
 
+## Presentation starters
+
+| Audience task | Profile and editable example | What the pages show |
+| --- | --- | --- |
+| Assess research evidence | [conference](profiles/conference.md) | Research question, comparison conditions, a results table with denominators, and a limitation. The sample counts are illustrative. |
+| Make a decision | [business](profiles/business.md) | Requested decision on the cover, alternatives under shared criteria, owners and timing. |
+| Carry out an exercise | [workshop](profiles/workshop.md) | Materials, timed prompts, a handoff between partners, and a concrete output. |
+
+Run `npm run marpx -- -n decks/my-talk --profile conference`. To inspect a starter first, run `npm run marpx -- template/profiles/conference.md --overview`. Replace the example topic and data in the copied Markdown. The frontmatter controls the theme and local colors; the profile is only needed at creation.
+
+### Automatic contents
+
+Put `<!-- _toc: true -->` on a slide with a heading such as `## 目次`. Put `<!-- _section: true -->` on each slide that begins a section. Its first Markdown heading supplies the agenda label. Move, rename, add, hide or delete the section slide to update all agendas in preview and export. Unmarked supporting pages do not add entries. Remove the agenda page for a short talk. These directives require the MarpAgent engine.
+
+## Blank deck and layout recipes
+
 `marpx -n` copies `brief.md` and `slide.md`. Ordinary slides use automatic body layout by default:
 write a page heading and ordinary Markdown; rendering supplies the `.body.box`
 wrapper. A context `header` is optional and should identify a section spanning

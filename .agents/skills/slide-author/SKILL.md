@@ -24,6 +24,8 @@ For a new destination:
 npm run marpx -- -n decks/<name>
 ```
 
+For a research talk, decision meeting, or hands-on session, add `--profile conference`, `--profile business`, or `--profile workshop`. See the [starter comparison and agenda directives](../../../template/README.md#presentation-starters). Replace the worked example with the source material.
+
 Never re-scaffold or use `--force` to overwrite an existing deck as part of this workflow. Keep human-edited `slide.md` as the current presentation. An existing deck without a brief can be edited without creating one. Update the brief for changed requirements or sources, not to mirror page order or wording. Read any unique requirements in a legacy `outline.md` and preserve it; create or synchronize an outline only when requested. A target page count is a hard limit only when specified as one.
 
 ## Develop and revise in place

@@ -5,26 +5,37 @@ const { enforceSupportedNodeRuntime } = require("../src/runtime-version");
 
 enforceSupportedNodeRuntime();
 
+const { parseArgs } = require("node:util");
 const rawArgs = process.argv.slice(2);
 if (rawArgs.includes("--poster")) {
   console.error("Error: --poster has been replaced by --paper.");
   process.exit(1);
 }
 
-const supportedFlags = new Set(["--paper", "--force"]);
-const unsupportedFlag = rawArgs.find(
-  (arg) => arg.startsWith("--") && !supportedFlags.has(arg),
-);
-if (unsupportedFlag) {
-  console.error(`Error: unsupported option ${unsupportedFlag}`);
+let parsed;
+try {
+  parsed = parseArgs({
+    args: rawArgs,
+    options: {
+      paper: { type: "boolean" },
+      force: { type: "boolean" },
+      profile: { type: "string" },
+    },
+    allowPositionals: true,
+  });
+} catch (error) {
+  console.error(error.message);
   process.exit(1);
 }
-
-const paperMode = rawArgs.includes("--paper");
-const force = rawArgs.includes("--force");
-const name = rawArgs.find((arg) => !arg.startsWith("--"));
-if (!name) {
-  console.error("Usage: marpx -n <path> [--paper] [--force]");
+const { paper: paperMode, force, profile } = parsed.values;
+const [name] = parsed.positionals;
+const profiles = ["conference", "business", "workshop"];
+if (profile !== undefined && (!profiles.includes(profile) || paperMode)) {
+  console.error(`Choose --profile ${profiles.join("|")} for slide decks only.`);
+  process.exit(1);
+}
+if (parsed.positionals.length !== 1) {
+  console.error("Usage: marpx -n <path> [--profile <name> | --paper] [--force]");
   console.error("Path is relative to repository root.");
   console.error("Examples:");
   console.error("  marpx -n decks/2025/presentation");
@@ -46,7 +57,7 @@ const templateFiles = paperMode
     ]
   : [
       ["brief.md", "brief.md"],
-      ["slide.md", "slide.md"],
+      [profile ? `profiles/${profile}.md` : "slide.md", "slide.md"],
     ];
 const date = new Date().toISOString().split("T")[0];
 

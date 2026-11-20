@@ -45,6 +45,7 @@ Options:
   --screenshot <page>      Screenshot a slide by displayed page number
   -v, --validate           Validate deck
   -n, --new                Create new deck
+  --profile <name>         Slide starter for conference, business, or workshop (with --new)
   --paper                  Scaffold an A-series paper deck (with --new)
   --outline                Deprecated: generate outline from a legacy brief
   --no-strict-brief        Allow incomplete legacy brief schema for --outline
@@ -131,6 +132,7 @@ try {
       hints: { type: "boolean", default: false },
       validate: { type: "boolean", short: "v", default: false },
       new: { type: "boolean", short: "n", default: false },
+      profile: { type: "string" },
       paper: { type: "boolean", default: false },
       poster: { type: "boolean", default: false },
       outline: { type: "boolean", default: false },
@@ -268,6 +270,11 @@ if (values["no-strict-brief"] && mode !== "outline") {
 
 if (values.poster) {
   console.error("Error: --poster has been replaced by --paper.");
+  process.exit(1);
+}
+
+if (values.profile !== undefined && mode !== "new") {
+  console.error("Error: --profile can only be used with --new");
   process.exit(1);
 }
 
@@ -634,6 +641,7 @@ switch (mode) {
 
   case "new": {
     const args = [...positionals];
+    if (values.profile !== undefined) args.push("--profile", values.profile);
     if (values.paper) {
       args.push("--paper");
     }
