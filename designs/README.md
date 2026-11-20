@@ -10,13 +10,11 @@ Available designs:
 
 ## Automatic contents gallery
 
-The [sample manuscript](contents/slide.md) puts `<!-- _toc: true -->` on its first slide. The four body slides use three distinct header runs. The two consecutive slides about choosing a question contribute a single entry, followed by the sections on figures and conclusions. The slide heading is ordinary Markdown, and MarpAgent generates the numbered list beneath it.
+The first two slides of the [sample manuscript](contents/slide.md) use the same heading and generated entries. The default places them at the top left. Add `<!-- _class: toc-center -->` to an automatic contents slide to center its heading and list together in the available body area. The heading is centered and each numbered entry is left-aligned. The context header and footer keep their usual positions.
 
-| `lab` | `muji` | `toshiba` |
-| :--- | :--- | :--- |
-| [![lab automatic contents](contents/lab-contents.png)](contents/lab-contents.png) | [![muji automatic contents](contents/muji-contents.png)](contents/muji-contents.png) | [![toshiba automatic contents](contents/toshiba-contents.png)](contents/toshiba-contents.png) |
+[![Default and centered contents in the lab theme](contents/placement.png)](contents/placement.png)
 
-The generated entries are 36 px in lab and toshiba and 34 px in MUJI. A headerless contents page leaves 48 px above the heading. Open a thumbnail for the 1280 × 720 render. Run `npm run marpx -- designs/contents/slide.md --overview` to see the list alongside the pages that supply its entries. Change the frontmatter `theme:` value to reproduce each column. The previews use Chromium with Noto Sans JP available.
+Use `npm run marpx -- designs/contents/slide.md --overview` to compare both layouts. The four content pages produce three entries because the first two share a header.
 
 ## Creating a design
 

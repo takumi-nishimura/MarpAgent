@@ -24,6 +24,8 @@ function wrap(open, tokens, Token) {
     }
     if (groups.some((g) => groupClasses(g).includes("body")))
         return [...tokens, ...logo];
+    const centerContents = open.meta.marpitDirectives.contentsPage &&
+        (open.attrGet("class") || "").split(/\s+/).includes("toc-center");
     const before = [],
         body = [],
         after = [];
@@ -44,7 +46,7 @@ function wrap(open, tokens, Token) {
                 /^\s*<!--[\s\S]*-->\s*$/.test(first.content))
         )
             before.push(...group);
-        else if (!contentSeen && /^h[1-6]$/.test(tag || "")) {
+        else if (!centerContents && !contentSeen && /^h[1-6]$/.test(tag || "")) {
             before.push(...group);
             contentSeen = true;
         } else {
@@ -54,7 +56,7 @@ function wrap(open, tokens, Token) {
     }
     const start = new Token("marpagent_body_open", "div", 1);
     start.block = true;
-    start.attrSet("class", "body box");
+    start.attrSet("class", centerContents ? "body box toc-group place-middle place-center" : "body box");
     const end = new Token("marpagent_body_close", "div", -1);
     end.block = true;
     return [...before, start, ...body, end, ...after, ...logo];

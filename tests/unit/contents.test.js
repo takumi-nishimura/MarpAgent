@@ -66,3 +66,19 @@ test("contents follow the explicit body or the marked cell inside it", () => {
     assert.equal(lists[1].parent.attribs.id, "target");
     assert.deepEqual(lists.map(DomUtils.textContent), ["Methods", "Methods"]);
 });
+
+test("toc-center groups the page heading with its generated list only in an automatic contents body", () => {
+    const pages = [
+        "<!-- _class: toc-center -->\n<!-- _toc: true -->\n## Centered",
+        "<!-- _toc: true -->\n## Ordinary",
+        "<!-- _class: toc-center -->\n<!-- _header: Methods -->\n## Evidence",
+        '<!-- _class: toc-center -->\n<!-- _toc: true -->\n## Custom\n\n<div class="body col"><p>Column</p></div>',
+    ];
+    const { html } = createConfiguredMarp().render(pages.join("\n\n---\n\n"));
+    const sections = DomUtils.findAll(n => n.name === "section", parseDocument(html).children);
+    const headings = sections.map(s => DomUtils.findOne(n => n.name === "h2", s.children));
+    const group = headings[0].parent;
+    assert.ok(group.attribs.class.split(/\s+/).includes("toc-group"));
+    assert.equal(DomUtils.findOne(n => n.name === "ol", group.children).parent, group);
+    assert.deepEqual(headings.slice(1).map(h => h.parent.name), ["section", "section", "section"]);
+});

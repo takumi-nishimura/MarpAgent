@@ -205,7 +205,7 @@ Contributors should follow the CI guide for Chromium/Firefox, D2/font preparatio
 
 ### 自動目次
 
-[3テーマの自動目次の表示見本と原稿](designs/README.md#automatic-contents-gallery)を確認できる．
+[自動目次の標準配置・中央配置の見本と原稿](designs/README.md#automatic-contents-gallery)を確認できる．
 
 目次を置くページに `<!-- _toc: true -->` を書く．通常は各ページに
 適用されたヘッダーを原稿順に並べ，同じ表示名が続く区間を1項目にする．
@@ -236,6 +236,8 @@ Contributors should follow the CI guide for Chromium/Firefox, D2/font preparatio
 `<!-- section: "" -->` で章の範囲を終える．章に属するページがすべて非表示なら
 その章は目次に載らない．原稿を並べ替えたり改題したりすると，次の描画に反映される．
 
-目次の配置を指定する場合，明示した `.body` の中にリストを生成する．
+目次ページに `<!-- _class: toc-center -->` を加えると，見出しと番号付きリストを一組として本文領域の中央に置く．見出しは中央揃え，項目は左揃えになる．
+
+独自の段組みに合わせる場合は，原稿に `.body` を書くとその中にリストを生成する．
 二段組みの片側に入れたい場合は，その列内で前後に空行を置いて
 `<!-- _toc: true -->` を独立した行に書く．

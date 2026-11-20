@@ -506,3 +506,13 @@ section .section-contents > li {
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> header, > .paper-header)):has(> .body):has(.section-contents) {
   padding-top: 48px;
 }
+
+.toc-group > :is(h1, h2, h3, h4, h5, h6) {
+  margin-block: 0;
+  max-inline-size: 100%;
+  text-align: center;
+}
+.toc-group > .section-contents {
+  max-inline-size: 100%;
+  text-align: start;
+}
