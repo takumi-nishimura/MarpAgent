@@ -1,0 +1,90 @@
+/* Share title and author layout between the photo cover and themes that opt in. */
+@utility cover-layout {
+  --cover-inset: max(var(--padding-x), 6%);
+  --cover-content-end: var(--cover-inset);
+  --cover-heading-size: var(--text-display, 2.5em);
+  --cover-copy-width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  align-items: flex-start;
+  padding: 60px var(--cover-content-end) 60px var(--cover-inset);
+
+  &:has(> header) {
+    padding-top: calc(var(--logo-title-size) + 52px);
+  }
+
+  & > header {
+    position: absolute;
+    inset: 20px var(--cover-header-end, var(--cover-content-end)) auto var(--cover-inset);
+    width: auto;
+    padding-inline-end: 0;
+    font-size: 0.75em;
+    background-position:
+      left 0 top 10px,
+      left calc(var(--logo-title-size) + var(--logo-title-spacing)) top 10px,
+      left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 2) top 10px,
+      left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 3) top 10px,
+      left calc((var(--logo-title-size) + var(--logo-title-spacing)) * 4) top 10px;
+  }
+
+  & > h1 {
+    max-inline-size: var(--cover-copy-width);
+    margin: 0;
+    font-size: var(--cover-heading-size);
+    line-height: var(--leading-display, 1.14);
+    font-weight: var(--font-weight-display, 700);
+    letter-spacing: var(--tracking-display, normal);
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+
+  & > :is(p, .author) {
+    max-inline-size: var(--cover-copy-width);
+    align-items: flex-start;
+    margin: 24px 0 0;
+    color: var(--fg-muted);
+    font-size: var(--text-body-md, 1em);
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+
+  & > p:has(~ h1) {
+    margin: 0 0 22px;
+    font-size: 0.82em;
+    font-weight: 600;
+  }
+
+  & > footer {
+    inset-inline: var(--cover-inset) var(--cover-content-end);
+  }
+}
+
+section.title:where(.cover-photo) {
+  @apply cover-layout;
+}
+
+section.title.cover-photo {
+  --cover-gutter: 4%;
+  --cover-photo-width: 44%;
+}
+
+section.title.cover-photo:has(> img.cover-image) {
+  --cover-content-end: calc(var(--cover-photo-width) + var(--cover-gutter));
+  --cover-heading-size: min(var(--text-display, 2.5em), 54px);
+  background-color: color-mix(in srgb, var(--bg) 96%, var(--highlight));
+}
+
+section.title.cover-photo > img.cover-image {
+  position: absolute;
+  inset: 0 0 0 auto;
+  inline-size: var(--cover-photo-width);
+  max-inline-size: none;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+section.title.cover-photo:has(> img.cover-image)::after {
+  right: var(--cover-photo-width);
+}

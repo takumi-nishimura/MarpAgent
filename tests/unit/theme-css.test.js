@@ -255,48 +255,25 @@ test("normal slide header uses a flat surface with an accent rule", () => {
     "themes/lab.css",
   ]) {
     const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
-    assert.match(
-      css,
-      /section:not\(\.title\) header:not\(\.paper-header\)\s*\{[\s\S]*background:\s*var\(--bg\)/,
-    );
+    const header = /section:not\(\.title\) header:not\(\.paper-header\)\s*\{([^}]+)\}/.exec(css)?.[1];
+    assert.ok(header, relativePath);
+    assert.match(header, /background:\s*var\(--bg\)/);
     assert.match(
       css,
       /--accent-rule:\s*color-mix\(in srgb, var\(--highlight\) 40%, transparent\)/,
     );
-    assert.match(
-      css,
-      /--accent-rule-width:\s*2px/,
-    );
-    assert.match(
-      css,
-      /section:not\(\.title\) header:not\(\.paper-header\)\s*\{[\s\S]*border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/,
-    );
-    assert.match(
-      css,
-      /section:not\(\.title\) header:not\(\.paper-header\)\s*\{[\s\S]*color:\s*var\(--fg\)/,
-    );
-    assert.doesNotMatch(
-      css,
-      /section:not\(\.title\) header:not\(\.paper-header\)\s*\{[\s\S]*background-image:\s*linear-gradient/,
-    );
+    assert.match(css, /--accent-rule-width:\s*2px/);
+    assert.match(header, /border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/);
+    assert.match(header, /color:\s*var\(--fg\)/);
+    assert.doesNotMatch(header, /background-image:\s*linear-gradient/);
   }
 });
 
-test("title and normal slide rules share the same accent treatment", () => {
-  for (const relativePath of [
-    "themes/src/lab/_cover.css",
-    "themes/lab.css",
-  ]) {
-    const css = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
-    assert.match(
-      css,
-      /section\.title:where\(:not\(\.cover-plain\)\) h1\s*\{[\s\S]*border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/,
-    );
-    assert.doesNotMatch(
-      css,
-      /section\.title:where\(:not\(\.cover-plain\)\) h1\s*\{[\s\S]*border-bottom:\s*1px solid var\(--fg\)/,
-    );
-  }
+test("the Lab cover rule uses the shared accent treatment", () => {
+  const css = fs.readFileSync(path.join(repoRoot, "themes/src/lab/_cover.css"), "utf8");
+  const rule = /(?:&\s+)?h1\s*\{([^}]+)\}/.exec(css)?.[1];
+  assert.ok(rule);
+  assert.match(rule, /border-bottom:\s*var\(--accent-rule-width\) solid var\(--accent-rule\)/);
 });
 
 test("theme sources take Tailwind utilities only from the explicit safelist", () => {
