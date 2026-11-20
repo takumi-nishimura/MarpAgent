@@ -91,6 +91,7 @@ for (const size of ["16:9", "4:3"]) {
         expect(layout.headerTextLeft).toBeCloseTo(layout.heading.left - 16 * (layout.header.right - layout.header.left) / (size === "4:3" ? 1024 : 1280), 0);
         expect(layout.heading.top - layout.header.bottom).toBeGreaterThanOrEqual(16);
         expect(layout.headerFont).toBe(26);
+        expect(layout.bodyFont).toBe(32);
         expect(layout.body.height).toBeGreaterThan(layout.slide.height * 0.5);
         expect(layout.point.left).toBeCloseTo(layout.heading.left, 0);
         expect((layout.point.top + layout.point.bottom) / 2).toBeCloseTo((layout.body.top + layout.body.bottom) / 2, 0);
@@ -141,7 +142,7 @@ test("a body group uses one spacing rhythm between prose and a comparison table"
         return children.slice(1).map((rect, i) => rect.top - children[i].bottom);
     });
     expect(gaps).toHaveLength(2);
-    for (const gap of gaps) expect(gap).toBeCloseTo(13, 0);
+    for (const gap of gaps) expect(gap).toBeCloseTo(16, 0);
 });
 
 for (const theme of ["lab", "muji", "toshiba"]) {

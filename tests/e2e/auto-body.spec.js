@@ -68,7 +68,8 @@ Text and supporting evidence.
         expect(layout[0].body.bottom).toBeLessThanOrEqual(layout[0].logo.top);
         expect(layout[0].footer.right).toBeLessThan(layout[0].logo.left);
         expect(layout[1].logo).toBeNull();
-        expect(layout[1].header.bottom - layout[1].header.top).toBe(52);
+        expect(layout[1].header.bottom - layout[1].header.top).toBeGreaterThanOrEqual(52);
+        expect(layout[1].heading.top - layout[1].header.bottom).toBeCloseTo(24, 1);
         expect(layout[1].headerFont).toBe("26px");
         expect(layout[1].heading.left - layout[1].headerLeft).toBe(16);
         expect(

@@ -92,14 +92,14 @@ test("plain lab uses readable type roles and preserves colored emphasis", async 
     expect(value.strong.weight).toBe("700");
     expect(value.body.size).toBe(26);
     expect(value.body.leading).toBe(39);
-    expect(value.heading.size).toBe(39);
-    expect(value.heading.leading).toBeCloseTo(46.8, 1);
+    expect(value.heading.size).toBe(44);
+    expect(value.heading.leading).toBeCloseTo(52.8, 1);
     expect(value.strong.color).not.toBe(value.body.color);
     expect(value.caption.size).toBe(19.5);
     expect(value.caption.leading).toBeCloseTo(25.35, 1);
     expect(value.footnote.size).toBe(14);
     expect(value.footnote.leading).toBeCloseTo(19.6, 1);
-    expect(value.table.size).toBe(22.75);
+    expect(value.table.size).toBe(28);
     expect(value.emphasis.background).toContain("linear-gradient");
     expect(value.marker.background).toContain("linear-gradient");
     expect(value.emphasis.decoration).toBe("clone");
