@@ -2,6 +2,34 @@
 // slides after Marpit has parsed their inherited and spot headers.
 const { parseDocument, DomUtils } = require("htmlparser2");
 
+const { groupClasses } = require("./auto-body-plugin");
+const { bodyGroups } = require("./scroll-slides-plugin");
+
+function insertContents(tokens, list, Token) {
+    const groups = bodyGroups(tokens, Token);
+    const body = groups.find(group => groupClasses(group).includes("body"));
+    if (!body) return [...tokens, list];
+
+    // A standalone directive inside a body selects the exact cell or position.
+    const marker = body.findIndex(token =>
+        token.type === "marpit_comment" && token.meta?.marpitParsedDirectives?._toc === "true",
+    );
+    if (marker >= 0) {
+        body.splice(marker + 1, 0, list);
+    } else {
+        // bodyGroups isolates this top-level HTML element, including when
+        // several elements share one html_block token.
+        const last = body.at(-1);
+        const closing = last.type === "html_block" && /<\/[\w:-]+\s*>\s*$/.exec(last.content);
+        if (closing) {
+            last.content = last.content.slice(0, closing.index) + list.content + closing[0];
+        } else {
+            body.push(list);
+        }
+    }
+    return groups.flat();
+}
+
 module.exports = (md) => {
     md.marpit.customDirectives.local.section = (value) => ({
         contentsSection: String(value ?? "").trim(),
@@ -35,10 +63,12 @@ module.exports = (md) => {
         const insertions = [];
         let previous = "";
         let current;
+        let start;
         let header = "";
         for (const [index, token] of state.tokens.entries()) {
             if (token.type === "marpit_slide_open") {
                 current = token;
+                start = index + 1;
                 header = "";
             } else if (token.type === "marpit_header_open" && !state.hasContentsSections) {
                 const inline = state.tokens[index + 1];
@@ -47,7 +77,7 @@ module.exports = (md) => {
             } else if (token.type === "marpit_slide_close") {
                 const { contentsPage, contentsSection } = current.meta.marpitDirectives;
                 if (contentsPage) {
-                    insertions.push(index);
+                    insertions.push([start, index]);
                     continue;
                 }
                 if (!state.hasContentsSections && (current.attrGet("class") || "").split(/\s+/).includes("title")) continue;
@@ -58,10 +88,11 @@ module.exports = (md) => {
         }
         if (!labels.length) return;
         const items = labels.map(label => `<li>${md.utils.escapeHtml(label)}</li>`).join("");
-        for (const index of insertions.reverse()) {
+        for (const [start, end] of insertions.reverse()) {
             const list = new state.Token("html_block", "", 0);
             list.content = `<ol class="section-contents">${items}</ol>\n`;
-            state.tokens.splice(index, 0, list);
+            const content = insertContents(state.tokens.slice(start, end), list, state.Token);
+            state.tokens.splice(start, end - start, ...content);
         }
     });
 };

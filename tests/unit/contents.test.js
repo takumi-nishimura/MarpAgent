@@ -52,3 +52,17 @@ test("chapter labels remain literal and reappearing chapters keep their position
     assert.deepEqual(render(pages).lists, [[label, "Another", label]]);
     assert.equal(render(pages).headers[0], label);
 });
+
+test("contents follow the explicit body or the marked cell inside it", () => {
+    const pages = [
+        '<!-- _toc: true -->\n\n## Agenda\n\n<div class="body box"><p>Intro</p></div><aside>Side</aside>',
+        '## Agenda\n\n<div class="body col"><div>Notes</div><div id="target">\n\n<!-- _toc: true -->\n\n</div></div>',
+        '<!-- header: Methods -->\n\n## First step',
+    ];
+    const { html } = createConfiguredMarp().render(pages.join("\n\n---\n\n"));
+    const lists = DomUtils.findAll(n => n.attribs.class === "section-contents", parseDocument(html).children);
+    assert.equal(lists.length, 2);
+    assert.equal(lists[0].parent.attribs.class, "body box");
+    assert.equal(lists[1].parent.attribs.id, "target");
+    assert.deepEqual(lists.map(DomUtils.textContent), ["Methods", "Methods"]);
+});

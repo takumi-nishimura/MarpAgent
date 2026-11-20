@@ -96,3 +96,5 @@ module.exports = (md) => {
         },
     );
 };
+
+module.exports.groupClasses = groupClasses;
