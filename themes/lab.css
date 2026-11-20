@@ -670,11 +670,11 @@ section > footer:not(.paper-footer) {
   bottom: 20px;
   margin: 0;
   padding: 0;
-  font-size: 0.5em;
+  font-size: calc(var(--marpagent-canvas-text, 1em) * 0.5);
   color: var(--fg-muted);
 }
 section::after {
-  font-size: 0.5em;
+  font-size: calc(var(--marpagent-canvas-text, 1em) * 0.5);
   color: var(--fg-muted);
   content: attr(data-marpit-pagination) " / " attr(data-marpit-pagination-total);
   padding-right: 20px;
@@ -765,7 +765,7 @@ section:not(.title).invert header:not(.paper-header)::after {
   left: 2.0rem;
   right: 2.0rem;
   bottom: 0.5rem;
-  font-size: 0.4em;
+  font-size: calc(var(--marpagent-canvas-text, 1em) * 0.4);
   color: var(--fg-muted);
 }
 table {
@@ -801,12 +801,6 @@ section[data-marpagent-auto-body].invert > .slide-logos {
 }
 section[data-marpagent-auto-body]:has(> .slide-logos) > footer {
   right: 48%;
-}
-section:where(:not(.title):not(:has(> .paper-header))):has(> .body) > h2, section > .toc-group > h2 {
-  font-size: var(--text-slide-heading, var(--text-headline-md, 1.5em));
-}
-section:where(:not(.title):not(:has(> .paper-header))) > .body {
-  font-size: var(--text-slide-body, var(--text-body-md));
 }
 section:where(:not(.title):not(:has(> .paper-header))) > .body :where(table) {
   font-size: var(--text-slide-table, var(--text-body-md));
@@ -1266,7 +1260,7 @@ figure img, figure video {
   object-fit: contain;
 }
 figcaption {
-  font-size: 0.6em;
+  font-size: calc(var(--marpagent-canvas-text, 1em) * 0.6);
   text-align: center;
   margin-top: 0.5em;
   color: var(--fg-muted);
@@ -2058,15 +2052,34 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)) > header:not(.paper-header)::after {
   background-position: right var(--padding-x) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing))) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 2) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 3) center, right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 4) center;
 }
+section:where(:not(.title, [data-marpagent-scroll="true"], :has(> .paper-header)):has(> .body):has(> header)) {
+  padding-inline: 0;
+}
+section:where(:not(.title, [data-marpagent-scroll="true"], :has(> .paper-header)):has(> .body):has(> header)) > :where(:not(header, footer, .footnote, .slide-logos, script, style)) {
+  margin-inline: var(--padding-x);
+}
+section:where(:not(.title, [data-marpagent-scroll="true"], :has(> .paper-header)):has(> .body):has(> header)) > :is(.centered, .fit) {
+  align-self: center;
+  max-width: calc(100% - 2 * var(--padding-x));
+}
+section:where(:not(.title, [data-marpagent-scroll="true"], :has(> .paper-header)):has(> .body):has(> header)) > .body.centered {
+  max-width: min(720px, 100% - 2 * var(--padding-x));
+}
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header {
   position: relative;
   top: 0;
   left: 0;
-  width: calc(100% + 2 * var(--padding-x));
-  margin-inline: calc(-1 * var(--padding-x));
+  width: 100%;
   margin-bottom: var(--body-top-gap);
   min-height: var(--header-height);
   height: auto;
+}
+section:where(:not(.title, :has(> .paper-header)):has(> .body)) {
+  --marpagent-canvas-text: var(--text-body-md);
+  font-size: var(--text-slide-body, var(--text-body-md));
+}
+section:where(:not(.title, :has(> .paper-header)):has(> .body)) > h2, section > :where(.toc-group) > h2 {
+  font-size: var(--text-slide-heading, var(--text-headline-md, 1.5em));
 }
 section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):not(:has(> :is(h1, h2, h3, h4, h5, h6), > .toc-group > :is(h1, h2, h3, h4, h5, h6))) > header:not(.paper-header) {
   font-size: var(--text-headline-md, 1.5em);

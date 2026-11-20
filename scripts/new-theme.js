@@ -176,7 +176,15 @@ function createThemeFiles(options) {
     },
     {
       path: path.join(repoRoot, "themes", "src", name, "_cover.css"),
-      content: "section.title:where(:not(.cover-plain)) {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n}\n",
+      content: `section.title:where(:not(.cover-plain)) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+section.title:where(:not(.cover-plain)) > h1 {
+  font-size: var(--text-display);
+}
+`,
     },
     {
       path: path.join(repoRoot, "themes", "src", name, "_body.css"),

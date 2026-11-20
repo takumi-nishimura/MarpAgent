@@ -104,7 +104,13 @@ for (const size of ["16:9", "4:3"]) {
         const gaps = [];
         for (const count of [1, 5]) {
             await render(page, Array.from({ length: count }, () => "Evidence with its required qualification.").join("\n\n"), size, "body box");
-            const gap = await page.evaluate(() => document.querySelector(".body p").getBoundingClientRect().top - document.querySelector("h2").getBoundingClientRect().bottom);
+            const gap = await page.evaluate(() => {
+                const section = document.querySelector("section");
+                const scale = section.getBoundingClientRect().width / section.offsetWidth;
+                const prose = section.querySelector(".body p").getBoundingClientRect();
+                const heading = section.querySelector("h2").getBoundingClientRect();
+                return (prose.top - heading.bottom) / scale;
+            });
             expect(gap).toBeGreaterThanOrEqual(16);
             expect(gap).toBeLessThanOrEqual(32);
             gaps.push(gap);
