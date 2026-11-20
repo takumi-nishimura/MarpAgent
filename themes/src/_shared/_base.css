@@ -349,3 +349,15 @@ section[data-marpagent-auto-body].invert > .slide-logos {
 section[data-marpagent-auto-body]:has(> .slide-logos) > footer {
   right: 48%;
 }
+
+/* Projected slide text. Keep the canvas size as the basis for covers,
+   captions and furniture. Prose inherits the body scale in nested layouts. */
+section:where(:not(.title):not(:has(> .paper-header))):has(> .body) > h2 {
+  font-size: var(--text-slide-heading, var(--text-headline-md, 1.5em));
+}
+section:where(:not(.title):not(:has(> .paper-header))) > .body {
+  font-size: var(--text-slide-body, var(--text-body-md));
+}
+section:where(:not(.title):not(:has(> .paper-header))) > .body :where(table) {
+  font-size: var(--text-slide-table, var(--text-body-md));
+}

@@ -37,3 +37,8 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
   line-height: var(--leading-headline-md, 1.2);
   font-weight: var(--font-weight-headline-md, 700);
 }
+
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body)
+  > header:has(+ :is(h1, h2, h3, h4, h5, h6)) {
+  margin-bottom: var(--header-heading-gap, 24px);
+}

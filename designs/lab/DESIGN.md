@@ -105,6 +105,12 @@ colors:
   code-dark-builtin: "#E6C07B"
   code-dark-meta: "#56B6C2"
 typography:
+  slide-heading:
+    fontSize: 44px
+  slide-body:
+    fontSize: 32px
+  slide-table:
+    fontSize: 28px
   display:
     fontFamily: Noto Sans JP
     fontSize: 65px

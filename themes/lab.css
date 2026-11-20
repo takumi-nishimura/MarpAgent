@@ -158,6 +158,9 @@
     --font-footnote: "Noto Sans JP";
     --font-label-md: "Noto Sans JP";
     --font-header-label: "Noto Sans JP";
+    --text-slide-heading: 44px;
+    --text-slide-body: 32px;
+    --text-slide-table: 28px;
     --text-display: 65px;
     --text-headline-lg: 58.5px;
     --text-headline-md: 39px;
@@ -798,6 +801,15 @@ section[data-marpagent-auto-body].invert > .slide-logos {
 }
 section[data-marpagent-auto-body]:has(> .slide-logos) > footer {
   right: 48%;
+}
+section:where(:not(.title):not(:has(> .paper-header))):has(> .body) > h2 {
+  font-size: var(--text-slide-heading, var(--text-headline-md, 1.5em));
+}
+section:where(:not(.title):not(:has(> .paper-header))) > .body {
+  font-size: var(--text-slide-body, var(--text-body-md));
+}
+section:where(:not(.title):not(:has(> .paper-header))) > .body :where(table) {
+  font-size: var(--text-slide-table, var(--text-body-md));
 }
 @layer utilities {
   .white {
@@ -2041,6 +2053,9 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
   font-size: var(--text-headline-md, 1.5em);
   line-height: var(--leading-headline-md, 1.2);
   font-weight: var(--font-weight-headline-md, 700);
+}
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header:has(+ :is(h1, h2, h3, h4, h5, h6)) {
+  margin-bottom: var(--header-heading-gap, 24px);
 }
 @property --tw-ordinal {
   syntax: "*";

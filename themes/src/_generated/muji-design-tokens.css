@@ -121,6 +121,9 @@
   --font-caption: "Helvetica Neue";
   --font-label-md: "Helvetica Neue";
   --font-header-label: "Helvetica Neue";
+  --text-slide-heading: 40px;
+  --text-slide-body: 30px;
+  --text-slide-table: 27px;
   --text-display: 52px;
   --text-headline-lg: 44px;
   --text-headline-md: 32px;

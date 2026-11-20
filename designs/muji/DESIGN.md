@@ -117,6 +117,12 @@ colors:
   code-dark-builtin: "#FFFFFF"
   code-dark-meta: "#C4C4C6"
 typography:
+  slide-heading:
+    fontSize: 40px
+  slide-body:
+    fontSize: 30px
+  slide-table:
+    fontSize: 27px
   display:
     fontFamily: Helvetica Neue
     fontSize: 52px

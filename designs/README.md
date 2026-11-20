@@ -49,3 +49,5 @@ the cover stylesheet. New themes start with a neutral design.
 Open a thumbnail for the 1280 × 720 render. Each row uses the [same three-slide manuscript](previews/slide.md). The first two slides have identical text. On the second slide, `cover-plain` groups the title and subtitle at the left, vertically centers them, and removes the theme's cover decoration. Type and color still come from the selected theme. The third slide compares a context header, a heading, emphasis, and a table.
 
 To try the example, run `npm run marpx -- designs/previews/slide.md --overview` from the repository root. For the other rows, set the manuscript's frontmatter to `theme: muji` or `theme: toshiba`. Export the three pages with `npm run marpx -- designs/previews/slide.md --images png --output out/cover-body.png`. The saved previews use Chromium at 1280 × 720 with Noto Sans JP available.
+
+On regular body slides, lab and toshiba use 44 px page headings, 32 px body text and 28 px tables. MUJI uses 40, 30 and 27 px respectively. A context header directly followed by a page heading leaves a 24 px gap in all three designs.
