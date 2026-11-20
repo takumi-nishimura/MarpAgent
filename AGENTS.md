@@ -48,8 +48,7 @@ force layout variety. Follow the user's references and preserve evidence,
 qualifications, and intentional human edits.
 
 Ordinary slides use automatic body layout by default: write a page heading and plain Markdown;
-the renderer supplies one direct `.body.box`. Use an explicit `.body` for
-columns or custom placement, as shown in `template/layouts.md`. Use optional
+the renderer supplies one direct `.body.box`. Use `.col.fill` inside ordinary Markdown for a growing row, or an explicit `.body` for custom placement, as shown in `template/layouts.md`. Use optional
 headers only for context spanning several slides, not a second page title.
 Use `autoBody: false` in frontmatter for legacy flow; `_autoBody: false`
 disables automatic layout on one slide. Choose the material's width and top/middle placement from

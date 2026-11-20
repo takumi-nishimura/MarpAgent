@@ -81,3 +81,33 @@ Text and supporting evidence.
                 .screenshot({ path: "/tmp/marpagent-auto-body.png" });
     });
 }
+
+test("a growing comparison row fits captions between the page header and multiline footer", async ({ page }) => {
+    const marp = createConfiguredMarp();
+    marp.themeSet.add(fs.readFileSync(path.join(__dirname, "../../themes/lab.css"), "utf8"));
+    const image = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'/%3E";
+    const figure = (caption) => `<figure><img alt="Device" src="${image}"><figcaption>${caption}</figcaption></figure>`;
+    const { html, css } = marp.render([
+        "---", "theme: lab", "header: Comparison", "---",
+        "## Equipment", "", "Controls.", "", "---",
+        "<!-- _footer: Source<br>Conditions<br>Limitations -->", "",
+        "Upper row.", "",
+        '<div class="col fill"><div><p>Detail view</p><div class="col fill">',
+        figure("Input"), figure("Display<br>Second line"), "</div></div>",
+        figure("Overview"), "</div>",
+    ].join("\n"));
+    await page.route("https://fonts.googleapis.com/**", route => route.abort());
+    await page.setContent(`<style>${css}</style>${html}`);
+    const headers = await page.locator("section > header").evaluateAll(nodes =>
+        nodes.map(node => parseFloat(getComputedStyle(node).fontSize)));
+    expect(headers[1]).toBeGreaterThan(headers[0]);
+    const slide = page.locator("section").last();
+    const footer = await slide.locator("footer").boundingBox();
+    for (const figure of await slide.locator("figure").all()) {
+        const media = await figure.locator("img").boundingBox();
+        const caption = await figure.locator("figcaption").boundingBox();
+        expect(media.height).toBeGreaterThan(100);
+        expect(media.y + media.height).toBeLessThanOrEqual(caption.y + 1);
+        expect(caption.y + caption.height).toBeLessThan(footer.y);
+    }
+});

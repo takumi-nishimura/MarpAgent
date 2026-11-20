@@ -34,6 +34,7 @@ function wrap(open, tokens, Token) {
         if (tag === "header") before.push(...group);
         else if (
             ["footer", "script", "style"].includes(tag) ||
+            groupClasses(group).includes("footnote") ||
             first.type === "marpit_style"
         )
             after.push(...group);

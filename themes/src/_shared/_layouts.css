@@ -372,6 +372,24 @@
   margin-bottom: 0;
 }
 
+/* A nested row keeps its horizontal direction, even as a direct column.
+   A growing row stretches each cell to give its figures a definite height. */
+.body .col {
+  flex-direction: row;
+  gap: var(--col-gap);
+}
+.body .col:has(.fill),
+.body .col.fill {
+  align-items: stretch;
+}
+.body :is(.box, .col):has(.fill) {
+  flex: 1 1 0;
+  min-height: 0;
+}
+.body .col.fill {
+  grid-template-rows: minmax(0, 1fr);
+}
+
 /* .author paragraph reset — outside @layer so it wins over unlayered section p rule */
 .author p {
   margin: 0;

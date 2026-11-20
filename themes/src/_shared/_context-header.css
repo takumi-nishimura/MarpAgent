@@ -18,3 +18,22 @@ section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header
     right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 3) center,
     right calc(var(--padding-x) + (var(--logo-header-size) + var(--logo-header-spacing)) * 4) center;
 }
+
+/* In a body layout the header occupies its measured height, including wraps. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):has(> .body) > header {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: calc(100% + 2 * var(--padding-x));
+  margin-inline: calc(-1 * var(--padding-x));
+  margin-bottom: var(--body-top-gap);
+  min-height: var(--header-height);
+  height: auto;
+}
+
+/* When the header names the page itself, use the theme's heading scale. */
+section:not(.title):not([data-marpagent-scroll="true"]):not(:has(> .paper-header)):not(:has(> :is(h1, h2, h3, h4, h5, h6))) > header:not(.paper-header) {
+  font-size: var(--text-headline-md, 1.5em);
+  line-height: var(--leading-headline-md, 1.2);
+  font-weight: var(--font-weight-headline-md, 700);
+}

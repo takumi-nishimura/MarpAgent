@@ -6,7 +6,7 @@ wrapper. A context `header` is optional and should identify a section spanning
 several pages, not repeat the page title. Headerless pages keep logos in the
 bottom safe area without reserving a header row.
 
-Use an explicit `.body` for columns or custom placement. It takes precedence
+Use `.col.fill` for a growing row after ordinary Markdown. An explicit `.body` can take over the entire body layout. It takes precedence
 over automatic wrapping. `_autoBody: false` disables wrapping on one slide.
 Title, paper, and scroll slides retain their dedicated layouts. Legacy decks without explicit wrappers also receive automatic bodies. Set
 `autoBody: false` in frontmatter if their original flow must be preserved.
@@ -20,6 +20,7 @@ directives. These are independent examples, not a required deck sequence.
 | 1 — Comparison table | Alternatives share the same decision criteria | Put criteria in rows and alternatives in columns. Keep units and conditions comparable; say when information is missing. |
 | 2 — Main material and context | A table or figure needs an interpretation beside it | Use the wider column for evidence and the narrower one for implications, conditions, or a recommendation. Adjust the 2:1 split when the material needs it. |
 | 3 — Process and outputs | Ordered work has an action and a review outcome | Keep stage, action, and output on shared column boundaries. Use as many rows as the actual process needs. |
+| 4 — Captioned comparison | Two figures share the height below an explanation | Add a figure for each column. Set `--col-width` on any column that needs a particular width. |
 
 The examples use repository workflow facts so they can be rendered without
 placeholder images or fabricated business metrics. Replace their subject matter
@@ -36,7 +37,7 @@ themselves add no decorative surface.
 
 - Ordinary Markdown needs no wrapper. For explicit layouts,
   keep one direct `.body` below the heading. Use `.body.box` for an explanation
-  or table, or `.body.col.visual` for main material with interpretation. Keep
+  or table, or `.body.col` for main material with interpretation. Keep
   explanations near their heading by default; `.body.centered.box.place-top`
   also bounds their reading width. Select `.place-middle` when the relationship
   to a figure or a deliberate focal composition needs it. Inspect the gap from

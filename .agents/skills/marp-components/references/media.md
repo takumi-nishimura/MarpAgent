@@ -60,20 +60,17 @@ Video:
 
 ### Fit media and its caption to the remaining body
 
-On a regular slide, select the caption-aware defaults with one direct `.body`
-wrapper. `.body.box` is a single area; `.body.col.shares` supports a figure
+Ordinary slides already have a caption-aware body. `.body.box` is a single area; `.body.col` supports a figure
 beside its interpretation. A multiline heading above the body or a multiline
 caption reduces the media area while keeping the text's natural height.
 
 ```markdown
 ## Result under the tested condition
 
-<div class="body box">
 <figure>
 <img src="assets/img/result.png" alt="Describe the result" />
 <figcaption>Source and conditions needed to interpret the figure</figcaption>
 </figure>
-</div>
 ```
 
 Direct image, video, and SVG children of a figure share the remaining media
@@ -82,7 +79,7 @@ the column's remaining height and keep their own captions. Keep a continuous
 height chain: use `.box.fill` or `.col.fill` for a nested growing area instead
 of an anonymous wrapper or `height: 100%` beside a caption.
 
-For new unequal columns, use `.col.shares` and set `--col-width: 60%` on
+For new unequal columns, use `.col` and set `--col-width: 60%` on
 only the columns needing a specific width. Unspecified columns divide the
 remaining width equally, including rows with three or more columns. Equal
 columns need no width declarations. Do not repeat the complementary width.
@@ -91,9 +88,8 @@ layout. Then adjust `--col-gap`, `--body-gap`, or `--figure-gap` on the
 relevant wrapper. A whole fixed-height figure may use
 `style="flex: none; height: 280px"`; its caption is included in that height.
 Use `style="flex: 2"` to allocate more height to one stacked figure. The configured runtime
-automatically reserves the measured height of a direct `.footnote`; add
-`--body-bottom-safe` only for an intentional extra minimum or a native footer
-that needs more space. Nested footnotes and CSS-only rendering need an
+measures visible footers, direct footnotes and bottom logos. Set
+`--body-bottom-safe` for an intentional minimum. Nested footnotes and CSS-only rendering need an
 explicit reserve.
 
 To keep an intentionally fixed inline image/video size inside the new body,
