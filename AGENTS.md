@@ -98,6 +98,8 @@ to keep it on one line. Applies to lab slide and paper layouts (see `marp-compon
 
 | Directive | Purpose |
 | :-------- | :------ |
+| `<!-- _toc: true -->` | Insert an automatically updated contents list on this slide |
+| `<!-- section: Chapter title -->` | Start a chapter. Any named chapter selects chapter-based contents for the entire deck; otherwise use runs of visible body slide headers |
 | `<!-- _paginate: skip -->` | Hide page number (title/close slides) |
 | `<!-- _class: title -->` | Apply title layout |
 | `<!-- _header: <text> -->` | Set slide header text |

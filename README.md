@@ -202,3 +202,34 @@ Automatic PR checks validate records and, for engine-related paths, a lightweigh
 smoke suite. They do not replace rendered deck inspection or full acceptance.
 Contributors should follow the CI guide for Chromium/Firefox, D2/font preparation,
 `npm run ci:full`, and the separate dependency audit.
+
+### 自動目次
+
+目次を置くページに `<!-- _toc: true -->` を書く．通常は各ページに
+適用されたヘッダーを原稿順に並べ，同じ表示名が続く区間を1項目にする．
+たとえば「背景，背景，手法，背景」の目次は「背景，手法，背景」となる．
+ヘッダーのないページ，表紙のヘッダー，目次ページは読み飛ばす．
+ページ見出しは自由に変更できる．
+
+```markdown
+<!-- _toc: true -->
+
+## 発表の流れ
+
+---
+
+<!-- header: 手法 -->
+
+## 入力を記録する
+
+---
+
+## 二人の入力を統合する
+```
+
+目次と表示用ヘッダーの粒度を分けたいときは，章の開始ページに
+`<!-- section: 評価実験 -->` と一度書く．章を一つでも指定すると，
+デッキ全体の目次は章タイトルを使う．ヘッダーを別に指定しなければ
+章タイトルを表示し，`<!-- _header: 実験条件 -->` でそのページの表示を変更できる．
+`<!-- section: "" -->` で章の範囲を終える．章に属するページがすべて非表示なら
+その章は目次に載らない．原稿を並べ替えたり改題したりすると，次の描画に反映される．
