@@ -59,9 +59,10 @@ marpx --theme-new <name> --source-url <url> --no-build
 
 The scaffold creates:
 
-- `designs/<name>/DESIGN.md`, seeded with the complete `lab` token schema;
+- `designs/<name>/DESIGN.md`, initialized from the neutral `template/theme-design.md` scaffold;
 - `themes/src/<name>.css`, a Marp theme entry that imports the matching
-  generated token CSS and shared components;
+  generated tokens, shared components, and theme-specific styles;
+- `themes/src/<name>/_cover.css` and `_body.css`, for the cover and body styles;
 - `fixtures/<name>-slide.md`, a smoke deck for validation.
 
 After scaffolding, edit `DESIGN.md` first. Literal design values belong there,
