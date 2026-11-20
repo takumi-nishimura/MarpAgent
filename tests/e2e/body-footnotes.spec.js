@@ -18,6 +18,7 @@ paginate: true
 header: Footnote contract
 ${kind === "title" ? "class: title\n" : ""}---
 ${kind === "scroll" ? "<!-- _scroll: true -->" : ""}
+${kind === "legacy" ? "<!-- _autoBody: false -->" : ""}
 ${kind === "paper" ? '<div class="paper-header">Paper header</div>' : ""}
 <h2>${heading}</h2>
 ${noteFirst ? footnote : ""}

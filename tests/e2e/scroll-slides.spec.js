@@ -554,7 +554,8 @@ Normal body
             expect(geometry.horizontal).toBeLessThanOrEqual(1);
             expect(geometry.belowTitle).toBe(true);
             expect(geometry.aboveFooter).toBe(true);
-            expect(geometry.bodyFont).toBe(geometry.normalFont);
+            expect(geometry.bodyFont).toBe(theme === "muji" ? "24px" : "26px");
+            expect(geometry.normalFont).toBe(theme === "muji" ? "30px" : "32px");
             await scroll(page, 1, 'section[id="1"] > .marpagent-scroll-body');
             await expect
                 .poll(() =>
