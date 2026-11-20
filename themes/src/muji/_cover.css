@@ -15,9 +15,10 @@ section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fi
 /* Keep the event label with the title and the cover logos at the top. */
 section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fill))) > header {
   position: static;
+  align-self: stretch;
   min-height: 0;
   max-inline-size: 100%;
-  text-align: start;
+  text-align: end;
   overflow-wrap: anywhere;
   background-size: 0;
 
