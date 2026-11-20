@@ -2023,7 +2023,7 @@ section.title:where(:not(.cover-plain, .cover-photo, :has(> .paper-header, > .fi
   overflow-wrap: anywhere;
   background-size: 0;
   &:not(:empty) {
-    margin-block: -16px 30px;
+    margin-block: -28px 42px;
   }
   &::before {
     content: "";
