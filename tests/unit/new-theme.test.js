@@ -71,6 +71,12 @@ test("new-theme scaffolds design, theme source, and fixture", () => {
     assert.doesNotMatch(css, /@source\s+"/);
     assert.match(css, /@import "\.\/_shared\/_safelist\.css";/);
 
+    const cover = fs.readFileSync(
+      path.join(tempRoot, "themes", "src", "plain", "_cover.css"),
+      "utf8",
+    );
+    assert.match(cover, /section\.title:where\(:not\(\.cover-plain\)\) > h1\s*\{[^}]*font-size: var\(--text-display\)/);
+
     const fixture = fs.readFileSync(
       path.join(tempRoot, "fixtures", "plain-slide.md"),
       "utf8",
