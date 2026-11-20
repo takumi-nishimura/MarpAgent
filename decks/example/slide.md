@@ -11,7 +11,7 @@ style: |
 ---
 
 <!-- _paginate: skip -->
-<!-- _class: title -->
+<!-- _class: title cover-muji -->
 <!-- _header: 2026-11-01 -->
 
 # MarpAgent
@@ -24,6 +24,14 @@ Markdownでスライドを作り，発表・配布する
 
 ---
 
+<!-- _class: toc-center -->
+<!-- _toc: true -->
+
+## 発表の流れ
+
+---
+
+<!-- section: 原稿を作り，改稿する -->
 <!-- _header: 概要 -->
 
 ## MarpAgentの機能
@@ -103,6 +111,7 @@ PDFとHTMLの違いを説明するページを試作し，比較の観点をそ�
 
 ---
 
+<!-- section: 表示と構成を点検する -->
 <!-- _header: 点検 -->
 
 ## 表示の自動検証と内容の点検
@@ -137,7 +146,7 @@ npm run marpx -- decks/example/slide.md -v --strict
 | muji | 控えめで簡潔なデザイン |
 | toshiba | コントラストの強い技術発表向けデザイン |
 
-この作例は`lab`で，比較表や段組みを使っている．D2・Mermaidの図，数式，コードの構文強調にも対応する．
+この作例は本文に `theme: lab` を使い，表紙の1枚だけに `title cover-muji` を指定している．
 
 > [!TIP]
 > 実際に使う図を描画し，ラベルとキャプションが読めるか確かめる．
@@ -171,6 +180,7 @@ npm run marpx -- decks/example/slide.md -v --strict
 
 ---
 
+<!-- section: 発表し，配布する -->
 <!-- _header: 発表 -->
 
 ## 発表用HTMLの操作
@@ -246,6 +256,7 @@ ZIPにMarkdown原稿は含まれない．共同編集をする場合は，原稿
 
 ---
 
+<!-- section: 最初の1枚を作る -->
 <!-- _header: 始め方 -->
 
 ## 手元の図や表で，最初の1枚を作る
